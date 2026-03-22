@@ -1,0 +1,2772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>AfriTrade | WASI Unified Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========== ROOT VARIABLES ========== */
+:root {
+  --bg-primary: #030B15;
+  --bg-secondary: #0A1628;
+  --bg-tertiary: #111E33;
+  --bg-card: #0D1A2D;
+  --bg-hover: #162640;
+  --gold: #C8922A;
+  --gold-light: #E5B84B;
+  --gold-dim: #8B6914;
+  --green: #00E676;
+  --green-dim: #004D25;
+  --red: #FF5252;
+  --red-dim: #4D1717;
+  --blue: #448AFF;
+  --cyan: #18FFFF;
+  --orange: #FF9100;
+  --text-primary: #E8E6E3;
+  --text-secondary: #8A9BB5;
+  --text-dim: #4A5A73;
+  --border: #1A2A44;
+  --border-light: #253550;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Sora', sans-serif;
+  --radius: 6px;
+  --radius-lg: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  /* Banking light theme */
+  --bank-bg: #F7F4EF;
+  --bank-card: #FFFFFF;
+  --bank-text: #1A1A2E;
+  --bank-text2: #6B7280;
+  --bank-border: #E5E1DB;
+  --bank-accent: #C8922A;
+  --bank-green: #059669;
+  --bank-red: #DC2626;
+}
+
+/* ========== RESET ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: var(--font-mono);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold-light); }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+input, select, textarea { font-family: inherit; outline: none; }
+
+/* ========== ACCESS GATE ========== */
+#access-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg-primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.gate-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
+.gate-logo {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+.gate-sub {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 32px;
+}
+.gate-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 1rem;
+  text-align: center;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  transition: border-color .2s;
+}
+.gate-input:focus { border-color: var(--gold); }
+.gate-input.error { border-color: var(--red); animation: shake .4s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.gate-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  letter-spacing: 1px;
+  transition: opacity .2s;
+}
+.gate-btn:hover { opacity: .9; }
+.gate-hint {
+  margin-top: 20px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ========== NOTIFICATION BAR ========== */
+#notif-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 8000;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  transform: translateY(-100%);
+  transition: transform .3s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+#notif-bar.show { transform: translateY(0); }
+#notif-bar.success { background: var(--green-dim); color: var(--green); border-bottom: 1px solid var(--green); }
+#notif-bar.error { background: var(--red-dim); color: var(--red); border-bottom: 1px solid var(--red); }
+#notif-bar.info { background: var(--bg-tertiary); color: var(--gold); border-bottom: 1px solid var(--gold); }
+#notif-close { background: none; color: inherit; font-size: 1.1rem; padding: 0 4px; }
+
+/* ========== APP SHELL ========== */
+#app { display: none; }
+.topbar {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 52px;
+  position: sticky; top: 0; z-index: 500;
+}
+.topbar-brand {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 3px;
+  margin-right: 32px;
+}
+.topbar-nav { display: flex; gap: 4px; }
+.topbar-nav button {
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: all .2s;
+}
+.topbar-nav button:hover { color: var(--text-primary); background: var(--bg-hover); }
+.topbar-nav button.active { color: var(--gold); background: rgba(200,146,42,.12); }
+.topbar-right {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 16px;
+}
+.topbar-user {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.topbar-user strong { color: var(--gold); }
+.topbar-tier {
+  font-size: 0.7rem;
+  background: rgba(200,146,42,.15);
+  color: var(--gold);
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+/* ========== TICKER BAR ========== */
+.ticker-bar {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  height: 32px;
+  position: relative;
+}
+.ticker-track {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: tickerScroll 60s linear infinite;
+  padding: 6px 0;
+  font-size: 0.78rem;
+}
+@keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.ticker-item { display: inline-flex; gap: 6px; align-items: center; }
+.ticker-item .sym { color: var(--gold); font-weight: 600; }
+.ticker-item .val { color: var(--text-primary); }
+.ticker-item .chg { font-weight: 500; }
+.ticker-item .chg.up { color: var(--green); }
+.ticker-item .chg.dn { color: var(--red); }
+.ticker-item .chg.flat { color: var(--text-dim); }
+
+/* ========== SCREEN CONTAINERS ========== */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ========== INTELLIGENCE SCREEN ========== */
+#screen-intel {
+  display: none;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 0;
+  height: calc(100vh - 84px);
+}
+#screen-intel.active { display: grid; }
+
+/* Country List */
+.intel-left {
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 16px;
+}
+.intel-left-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.country-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s;
+  margin-bottom: 4px;
+  position: relative;
+}
+.country-pill:hover { background: var(--bg-hover); }
+.country-pill.active { background: rgba(200,146,42,.12); border-left: 3px solid var(--gold); }
+.country-pill .flag { font-size: 1.4rem; }
+.country-pill .cname { font-size: 0.85rem; color: var(--text-primary); flex: 1; }
+.country-pill .cscore {
+  font-size: 0.8rem; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px;
+}
+.country-pill .cscore.high { background: rgba(0,230,118,.15); color: var(--green); }
+.country-pill .cscore.mid { background: rgba(255,145,0,.15); color: var(--orange); }
+.country-pill .cscore.low { background: rgba(255,82,82,.15); color: var(--red); }
+.country-pill .coup-badge {
+  position: absolute; top: 4px; right: 8px;
+  font-size: 0.6rem;
+  background: var(--red-dim);
+  color: var(--red);
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+.country-pill .ctrend { font-size: 0.9rem; margin-left: 2px; }
+
+/* Chat Center */
+.intel-center {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-primary);
+}
+.chat-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-header-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+.chat-header-focus {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.chat-msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.chat-msg.user {
+  align-self: flex-end;
+  background: rgba(200,146,42,.15);
+  color: var(--text-primary);
+  border-bottom-right-radius: 4px;
+}
+.chat-msg.bot {
+  align-self: flex-start;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.chat-msg.bot .sources {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.chat-typing {
+  align-self: flex-start;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: none;
+}
+.chat-typing.show { display: flex; gap: 4px; align-items: center; }
+.chat-typing span {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: typeDot .8s ease-in-out infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: .15s; }
+.chat-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes typeDot { 0%,100%{opacity:.3;transform:translateY(0)} 50%{opacity:1;transform:translateY(-3px)} }
+
+.chat-suggestions {
+  display: flex; gap: 8px; padding: 8px 20px; flex-wrap: wrap;
+}
+.chat-sugg {
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  transition: all .15s;
+}
+.chat-sugg:hover { border-color: var(--gold); color: var(--gold); }
+
+.chat-input-bar {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+.chat-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+.chat-input:focus { border-color: var(--gold); }
+.chat-send {
+  padding: 12px 20px;
+  background: var(--gold);
+  color: #000;
+  font-weight: 600;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+.chat-send:hover { background: var(--gold-light); }
+
+/* Composite Right */
+.intel-right {
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 16px;
+}
+.comp-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.comp-score-big {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.comp-score-big .val {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+.comp-score-big .label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.comp-section { margin-bottom: 20px; }
+.comp-section-title {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.comp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+}
+.comp-row .clabel { color: var(--text-primary); }
+.comp-row .cval { font-weight: 600; }
+.comp-bar-wrap {
+  flex: 1; margin: 0 10px;
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.comp-bar-fill { height: 100%; border-radius: 2px; transition: width .5s; }
+.coup-list { display: flex; flex-direction: column; gap: 6px; }
+.coup-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255,82,82,.08);
+  border-left: 3px solid var(--red);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+}
+.coup-item .flag { font-size: 1.1rem; }
+.coup-item .cname { flex: 1; color: var(--text-primary); }
+.coup-item .cscore { color: var(--red); font-weight: 600; }
+
+/* ========== DEX SCREEN ========== */
+#screen-dex { padding: 0; }
+#screen-dex.active { display: block; }
+.dex-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.dex-tab {
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: all .2s;
+}
+.dex-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
+.dex-tab.active { color: var(--gold); background: rgba(200,146,42,.12); }
+
+.dex-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  height: calc(100vh - 136px);
+}
+.dex-main { overflow-y: auto; padding: 20px; }
+.dex-sidebar {
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 16px;
+}
+.dex-panel { display: none; }
+.dex-panel.active { display: block; }
+
+/* Tables */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--bg-primary);
+}
+.data-table td {
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+}
+.data-table tr:hover { background: var(--bg-hover); }
+.data-table .up { color: var(--green); }
+.data-table .dn { color: var(--red); }
+.data-table .flat { color: var(--text-dim); }
+.signal-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.signal-badge.ACHAT { background: rgba(0,230,118,.15); color: var(--green); }
+.signal-badge.VENTE { background: rgba(255,82,82,.15); color: var(--red); }
+.signal-badge.NEUTRE { background: rgba(138,155,181,.15); color: var(--text-secondary); }
+
+.vol-bar { height: 4px; border-radius: 2px; background: var(--bg-primary); overflow: hidden; min-width: 50px; }
+.vol-fill { height: 100%; background: var(--gold-dim); border-radius: 2px; }
+
+/* Order sidebar */
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.order-side-btns { display: flex; gap: 4px; margin-bottom: 14px; }
+.order-side-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.82rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  transition: all .15s;
+}
+.order-side-btn.active-buy { background: rgba(0,230,118,.15); color: var(--green); }
+.order-side-btn.active-sell { background: rgba(255,82,82,.15); color: var(--red); }
+
+.form-group { margin-bottom: 12px; }
+.form-label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+.form-input:focus { border-color: var(--gold); }
+.form-select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.order-summary {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 0.82rem;
+}
+.order-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.order-summary-row .lab { color: var(--text-dim); }
+.order-summary-row .val { color: var(--text-primary); font-weight: 500; }
+.order-exec-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: opacity .2s;
+}
+.order-exec-btn.buy { background: var(--green); color: #000; }
+.order-exec-btn.sell { background: var(--red); color: #fff; }
+.order-exec-btn:hover { opacity: .85; }
+
+/* Order book */
+.orderbook { margin-top: 20px; }
+.orderbook-title { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; }
+.ob-row { display: flex; font-size: 0.78rem; padding: 2px 0; }
+.ob-row .ob-price { flex: 1; text-align: right; padding-right: 8px; }
+.ob-row .ob-qty { flex: 1; text-align: left; padding-left: 8px; }
+.ob-row.ask .ob-price { color: var(--red); }
+.ob-row.bid .ob-price { color: var(--green); }
+.ob-row .ob-qty { color: var(--text-dim); }
+.ob-spread { text-align: center; padding: 4px 0; font-size: 0.72rem; color: var(--gold); font-weight: 600; }
+
+/* ETF Detail */
+.etf-detail {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 16px;
+  display: none;
+}
+.etf-detail.show { display: block; }
+.etf-detail-name { font-size: 1.1rem; font-weight: 600; color: var(--gold); }
+.etf-detail-strat { font-size: 0.82rem; color: var(--text-secondary); margin: 6px 0 16px; }
+.etf-detail-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+.etf-stat { text-align: center; }
+.etf-stat .val { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+.etf-stat .lab { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
+
+/* Crypto swap */
+.swap-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.swap-title { font-size: 1rem; font-weight: 600; color: var(--gold); margin-bottom: 20px; text-align: center; }
+.swap-field { margin-bottom: 16px; }
+.swap-field label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; display: block; }
+.swap-row { display: flex; gap: 8px; }
+.swap-row select { width: 120px; }
+.swap-row input { flex: 1; }
+.swap-arrow { text-align: center; font-size: 1.4rem; color: var(--gold); margin: 8px 0; }
+.swap-rate { text-align: center; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; }
+.swap-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+  font-weight: 700;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+}
+.swap-btn:hover { opacity: .9; }
+
+/* Portfolio */
+.port-summary {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.port-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+}
+.port-card .val { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+.port-card .lab { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 4px; }
+
+/* Basket creator */
+.basket-modal {
+  position: fixed; inset: 0; z-index: 7000;
+  background: rgba(0,0,0,.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.basket-modal.show { display: flex; }
+.basket-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+}
+.basket-box h2 { color: var(--gold); font-size: 1.1rem; margin-bottom: 16px; }
+.basket-checks { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+.basket-check { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-primary); }
+.basket-check input[type=checkbox] { accent-color: var(--gold); }
+.basket-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.basket-actions button {
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.basket-cancel { background: var(--bg-tertiary); color: var(--text-secondary); }
+.basket-create { background: var(--gold); color: #000; }
+
+/* ========== BANKING SCREEN ========== */
+#screen-bank {
+  background: var(--bank-bg);
+  color: var(--bank-text);
+  font-family: var(--font-sans);
+  min-height: calc(100vh - 84px);
+}
+#screen-bank.active { display: block; }
+.bank-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 84px);
+}
+.bank-nav {
+  background: var(--bank-card);
+  border-right: 1px solid var(--bank-border);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bank-nav-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--bank-text2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.bank-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--bank-text2);
+  background: transparent;
+  transition: all .15s;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+.bank-nav-btn:hover { background: #F0EDE6; color: var(--bank-text); }
+.bank-nav-btn.active { background: rgba(200,146,42,.1); color: var(--bank-accent); font-weight: 600; }
+.bank-nav-icon { font-size: 1.1rem; }
+
+.bank-main {
+  padding: 24px 32px;
+  overflow-y: auto;
+  max-height: calc(100vh - 84px);
+}
+.bank-screen { display: none; }
+.bank-screen.active { display: block; }
+
+/* Bank cards */
+.bcard {
+  background: var(--bank-card);
+  border: 1px solid var(--bank-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.bcard-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--bank-text2);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 16px;
+}
+.bcard-big-val {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--bank-text);
+}
+.bcard-sub {
+  font-size: 0.78rem;
+  color: var(--bank-text2);
+  margin-top: 4px;
+}
+
+.bank-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+.bank-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* Bank form */
+.bform-group { margin-bottom: 14px; }
+.bform-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--bank-text2);
+  margin-bottom: 4px;
+}
+.bform-input, .bform-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--bank-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  color: var(--bank-text);
+  background: #FAFAF8;
+  font-family: var(--font-sans);
+}
+.bform-input:focus, .bform-select:focus { border-color: var(--bank-accent); outline: none; }
+.bform-btn {
+  padding: 12px 24px;
+  background: var(--bank-accent);
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  border: none;
+  cursor: pointer;
+}
+.bform-btn:hover { opacity: .9; }
+
+/* Bank transactions list */
+.btx-list { display: flex; flex-direction: column; gap: 8px; }
+.btx-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--bank-border);
+  background: #FAFAF8;
+}
+.btx-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.btx-icon.in { background: rgba(5,150,105,.1); color: var(--bank-green); }
+.btx-icon.out { background: rgba(220,38,38,.1); color: var(--bank-red); }
+.btx-info { flex: 1; }
+.btx-info .desc { font-size: 0.88rem; font-weight: 500; color: var(--bank-text); }
+.btx-info .meta { font-size: 0.75rem; color: var(--bank-text2); }
+.btx-amt { font-weight: 600; font-size: 0.92rem; }
+.btx-amt.in { color: var(--bank-green); }
+.btx-amt.out { color: var(--bank-red); }
+
+/* Transfer fee row */
+.tf-summary {
+  background: #F0EDE6;
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.tf-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.85rem; }
+.tf-row .lab { color: var(--bank-text2); }
+.tf-row .val { font-weight: 600; color: var(--bank-text); }
+.tf-row.total { border-top: 1px solid var(--bank-border); padding-top: 8px; margin-top: 4px; }
+.tf-row.total .val { color: var(--bank-accent); font-size: 1rem; }
+
+/* Credit score gauge */
+.credit-gauge {
+  width: 180px; height: 180px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+.credit-gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.credit-gauge .score-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.credit-gauge .score-text .val { font-size: 2rem; font-weight: 700; color: var(--bank-text); }
+.credit-gauge .score-text .lab { font-size: 0.72rem; color: var(--bank-text2); }
+
+/* Settings */
+.settings-group { margin-bottom: 24px; }
+.settings-group h3 { font-size: 0.92rem; font-weight: 600; color: var(--bank-text); margin-bottom: 12px; }
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bank-border);
+}
+.settings-row .label { font-size: 0.88rem; color: var(--bank-text); }
+.settings-row .desc { font-size: 0.75rem; color: var(--bank-text2); }
+.toggle {
+  width: 44px; height: 24px;
+  background: #D1D5DB;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background .2s;
+  border: none;
+}
+.toggle.on { background: var(--bank-accent); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 20px; height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left .2s;
+}
+.toggle.on::after { left: 22px; }
+
+/* ========== MOBILE COUNTRY PANEL ========== */
+.mobile-country-btn {
+  display: none;
+  padding: 6px 12px;
+  background: rgba(200,146,42,.12);
+  color: var(--gold);
+  border-radius: var(--radius);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Full-screen overlay for country list + detail on mobile */
+.mobile-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: var(--bg-primary);
+  flex-direction: column;
+  overflow: hidden;
+}
+.mobile-panel.show { display: flex; }
+
+.mobile-panel-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.mobile-panel-header .back-btn {
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+}
+.mobile-panel-header .title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+  flex: 1;
+}
+
+.mobile-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+}
+
+/* Country detail card (shown on mobile after selecting a country) */
+.country-detail-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.country-detail-card .cd-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.country-detail-card .cd-flag { font-size: 2.4rem; }
+.country-detail-card .cd-name { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+.country-detail-card .cd-code { font-size: 0.78rem; color: var(--text-dim); }
+.country-detail-card .cd-score-wrap {
+  margin-left: auto;
+  text-align: center;
+}
+.country-detail-card .cd-score {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.country-detail-card .cd-score-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.cd-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.cd-stat {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.cd-stat .label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+.cd-stat .value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.cd-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  margin-top: 16px;
+}
+.cd-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+}
+.cd-bar-row .lab { color: var(--text-secondary); }
+.cd-bar-row .val { font-weight: 600; }
+.cd-bar-wrap {
+  flex: 1;
+  margin: 0 10px;
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cd-bar-fill { height: 100%; border-radius: 2px; }
+
+.cd-exports {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.cd-export-tag {
+  padding: 4px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.cd-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.cd-action-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+}
+.cd-action-btn.primary {
+  background: rgba(200,146,42,.15);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+}
+.cd-action-btn.secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  #screen-intel.active { grid-template-columns: 1fr; }
+  .intel-left, .intel-right { display: none; }
+  .dex-body { grid-template-columns: 1fr; }
+  .dex-sidebar { display: none; }
+  .bank-layout { grid-template-columns: 1fr; }
+  .bank-nav { flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--bank-border); }
+  .bank-nav-btn { white-space: nowrap; padding: 8px 12px; font-size: 0.82rem; }
+  .bank-grid { grid-template-columns: 1fr 1fr; }
+  .bank-grid-2 { grid-template-columns: 1fr; }
+  .basket-checks { grid-template-columns: 1fr 1fr; }
+}
+
+/* Phone */
+@media (max-width: 640px) {
+  html { font-size: 13px; }
+  body { overflow-x: hidden; }
+
+  /* Gate */
+  .gate-box { padding: 32px 20px; width: 95%; }
+  .gate-logo { font-size: 1.8rem; }
+  .gate-sub { font-size: 0.75rem; margin-bottom: 24px; }
+  .gate-input { padding: 12px; font-size: 0.9rem; }
+  .gate-btn { padding: 12px; font-size: 0.88rem; }
+  .gate-hint { font-size: 0.7rem; }
+
+  /* Topbar — compact mobile layout */
+  .topbar {
+    padding: 0 10px;
+    height: auto;
+    min-height: 48px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .topbar-brand { font-size: 1rem; margin-right: 8px; letter-spacing: 2px; }
+  .topbar-nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .topbar-nav button {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .topbar-right { display: none; }
+
+  /* Ticker */
+  .ticker-bar { height: 28px; }
+  .ticker-track { font-size: 0.7rem; gap: 24px; }
+
+  /* Notification */
+  #notif-bar { font-size: 0.78rem; padding: 8px 12px; }
+
+  /* Mobile country button + panel */
+  .mobile-country-btn { display: inline-flex; }
+
+  /* Intelligence screen — single column, chat only */
+  #screen-intel.active {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100vh - 130px);
+  }
+  .intel-left, .intel-right { display: none; }
+  .intel-center { height: calc(100vh - 130px); }
+  .chat-header { padding: 10px 14px; gap: 8px; flex-wrap: wrap; }
+  .chat-header-title { font-size: 0.88rem; }
+  .chat-header-focus { font-size: 0.7rem; }
+  .chat-messages { padding: 14px; }
+  .chat-msg { max-width: 95%; font-size: 0.82rem; }
+  .chat-msg.bot { font-size: 0.78rem; }
+  .chat-suggestions { padding: 8px 14px; gap: 6px; flex-wrap: wrap; }
+  .chat-sugg { padding: 6px 10px; font-size: 0.72rem; }
+  .chat-input-bar { padding: 10px 14px; gap: 6px; }
+  .chat-input { padding: 10px; font-size: 0.85rem; }
+  .chat-send { padding: 10px 14px; font-size: 0.78rem; }
+
+  /* DEX screen */
+  .dex-tabs {
+    padding: 8px 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 2px;
+  }
+  .dex-tab {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .dex-body { grid-template-columns: 1fr; height: auto; }
+  .dex-main { padding: 14px; }
+  .dex-sidebar { display: none; }
+
+  /* Tables — horizontal scroll on mobile */
+  .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table th, .data-table td { padding: 8px 8px; font-size: 0.72rem; white-space: nowrap; }
+
+  /* Swap box */
+  .swap-box { padding: 16px; }
+  .swap-amount { font-size: 1.4rem; }
+  .swap-token-sel { font-size: 0.82rem; padding: 6px 10px; }
+
+  /* Portfolio */
+  .port-summary { grid-template-columns: 1fr; gap: 10px; }
+  .port-val { font-size: 1.6rem; }
+
+  /* ETF detail grid */
+  .etf-detail-grid { grid-template-columns: 1fr; }
+  .basket-checks { grid-template-columns: 1fr 1fr; }
+  .basket-box { padding: 20px 16px; width: 95%; }
+  .basket-actions { flex-direction: column; }
+  .basket-actions button { width: 100%; }
+
+  /* Banking screen */
+  .bank-layout { grid-template-columns: 1fr; }
+  .bank-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px;
+    border-right: none;
+    border-bottom: 1px solid var(--bank-border);
+    gap: 2px;
+  }
+  .bank-nav-title { display: none; }
+  .bank-nav-btn {
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+  .bank-nav-icon { font-size: 0.9rem; }
+  .bank-main { padding: 14px; max-height: none; }
+
+  /* Bank cards */
+  .bcard { padding: 16px; margin-bottom: 14px; }
+  .bcard-title { font-size: 0.75rem; margin-bottom: 12px; }
+  .bcard-big-val { font-size: 1.5rem; }
+  .bcard-sub { font-size: 0.72rem; }
+
+  /* Bank grids — single column */
+  .bank-grid { grid-template-columns: 1fr; gap: 10px; }
+  .bank-grid-2 { grid-template-columns: 1fr; gap: 14px; }
+
+  /* Bank form */
+  .bform-input, .bform-select { padding: 10px 12px; font-size: 0.85rem; }
+  .bform-btn { padding: 12px; font-size: 0.85rem; width: 100%; }
+
+  /* Bank transactions */
+  .btx-item { padding: 10px 12px; gap: 10px; }
+  .btx-icon { width: 32px; height: 32px; font-size: 0.88rem; }
+  .btx-info .desc { font-size: 0.82rem; }
+  .btx-info .meta { font-size: 0.7rem; }
+  .btx-amt { font-size: 0.85rem; }
+
+  /* Transfer summary */
+  .tf-summary { padding: 12px; }
+  .tf-row { font-size: 0.8rem; }
+
+  /* Credit gauge */
+  .credit-gauge { width: 150px; height: 150px; }
+  .credit-gauge .score-text .val { font-size: 1.6rem; }
+
+  /* Settings */
+  .settings-row { flex-wrap: wrap; gap: 6px; }
+  .settings-row .label { font-size: 0.82rem; }
+  .settings-row .desc { font-size: 0.7rem; width: 100%; }
+
+  /* Hero card in banking dashboard */
+  .bank-hero { padding: 20px 16px; border-radius: var(--radius-lg); }
+  .bank-hero .hero-balance { font-size: 1.6rem; }
+  .bank-hero .hero-actions { flex-wrap: wrap; gap: 6px; }
+  .bank-hero .hero-actions button { flex: 1; min-width: 100px; font-size: 0.78rem; padding: 8px 10px; }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  html { font-size: 12px; }
+  .gate-box { padding: 24px 14px; }
+  .topbar-brand { font-size: 0.9rem; }
+  .topbar-nav button { padding: 5px 8px; font-size: 0.68rem; }
+  .dex-tab { padding: 5px 8px; font-size: 0.68rem; }
+  .bank-nav-btn { padding: 6px 10px; font-size: 0.72rem; }
+  .chat-msg { font-size: 0.78rem; }
+  .chat-msg.bot { font-size: 0.74rem; }
+  .bcard-big-val { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== ACCESS GATE ========== -->
+<div id="access-gate">
+  <div class="gate-box">
+    <div class="gate-logo">W A S I</div>
+    <div class="gate-sub">West African Strategic Intelligence</div>
+    <input type="text" id="gate-key" class="gate-input" placeholder="Clef d'acces WASI-XXXX-XX##" spellcheck="false" autocomplete="off">
+    <button class="gate-btn" onclick="validateGate()">ENTRER</button>
+    <div class="gate-hint">Demo: WASI-DEMO-DM01</div>
+  </div>
+</div>
+
+<!-- ========== NOTIFICATION ========== -->
+<div id="notif-bar">
+  <span id="notif-msg"></span>
+  <button id="notif-close" onclick="hideNotif()">&times;</button>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="app">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">WASI</div>
+    <div class="topbar-nav" id="main-nav">
+      <button class="active" onclick="showScreen('intel',this)">Intelligence</button>
+      <button onclick="showScreen('dex',this)">DEX</button>
+      <button onclick="showScreen('bank',this)">Banking</button>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-user">Bienvenue, <strong id="user-name">Operateur</strong></span>
+      <span class="topbar-tier" id="user-tier">DEMO</span>
+    </div>
+  </div>
+
+  <!-- Ticker bar -->
+  <div class="ticker-bar">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+
+  <!-- ===== INTELLIGENCE SCREEN ===== -->
+  <div id="screen-intel" class="screen active">
+    <!-- Left: Countries -->
+    <div class="intel-left">
+      <div class="intel-left-title">Pays CEDEAO</div>
+      <div id="country-list"></div>
+    </div>
+    <!-- Center: Chat -->
+    <div class="intel-center">
+      <div class="chat-header">
+        <div class="chat-header-title">WASI Intelligence</div>
+        <div class="chat-header-focus" id="chat-focus">Focus: CEDEAO</div>
+        <button class="mobile-country-btn" onclick="openMobileCountries()">🌍 Pays</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg bot">Bienvenue dans WASI Intelligence. Posez vos questions sur la zone CEDEAO : indices de stabilite, risques politiques, opportunites economiques, corridors commerciaux.</div>
+      </div>
+      <div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>
+      <div class="chat-suggestions">
+        <button class="chat-sugg" onclick="sendSugg(this)">Analyse du corridor Abidjan-Lagos</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Opportunites BRVM 2026</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Impact du franc CFA</button>
+      </div>
+      <div class="chat-input-bar">
+        <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">Envoyer</button>
+      </div>
+    </div>
+    <!-- Right: Composite -->
+    <div class="intel-right">
+      <div class="comp-title">Indice Composite WASI</div>
+      <div class="comp-score-big"><div class="val" id="comp-score-val">--</div><div class="label">Score moyen CEDEAO</div></div>
+      <div id="comp-top5" class="comp-section"></div>
+      <div id="comp-coups" class="comp-section"></div>
+      <div id="comp-components" class="comp-section"></div>
+    </div>
+  </div>
+
+  <!-- ===== DEX SCREEN ===== -->
+  <div id="screen-dex" class="screen">
+    <div class="dex-tabs" id="dex-tabs">
+      <button class="dex-tab active" onclick="switchDexTab('brvm',this)">BRVM</button>
+      <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
+      <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
+      <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
+      <button class="dex-tab" onclick="switchDexTab('port',this)">Portefeuille</button>
+    </div>
+    <div class="dex-body">
+      <div class="dex-main">
+        <!-- BRVM panel -->
+        <div class="dex-panel active" id="panel-brvm">
+          <table class="data-table" id="brvm-table">
+            <thead>
+              <tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (XOF)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr>
+            </thead>
+            <tbody id="brvm-body"></tbody>
+          </table>
+        </div>
+        <!-- ETF panel -->
+        <div class="dex-panel" id="panel-etf">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h3 style="color:var(--gold);font-size:1rem;">ETF WASI</h3>
+            <button class="chat-sugg" onclick="openBasketCreator()" style="border-color:var(--gold);color:var(--gold);">+ Creer un panier</button>
+          </div>
+          <table class="data-table" id="etf-table">
+            <thead>
+              <tr><th>Ticker</th><th>Nom</th><th>Strategie</th><th>NAV (XOF)</th><th>Var %</th><th>AUM</th><th>Frais</th><th>Score</th></tr>
+            </thead>
+            <tbody id="etf-body"></tbody>
+          </table>
+          <div class="etf-detail" id="etf-detail"></div>
+        </div>
+        <!-- Crypto panel -->
+        <div class="dex-panel" id="panel-crypto">
+          <div style="margin-bottom:24px;">
+            <table class="data-table" id="crypto-table">
+              <thead>
+                <tr><th>Token</th><th>Nom</th><th>Prix USD</th><th>Var %</th><th>Cap.</th></tr>
+              </thead>
+              <tbody id="crypto-body"></tbody>
+            </table>
+          </div>
+          <div class="swap-card">
+            <div class="swap-title">Swap Crypto &#x2194; XOF</div>
+            <div class="swap-field">
+              <label>De</label>
+              <div class="swap-row">
+                <select class="form-select" id="swap-from" onchange="calcSwap()">
+                  <option value="XOF">XOF</option>
+                  <option value="BTC">BTC</option>
+                  <option value="ETH">ETH</option>
+                  <option value="USDC">USDC</option>
+                </select>
+                <input type="number" class="form-input" id="swap-from-amt" placeholder="0.00" oninput="calcSwap()" value="100000">
+              </div>
+            </div>
+            <div class="swap-arrow">&#8595;</div>
+            <div class="swap-field">
+              <label>Vers</label>
+              <div class="swap-row">
+                <select class="form-select" id="swap-to" onchange="calcSwap()">
+                  <option value="USDC">USDC</option>
+                  <option value="BTC">BTC</option>
+                  <option value="ETH">ETH</option>
+                  <option value="XOF">XOF</option>
+                </select>
+                <input type="number" class="form-input" id="swap-to-amt" placeholder="0.00" readonly>
+              </div>
+            </div>
+            <div class="swap-rate" id="swap-rate">Taux: --</div>
+            <button class="swap-btn" onclick="doSwap()">Executer le Swap</button>
+          </div>
+        </div>
+        <!-- FX panel -->
+        <div class="dex-panel" id="panel-fx">
+          <table class="data-table" id="fx-table">
+            <thead>
+              <tr><th>Paire</th><th>Achat</th><th>Vente</th><th>Spread</th><th>Var</th><th>Source</th></tr>
+            </thead>
+            <tbody id="fx-body"></tbody>
+          </table>
+        </div>
+        <!-- Portfolio panel -->
+        <div class="dex-panel" id="panel-port">
+          <div class="port-summary" id="port-summary"></div>
+          <div class="bcard" style="background:var(--bg-card);border-color:var(--border);">
+            <div style="color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;font-size:.82rem;">Positions</div>
+            <table class="data-table" id="port-table">
+              <thead><tr><th>Titre</th><th>Qte</th><th>PRU</th><th>Cours</th><th>P&amp;L</th><th>P&amp;L %</th></tr></thead>
+              <tbody id="port-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Sidebar: Order -->
+      <div class="dex-sidebar" id="dex-sidebar">
+        <div class="sidebar-title">Passer un Ordre</div>
+        <div class="order-side-btns">
+          <button class="order-side-btn active-buy" id="btn-buy" onclick="setOrderSide('buy')">ACHAT</button>
+          <button class="order-side-btn" id="btn-sell" onclick="setOrderSide('sell')">VENTE</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Titre</label>
+          <select class="form-select" id="ord-ticker" onchange="calcOrder()">
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type d'ordre</label>
+          <select class="form-select" id="ord-type">
+            <option value="market">Marche</option>
+            <option value="limit">Limite</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantite</label>
+          <input type="number" class="form-input" id="ord-qty" value="10" min="1" oninput="calcOrder()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prix limite (XOF)</label>
+          <input type="number" class="form-input" id="ord-price" value="16500" oninput="calcOrder()">
+        </div>
+        <div class="order-summary" id="ord-summary">
+          <div class="order-summary-row"><span class="lab">Montant brut</span><span class="val" id="ord-gross">--</span></div>
+          <div class="order-summary-row"><span class="lab">Commission (0.5%)</span><span class="val" id="ord-fee">--</span></div>
+          <div class="order-summary-row"><span class="lab">Total</span><span class="val" id="ord-total">--</span></div>
+        </div>
+        <button class="order-exec-btn buy" id="ord-exec-btn" onclick="execOrder()">ACHETER</button>
+
+        <!-- Order book -->
+        <div class="orderbook">
+          <div class="orderbook-title">Carnet d'ordres — SNTS</div>
+          <div id="orderbook-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BANKING SCREEN ===== -->
+  <div id="screen-bank" class="screen">
+    <div class="bank-layout">
+      <div class="bank-nav" id="bank-nav">
+        <div class="bank-nav-title">Banque WASI</div>
+        <button class="bank-nav-btn active" onclick="showBankScreen('bdash',this)"><span class="bank-nav-icon">&#x1F3E0;</span> Tableau de bord</button>
+        <button class="bank-nav-btn" onclick="showBankScreen('btransfer',this)"><span class="bank-nav-icon">&#x27A1;</span> Virements</button>
+        <button class="bank-nav-btn" onclick="showBankScreen('bmobile',this)"><span class="bank-nav-icon">&#x1F4F1;</span> Mobile Money</button>
+        <button class="bank-nav-btn" onclick="showBankScreen('bcredit',this)"><span class="bank-nav-icon">&#x1F4B3;</span> Credit</button>
+        <button class="bank-nav-btn" onclick="showBankScreen('bhistory',this)"><span class="bank-nav-icon">&#x1F4C4;</span> Historique</button>
+        <button class="bank-nav-btn" onclick="showBankScreen('bsettings',this)"><span class="bank-nav-icon">&#x2699;</span> Parametres</button>
+      </div>
+      <div class="bank-main">
+        <!-- Dashboard -->
+        <div class="bank-screen active" id="bs-bdash">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Tableau de bord</h2>
+          <div class="bank-grid" id="bank-cards"></div>
+          <div class="bank-grid-2">
+            <div class="bcard">
+              <div class="bcard-title">Transactions recentes</div>
+              <div class="btx-list" id="bank-recent-tx"></div>
+            </div>
+            <div class="bcard">
+              <div class="bcard-title">Actions rapides</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <button class="bform-btn" style="width:100%;" onclick="showBankScreen('btransfer',navBankBtn('Virements'))">Nouveau virement</button>
+                <button class="bform-btn" style="width:100%;background:var(--bank-green);" onclick="showBankScreen('bmobile',navBankBtn('Mobile Money'))">Depot Mobile Money</button>
+                <button class="bform-btn" style="width:100%;background:#4F46E5;" onclick="showBankScreen('bcredit',navBankBtn('Credit'))">Simuler un credit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Transfer -->
+        <div class="bank-screen" id="bs-btransfer">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Virements</h2>
+          <div class="bank-grid-2">
+            <div class="bcard">
+              <div class="bcard-title">Nouveau virement</div>
+              <div class="bform-group">
+                <label class="bform-label">Type de virement</label>
+                <select class="bform-select" id="btf-type" onchange="calcBTransfer()">
+                  <option value="0.001,500">Virement interne (0.1%, min 500 XOF)</option>
+                  <option value="0.005,1500">Virement UEMOA (0.5%, min 1 500 XOF)</option>
+                  <option value="0.01,5000">Virement international (1%, min 5 000 XOF)</option>
+                  <option value="0.003,1000">Mobile Money (0.3%, min 1 000 XOF)</option>
+                </select>
+              </div>
+              <div class="bform-group">
+                <label class="bform-label">Beneficiaire</label>
+                <input type="text" class="bform-input" id="btf-benef" placeholder="Nom ou IBAN">
+              </div>
+              <div class="bform-group">
+                <label class="bform-label">Montant (XOF)</label>
+                <input type="number" class="bform-input" id="btf-amount" placeholder="0" oninput="calcBTransfer()">
+              </div>
+              <div class="bform-group">
+                <label class="bform-label">Motif</label>
+                <input type="text" class="bform-input" id="btf-motif" placeholder="Objet du virement">
+              </div>
+              <div class="tf-summary" id="btf-summary">
+                <div class="tf-row"><span class="lab">Montant</span><span class="val" id="btf-disp-amt">0 XOF</span></div>
+                <div class="tf-row"><span class="lab">Frais</span><span class="val" id="btf-disp-fee">0 XOF</span></div>
+                <div class="tf-row total"><span class="lab">Total</span><span class="val" id="btf-disp-total">0 XOF</span></div>
+              </div>
+              <button class="bform-btn" onclick="execTransfer()">Confirmer le virement</button>
+            </div>
+            <div class="bcard">
+              <div class="bcard-title">Virements programmes</div>
+              <div class="btx-list">
+                <div class="btx-item">
+                  <div class="btx-icon out">&#x27A1;</div>
+                  <div class="btx-info"><div class="desc">Loyer mensuel</div><div class="meta">Chaque 1er du mois - 350 000 XOF</div></div>
+                  <span style="font-size:.75rem;color:var(--bank-green);font-weight:600;">Actif</span>
+                </div>
+                <div class="btx-item">
+                  <div class="btx-icon out">&#x27A1;</div>
+                  <div class="btx-info"><div class="desc">Epargne automatique</div><div class="meta">Chaque 15 du mois - 100 000 XOF</div></div>
+                  <span style="font-size:.75rem;color:var(--bank-green);font-weight:600;">Actif</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile Money -->
+        <div class="bank-screen" id="bs-bmobile">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Mobile Money</h2>
+          <div class="bank-grid">
+            <div class="bcard" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">&#x1F4F1;</div>
+              <div class="bcard-title">Orange Money</div>
+              <div style="font-size:0.85rem;color:var(--bank-text2);margin-bottom:12px;">+225 07 XX XX XX</div>
+              <button class="bform-btn" style="width:100%;" onclick="doMobileMoney('Orange Money')">Depot / Retrait</button>
+            </div>
+            <div class="bcard" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">&#x1F4F2;</div>
+              <div class="bcard-title">MTN MoMo</div>
+              <div style="font-size:0.85rem;color:var(--bank-text2);margin-bottom:12px;">+225 05 XX XX XX</div>
+              <button class="bform-btn" style="width:100%;background:#FFCB05;color:#000;" onclick="doMobileMoney('MTN MoMo')">Depot / Retrait</button>
+            </div>
+            <div class="bcard" style="text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">&#x1F4B8;</div>
+              <div class="bcard-title">Wave</div>
+              <div style="font-size:0.85rem;color:var(--bank-text2);margin-bottom:12px;">+221 77 XX XX XX</div>
+              <button class="bform-btn" style="width:100%;background:#1DC3E6;color:#fff;" onclick="doMobileMoney('Wave')">Depot / Retrait</button>
+            </div>
+          </div>
+          <div class="bcard">
+            <div class="bcard-title">Operation Mobile Money</div>
+            <div class="bank-grid-2">
+              <div>
+                <div class="bform-group">
+                  <label class="bform-label">Operateur</label>
+                  <select class="bform-select" id="mm-operator">
+                    <option>Orange Money</option>
+                    <option>MTN MoMo</option>
+                    <option>Wave</option>
+                    <option>Moov Money</option>
+                  </select>
+                </div>
+                <div class="bform-group">
+                  <label class="bform-label">Operation</label>
+                  <select class="bform-select" id="mm-op">
+                    <option value="deposit">Depot vers compte WASI</option>
+                    <option value="withdraw">Retrait vers mobile</option>
+                  </select>
+                </div>
+                <div class="bform-group">
+                  <label class="bform-label">Numero de telephone</label>
+                  <input type="tel" class="bform-input" id="mm-phone" placeholder="+225 07 XX XX XX">
+                </div>
+                <div class="bform-group">
+                  <label class="bform-label">Montant (XOF)</label>
+                  <input type="number" class="bform-input" id="mm-amount" placeholder="0">
+                </div>
+                <button class="bform-btn" onclick="execMobileMoney()">Valider l'operation</button>
+              </div>
+              <div>
+                <div class="btx-list">
+                  <div class="btx-item"><div class="btx-icon in">&#x2B07;</div><div class="btx-info"><div class="desc">Depot Orange Money</div><div class="meta">Hier 14:32</div></div><div class="btx-amt in">+50 000</div></div>
+                  <div class="btx-item"><div class="btx-icon out">&#x2B06;</div><div class="btx-info"><div class="desc">Retrait Wave</div><div class="meta">20 mars 09:15</div></div><div class="btx-amt out">-25 000</div></div>
+                  <div class="btx-item"><div class="btx-icon in">&#x2B07;</div><div class="btx-info"><div class="desc">Depot MTN MoMo</div><div class="meta">18 mars 16:45</div></div><div class="btx-amt in">+100 000</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Credit -->
+        <div class="bank-screen" id="bs-bcredit">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Credit & Scoring</h2>
+          <div class="bank-grid-2">
+            <div class="bcard">
+              <div class="bcard-title">Votre score de credit WASI</div>
+              <div class="credit-gauge">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E1DB" stroke-width="10"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#C8922A" stroke-width="10"
+                    stroke-dasharray="314" stroke-dashoffset="72" stroke-linecap="round" id="credit-arc"/>
+                </svg>
+                <div class="score-text"><span class="val" id="credit-score-val">725</span><span class="lab">/ 900</span></div>
+              </div>
+              <div style="text-align:center;font-size:.88rem;color:var(--bank-green);font-weight:600;">Bon</div>
+              <div style="margin-top:16px;">
+                <div class="tf-row"><span class="lab">Historique paiements</span><span class="val" style="color:var(--bank-green);">Excellent</span></div>
+                <div class="tf-row"><span class="lab">Utilisation credit</span><span class="val">32%</span></div>
+                <div class="tf-row"><span class="lab">Anciennete compte</span><span class="val">3 ans</span></div>
+                <div class="tf-row"><span class="lab">Dernier incident</span><span class="val" style="color:var(--bank-green);">Aucun</span></div>
+              </div>
+            </div>
+            <div class="bcard">
+              <div class="bcard-title">Simulateur de credit</div>
+              <div class="bform-group">
+                <label class="bform-label">Montant souhaite (XOF)</label>
+                <input type="number" class="bform-input" id="cred-amount" value="5000000" oninput="calcCredit()">
+              </div>
+              <div class="bform-group">
+                <label class="bform-label">Duree (mois)</label>
+                <select class="bform-select" id="cred-months" onchange="calcCredit()">
+                  <option value="6">6 mois</option>
+                  <option value="12" selected>12 mois</option>
+                  <option value="24">24 mois</option>
+                  <option value="36">36 mois</option>
+                  <option value="60">60 mois</option>
+                </select>
+              </div>
+              <div class="bform-group">
+                <label class="bform-label">Taux annuel</label>
+                <input type="text" class="bform-input" value="8.5%" readonly style="background:#F0EDE6;">
+              </div>
+              <div class="tf-summary" id="cred-summary">
+                <div class="tf-row"><span class="lab">Montant emprunte</span><span class="val" id="cred-disp-amt">5 000 000 XOF</span></div>
+                <div class="tf-row"><span class="lab">Mensualite</span><span class="val" id="cred-disp-month">-- XOF</span></div>
+                <div class="tf-row"><span class="lab">Cout total interets</span><span class="val" id="cred-disp-interest">-- XOF</span></div>
+                <div class="tf-row total"><span class="lab">Total rembourse</span><span class="val" id="cred-disp-total">-- XOF</span></div>
+              </div>
+              <button class="bform-btn" onclick="showNotif('Demande de credit soumise. Traitement sous 48h.','success')">Soumettre la demande</button>
+            </div>
+          </div>
+        </div>
+        <!-- History -->
+        <div class="bank-screen" id="bs-bhistory">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Historique complet</h2>
+          <div class="bcard">
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+              <select class="bform-select" style="width:auto;" id="hist-filter" onchange="renderHistory()">
+                <option value="all">Toutes operations</option>
+                <option value="in">Entrees</option>
+                <option value="out">Sorties</option>
+              </select>
+              <input type="text" class="bform-input" style="width:auto;flex:1;" placeholder="Rechercher..." id="hist-search" oninput="renderHistory()">
+            </div>
+            <div class="btx-list" id="hist-list"></div>
+          </div>
+        </div>
+        <!-- Settings -->
+        <div class="bank-screen" id="bs-bsettings">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Parametres</h2>
+          <div class="bcard">
+            <div class="settings-group">
+              <h3>Securite</h3>
+              <div class="settings-row">
+                <div><div class="label">Authentification a deux facteurs</div><div class="desc">Protegez votre compte avec un code SMS</div></div>
+                <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              </div>
+              <div class="settings-row">
+                <div><div class="label">Notifications par email</div><div class="desc">Recevez un email pour chaque transaction</div></div>
+                <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              </div>
+              <div class="settings-row">
+                <div><div class="label">Alerte solde bas</div><div class="desc">Notification quand le solde passe sous 50 000 XOF</div></div>
+                <button class="toggle" onclick="this.classList.toggle('on')"></button>
+              </div>
+            </div>
+            <div class="settings-group">
+              <h3>Preferences</h3>
+              <div class="settings-row">
+                <div><div class="label">Devise d'affichage</div><div class="desc">Devise principale pour les montants</div></div>
+                <select class="bform-select" style="width:120px;">
+                  <option>XOF</option>
+                  <option>EUR</option>
+                  <option>USD</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div><div class="label">Langue</div><div class="desc">Langue de l'interface</div></div>
+                <select class="bform-select" style="width:120px;">
+                  <option>Francais</option>
+                  <option>English</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <div><div class="label">Mode sombre DEX</div><div class="desc">Theme sombre pour les ecrans Intelligence et DEX</div></div>
+                <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              </div>
+            </div>
+            <div class="settings-group">
+              <h3>Compte</h3>
+              <div class="settings-row">
+                <div><div class="label">Identifiant WASI</div><div class="desc">WASI-USR-00421</div></div>
+                <span style="font-size:.8rem;color:var(--bank-text2);">Copier</span>
+              </div>
+              <div class="settings-row">
+                <div><div class="label">Niveau de verification</div><div class="desc">KYC Niveau 2 - Verifie</div></div>
+                <span style="font-size:.8rem;color:var(--bank-green);font-weight:600;">Verifie</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ========== MOBILE COUNTRY PANEL ========== -->
+<div class="mobile-panel" id="mobile-country-panel">
+  <div class="mobile-panel-header">
+    <button class="back-btn" onclick="closeMobileCountries()">← Retour</button>
+    <div class="title" id="mobile-panel-title">Pays CEDEAO</div>
+  </div>
+  <div class="mobile-panel-body" id="mobile-panel-body">
+    <!-- Country list or detail rendered here by JS -->
+  </div>
+</div>
+
+<!-- ========== BASKET MODAL ========== -->
+<div class="basket-modal" id="basket-modal">
+  <div class="basket-box">
+    <h2>Creer un panier personnalise</h2>
+    <div class="bform-group">
+      <label class="form-label" style="color:var(--text-secondary);">Nom du panier</label>
+      <input type="text" class="form-input" id="basket-name" placeholder="Mon Panier WASI">
+    </div>
+    <div style="color:var(--text-secondary);font-size:.78rem;margin-bottom:8px;">Selectionnez les ETF :</div>
+    <div class="basket-checks" id="basket-checks"></div>
+    <div class="basket-actions">
+      <button class="basket-cancel" onclick="closeBasketCreator()">Annuler</button>
+      <button class="basket-create" onclick="createBasket()">Creer le panier</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   WASI UNIFIED PLATFORM — COMPLETE JAVASCRIPT
+   ================================================================ */
+
+const API = 'https://wasi-backend-api.onrender.com';
+let token = null;
+let currentCountry = null;
+let chatHistory = [];
+let orderSide = 'buy';
+let selectedETF = null;
+let notifTimer = null;
+
+/* ========== DATA ========== */
+const COUNTRIES=[
+  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',score:58,trend:'\u2193',gdp:'$440B',risk:'Modere',coup:false},
+  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",score:72,trend:'\u2191',gdp:'$70B',risk:'Faible',coup:false},
+  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',score:65,trend:'\u2192',gdp:'$73B',risk:'Modere',coup:false},
+  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',score:70,trend:'\u2191',gdp:'$28B',risk:'Faible',coup:false},
+  {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',score:38,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true},
+  {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',score:35,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true},
+  {code:'GN',flag:'\u{1F1EC}\u{1F1F3}',name:'Guinee',score:42,trend:'\u2192',gdp:'$16B',risk:'Eleve',coup:true},
+  {code:'BJ',flag:'\u{1F1E7}\u{1F1EF}',name:'Benin',score:68,trend:'\u2191',gdp:'$18B',risk:'Faible',coup:false},
+  {code:'TG',flag:'\u{1F1F9}\u{1F1EC}',name:'Togo',score:55,trend:'\u2192',gdp:'$8B',risk:'Modere',coup:false},
+  {code:'NE',flag:'\u{1F1F3}\u{1F1EA}',name:'Niger',score:32,trend:'\u2193',gdp:'$14B',risk:'Eleve',coup:true},
+  {code:'MR',flag:'\u{1F1F2}\u{1F1F7}',name:'Mauritanie',score:50,trend:'\u2192',gdp:'$10B',risk:'Modere',coup:false},
+  {code:'GW',flag:'\u{1F1EC}\u{1F1FC}',name:'Guinee-Bissau',score:28,trend:'\u2193',gdp:'$2B',risk:'Eleve',coup:false},
+  {code:'SL',flag:'\u{1F1F8}\u{1F1F1}',name:'Sierra Leone',score:40,trend:'\u2192',gdp:'$4B',risk:'Eleve',coup:false},
+  {code:'LR',flag:'\u{1F1F1}\u{1F1F7}',name:'Liberia',score:37,trend:'\u2192',gdp:'$4B',risk:'Eleve',coup:false},
+  {code:'GM',flag:'\u{1F1EC}\u{1F1F2}',name:'Gambie',score:45,trend:'\u2192',gdp:'$2B',risk:'Modere',coup:false},
+  {code:'CV',flag:'\u{1F1E8}\u{1F1FB}',name:'Cap-Vert',score:74,trend:'\u2191',gdp:'$2B',risk:'Faible',coup:false},
+];
+
+const COUNTRY_DETAILS = {
+  NG: {capital:'Abuja',eco_center:'Lagos',president:'Bola Tinubu',pop:'223 M',currency:'Naira (NGN)',zone:'CEDEAO',resources:['Petrole','Gaz naturel','Etain','Cacao'],exports:['Petrole brut','GNL','Cacao','Caoutchouc'],growth:'+3.0%',inflation:'28.9%',dette_pib:'38%',
+    indices:{politique:45,economie:62,infra:55,juridique:52,humain:58,integration:68}},
+  CI: {capital:'Yamoussoukro',eco_center:'Abidjan',president:'Alassane Ouattara',pop:'28 M',currency:'Franc CFA (XOF)',zone:'UEMOA',resources:['Cacao','Cafe','Hevea','Or'],exports:['Cacao','Noix de cajou','Caoutchouc','Cafe'],growth:'+6.5%',inflation:'4.2%',dette_pib:'52%',
+    indices:{politique:72,economie:78,infra:58,juridique:65,humain:52,integration:82}},
+  GH: {capital:'Accra',eco_center:'Accra',president:'John Mahama',pop:'33 M',currency:'Cedi (GHS)',zone:'CEDEAO',resources:['Or','Cacao','Petrole','Diamants'],exports:['Or','Cacao','Petrole','Bois'],growth:'+4.7%',inflation:'22.8%',dette_pib:'72%',
+    indices:{politique:70,economie:58,infra:52,juridique:62,humain:60,integration:65}},
+  SN: {capital:'Dakar',eco_center:'Dakar',president:'Bassirou Diomaye Faye',pop:'18 M',currency:'Franc CFA (XOF)',zone:'UEMOA',resources:['Phosphates','Peche','Arachide','Gaz'],exports:['Or','Phosphates','Poisson','Arachide'],growth:'+8.3%',inflation:'3.8%',dette_pib:'68%',
+    indices:{politique:74,economie:72,infra:48,juridique:68,humain:55,integration:78}},
+  BF: {capital:'Ouagadougou',eco_center:'Ouagadougou',president:'Ibrahim Traore (militaire)',pop:'22 M',currency:'Franc CFA (XOF)',zone:'UEMOA (AES)',resources:['Or','Coton','Karite','Manganese'],exports:['Or','Coton','Karite','Sesame'],growth:'+3.5%',inflation:'5.8%',dette_pib:'42%',
+    indices:{politique:18,economie:42,infra:28,juridique:30,humain:35,integration:25}},
+  ML: {capital:'Bamako',eco_center:'Bamako',president:'Assimi Goita (militaire)',pop:'22 M',currency:'Franc CFA (XOF)',zone:'UEMOA (AES)',resources:['Or','Coton','Sel','Phosphates'],exports:['Or','Coton','Betail','Mangues'],growth:'+3.2%',inflation:'5.0%',dette_pib:'48%',
+    indices:{politique:15,economie:38,infra:22,juridique:25,humain:30,integration:20}},
+  GN: {capital:'Conakry',eco_center:'Conakry',president:'Mamadi Doumbouya (militaire)',pop:'14 M',currency:'Franc guineen (GNF)',zone:'CEDEAO (AES)',resources:['Bauxite','Or','Diamants','Fer'],exports:['Bauxite','Or','Alumine','Diamants'],growth:'+4.8%',inflation:'10.2%',dette_pib:'35%',
+    indices:{politique:22,economie:48,infra:25,juridique:32,humain:28,integration:30}},
+  BJ: {capital:'Porto-Novo',eco_center:'Cotonou',president:'Patrice Talon',pop:'13 M',currency:'Franc CFA (XOF)',zone:'UEMOA',resources:['Coton','Noix de cajou','Karite','Calcaire'],exports:['Coton','Noix de cajou','Ananas','Karite'],growth:'+5.8%',inflation:'3.5%',dette_pib:'44%',
+    indices:{politique:65,economie:72,infra:48,juridique:62,humain:48,integration:75}},
+  TG: {capital:'Lome',eco_center:'Lome',president:'Faure Gnassingbe',pop:'9 M',currency:'Franc CFA (XOF)',zone:'UEMOA',resources:['Phosphates','Calcaire','Coton','Cafe'],exports:['Phosphates','Coton','Ciment','Cafe'],growth:'+5.0%',inflation:'4.8%',dette_pib:'58%',
+    indices:{politique:42,economie:58,infra:52,juridique:48,humain:42,integration:65}},
+  NE: {capital:'Niamey',eco_center:'Niamey',president:'Abdourahamane Tchiani (militaire)',pop:'26 M',currency:'Franc CFA (XOF)',zone:'UEMOA (AES)',resources:['Uranium','Petrole','Or','Charbon'],exports:['Uranium','Petrole','Or','Oignons'],growth:'+2.0%',inflation:'6.5%',dette_pib:'45%',
+    indices:{politique:12,economie:28,infra:18,juridique:20,humain:22,integration:15}},
+  MR: {capital:'Nouakchott',eco_center:'Nouakchott',president:'Mohamed Ould Ghazouani',pop:'5 M',currency:'Ouguiya (MRU)',zone:'CEDEAO obs.',resources:['Fer','Peche','Or','Cuivre'],exports:['Minerai de fer','Poisson','Or','Cuivre'],growth:'+4.2%',inflation:'7.8%',dette_pib:'52%',
+    indices:{politique:52,economie:50,infra:35,juridique:42,humain:38,integration:40}},
+  GW: {capital:'Bissau',eco_center:'Bissau',president:'Umaro Sissoco Embalo',pop:'2 M',currency:'Franc CFA (XOF)',zone:'UEMOA',resources:['Noix de cajou','Bois','Poisson','Bauxite'],exports:['Noix de cajou','Poisson','Bois','Arachide'],growth:'+3.5%',inflation:'8.2%',dette_pib:'62%',
+    indices:{politique:18,economie:22,infra:12,juridique:15,humain:20,integration:35}},
+  SL: {capital:'Freetown',eco_center:'Freetown',president:'Julius Maada Bio',pop:'8 M',currency:'Leone (SLL)',zone:'CEDEAO',resources:['Diamants','Rutile','Bauxite','Or'],exports:['Diamants','Rutile','Cacao','Cafe'],growth:'+3.8%',inflation:'35.2%',dette_pib:'68%',
+    indices:{politique:38,economie:35,infra:22,juridique:32,humain:28,integration:42}},
+  LR: {capital:'Monrovia',eco_center:'Monrovia',president:'Joseph Boakai',pop:'5 M',currency:'Dollar liberien (LRD)',zone:'CEDEAO',resources:['Fer','Caoutchouc','Or','Diamants'],exports:['Fer','Caoutchouc','Or','Bois'],growth:'+4.0%',inflation:'12.5%',dette_pib:'45%',
+    indices:{politique:40,economie:32,infra:18,juridique:28,humain:25,integration:38}},
+  GM: {capital:'Banjul',eco_center:'Banjul',president:'Adama Barrow',pop:'3 M',currency:'Dalasi (GMD)',zone:'CEDEAO',resources:['Arachide','Poisson','Tourisme','Bois'],exports:['Arachide','Poisson','Noix de cajou','Coton'],growth:'+5.2%',inflation:'11.8%',dette_pib:'58%',
+    indices:{politique:48,economie:42,infra:30,juridique:38,humain:35,integration:52}},
+  CV: {capital:'Praia',eco_center:'Praia',president:'Jose Maria Neves',pop:'0.6 M',currency:'Escudo (CVE)',zone:'CEDEAO',resources:['Poisson','Sel','Tourisme','Banane'],exports:['Poisson','Chaussures','Vetements','Banane'],growth:'+5.5%',inflation:'3.2%',dette_pib:'110%',
+    indices:{politique:82,economie:68,infra:62,juridique:72,humain:70,integration:58}},
+};
+
+const BRVM_STOCKS=[
+  {name:'Sonatel',ticker:'SNTS',sector:'Telecom',price:16500,change:2.1,volume:45200,per:12.3,signal:'ACHAT'},
+  {name:'Ecobank CI',ticker:'ECOC',sector:'Banque',price:6200,change:-0.8,volume:28100,per:8.7,signal:'NEUTRE'},
+  {name:'SGBF',ticker:'SGBF',sector:'Banque',price:5400,change:1.5,volume:12300,per:9.2,signal:'ACHAT'},
+  {name:'SAPH',ticker:'SAPH',sector:'Agri',price:3800,change:-1.2,volume:8900,per:7.1,signal:'VENTE'},
+  {name:'Palm CI',ticker:'PALC',sector:'Agri',price:4150,change:0.3,volume:15600,per:6.8,signal:'NEUTRE'},
+  {name:'SIFCA',ticker:'SIFC',sector:'Agri',price:4700,change:1.8,volume:9200,per:10.4,signal:'ACHAT'},
+  {name:'Onatel BF',ticker:'ONTBF',sector:'Telecom',price:7100,change:-0.5,volume:6700,per:11.1,signal:'NEUTRE'},
+  {name:'BOA Benin',ticker:'BOAB',sector:'Banque',price:5900,change:0.9,volume:11400,per:8.9,signal:'ACHAT'},
+  {name:'Coris Bank',ticker:'CBIBF',sector:'Banque',price:8450,change:2.4,volume:7800,per:10.2,signal:'ACHAT'},
+  {name:'Total CI',ticker:'TTLC',sector:'Energie',price:2150,change:-0.3,volume:19500,per:5.6,signal:'NEUTRE'},
+  {name:'Solibra',ticker:'SLBC',sector:'Industrie',price:12800,change:0.7,volume:3200,per:14.5,signal:'NEUTRE'},
+  {name:'Nestle CI',ticker:'NTLC',sector:'Conso.',price:7500,change:1.1,volume:4100,per:16.2,signal:'ACHAT'},
+];
+
+const WASI_ETFS=[
+  {ticker:'WASI-UEMOA',name:'WASI UEMOA Index Fund',strategy:'Indice large UEMOA',nav:4850,change:1.2,aum:'1.8 Mds',fees:'0.45%',score:72},
+  {ticker:'WASI-SAHEL',name:'WASI Sahel Resilience',strategy:'Resilience zone Sahel',nav:2100,change:-0.8,aum:'420 M',fees:'0.65%',score:38},
+  {ticker:'WASI-AGRI',name:'WASI Agri Africa',strategy:'Secteur agricole',nav:1680,change:0.5,aum:'680 M',fees:'0.55%',score:61},
+  {ticker:'WASI-INFRA',name:'WASI Infra CEDEAO',strategy:'Infrastructure',nav:3200,change:1.8,aum:'520 M',fees:'0.50%',score:65},
+  {ticker:'WASI-TELECOM',name:'WASI Telecom West',strategy:'Telecommunications',nav:5400,change:2.3,aum:'340 M',fees:'0.40%',score:70},
+  {ticker:'WASI-FINTECH',name:'WASI Fintech Afri',strategy:'Fintech & digital',nav:2750,change:3.1,aum:'180 M',fees:'0.75%',score:58},
+  {ticker:'WASI-SHIPPING',name:'WASI Shipping Index',strategy:'Transport maritime',nav:6100,change:-0.4,aum:'210 M',fees:'0.60%',score:55},
+  {ticker:'WASI-CRYPTO',name:'WASI Crypto Bridge',strategy:'Crypto-XOF bridge',nav:1200,change:4.2,aum:'90 M',fees:'0.85%',score:42},
+];
+
+const CRYPTO_PRICES=[
+  {token:'BTC',name:'Bitcoin',usd:67240,change:1.8,cap:'$1.32T'},
+  {token:'ETH',name:'Ethereum',usd:3520,change:2.4,cap:'$423B'},
+  {token:'USDC',name:'USD Coin',usd:1.00,change:0.0,cap:'$33B'},
+  {token:'MATIC',name:'Polygon',usd:0.72,change:-1.2,cap:'$7.1B'},
+];
+
+const FX_RATES=[
+  {pair:'EUR/XOF',buy:655.957,sell:655.957,spread:'0.00',change:'0.00%',bank:'BCEAO (fixe)'},
+  {pair:'USD/XOF',buy:602.50,sell:605.80,spread:'3.30',change:'+0.12%',bank:'BCEAO'},
+  {pair:'GBP/XOF',buy:764.20,sell:768.40,spread:'4.20',change:'-0.08%',bank:'BCEAO'},
+  {pair:'NGN/XOF',buy:0.38,sell:0.41,spread:'0.03',change:'-1.2%',bank:'CBN / BCEAO'},
+  {pair:'GHS/XOF',buy:41.20,sell:43.80,spread:'2.60',change:'+0.5%',bank:'BOG / BCEAO'},
+  {pair:'XOF/CNY',buy:0.012,sell:0.013,spread:'0.001',change:'+0.3%',bank:'PBOC / BCEAO'},
+];
+
+const XOF_PER_USD=603;
+
+const PORTFOLIO_HOLDINGS=[
+  {ticker:'SNTS',name:'Sonatel',qty:50,pru:15800,current:16500},
+  {ticker:'ECOC',name:'Ecobank CI',qty:100,pru:6400,current:6200},
+  {ticker:'CBIBF',name:'Coris Bank',qty:30,pru:7900,current:8450},
+  {ticker:'SIFC',name:'SIFCA',qty:80,pru:4500,current:4700},
+  {ticker:'WASI-UEMOA',name:'WASI UEMOA ETF',qty:20,pru:4600,current:4850},
+];
+
+const BANK_TRANSACTIONS=[
+  {type:'in',desc:'Virement recu - Salaire',date:'22 mars 2026',amount:1250000},
+  {type:'out',desc:'Virement UEMOA - Fournisseur',date:'21 mars 2026',amount:380000},
+  {type:'out',desc:'Paiement carte - Supermarche',date:'20 mars 2026',amount:45600},
+  {type:'in',desc:'Depot Mobile Money',date:'19 mars 2026',amount:200000},
+  {type:'out',desc:'Retrait DAB',date:'18 mars 2026',amount:100000},
+  {type:'in',desc:'Remboursement - Kofi A.',date:'17 mars 2026',amount:75000},
+  {type:'out',desc:'Abonnement Internet',date:'16 mars 2026',amount:35000},
+  {type:'out',desc:'Achat BRVM - SNTS x10',date:'15 mars 2026',amount:165000},
+  {type:'in',desc:'Dividende Sonatel',date:'14 mars 2026',amount:42000},
+  {type:'out',desc:'Virement international',date:'13 mars 2026',amount:520000},
+  {type:'in',desc:'Depot especes',date:'12 mars 2026',amount:300000},
+  {type:'out',desc:'Facture electricite',date:'11 mars 2026',amount:28500},
+];
+
+/* ========== UTILITY ========== */
+function fmt(n) {
+  if (n == null) return '--';
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function fmtDec(n, d) {
+  if (n == null) return '--';
+  return n.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function chgClass(v) { return v > 0 ? 'up' : v < 0 ? 'dn' : 'flat'; }
+function chgSign(v) { return v > 0 ? '+' + v.toFixed(1) + '%' : v.toFixed(1) + '%'; }
+function scoreClass(s) { return s >= 65 ? 'high' : s >= 45 ? 'mid' : 'low'; }
+
+/* ========== NOTIFICATIONS ========== */
+function showNotif(msg, type) {
+  const bar = document.getElementById('notif-bar');
+  document.getElementById('notif-msg').textContent = msg;
+  bar.className = 'show ' + (type || 'info');
+  if (notifTimer) clearTimeout(notifTimer);
+  notifTimer = setTimeout(hideNotif, 5000);
+}
+function hideNotif() {
+  document.getElementById('notif-bar').className = '';
+  if (notifTimer) { clearTimeout(notifTimer); notifTimer = null; }
+}
+
+/* ========== ACCESS GATE ========== */
+function validateGate() {
+  const input = document.getElementById('gate-key');
+  const key = input.value.trim().toUpperCase();
+  // Accept WASI-DEMO-DM01 or pattern WASI-XXXX-XX##
+  const valid = key === 'WASI-DEMO-DM01' || /^WASI-[A-Z]{4}-[A-Z]{2}\d{2}$/.test(key);
+  if (!valid) {
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 500);
+    return;
+  }
+  token = 'demo_token_' + Date.now();
+  document.getElementById('access-gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initApp();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('access-gate').style.display !== 'none') {
+    validateGate();
+  }
+});
+
+/* ========== INIT ========== */
+function initApp() {
+  renderTicker();
+  renderCountries();
+  renderComposite();
+  renderBRVM();
+  renderETFs();
+  renderCrypto();
+  renderFX();
+  renderPortfolio();
+  renderOrderBook();
+  populateOrderTickers();
+  calcOrder();
+  calcSwap();
+  renderBankDashboard();
+  renderHistory();
+  calcCredit();
+  showNotif('Bienvenue sur la plateforme WASI. Mode demo actif.', 'success');
+}
+
+/* ========== SCREEN NAVIGATION ========== */
+function showScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('#main-nav button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function showBankScreen(id, btn) {
+  document.querySelectorAll('.bank-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('bs-' + id).classList.add('active');
+  document.querySelectorAll('#bank-nav .bank-nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function navBankBtn(label) {
+  const btns = document.querySelectorAll('#bank-nav .bank-nav-btn');
+  for (const b of btns) {
+    if (b.textContent.trim().includes(label)) {
+      b.classList.add('active');
+      return b;
+    }
+  }
+  return null;
+}
+
+function switchDexTab(tab, btn) {
+  document.querySelectorAll('.dex-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.querySelectorAll('#dex-tabs .dex-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+/* ========== TICKER ========== */
+function renderTicker() {
+  let html = '';
+  BRVM_STOCKS.forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)}</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  FX_RATES.forEach(f => {
+    const cls = f.change.includes('+') ? 'up' : f.change.includes('-') ? 'dn' : 'flat';
+    html += `<span class="ticker-item"><span class="sym">${f.pair}</span><span class="val">${f.buy}</span><span class="chg ${cls}">${f.change}</span></span>`;
+  });
+  CRYPTO_PRICES.forEach(c => {
+    const cls = chgClass(c.change);
+    html += `<span class="ticker-item"><span class="sym">${c.token}</span><span class="val">$${fmt(c.usd)}</span><span class="chg ${cls}">${chgSign(c.change)}</span></span>`;
+  });
+  // duplicate for seamless scroll
+  document.getElementById('ticker-track').innerHTML = html + html;
+}
+
+/* ========== COUNTRIES ========== */
+function renderCountries() {
+  const el = document.getElementById('country-list');
+  el.innerHTML = COUNTRIES.map(c => {
+    const sc = scoreClass(c.score);
+    return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="selectCountry('${c.code}')">
+      <span class="flag">${c.flag}</span>
+      <span class="cname">${c.name}</span>
+      <span class="cscore ${sc}">${c.score}</span>
+      <span class="ctrend">${c.trend}</span>
+      ${c.coup ? '<span class="coup-badge">COUP</span>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function selectCountry(code) {
+  currentCountry = code;
+  const c = COUNTRIES.find(x => x.code === code);
+  document.getElementById('chat-focus').textContent = 'Focus: ' + c.name;
+  renderCountries();
+  // On mobile, show country detail
+  if (window.innerWidth <= 640) {
+    showMobileCountryDetail(code);
+  }
+}
+
+/* ========== MOBILE COUNTRY PANEL ========== */
+let mobileCountryView = 'list'; // 'list' or 'detail'
+
+function isMobile() { return window.innerWidth <= 640; }
+
+function openMobileCountries() {
+  mobileCountryView = 'list';
+  renderMobileCountryList();
+  document.getElementById('mobile-panel-title').textContent = 'Pays CEDEAO (16)';
+  document.getElementById('mobile-country-panel').classList.add('show');
+}
+
+function closeMobileCountries() {
+  if (mobileCountryView === 'detail') {
+    // Go back to list
+    mobileCountryView = 'list';
+    renderMobileCountryList();
+    document.getElementById('mobile-panel-title').textContent = 'Pays CEDEAO (16)';
+  } else {
+    document.getElementById('mobile-country-panel').classList.remove('show');
+  }
+}
+
+function renderMobileCountryList() {
+  const body = document.getElementById('mobile-panel-body');
+  // Composite score summary
+  const avg = Math.round(COUNTRIES.reduce((s, c) => s + c.score, 0) / COUNTRIES.length);
+  let html = `<div style="text-align:center;padding:16px;margin-bottom:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);">
+    <div style="font-size:2.2rem;font-weight:700;color:var(--gold);">${avg}</div>
+    <div style="font-size:.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Composite WASI / 100</div>
+  </div>`;
+
+  html += COUNTRIES.map(c => {
+    const sc = scoreClass(c.score);
+    const col = c.score >= 65 ? 'var(--green)' : c.score >= 45 ? 'var(--orange)' : 'var(--red)';
+    return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="showMobileCountryDetail('${c.code}')" style="padding:12px;">
+      <span class="flag" style="font-size:1.6rem;">${c.flag}</span>
+      <span style="flex:1;">
+        <span class="cname" style="display:block;font-size:.9rem;font-weight:500;">${c.name}</span>
+        <span style="font-size:.72rem;color:var(--text-dim);">${c.gdp} · ${c.risk}</span>
+      </span>
+      <span class="cscore ${sc}" style="font-size:.9rem;min-width:36px;text-align:center;">${c.score}</span>
+      <span class="ctrend">${c.trend}</span>
+      ${c.coup ? '<span class="coup-badge">COUP</span>' : ''}
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+}
+
+function showMobileCountryDetail(code) {
+  mobileCountryView = 'detail';
+  currentCountry = code;
+  const c = COUNTRIES.find(x => x.code === code);
+  const d = COUNTRY_DETAILS[code];
+  document.getElementById('chat-focus').textContent = 'Focus: ' + c.name;
+  document.getElementById('mobile-panel-title').textContent = c.flag + ' ' + c.name;
+  document.getElementById('mobile-country-panel').classList.add('show');
+  renderCountries();
+
+  if (!d) {
+    document.getElementById('mobile-panel-body').innerHTML = '<div style="padding:20px;color:var(--text-dim);">Details non disponibles.</div>';
+    return;
+  }
+
+  const scoreCol = c.score >= 65 ? 'var(--green)' : c.score >= 45 ? 'var(--orange)' : 'var(--red)';
+  const riskCol = c.risk === 'Faible' ? 'var(--green)' : c.risk === 'Modere' ? 'var(--orange)' : 'var(--red)';
+
+  function bar(label, val) {
+    const col = val >= 65 ? 'var(--green)' : val >= 45 ? 'var(--orange)' : 'var(--red)';
+    return `<div class="cd-bar-row">
+      <span class="lab">${label}</span>
+      <div class="cd-bar-wrap"><div class="cd-bar-fill" style="width:${val}%;background:${col};"></div></div>
+      <span class="val" style="color:${col};">${val}</span>
+    </div>`;
+  }
+
+  let html = `
+    <div class="country-detail-card">
+      <div class="cd-header">
+        <span class="cd-flag">${c.flag}</span>
+        <div>
+          <div class="cd-name">${c.name}</div>
+          <div class="cd-code">${c.code} · ${d.zone}</div>
+        </div>
+        <div class="cd-score-wrap">
+          <div class="cd-score" style="color:${scoreCol};">${c.score}</div>
+          <div class="cd-score-label">WASI Score</div>
+        </div>
+      </div>
+
+      <div class="cd-grid">
+        <div class="cd-stat"><div class="label">Capital</div><div class="value">${d.capital}</div></div>
+        <div class="cd-stat"><div class="label">Centre economique</div><div class="value">${d.eco_center}</div></div>
+        <div class="cd-stat"><div class="label">President</div><div class="value">${d.president}</div></div>
+        <div class="cd-stat"><div class="label">Population</div><div class="value">${d.pop}</div></div>
+        <div class="cd-stat"><div class="label">Devise</div><div class="value">${d.currency}</div></div>
+        <div class="cd-stat"><div class="label">PIB</div><div class="value">${c.gdp}</div></div>
+        <div class="cd-stat"><div class="label">Croissance</div><div class="value" style="color:var(--green);">${d.growth}</div></div>
+        <div class="cd-stat"><div class="label">Inflation</div><div class="value">${d.inflation}</div></div>
+        <div class="cd-stat"><div class="label">Dette/PIB</div><div class="value">${d.dette_pib}</div></div>
+        <div class="cd-stat"><div class="label">Risque</div><div class="value" style="color:${riskCol};">${c.risk}</div></div>
+      </div>
+      ${c.coup ? '<div style="padding:10px;background:var(--red-dim);border:1px solid var(--red);border-radius:var(--radius);margin-bottom:14px;font-size:.82rem;color:var(--red);">⚠ Regime militaire en place — sanctions CEDEAO potentielles</div>' : ''}
+    </div>
+
+    <div class="country-detail-card">
+      <div class="cd-section-title">Indice WASI par composante</div>
+      ${bar('Stabilite politique', d.indices.politique)}
+      ${bar('Environnement economique', d.indices.economie)}
+      ${bar('Infrastructure', d.indices.infra)}
+      ${bar('Cadre juridique', d.indices.juridique)}
+      ${bar('Capital humain', d.indices.humain)}
+      ${bar('Integration regionale', d.indices.integration)}
+    </div>
+
+    <div class="country-detail-card">
+      <div class="cd-section-title">Ressources naturelles</div>
+      <div class="cd-exports">
+        ${d.resources.map(r => `<span class="cd-export-tag">⛏ ${r}</span>`).join('')}
+      </div>
+
+      <div class="cd-section-title">Exportations principales</div>
+      <div class="cd-exports">
+        ${d.exports.map(e => `<span class="cd-export-tag">📦 ${e}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="cd-actions">
+      <button class="cd-action-btn primary" onclick="askAboutCountry('${c.name}')">💬 Interroger l'IA</button>
+      <button class="cd-action-btn secondary" onclick="closeMobileCountries()">← Retour</button>
+    </div>
+  `;
+
+  document.getElementById('mobile-panel-body').innerHTML = html;
+  document.getElementById('mobile-panel-body').scrollTop = 0;
+}
+
+function askAboutCountry(name) {
+  document.getElementById('mobile-country-panel').classList.remove('show');
+  document.getElementById('chat-input').value = 'Analyse complete de ' + name + ' : opportunites, risques, et previsions';
+  sendChat();
+}
+
+/* ========== COMPOSITE ========== */
+function renderComposite() {
+  const avg = Math.round(COUNTRIES.reduce((s, c) => s + c.score, 0) / COUNTRIES.length);
+  document.getElementById('comp-score-val').textContent = avg;
+
+  // Top 5
+  const sorted = [...COUNTRIES].sort((a, b) => b.score - a.score);
+  const top5 = sorted.slice(0, 5);
+  let html = '<div class="comp-section-title">Top 5 Stabilite</div>';
+  top5.forEach(c => {
+    const col = c.score >= 65 ? 'var(--green)' : c.score >= 45 ? 'var(--orange)' : 'var(--red)';
+    html += `<div class="comp-row">
+      <span class="clabel">${c.flag} ${c.name}</span>
+      <div class="comp-bar-wrap"><div class="comp-bar-fill" style="width:${c.score}%;background:${col}"></div></div>
+      <span class="cval" style="color:${col}">${c.score}</span>
+    </div>`;
+  });
+  document.getElementById('comp-top5').innerHTML = html;
+
+  // Coups
+  const coups = COUNTRIES.filter(c => c.coup);
+  let chtml = '<div class="comp-section-title">Pays sous regime militaire</div><div class="coup-list">';
+  coups.forEach(c => {
+    chtml += `<div class="coup-item"><span class="flag">${c.flag}</span><span class="cname">${c.name}</span><span class="cscore">${c.score}</span></div>`;
+  });
+  chtml += '</div>';
+  document.getElementById('comp-coups').innerHTML = chtml;
+
+  // Components
+  const components = [
+    {label: 'Stabilite politique', val: 52},
+    {label: 'Environnement economique', val: 58},
+    {label: 'Infrastructure', val: 41},
+    {label: 'Cadre juridique', val: 55},
+    {label: 'Capital humain', val: 47},
+    {label: 'Integration regionale', val: 63},
+  ];
+  let compHtml = '<div class="comp-section-title">Composantes WASI</div>';
+  components.forEach(co => {
+    const col = co.val >= 60 ? 'var(--green)' : co.val >= 45 ? 'var(--orange)' : 'var(--red)';
+    compHtml += `<div class="comp-row">
+      <span class="clabel">${co.label}</span>
+      <div class="comp-bar-wrap"><div class="comp-bar-fill" style="width:${co.val}%;background:${col}"></div></div>
+      <span class="cval" style="color:${col}">${co.val}</span>
+    </div>`;
+  });
+  document.getElementById('comp-components').innerHTML = compHtml;
+}
+
+/* ========== CHAT ========== */
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  appendChatMsg(msg, 'user');
+  chatHistory.push({role: 'user', content: msg});
+
+  const typing = document.getElementById('chat-typing');
+  typing.classList.add('show');
+  scrollChat();
+
+  const reply = await callWASIChat(msg, currentCountry ? COUNTRIES.find(c => c.code === currentCountry)?.name : 'CEDEAO');
+
+  typing.classList.remove('show');
+  appendChatMsg(reply, 'bot');
+  chatHistory.push({role: 'assistant', content: reply});
+  scrollChat();
+}
+
+function sendSugg(btn) {
+  document.getElementById('chat-input').value = btn.textContent;
+  sendChat();
+}
+
+function appendChatMsg(text, role) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.textContent = text;
+  document.getElementById('chat-messages').appendChild(div);
+  scrollChat();
+}
+
+function scrollChat() {
+  const el = document.getElementById('chat-messages');
+  el.scrollTop = el.scrollHeight;
+}
+
+async function callWASIChat(message, countryFocus) {
+  try {
+    const res = await fetch(API + '/wasi/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+      body: JSON.stringify({message: message, country_focus: countryFocus, history: chatHistory.slice(-10)})
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    return data.reply || data.response || 'Reponse non disponible.';
+  } catch(e) {
+    return generateLocalResponse(message, countryFocus);
+  }
+}
+
+function generateLocalResponse(message, focus) {
+  const msg = message.toLowerCase();
+  const country = focus || 'la zone CEDEAO';
+
+  if (msg.includes('corridor') || msg.includes('abidjan') || msg.includes('lagos')) {
+    return `Le corridor Abidjan-Lagos est l'axe commercial le plus dynamique d'Afrique de l'Ouest, reliant 5 pays (Cote d'Ivoire, Ghana, Togo, Benin, Nigeria) et representant environ 75% du commerce regional. Les principaux defis restent les postes de controle multiples, les delais douaniers et l'harmonisation des normes CEDEAO. Les investissements dans le projet d'autoroute Abidjan-Lagos (15.6 milliards USD) devraient reduire le temps de transit de 50% d'ici 2030.`;
+  }
+  if (msg.includes('risque') || msg.includes('sahel') || msg.includes('coup') || msg.includes('politique')) {
+    return `Le Sahel presente actuellement le profil de risque le plus eleve de la zone CEDEAO. Le Burkina Faso (score 38), le Mali (35), le Niger (32) et la Guinee (42) sont sous regime militaire ou de transition. Les facteurs de risque principaux incluent : instabilite securitaire (groupes armes), sanctions regionales, retrait des partenaires occidentaux, et pression sur le franc CFA. Recommandation WASI : prudence maximale, privilegier les investissements dans la zone cotiere (Cote d'Ivoire, Senegal, Benin).`;
+  }
+  if (msg.includes('brvm') || msg.includes('bourse') || msg.includes('action') || msg.includes('opportunit')) {
+    return `La BRVM affiche une dynamique positive en 2026. Les titres a surveiller : Sonatel (SNTS) reste le leader avec un PER de 12.3 et un signal d'achat fort. Coris Bank (CBIBF, +2.4%) et SIFCA (SIFC, +1.8%) beneficient de la reprise economique. Le secteur telecom surperforme avec la croissance du mobile money. WASI recommande une allocation 40% telecom, 30% banque, 20% agri, 10% energie pour un portefeuille equilibre zone UEMOA.`;
+  }
+  if (msg.includes('franc') || msg.includes('cfa') || msg.includes('monnaie') || msg.includes('devise')) {
+    return `Le franc CFA (XOF) reste arrime a l'euro au taux fixe de 655.957 XOF/EUR. Ce mecanisme offre stabilite et faible inflation dans la zone UEMOA, mais limite la competitivite a l'export. Le debat sur la reforme monetaire se poursuit avec le projet ECO de la CEDEAO. Le taux USD/XOF fluctue autour de 603 XOF. Impact pour les investisseurs : exposition de change minimale intra-UEMOA, mais risque EUR/USD a couvrir pour les operations internationales.`;
+  }
+  if (msg.includes('etf') || msg.includes('fonds') || msg.includes('indice')) {
+    return `Les ETF WASI offrent une exposition diversifiee a la zone CEDEAO. Le WASI-UEMOA (NAV 4 850 XOF, +1.2%) est le fonds phare avec 1.8 Mds XOF d'AUM. Le WASI-TELECOM (+2.3%) surperforme grace a la croissance du secteur. Pour les profils prudents, le WASI-INFRA (score 65) offre un bon couple rendement/risque. A eviter : WASI-SAHEL (score 38) en raison de l'instabilite regionale.`;
+  }
+  // Default
+  const c = COUNTRIES.find(x => x.name.toLowerCase().includes(msg) || x.code.toLowerCase() === msg);
+  if (c) {
+    return `${c.flag} ${c.name} — Score WASI: ${c.score}/100 (tendance: ${c.trend})\nPIB: ${c.gdp} | Risque: ${c.risk}${c.coup ? ' | ATTENTION: Regime militaire/transition' : ''}\n\nLe pays presente un profil ${c.risk.toLowerCase()} pour les investissements. ${c.score >= 65 ? 'Environnement favorable aux affaires avec un cadre institutionnel relativement stable.' : c.score >= 45 ? 'Opportunites selectionnees possibles mais vigilance requise sur le cadre reglementaire.' : 'Risque eleve. Recommandation WASI: exposition minimale, privilegier les instruments couverts.'}`;
+  }
+  return `Analyse WASI pour ${country} :\n\nLa zone CEDEAO (16 pays, 400+ millions d'habitants) presente un indice composite moyen de ${Math.round(COUNTRIES.reduce((s,c)=>s+c.score,0)/COUNTRIES.length)}/100. Les economies les plus performantes sont le Cap-Vert (74), la Cote d'Ivoire (72) et le Senegal (70). Les secteurs porteurs incluent les telecommunications, les services financiers et l'agriculture. N'hesitez pas a poser une question plus specifique sur un pays, un secteur ou un corridor commercial.`;
+}
+
+/* ========== BRVM ========== */
+function renderBRVM() {
+  const maxVol = Math.max(...BRVM_STOCKS.map(s => s.volume));
+  document.getElementById('brvm-body').innerHTML = BRVM_STOCKS.map(s => {
+    const cls = chgClass(s.change);
+    const volPct = Math.round((s.volume / maxVol) * 100);
+    return `<tr>
+      <td style="font-weight:600;">${s.name}</td>
+      <td style="color:var(--gold);">${s.ticker}</td>
+      <td>${s.sector}</td>
+      <td>${fmt(s.price)}</td>
+      <td class="${cls}">${chgSign(s.change)}</td>
+      <td><div class="vol-bar"><div class="vol-fill" style="width:${volPct}%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">${fmt(s.volume)}</span></td>
+      <td>${s.per}</td>
+      <td><span class="signal-badge ${s.signal}">${s.signal}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ========== ETF ========== */
+function renderETFs() {
+  document.getElementById('etf-body').innerHTML = WASI_ETFS.map((e, i) => {
+    const cls = chgClass(e.change);
+    const sc = scoreClass(e.score);
+    return `<tr onclick="selectETF(${i})" style="cursor:pointer;">
+      <td style="color:var(--gold);font-weight:600;">${e.ticker}</td>
+      <td>${e.name}</td>
+      <td style="font-size:.78rem;color:var(--text-secondary);">${e.strategy}</td>
+      <td>${fmt(e.nav)}</td>
+      <td class="${cls}">${chgSign(e.change)}</td>
+      <td>${e.aum}</td>
+      <td>${e.fees}</td>
+      <td><span class="cscore ${sc}" style="padding:2px 8px;border-radius:10px;font-size:.78rem;font-weight:600;">${e.score}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function selectETF(idx) {
+  selectedETF = WASI_ETFS[idx];
+  const e = selectedETF;
+  const cls = chgClass(e.change);
+  const det = document.getElementById('etf-detail');
+  det.classList.add('show');
+  det.innerHTML = `
+    <div class="etf-detail-name">${e.name} (${e.ticker})</div>
+    <div class="etf-detail-strat">${e.strategy}</div>
+    <div class="etf-detail-stats">
+      <div class="etf-stat"><div class="val">${fmt(e.nav)}</div><div class="lab">NAV (XOF)</div></div>
+      <div class="etf-stat"><div class="val ${cls}">${chgSign(e.change)}</div><div class="lab">Variation</div></div>
+      <div class="etf-stat"><div class="val">${e.aum}</div><div class="lab">AUM</div></div>
+    </div>
+    <div class="etf-detail-stats">
+      <div class="etf-stat"><div class="val">${e.fees}</div><div class="lab">Frais</div></div>
+      <div class="etf-stat"><div class="val">${e.score}</div><div class="lab">Score WASI</div></div>
+      <div class="etf-stat"><div class="val">${e.score >= 65 ? 'Faible' : e.score >= 45 ? 'Modere' : 'Eleve'}</div><div class="lab">Risque</div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="order-exec-btn buy" style="flex:1;" onclick="etfOrder('subscribe')">Souscrire</button>
+      <button class="order-exec-btn sell" style="flex:1;" onclick="etfOrder('redeem')">Racheter</button>
+    </div>`;
+}
+
+function etfOrder(type) {
+  if (!selectedETF) return;
+  const action = type === 'subscribe' ? 'Souscription' : 'Rachat';
+  showNotif(action + ' ETF ' + selectedETF.ticker + ' enregistree avec succes.', 'success');
+}
+
+/* ========== CRYPTO ========== */
+function renderCrypto() {
+  document.getElementById('crypto-body').innerHTML = CRYPTO_PRICES.map(c => {
+    const cls = chgClass(c.change);
+    return `<tr>
+      <td style="color:var(--gold);font-weight:600;">${c.token}</td>
+      <td>${c.name}</td>
+      <td>$${c.usd < 10 ? c.usd.toFixed(2) : fmt(c.usd)}</td>
+      <td class="${cls}">${chgSign(c.change)}</td>
+      <td>${c.cap}</td>
+    </tr>`;
+  }).join('');
+}
+
+function getCryptoXOF(token) {
+  if (token === 'XOF') return 1;
+  const c = CRYPTO_PRICES.find(x => x.token === token);
+  if (!c) return 0;
+  return c.usd * XOF_PER_USD;
+}
+
+function calcSwap() {
+  const fromToken = document.getElementById('swap-from').value;
+  const toToken = document.getElementById('swap-to').value;
+  const fromAmt = parseFloat(document.getElementById('swap-from-amt').value) || 0;
+
+  const fromXOF = getCryptoXOF(fromToken);
+  const toXOF = getCryptoXOF(toToken);
+
+  if (toXOF === 0) {
+    document.getElementById('swap-to-amt').value = '';
+    document.getElementById('swap-rate').textContent = 'Taux: --';
+    return;
+  }
+
+  const rate = fromXOF / toXOF;
+  const result = fromAmt * rate;
+
+  document.getElementById('swap-to-amt').value = result < 0.01 ? result.toFixed(8) : result < 100 ? result.toFixed(4) : Math.round(result);
+  document.getElementById('swap-rate').textContent = 'Taux: 1 ' + fromToken + ' = ' + (rate < 0.01 ? rate.toFixed(8) : rate < 100 ? rate.toFixed(4) : fmt(Math.round(rate))) + ' ' + toToken + ' (frais 0.5%)';
+}
+
+function doSwap() {
+  const from = document.getElementById('swap-from').value;
+  const to = document.getElementById('swap-to').value;
+  const amt = document.getElementById('swap-from-amt').value;
+  const result = document.getElementById('swap-to-amt').value;
+  if (!amt || !result || parseFloat(amt) <= 0) {
+    showNotif('Veuillez saisir un montant valide.', 'error');
+    return;
+  }
+  showNotif('Swap execute : ' + amt + ' ' + from + ' -> ' + result + ' ' + to, 'success');
+}
+
+/* ========== FX ========== */
+function renderFX() {
+  document.getElementById('fx-body').innerHTML = FX_RATES.map(f => {
+    const cls = f.change.includes('+') ? 'up' : f.change.includes('-') ? 'dn' : 'flat';
+    return `<tr>
+      <td style="color:var(--gold);font-weight:600;">${f.pair}</td>
+      <td>${f.buy}</td>
+      <td>${f.sell}</td>
+      <td>${f.spread}</td>
+      <td class="${cls}">${f.change}</td>
+      <td style="font-size:.78rem;color:var(--text-secondary);">${f.bank}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ========== PORTFOLIO ========== */
+function renderPortfolio() {
+  let totalVal = 0, totalPnl = 0;
+  const rows = PORTFOLIO_HOLDINGS.map(h => {
+    const val = h.qty * h.current;
+    const cost = h.qty * h.pru;
+    const pnl = val - cost;
+    const pnlPct = ((pnl / cost) * 100);
+    totalVal += val;
+    totalPnl += pnl;
+    const cls = pnl >= 0 ? 'up' : 'dn';
+    return `<tr>
+      <td style="font-weight:600;">${h.name} <span style="color:var(--gold);font-size:.75rem;">${h.ticker}</span></td>
+      <td>${h.qty}</td>
+      <td>${fmt(h.pru)}</td>
+      <td>${fmt(h.current)}</td>
+      <td class="${cls}">${pnl >= 0 ? '+' : ''}${fmt(pnl)}</td>
+      <td class="${cls}">${pnl >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%</td>
+    </tr>`;
+  });
+  document.getElementById('port-body').innerHTML = rows.join('');
+
+  const totalCost = PORTFOLIO_HOLDINGS.reduce((s, h) => s + h.qty * h.pru, 0);
+  const pnlPct = ((totalPnl / totalCost) * 100);
+  document.getElementById('port-summary').innerHTML = `
+    <div class="port-card"><div class="val">${fmt(totalVal)} <span style="font-size:.8rem;">XOF</span></div><div class="lab">Valeur totale</div></div>
+    <div class="port-card"><div class="val" style="color:${totalPnl >= 0 ? 'var(--green)' : 'var(--red)'};">${totalPnl >= 0 ? '+' : ''}${fmt(totalPnl)}</div><div class="lab">P&L total</div></div>
+    <div class="port-card"><div class="val" style="color:${pnlPct >= 0 ? 'var(--green)' : 'var(--red)'};">${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%</div><div class="lab">Performance</div></div>
+  `;
+}
+
+/* ========== ORDER BOOK ========== */
+function renderOrderBook() {
+  const basePrice = 16500;
+  let html = '';
+  // Asks (higher prices, reversed)
+  const asks = [];
+  for (let i = 5; i >= 1; i--) {
+    const price = basePrice + i * 25 + Math.round(Math.random() * 15);
+    const qty = Math.round(50 + Math.random() * 200);
+    asks.push(`<div class="ob-row ask"><span class="ob-price">${fmt(price)}</span><span class="ob-qty">${qty}</span></div>`);
+  }
+  html += asks.join('');
+  html += `<div class="ob-spread">${fmt(basePrice)} XOF (spread ~50)</div>`;
+  // Bids (lower prices)
+  for (let i = 1; i <= 5; i++) {
+    const price = basePrice - i * 25 - Math.round(Math.random() * 15);
+    const qty = Math.round(50 + Math.random() * 200);
+    html += `<div class="ob-row bid"><span class="ob-price">${fmt(price)}</span><span class="ob-qty">${qty}</span></div>`;
+  }
+  document.getElementById('orderbook-content').innerHTML = html;
+}
+
+/* ========== ORDER FORM ========== */
+function populateOrderTickers() {
+  const sel = document.getElementById('ord-ticker');
+  sel.innerHTML = BRVM_STOCKS.map(s => `<option value="${s.ticker}" data-price="${s.price}">${s.ticker} - ${s.name}</option>`).join('');
+}
+
+function setOrderSide(side) {
+  orderSide = side;
+  const buyBtn = document.getElementById('btn-buy');
+  const sellBtn = document.getElementById('btn-sell');
+  const execBtn = document.getElementById('ord-exec-btn');
+  buyBtn.className = 'order-side-btn' + (side === 'buy' ? ' active-buy' : '');
+  sellBtn.className = 'order-side-btn' + (side === 'sell' ? ' active-sell' : '');
+  execBtn.className = 'order-exec-btn ' + side;
+  execBtn.textContent = side === 'buy' ? 'ACHETER' : 'VENDRE';
+  calcOrder();
+}
+
+function calcOrder() {
+  const sel = document.getElementById('ord-ticker');
+  const opt = sel.options[sel.selectedIndex];
+  if (opt) {
+    const price = parseInt(opt.getAttribute('data-price'));
+    document.getElementById('ord-price').value = price;
+  }
+  const qty = parseInt(document.getElementById('ord-qty').value) || 0;
+  const price = parseInt(document.getElementById('ord-price').value) || 0;
+  const gross = qty * price;
+  const fee = Math.round(gross * 0.005);
+  const total = orderSide === 'buy' ? gross + fee : gross - fee;
+  document.getElementById('ord-gross').textContent = fmt(gross) + ' XOF';
+  document.getElementById('ord-fee').textContent = fmt(fee) + ' XOF';
+  document.getElementById('ord-total').textContent = fmt(total) + ' XOF';
+}
+
+function execOrder() {
+  const ticker = document.getElementById('ord-ticker').value;
+  const qty = document.getElementById('ord-qty').value;
+  const action = orderSide === 'buy' ? 'Achat' : 'Vente';
+  showNotif(action + ' de ' + qty + ' ' + ticker + ' execute avec succes.', 'success');
+}
+
+/* ========== BASKET CREATOR ========== */
+function openBasketCreator() {
+  const checks = document.getElementById('basket-checks');
+  checks.innerHTML = WASI_ETFS.map(e => `<label class="basket-check"><input type="checkbox" value="${e.ticker}"> ${e.ticker}</label>`).join('');
+  document.getElementById('basket-modal').classList.add('show');
+}
+
+function closeBasketCreator() {
+  document.getElementById('basket-modal').classList.remove('show');
+}
+
+function createBasket() {
+  const name = document.getElementById('basket-name').value.trim() || 'Mon Panier';
+  const checked = document.querySelectorAll('#basket-checks input:checked');
+  if (checked.length === 0) {
+    showNotif('Selectionnez au moins un ETF.', 'error');
+    return;
+  }
+  const tickers = Array.from(checked).map(c => c.value).join(', ');
+  closeBasketCreator();
+  showNotif('Panier "' + name + '" cree avec ' + checked.length + ' ETF : ' + tickers, 'success');
+}
+
+/* ========== BANKING DASHBOARD ========== */
+function renderBankDashboard() {
+  // Cards
+  const balance = 2847500;
+  const savings = 1200000;
+  const investments = PORTFOLIO_HOLDINGS.reduce((s, h) => s + h.qty * h.current, 0);
+  document.getElementById('bank-cards').innerHTML = `
+    <div class="bcard">
+      <div class="bcard-title">Solde courant</div>
+      <div class="bcard-big-val">${fmt(balance)} <span style="font-size:.9rem;font-weight:400;">XOF</span></div>
+      <div class="bcard-sub">~ ${fmt(Math.round(balance / XOF_PER_USD))} USD</div>
+    </div>
+    <div class="bcard">
+      <div class="bcard-title">Epargne</div>
+      <div class="bcard-big-val">${fmt(savings)} <span style="font-size:.9rem;font-weight:400;">XOF</span></div>
+      <div class="bcard-sub">Taux: 3.5% annuel</div>
+    </div>
+    <div class="bcard">
+      <div class="bcard-title">Investissements</div>
+      <div class="bcard-big-val">${fmt(investments)} <span style="font-size:.9rem;font-weight:400;">XOF</span></div>
+      <div class="bcard-sub">BRVM + ETF WASI</div>
+    </div>
+  `;
+
+  // Recent transactions
+  const recent = BANK_TRANSACTIONS.slice(0, 5);
+  document.getElementById('bank-recent-tx').innerHTML = recent.map(tx => {
+    const icon = tx.type === 'in' ? '\u2B07' : '\u2B06';
+    return `<div class="btx-item">
+      <div class="btx-icon ${tx.type}">${icon}</div>
+      <div class="btx-info"><div class="desc">${tx.desc}</div><div class="meta">${tx.date}</div></div>
+      <div class="btx-amt ${tx.type}">${tx.type === 'in' ? '+' : '-'}${fmt(tx.amount)}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ========== TRANSFER ========== */
+function calcBTransfer() {
+  const typeVal = document.getElementById('btf-type').value;
+  const [rate, minFee] = typeVal.split(',').map(Number);
+  const amount = parseFloat(document.getElementById('btf-amount').value) || 0;
+  const fee = Math.max(amount * rate, amount > 0 ? minFee : 0);
+  const total = amount + fee;
+  document.getElementById('btf-disp-amt').textContent = fmt(amount) + ' XOF';
+  document.getElementById('btf-disp-fee').textContent = fmt(Math.round(fee)) + ' XOF';
+  document.getElementById('btf-disp-total').textContent = fmt(Math.round(total)) + ' XOF';
+}
+
+function execTransfer() {
+  const benef = document.getElementById('btf-benef').value.trim();
+  const amount = parseFloat(document.getElementById('btf-amount').value) || 0;
+  if (!benef) { showNotif('Veuillez saisir un beneficiaire.', 'error'); return; }
+  if (amount <= 0) { showNotif('Veuillez saisir un montant valide.', 'error'); return; }
+  showNotif('Virement de ' + fmt(amount) + ' XOF vers ' + benef + ' execute avec succes.', 'success');
+  document.getElementById('btf-benef').value = '';
+  document.getElementById('btf-amount').value = '';
+  document.getElementById('btf-motif').value = '';
+  calcBTransfer();
+}
+
+/* ========== MOBILE MONEY ========== */
+function doMobileMoney(provider) {
+  document.getElementById('mm-operator').value = provider;
+  // Scroll to form
+  document.getElementById('mm-phone').focus();
+}
+
+function execMobileMoney() {
+  const operator = document.getElementById('mm-operator').value;
+  const op = document.getElementById('mm-op').value;
+  const phone = document.getElementById('mm-phone').value.trim();
+  const amount = parseFloat(document.getElementById('mm-amount').value) || 0;
+  if (!phone) { showNotif('Veuillez saisir un numero de telephone.', 'error'); return; }
+  if (amount <= 0) { showNotif('Veuillez saisir un montant valide.', 'error'); return; }
+  const action = op === 'deposit' ? 'Depot' : 'Retrait';
+  showNotif(action + ' ' + operator + ' de ' + fmt(amount) + ' XOF effectue.', 'success');
+  document.getElementById('mm-phone').value = '';
+  document.getElementById('mm-amount').value = '';
+}
+
+/* ========== CREDIT ========== */
+function calcCredit() {
+  const amount = parseFloat(document.getElementById('cred-amount').value) || 0;
+  const months = parseInt(document.getElementById('cred-months').value) || 12;
+  const annualRate = 0.085;
+  const monthlyRate = annualRate / 12;
+
+  let monthly, totalInterest, totalRepay;
+  if (monthlyRate === 0) {
+    monthly = amount / months;
+    totalInterest = 0;
+  } else {
+    monthly = amount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+    totalInterest = monthly * months - amount;
+  }
+  totalRepay = amount + totalInterest;
+
+  document.getElementById('cred-disp-amt').textContent = fmt(amount) + ' XOF';
+  document.getElementById('cred-disp-month').textContent = fmt(Math.round(monthly)) + ' XOF';
+  document.getElementById('cred-disp-interest').textContent = fmt(Math.round(totalInterest)) + ' XOF';
+  document.getElementById('cred-disp-total').textContent = fmt(Math.round(totalRepay)) + ' XOF';
+}
+
+/* ========== HISTORY ========== */
+function renderHistory() {
+  const filter = document.getElementById('hist-filter').value;
+  const search = (document.getElementById('hist-search').value || '').toLowerCase();
+
+  let txs = BANK_TRANSACTIONS;
+  if (filter === 'in') txs = txs.filter(t => t.type === 'in');
+  if (filter === 'out') txs = txs.filter(t => t.type === 'out');
+  if (search) txs = txs.filter(t => t.desc.toLowerCase().includes(search) || t.date.toLowerCase().includes(search));
+
+  document.getElementById('hist-list').innerHTML = txs.map(tx => {
+    const icon = tx.type === 'in' ? '\u2B07' : '\u2B06';
+    return `<div class="btx-item">
+      <div class="btx-icon ${tx.type}">${icon}</div>
+      <div class="btx-info"><div class="desc">${tx.desc}</div><div class="meta">${tx.date}</div></div>
+      <div class="btx-amt ${tx.type}">${tx.type === 'in' ? '+' : '-'}${fmt(tx.amount)} XOF</div>
+    </div>`;
+  }).join('') || '<div style="text-align:center;padding:20px;color:var(--bank-text2);">Aucune transaction trouvee.</div>';
+}
+
+</script>
+</body>
+</html>
