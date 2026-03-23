@@ -2583,31 +2583,31 @@ function validateGate() {
     setTimeout(() => input.classList.remove('error'), 500);
     return;
   }
-  // Try real API login first, fallback to demo token
-  (async () => {
-    try {
-      const res = await fetch(API + '/auth/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username: key, password: key})
-      });
-      if (res.ok) {
-        const data = await res.json();
-        token = data.access_token || ('demo_token_' + Date.now());
+  // Show app immediately, try API login in background
+  token = 'demo_token_' + Date.now();
+  document.getElementById('access-gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initApp();
+
+  // Try real API login in background (non-blocking)
+  try {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 5000);
+    fetch(API + '/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: key, password: key}),
+      signal: controller.signal
+    }).then(res => res.ok ? res.json() : null).then(data => {
+      if (data && data.access_token) {
+        token = data.access_token;
         if (data.user) {
           document.getElementById('user-name').textContent = data.user.name || 'Operateur';
           document.getElementById('user-tier').textContent = data.user.tier || 'DEMO';
         }
-      } else {
-        token = 'demo_token_' + Date.now();
       }
-    } catch(e) {
-      token = 'demo_token_' + Date.now();
-    }
-    document.getElementById('access-gate').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    initApp();
-  })();
+    }).catch(() => {});
+  } catch(e) {}
 }
 
 document.addEventListener('keydown', function(e) {
