@@ -443,7 +443,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   align-items: center;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   border-bottom: 1px solid var(--border);
 }
 .comp-row .clabel { color: var(--text-primary); }
@@ -485,10 +485,12 @@ input, select, textarea { font-family: inherit; outline: none; }
   border-bottom: 1px solid var(--border);
 }
 .dex-tab {
-  padding: 8px 16px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 6px 12px;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 500;
   border-radius: var(--radius);
   transition: all .2s;
@@ -526,7 +528,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .data-table td {
   padding: 10px 12px;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   border-bottom: 1px solid var(--border);
 }
 .data-table tr:hover { background: var(--bg-hover); }
@@ -561,7 +563,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   padding: 8px;
   border-radius: var(--radius);
   font-weight: 600;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
   transition: all .15s;
@@ -605,7 +607,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   border-radius: var(--radius);
   padding: 12px;
   margin-bottom: 12px;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 .order-summary-row {
   display: flex;
@@ -796,7 +798,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   box-shadow: 0 1px 4px rgba(0,0,0,.05);
 }
 .bcard-title {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--bank-text2);
   text-transform: uppercase;
@@ -1067,7 +1069,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   align-items: center;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   border-bottom: 1px solid var(--border);
 }
 .cd-bar-row .lab { color: var(--text-secondary); }
@@ -1106,7 +1108,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   flex: 1;
   padding: 10px;
   border-radius: var(--radius);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-align: center;
 }
@@ -1217,6 +1219,8 @@ input, select, textarea { font-family: inherit; outline: none; }
     gap: 2px;
   }
   .dex-tab {
+  white-space: nowrap;
+  flex-shrink: 0;
     padding: 6px 10px;
     font-size: 0.72rem;
     white-space: nowrap;
@@ -1314,7 +1318,9 @@ input, select, textarea { font-family: inherit; outline: none; }
   .gate-box { padding: 24px 14px; }
   .topbar-brand { font-size: 0.9rem; }
   .topbar-nav button { padding: 5px 8px; font-size: 0.68rem; }
-  .dex-tab { padding: 5px 8px; font-size: 0.68rem; }
+  .dex-tab {
+  white-space: nowrap;
+  flex-shrink: 0; padding: 5px 8px; font-size: 0.68rem; }
   .bank-nav-btn { padding: 6px 10px; font-size: 0.72rem; }
   .chat-msg { font-size: 0.78rem; }
   .chat-msg.bot { font-size: 0.74rem; }
@@ -1339,8 +1345,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   background: var(--bg-secondary); border-bottom: 1px solid var(--border);
 }
 .sm-tab {
-  padding: 8px 16px; background: transparent; color: var(--text-secondary);
-  font-size: 0.82rem; font-weight: 500; border-radius: var(--radius); transition: all .2s;
+  padding: 6px 12px; background: transparent; color: var(--text-secondary);
+  font-size: 0.78rem; font-weight: 500; border-radius: var(--radius); transition: all .2s;
 }
 .sm-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
 .sm-tab.active { color: var(--gold); background: rgba(200,146,42,.12); }
@@ -1383,7 +1389,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 .sm-comp-footer { display: flex; align-items: center; justify-content: space-between; }
 .sm-comp-count { font-size: 0.78rem; color: var(--text-secondary); }
 .sm-comp-btn {
-  padding: 8px 16px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600;
+  padding: 6px 12px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600;
   background: rgba(200,146,42,.12); color: var(--gold); border: 1px solid var(--gold-dim);
 }
 
@@ -1526,7 +1532,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 /* Action buttons */
 .compta-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
 .compta-action-btn {
-  padding: 8px 16px; font-size: 0.78rem; font-weight: 600;
+  padding: 6px 12px; font-size: 0.78rem; font-weight: 600;
   border-radius: var(--radius); transition: all .2s; cursor: pointer;
 }
 .compta-action-btn.primary { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #000; }
