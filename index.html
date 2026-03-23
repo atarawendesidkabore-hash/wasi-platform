@@ -1442,6 +1442,162 @@ input, select, textarea { font-family: inherit; outline: none; }
   .sm-stepper { flex-wrap: wrap; gap: 4px; }
   .sm-step { min-width: 80px; }
 }
+
+/* ========== COMPTA (OHADA) SCREEN ========== */
+#screen-compta { padding: 0; }
+#screen-compta.active { display: block; }
+.compta-header {
+  padding: 14px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.compta-header-title { font-size: 1rem; font-weight: 600; color: var(--gold); }
+.compta-header-sub { font-size: 0.75rem; color: var(--text-secondary); }
+.compta-tabs {
+  display: flex; gap: 4px; padding: 10px 20px;
+  background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.compta-tab {
+  padding: 7px 16px; font-size: 0.8rem; font-weight: 500;
+  background: transparent; color: var(--text-secondary); border-radius: var(--radius);
+  transition: all .2s; white-space: nowrap; flex-shrink: 0;
+}
+.compta-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
+.compta-tab.active { color: var(--gold); background: rgba(200,146,42,.12); }
+.compta-body { padding: 20px; max-height: calc(100vh - 180px); overflow-y: auto; }
+.compta-panel { display: none; }
+.compta-panel.active { display: block; }
+
+/* Pilotage metrics grid */
+.compta-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+.compta-metric-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;
+}
+.compta-metric-label { font-size: 0.72rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
+.compta-metric-val { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+.compta-metric-val.green { color: var(--green); }
+.compta-metric-val.red { color: var(--red); }
+.compta-metric-val.gold { color: var(--gold); }
+
+/* Compact accounting tables */
+.compta-table {
+  width: 100%; border-collapse: collapse; font-size: 0.78rem;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.compta-table th {
+  background: var(--bg-secondary); color: var(--gold); font-weight: 600;
+  padding: 10px 12px; text-align: left; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 2;
+}
+.compta-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+.compta-table tr:hover td { background: var(--bg-hover); }
+.compta-table .num-col { text-align: right; font-variant-numeric: tabular-nums; }
+.compta-table .debit-col { color: var(--red); text-align: right; }
+.compta-table .credit-col { color: var(--green); text-align: right; }
+.compta-table .total-row td { font-weight: 700; background: var(--bg-secondary); border-top: 2px solid var(--gold); }
+
+/* Action buttons */
+.compta-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.compta-action-btn {
+  padding: 8px 16px; font-size: 0.78rem; font-weight: 600;
+  border-radius: var(--radius); transition: all .2s; cursor: pointer;
+}
+.compta-action-btn.primary { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #000; }
+.compta-action-btn.secondary { background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); }
+.compta-action-btn:hover { opacity: .85; }
+
+/* Class filter pills */
+.compta-filters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.compta-filter-btn {
+  padding: 5px 12px; font-size: 0.72rem; font-weight: 500; border-radius: 12px;
+  background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); transition: all .2s;
+}
+.compta-filter-btn:hover { color: var(--text-primary); border-color: var(--gold-dim); }
+.compta-filter-btn.active { background: rgba(200,146,42,.15); color: var(--gold); border-color: var(--gold); }
+.compta-search {
+  padding: 7px 14px; background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary); font-size: 0.78rem; min-width: 200px;
+}
+.compta-search:focus { border-color: var(--gold); }
+
+/* Journal expandable rows */
+.compta-entry-detail { display: none; }
+.compta-entry-detail.open { display: table-row; }
+.compta-entry-detail td { background: var(--bg-secondary); padding: 10px 20px; }
+.compta-entry-lines { width: 100%; font-size: 0.75rem; }
+.compta-entry-lines td { padding: 4px 10px; border: none; }
+.compta-clickable { cursor: pointer; }
+.compta-clickable:hover td { background: rgba(200,146,42,.06); }
+
+/* Journal form */
+.compta-form { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-top: 16px; }
+.compta-form-title { font-size: 0.88rem; font-weight: 600; color: var(--gold); margin-bottom: 14px; }
+.compta-form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.compta-form-row .form-input, .compta-form-row select {
+  padding: 8px 12px; background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary); font-size: 0.78rem; flex: 1; min-width: 120px;
+}
+.compta-form-row select { cursor: pointer; }
+.compta-balance-ok { color: var(--green); font-weight: 600; font-size: 0.8rem; }
+.compta-balance-nok { color: var(--red); font-weight: 600; font-size: 0.8rem; }
+.compta-line-actions { display: flex; gap: 6px; align-items: center; }
+.compta-add-line {
+  padding: 5px 12px; font-size: 0.72rem; background: var(--bg-tertiary);
+  color: var(--gold); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer;
+}
+.compta-rm-line {
+  padding: 3px 8px; font-size: 0.72rem; background: var(--red-dim);
+  color: var(--red); border: none; border-radius: var(--radius); cursor: pointer;
+}
+
+/* Grand Livre account selector */
+.compta-select {
+  padding: 8px 14px; background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary); font-size: 0.78rem;
+  margin-bottom: 14px; min-width: 300px; cursor: pointer;
+}
+.compta-select:focus { border-color: var(--gold); }
+
+/* Bilan two-column */
+.compta-bilan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.compta-bilan-col {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px;
+}
+.compta-bilan-col h3 {
+  font-size: 0.88rem; font-weight: 600; margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.compta-bilan-col h3.actif-title { color: var(--cyan); }
+.compta-bilan-col h3.passif-title { color: var(--gold); }
+.compta-bilan-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
+.compta-bilan-line.total { font-weight: 700; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; }
+.compta-bilan-line .lbl { color: var(--text-secondary); }
+.compta-bilan-line .val { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.compta-equilibre { text-align: center; margin-top: 16px; padding: 10px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600; }
+.compta-equilibre.ok { background: rgba(0,230,118,.1); color: var(--green); border: 1px solid var(--green); }
+.compta-equilibre.nok { background: rgba(255,82,82,.1); color: var(--red); border: 1px solid var(--red); }
+
+/* Resultat sections */
+.compta-resultat-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
+.compta-resultat-section h3 { font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 10px; }
+.compta-resultat-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
+.compta-resultat-line.subtotal { font-weight: 700; border-top: 2px solid var(--border); border-bottom: none; padding-top: 8px; margin-top: 4px; }
+.compta-resultat-line.grand-total { font-weight: 700; font-size: 0.92rem; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .compta-metrics { grid-template-columns: repeat(2, 1fr); }
+  .compta-bilan-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .compta-metrics { grid-template-columns: 1fr; }
+  .compta-body { padding: 14px; }
+  .compta-tabs { padding: 8px 10px; gap: 2px; }
+  .compta-tab { padding: 6px 10px; font-size: 0.72rem; }
+}
 </style>
 </head>
 <body>
@@ -1474,6 +1630,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button onclick="showScreen('dex',this)">DEX</button>
       <button onclick="showScreen('bank',this)">Banking</button>
       <button onclick="showScreen('stock',this)">Stock Market</button>
+      <button onclick="showScreen('compta',this)">Comptabilite</button>
     </div>
     <div class="topbar-right">
       <span class="topbar-user">Bienvenue, <strong id="user-name">Operateur</strong></span>
@@ -2096,6 +2253,34 @@ input, select, textarea { font-family: inherit; outline: none; }
     </div>
   </div>
 
+  <!-- ===== COMPTA (OHADA-SYSCOHADA) SCREEN ===== -->
+  <div id="screen-compta" class="screen">
+    <div class="compta-header">
+      <div>
+        <div class="compta-header-title">OHADA-COMPTA &mdash; Module Comptable SYSCOHADA</div>
+        <div class="compta-header-sub">Plan comptable OHADA r&eacute;vis&eacute; &bull; Exercice 2026</div>
+      </div>
+    </div>
+    <div class="compta-tabs" id="compta-tabs">
+      <button class="compta-tab active" onclick="switchComptaTab('pilotage',this)">Pilotage</button>
+      <button class="compta-tab" onclick="switchComptaTab('plan',this)">Plan Comptable</button>
+      <button class="compta-tab" onclick="switchComptaTab('journal',this)">Journal</button>
+      <button class="compta-tab" onclick="switchComptaTab('grandlivre',this)">Grand Livre</button>
+      <button class="compta-tab" onclick="switchComptaTab('balance',this)">Balance</button>
+      <button class="compta-tab" onclick="switchComptaTab('bilan',this)">Bilan</button>
+      <button class="compta-tab" onclick="switchComptaTab('resultat',this)">Resultat</button>
+    </div>
+    <div class="compta-body">
+      <div class="compta-panel active" id="compta-panel-pilotage"></div>
+      <div class="compta-panel" id="compta-panel-plan"></div>
+      <div class="compta-panel" id="compta-panel-journal"></div>
+      <div class="compta-panel" id="compta-panel-grandlivre"></div>
+      <div class="compta-panel" id="compta-panel-balance"></div>
+      <div class="compta-panel" id="compta-panel-bilan"></div>
+      <div class="compta-panel" id="compta-panel-resultat"></div>
+    </div>
+  </div>
+
 </div><!-- /app -->
 
 <!-- ========== MOBILE COUNTRY PANEL ========== -->
@@ -2383,6 +2568,7 @@ function initApp() {
   renderStockMarket();
   renderSMEmetteurs();
   renderSMPortfolio();
+  renderComptaPilotage();
   showNotif('Bienvenue sur la plateforme WASI. Mode demo actif.', 'success');
 }
 
@@ -4863,6 +5049,420 @@ function submitPME() {
   var country = document.getElementById('pme-country').value;
   if (!country) { showNotif('Veuillez s\u00e9lectionner un pays.', 'error'); return; }
   showNotif('Candidature de "' + name + '" soumise avec succ\u00e8s. Analyse WASI sous 48h.', 'success');
+}
+
+/* ================================================================
+   OHADA-COMPTA MODULE
+   ================================================================ */
+
+const SYSCOHADA_CLASSES = [
+  {num:1,label:'Capitaux',families:['Capital','Reserves','Resultat net','Subventions'],color:'var(--blue)'},
+  {num:2,label:'Immobilisations',families:['Incorporelles','Corporelles','Financieres'],color:'var(--cyan)'},
+  {num:3,label:'Stocks',families:['Marchandises','Produits digitaux','En-cours'],color:'var(--orange)'},
+  {num:4,label:'Tiers',families:['Fournisseurs','Clients','Personnel','Fiscalite'],color:'var(--gold)'},
+  {num:5,label:'Tresorerie',families:['Banques','Caisse'],color:'var(--green)'},
+  {num:6,label:'Charges',families:['Achats','Services ext.','Personnel','Charges fin.'],color:'var(--red)'},
+  {num:7,label:'Produits',families:['Ventes','Services','Commissions','Data'],color:'var(--green)'},
+  {num:8,label:'Hors activites ordinaires',families:['Produits HAO','Charges HAO'],color:'var(--text-dim)'},
+];
+
+const COMPTA_ACCOUNTS = [
+  {code:'101000',label:'Capital social',class:1,debit:0,credit:10000000},
+  {code:'106100',label:'Reserves libres',class:1,debit:0,credit:2500000},
+  {code:'131000',label:'Resultat net de l\'exercice',class:1,debit:0,credit:1850000},
+  {code:'211000',label:'Logiciels et plateformes',class:2,debit:8500000,credit:0},
+  {code:'244000',label:'Mobilier et materiel de bureau',class:2,debit:2200000,credit:0},
+  {code:'371000',label:'Marchandises et produits digitaux',class:3,debit:450000,credit:0},
+  {code:'401100',label:'Fournisseurs',class:4,debit:0,credit:3200000},
+  {code:'411100',label:'Clients',class:4,debit:5800000,credit:0},
+  {code:'421000',label:'Personnel remuneration due',class:4,debit:0,credit:1500000},
+  {code:'447000',label:'Etat - impots et taxes dus',class:4,debit:0,credit:890000},
+  {code:'521000',label:'Banque - Ecobank',class:5,debit:4200000,credit:0},
+  {code:'571000',label:'Caisse XOF',class:5,debit:350000,credit:0},
+  {code:'601100',label:'Achats de services cloud',class:6,debit:1800000,credit:0},
+  {code:'616100',label:'Loyers et charges locatives',class:6,debit:2400000,credit:0},
+  {code:'641100',label:'Salaires et traitements',class:6,debit:9600000,credit:0},
+  {code:'671200',label:'Charges financieres',class:6,debit:420000,credit:0},
+  {code:'681000',label:'Dotations aux amortissements',class:6,debit:1700000,credit:0},
+  {code:'701100',label:'Ventes de solutions digitales',class:7,debit:0,credit:12500000},
+  {code:'706100',label:'Commissions bancaires et trading',class:7,debit:0,credit:4800000},
+  {code:'706200',label:'Frais de marche DEX',class:7,debit:0,credit:2100000},
+  {code:'707100',label:'Services data et intelligence WASI',class:7,debit:0,credit:3200000},
+  {code:'811000',label:'Produits hors activites ordinaires',class:8,debit:0,credit:180000},
+];
+
+const JOURNAL_ENTRIES = [
+  {id:'EC-001',date:'2026-03-01',ref:'FAC-2026-001',journal:'VT',desc:'Vente abonnement Terminal DEX - Mars',lines:[{account:'411100',label:'Client - Abonnement',debit:2450000,credit:0},{account:'701100',label:'Vente solutions digitales',debit:0,credit:2450000}]},
+  {id:'EC-002',date:'2026-03-01',ref:'SAL-2026-03',journal:'OD',desc:'Charges salariales Mars 2026',lines:[{account:'641100',label:'Salaires bruts',debit:800000,credit:0},{account:'421000',label:'Personnel remun. due',debit:0,credit:800000}]},
+  {id:'EC-003',date:'2026-03-05',ref:'ACH-2026-012',journal:'AC',desc:'Achat serveurs cloud AWS',lines:[{account:'601100',label:'Services cloud',debit:150000,credit:0},{account:'521000',label:'Banque Ecobank',debit:0,credit:150000}]},
+  {id:'EC-004',date:'2026-03-08',ref:'FAC-2026-002',journal:'VT',desc:'Commission trading BRVM',lines:[{account:'411100',label:'Client - Commission',debit:380000,credit:0},{account:'706100',label:'Commission trading',debit:0,credit:380000}]},
+  {id:'EC-005',date:'2026-03-10',ref:'LOY-2026-03',journal:'OD',desc:'Loyer bureaux Ouagadougou',lines:[{account:'616100',label:'Loyer Mars',debit:200000,credit:0},{account:'521000',label:'Banque Ecobank',debit:0,credit:200000}]},
+  {id:'EC-006',date:'2026-03-12',ref:'FAC-2026-003',journal:'VT',desc:'Frais marche DEX - Semaine 10',lines:[{account:'411100',label:'Client - DEX fees',debit:175000,credit:0},{account:'706200',label:'Frais marche DEX',debit:0,credit:175000}]},
+  {id:'EC-007',date:'2026-03-15',ref:'ENC-2026-008',journal:'BQ',desc:'Encaissement client Sonatel',lines:[{account:'521000',label:'Banque Ecobank',debit:1200000,credit:0},{account:'411100',label:'Client Sonatel',debit:0,credit:1200000}]},
+  {id:'EC-008',date:'2026-03-18',ref:'FAC-2026-004',journal:'VT',desc:'Vente data intelligence WASI',lines:[{account:'411100',label:'Client - Data WASI',debit:520000,credit:0},{account:'707100',label:'Services data WASI',debit:0,credit:520000}]},
+  {id:'EC-009',date:'2026-03-20',ref:'DIV-2026-01',journal:'OD',desc:'Dotation amortissement T1 2026',lines:[{account:'681000',label:'Dotation amort.',debit:425000,credit:0},{account:'244000',label:'Amort. materiel',debit:0,credit:425000}]},
+  {id:'EC-010',date:'2026-03-22',ref:'TVA-2026-03',journal:'OD',desc:'Declaration TVA Mars 2026',lines:[{account:'447000',label:'TVA collectee',debit:0,credit:445500},{account:'445000',label:'TVA deductible',debit:445500,credit:0}]},
+];
+
+var comptaClassFilter = 0;
+var comptaSearchTerm = '';
+var comptaJournalFilter = '';
+var comptaGrandLivreAccount = '';
+var newEntryLines = [{account:'',label:'',debit:0,credit:0},{account:'',label:'',debit:0,credit:0}];
+
+function fmtXOF(n) {
+  return Number(n).toLocaleString('fr-FR') + ' XOF';
+}
+
+function switchComptaTab(tab, btn) {
+  document.querySelectorAll('.compta-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('compta-panel-' + tab).classList.add('active');
+  document.querySelectorAll('#compta-tabs .compta-tab').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  if (tab === 'pilotage') renderComptaPilotage();
+  else if (tab === 'plan') renderPlanComptable();
+  else if (tab === 'journal') renderJournal();
+  else if (tab === 'grandlivre') renderGrandLivre();
+  else if (tab === 'balance') renderBalance();
+  else if (tab === 'bilan') renderBilan();
+  else if (tab === 'resultat') renderResultat();
+}
+
+function renderComptaPilotage() {
+  var el = document.getElementById('compta-panel-pilotage');
+  var produits = COMPTA_ACCOUNTS.filter(function(a){return a.class===7;}).reduce(function(s,a){return s+a.credit;},0);
+  var charges = COMPTA_ACCOUNTS.filter(function(a){return a.class===6;}).reduce(function(s,a){return s+a.debit;},0);
+  var resultat = produits - charges;
+  var tva = COMPTA_ACCOUNTS.filter(function(a){return a.code==='447000';}).reduce(function(s,a){return s+a.credit;},0);
+
+  var html = '<div class="compta-metrics">';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Ecritures postees</div><div class="compta-metric-val">' + JOURNAL_ENTRIES.length + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Comptes actifs</div><div class="compta-metric-val">' + COMPTA_ACCOUNTS.length + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Produits (Classe 7)</div><div class="compta-metric-val green">' + fmtXOF(produits) + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Charges (Classe 6)</div><div class="compta-metric-val red">' + fmtXOF(charges) + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Resultat net</div><div class="compta-metric-val ' + (resultat >= 0 ? 'gold' : 'red') + '">' + fmtXOF(resultat) + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">TVA nette</div><div class="compta-metric-val">' + fmtXOF(tva) + '</div></div>';
+  html += '</div>';
+
+  // Recent journal entries
+  html += '<h3 style="font-size:.88rem;color:var(--gold);margin-bottom:10px;">Ecritures recentes</h3>';
+  html += '<table class="compta-table"><thead><tr><th>DATE</th><th>REF</th><th>JOURNAL</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th></tr></thead><tbody>';
+  var recent = JOURNAL_ENTRIES.slice(-5).reverse();
+  recent.forEach(function(e) {
+    var td = e.lines.reduce(function(s,l){return s+l.debit;},0);
+    var tc = e.lines.reduce(function(s,l){return s+l.credit;},0);
+    html += '<tr><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.journal + '</td><td>' + e.desc + '</td><td class="debit-col">' + (td ? Number(td).toLocaleString('fr-FR') : '') + '</td><td class="credit-col">' + (tc ? Number(tc).toLocaleString('fr-FR') : '') + '</td></tr>';
+  });
+  html += '</tbody></table>';
+
+  // Quick actions
+  html += '<div class="compta-actions">';
+  html += '<button class="compta-action-btn primary" onclick="switchComptaTab(\'journal\',document.querySelectorAll(\'#compta-tabs .compta-tab\')[2])">Nouvelle ecriture</button>';
+  html += '<button class="compta-action-btn secondary" onclick="showNotif(\'Export Excel en cours...\',\'info\')">Exporter Excel</button>';
+  html += '<button class="compta-action-btn secondary" onclick="showNotif(\'Cloture exercice non disponible en mode demo.\',\'info\')">Cloture exercice</button>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+function renderPlanComptable() {
+  var el = document.getElementById('compta-panel-plan');
+  var html = '<div class="compta-filters">';
+  html += '<button class="compta-filter-btn ' + (comptaClassFilter === 0 ? 'active' : '') + '" onclick="comptaClassFilter=0;renderPlanComptable();">Toutes</button>';
+  SYSCOHADA_CLASSES.forEach(function(c) {
+    html += '<button class="compta-filter-btn ' + (comptaClassFilter === c.num ? 'active' : '') + '" onclick="comptaClassFilter=' + c.num + ';renderPlanComptable();" style="border-color:' + c.color + ';">' + c.num + ' - ' + c.label + '</button>';
+  });
+  html += '<input class="compta-search" type="text" placeholder="Rechercher code ou libelle..." value="' + (comptaSearchTerm||'') + '" oninput="comptaSearchTerm=this.value;renderPlanComptable();">';
+  html += '</div>';
+
+  var filtered = filterComptaAccounts();
+  html += '<table class="compta-table"><thead><tr><th>CODE</th><th>LIBELLE</th><th>CLASSE</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th></tr></thead><tbody>';
+  filtered.forEach(function(a) {
+    var cls = SYSCOHADA_CLASSES.find(function(c){return c.num===a.class;});
+    var clr = cls ? cls.color : 'var(--text-primary)';
+    html += '<tr><td style="color:' + clr + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td style="color:' + clr + ';">' + a.class + ' - ' + (cls?cls.label:'') + '</td><td class="debit-col">' + (a.debit ? Number(a.debit).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (a.credit ? Number(a.credit).toLocaleString('fr-FR') : '-') + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function filterComptaAccounts() {
+  return COMPTA_ACCOUNTS.filter(function(a) {
+    if (comptaClassFilter > 0 && a.class !== comptaClassFilter) return false;
+    if (comptaSearchTerm) {
+      var s = comptaSearchTerm.toLowerCase();
+      if (a.code.toLowerCase().indexOf(s) === -1 && a.label.toLowerCase().indexOf(s) === -1) return false;
+    }
+    return true;
+  });
+}
+
+function renderJournal() {
+  var el = document.getElementById('compta-panel-journal');
+  var types = ['','AC','VT','BQ','CA','OD','AN','EX'];
+  var html = '<div class="compta-filters">';
+  types.forEach(function(t) {
+    var label = t || 'Tous';
+    html += '<button class="compta-filter-btn ' + (comptaJournalFilter === t ? 'active' : '') + '" onclick="comptaJournalFilter=\'' + t + '\';renderJournal();">' + label + '</button>';
+  });
+  html += '</div>';
+
+  var entries = JOURNAL_ENTRIES.filter(function(e) {
+    return !comptaJournalFilter || e.journal === comptaJournalFilter;
+  });
+
+  html += '<table class="compta-table"><thead><tr><th>DATE</th><th>REF</th><th>JOURNAL</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th></tr></thead><tbody>';
+  entries.forEach(function(e) {
+    var td = e.lines.reduce(function(s,l){return s+l.debit;},0);
+    var tc = e.lines.reduce(function(s,l){return s+l.credit;},0);
+    html += '<tr class="compta-clickable" onclick="toggleEntryDetail(\'' + e.id + '\')"><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.journal + '</td><td>' + e.desc + '</td><td class="debit-col">' + Number(td).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(tc).toLocaleString('fr-FR') + '</td></tr>';
+    html += '<tr class="compta-entry-detail" id="detail-' + e.id + '"><td colspan="6"><table class="compta-entry-lines">';
+    e.lines.forEach(function(l) {
+      html += '<tr><td style="color:var(--text-dim);width:100px;">' + l.account + '</td><td>' + l.label + '</td><td class="debit-col" style="width:120px;">' + (l.debit ? Number(l.debit).toLocaleString('fr-FR') : '') + '</td><td class="credit-col" style="width:120px;">' + (l.credit ? Number(l.credit).toLocaleString('fr-FR') : '') + '</td></tr>';
+    });
+    html += '</table></td></tr>';
+  });
+  html += '</tbody></table>';
+
+  // New entry form
+  html += '<div class="compta-form"><div class="compta-form-title">Nouvelle ecriture comptable</div>';
+  html += '<div class="compta-form-row">';
+  html += '<input class="form-input" type="text" id="new-entry-ref" placeholder="Reference (ex: FAC-2026-005)">';
+  html += '<select id="new-entry-journal"><option value="AC">AC - Achats</option><option value="VT">VT - Ventes</option><option value="BQ">BQ - Banque</option><option value="CA">CA - Caisse</option><option value="OD">OD - Operations div.</option><option value="AN">AN - A nouveau</option><option value="EX">EX - Exercice</option></select>';
+  html += '<input class="form-input" type="date" id="new-entry-date" value="2026-03-23">';
+  html += '</div>';
+  html += '<div class="compta-form-row"><input class="form-input" type="text" id="new-entry-desc" placeholder="Description de l\'ecriture" style="flex:3;"></div>';
+  html += '<div id="new-entry-lines">';
+  newEntryLines.forEach(function(l, i) {
+    html += renderNewEntryLine(i);
+  });
+  html += '</div>';
+  var lineDebits = newEntryLines.reduce(function(s,l){return s+(parseFloat(l.debit)||0);},0);
+  var lineCredits = newEntryLines.reduce(function(s,l){return s+(parseFloat(l.credit)||0);},0);
+  var balanced = lineDebits > 0 && lineDebits === lineCredits;
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">';
+  html += '<div class="compta-line-actions"><button class="compta-add-line" onclick="newEntryLines.push({account:\'\',label:\'\',debit:0,credit:0});renderJournal();">+ Ajouter une ligne</button></div>';
+  html += '<div>Total D: <span class="debit-col">' + Number(lineDebits).toLocaleString('fr-FR') + '</span> | Total C: <span class="credit-col">' + Number(lineCredits).toLocaleString('fr-FR') + '</span> &nbsp;';
+  html += balanced ? '<span class="compta-balance-ok">&#10003; Ecriture equilibree</span>' : '<span class="compta-balance-nok">&#10007; Non equilibree</span>';
+  html += '</div></div>';
+  html += '<div style="margin-top:12px;"><button class="compta-action-btn primary" onclick="addJournalEntry()" ' + (balanced ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"') + '>Enregistrer l\'ecriture</button></div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+function renderNewEntryLine(i) {
+  var l = newEntryLines[i];
+  var html = '<div class="compta-form-row">';
+  html += '<input class="form-input" type="text" placeholder="Code compte" value="' + (l.account||'') + '" onchange="newEntryLines[' + i + '].account=this.value;" style="flex:.8;">';
+  html += '<input class="form-input" type="text" placeholder="Libelle" value="' + (l.label||'') + '" onchange="newEntryLines[' + i + '].label=this.value;" style="flex:1.5;">';
+  html += '<input class="form-input" type="number" placeholder="Debit" value="' + (l.debit||'') + '" onchange="newEntryLines[' + i + '].debit=parseFloat(this.value)||0;renderJournal();" style="flex:.6;">';
+  html += '<input class="form-input" type="number" placeholder="Credit" value="' + (l.credit||'') + '" onchange="newEntryLines[' + i + '].credit=parseFloat(this.value)||0;renderJournal();" style="flex:.6;">';
+  if (newEntryLines.length > 2) {
+    html += '<button class="compta-rm-line" onclick="newEntryLines.splice(' + i + ',1);renderJournal();">X</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function addJournalEntry() {
+  var ref = document.getElementById('new-entry-ref').value.trim();
+  var journal = document.getElementById('new-entry-journal').value;
+  var date = document.getElementById('new-entry-date').value;
+  var desc = document.getElementById('new-entry-desc').value.trim();
+  if (!ref || !desc) { showNotif('Veuillez remplir la reference et la description.', 'error'); return; }
+  var lineDebits = newEntryLines.reduce(function(s,l){return s+(parseFloat(l.debit)||0);},0);
+  var lineCredits = newEntryLines.reduce(function(s,l){return s+(parseFloat(l.credit)||0);},0);
+  if (lineDebits !== lineCredits || lineDebits === 0) { showNotif('L\'ecriture doit etre equilibree (debit = credit).', 'error'); return; }
+  var id = 'EC-' + String(JOURNAL_ENTRIES.length + 1).padStart(3, '0');
+  var lines = newEntryLines.filter(function(l){return l.account;}).map(function(l){return {account:l.account,label:l.label,debit:parseFloat(l.debit)||0,credit:parseFloat(l.credit)||0};});
+  JOURNAL_ENTRIES.push({id:id, date:date, ref:ref, journal:journal, desc:desc, lines:lines});
+  newEntryLines = [{account:'',label:'',debit:0,credit:0},{account:'',label:'',debit:0,credit:0}];
+  showNotif('Ecriture ' + id + ' enregistree avec succes.', 'success');
+  renderJournal();
+}
+
+function toggleEntryDetail(id) {
+  var row = document.getElementById('detail-' + id);
+  if (row) row.classList.toggle('open');
+}
+
+function renderGrandLivre() {
+  var el = document.getElementById('compta-panel-grandlivre');
+  var html = '<select class="compta-select" id="gl-account-select" onchange="comptaGrandLivreAccount=this.value;renderGrandLivre();">';
+  html += '<option value="">-- Selectionnez un compte --</option>';
+  COMPTA_ACCOUNTS.forEach(function(a) {
+    html += '<option value="' + a.code + '" ' + (comptaGrandLivreAccount === a.code ? 'selected' : '') + '>' + a.code + ' - ' + a.label + '</option>';
+  });
+  html += '</select>';
+
+  if (comptaGrandLivreAccount) {
+    var acct = COMPTA_ACCOUNTS.find(function(a){return a.code === comptaGrandLivreAccount;});
+    var entries = [];
+    JOURNAL_ENTRIES.forEach(function(e) {
+      e.lines.forEach(function(l) {
+        if (l.account === comptaGrandLivreAccount) {
+          entries.push({date:e.date, ref:e.ref, desc:e.desc, debit:l.debit, credit:l.credit});
+        }
+      });
+    });
+
+    html += '<h3 style="font-size:.85rem;color:var(--gold);margin:10px 0;">' + comptaGrandLivreAccount + ' - ' + (acct ? acct.label : '') + '</h3>';
+    html += '<table class="compta-table"><thead><tr><th>DATE</th><th>REF</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE</th></tr></thead><tbody>';
+
+    var balance = acct ? (acct.debit - acct.credit) : 0;
+    // Opening balance row
+    html += '<tr style="color:var(--text-dim);"><td>-</td><td>-</td><td>Solde initial</td><td class="debit-col">' + (acct && acct.debit ? Number(acct.debit).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (acct && acct.credit ? Number(acct.credit).toLocaleString('fr-FR') : '-') + '</td><td class="num-col">' + Number(balance).toLocaleString('fr-FR') + '</td></tr>';
+
+    var totalD = acct ? acct.debit : 0;
+    var totalC = acct ? acct.credit : 0;
+    entries.forEach(function(en) {
+      balance += en.debit - en.credit;
+      totalD += en.debit;
+      totalC += en.credit;
+      html += '<tr><td>' + en.date + '</td><td style="color:var(--cyan);">' + en.ref + '</td><td>' + en.desc + '</td><td class="debit-col">' + (en.debit ? Number(en.debit).toLocaleString('fr-FR') : '') + '</td><td class="credit-col">' + (en.credit ? Number(en.credit).toLocaleString('fr-FR') : '') + '</td><td class="num-col" style="font-weight:600;">' + Number(balance).toLocaleString('fr-FR') + '</td></tr>';
+    });
+
+    html += '<tr class="total-row"><td colspan="3">TOTAUX</td><td class="debit-col">' + Number(totalD).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(totalC).toLocaleString('fr-FR') + '</td><td class="num-col">' + Number(balance).toLocaleString('fr-FR') + '</td></tr>';
+    html += '</tbody></table>';
+  } else {
+    html += '<div style="color:var(--text-dim);padding:40px;text-align:center;">Selectionnez un compte pour afficher le grand livre.</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderBalance() {
+  var el = document.getElementById('compta-panel-balance');
+  var html = '<table class="compta-table"><thead><tr><th>COMPTE</th><th>LIBELLE</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE DEBITEUR</th><th class="num-col">SOLDE CREDITEUR</th></tr></thead><tbody>';
+
+  var totalD = 0, totalC = 0, totalSD = 0, totalSC = 0;
+  COMPTA_ACCOUNTS.forEach(function(a) {
+    if (a.debit === 0 && a.credit === 0) return;
+    var solde = a.debit - a.credit;
+    var sd = solde > 0 ? solde : 0;
+    var sc = solde < 0 ? Math.abs(solde) : 0;
+    totalD += a.debit; totalC += a.credit; totalSD += sd; totalSC += sc;
+    var cls = SYSCOHADA_CLASSES.find(function(c){return c.num===a.class;});
+    var clr = cls ? cls.color : 'var(--text-primary)';
+    html += '<tr><td style="color:' + clr + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td class="debit-col">' + (a.debit ? Number(a.debit).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (a.credit ? Number(a.credit).toLocaleString('fr-FR') : '-') + '</td><td class="debit-col">' + (sd ? Number(sd).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (sc ? Number(sc).toLocaleString('fr-FR') : '-') + '</td></tr>';
+  });
+
+  var balanced = totalSD === totalSC;
+  var totStyle = balanced ? '' : 'background:rgba(255,82,82,.1);';
+  html += '<tr class="total-row" style="' + totStyle + '"><td colspan="2">TOTAUX</td><td class="debit-col">' + Number(totalD).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(totalC).toLocaleString('fr-FR') + '</td><td class="debit-col">' + Number(totalSD).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(totalSC).toLocaleString('fr-FR') + '</td></tr>';
+  html += '</tbody></table>';
+
+  if (balanced) {
+    html += '<div class="compta-equilibre ok">&#10003; Balance equilibree - Totaux debits = Totaux credits</div>';
+  } else {
+    html += '<div class="compta-equilibre nok">&#10007; Balance NON equilibree - Ecart : ' + fmtXOF(Math.abs(totalSD - totalSC)) + '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderBilan() {
+  var el = document.getElementById('compta-panel-bilan');
+
+  // ACTIF
+  var immobilisations = COMPTA_ACCOUNTS.filter(function(a){return a.class===2;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
+  var stocks = COMPTA_ACCOUNTS.filter(function(a){return a.class===3;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
+  var creances = COMPTA_ACCOUNTS.filter(function(a){return a.class===4 && a.debit>a.credit;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
+  var tresorerie = COMPTA_ACCOUNTS.filter(function(a){return a.class===5;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
+  var totalActif = immobilisations + stocks + creances + tresorerie;
+
+  // PASSIF
+  var capitaux = COMPTA_ACCOUNTS.filter(function(a){return a.class===1;}).reduce(function(s,a){return s+a.credit-a.debit;},0);
+  var dettesFourn = COMPTA_ACCOUNTS.filter(function(a){return a.code==='401100';}).reduce(function(s,a){return s+a.credit-a.debit;},0);
+  var dettesFiscSoc = COMPTA_ACCOUNTS.filter(function(a){return a.class===4 && a.credit>a.debit && a.code!=='401100';}).reduce(function(s,a){return s+a.credit-a.debit;},0);
+  var totalPassif = capitaux + dettesFourn + dettesFiscSoc;
+
+  var equi = totalActif === totalPassif;
+
+  var html = '<div class="compta-bilan-grid">';
+
+  // ACTIF column
+  html += '<div class="compta-bilan-col"><h3 class="actif-title">ACTIF</h3>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Immobilisations (Cl. 2)</span><span class="val">' + fmtXOF(immobilisations) + '</span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Stocks (Cl. 3)</span><span class="val">' + fmtXOF(stocks) + '</span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Creances clients (Cl. 4)</span><span class="val">' + fmtXOF(creances) + '</span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Tresorerie (Cl. 5)</span><span class="val">' + fmtXOF(tresorerie) + '</span></div>';
+  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--cyan);">TOTAL ACTIF</span><span class="val" style="color:var(--cyan);font-size:.92rem;">' + fmtXOF(totalActif) + '</span></div>';
+  html += '</div>';
+
+  // PASSIF column
+  html += '<div class="compta-bilan-col"><h3 class="passif-title">PASSIF</h3>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Capitaux propres (Cl. 1)</span><span class="val">' + fmtXOF(capitaux) + '</span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Dettes fournisseurs</span><span class="val">' + fmtXOF(dettesFourn) + '</span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">Dettes fiscales &amp; sociales</span><span class="val">' + fmtXOF(dettesFiscSoc) + '</span></div>';
+  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--gold);">TOTAL PASSIF</span><span class="val" style="color:var(--gold);font-size:.92rem;">' + fmtXOF(totalPassif) + '</span></div>';
+  html += '</div>';
+
+  html += '</div>';
+
+  if (equi) {
+    html += '<div class="compta-equilibre ok">&#10003; Bilan equilibre - Actif = Passif = ' + fmtXOF(totalActif) + '</div>';
+  } else {
+    html += '<div class="compta-equilibre nok">&#10007; Bilan NON equilibre - Actif: ' + fmtXOF(totalActif) + ' | Passif: ' + fmtXOF(totalPassif) + ' | Ecart: ' + fmtXOF(Math.abs(totalActif - totalPassif)) + '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+function renderResultat() {
+  var el = document.getElementById('compta-panel-resultat');
+
+  // Class 7 - Produits
+  var produitsAccounts = COMPTA_ACCOUNTS.filter(function(a){return a.class===7;});
+  var totalProduits = produitsAccounts.reduce(function(s,a){return s+a.credit;},0);
+
+  // Class 6 - Charges
+  var chargesAccounts = COMPTA_ACCOUNTS.filter(function(a){return a.class===6;});
+  var totalCharges = chargesAccounts.reduce(function(s,a){return s+a.debit;},0);
+
+  var resultatExploitation = totalProduits - totalCharges;
+
+  // Class 8 - HAO
+  var haoAccounts = COMPTA_ACCOUNTS.filter(function(a){return a.class===8;});
+  var produitsHAO = haoAccounts.reduce(function(s,a){return s+a.credit;},0);
+  var chargesHAO = haoAccounts.reduce(function(s,a){return s+a.debit;},0);
+
+  var resultatNet = resultatExploitation + produitsHAO - chargesHAO;
+
+  var html = '';
+
+  // Produits d'exploitation
+  html += '<div class="compta-resultat-section"><h3>Produits d\'exploitation (Classe 7)</h3>';
+  produitsAccounts.forEach(function(a) {
+    html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--green);">' + fmtXOF(a.credit) + '</span></div>';
+  });
+  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--green);">Total Produits</span><span class="val" style="color:var(--green);">' + fmtXOF(totalProduits) + '</span></div>';
+  html += '</div>';
+
+  // Charges d'exploitation
+  html += '<div class="compta-resultat-section"><h3>Charges d\'exploitation (Classe 6)</h3>';
+  chargesAccounts.forEach(function(a) {
+    html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--red);">' + fmtXOF(a.debit) + '</span></div>';
+  });
+  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--red);">Total Charges</span><span class="val" style="color:var(--red);">' + fmtXOF(totalCharges) + '</span></div>';
+  html += '</div>';
+
+  // Resultat exploitation
+  html += '<div class="compta-resultat-section"><h3>Resultat d\'exploitation</h3>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Produits - Charges</span><span class="val" style="color:' + (resultatExploitation >= 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:700;">' + fmtXOF(resultatExploitation) + '</span></div>';
+  html += '</div>';
+
+  // HAO
+  html += '<div class="compta-resultat-section"><h3>Hors Activites Ordinaires (Classe 8)</h3>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Produits HAO</span><span class="val" style="color:var(--green);">' + fmtXOF(produitsHAO) + '</span></div>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Charges HAO</span><span class="val" style="color:var(--red);">' + fmtXOF(chargesHAO) + '</span></div>';
+  html += '</div>';
+
+  // Resultat net
+  html += '<div class="compta-resultat-section" style="border-color:var(--gold);">';
+  html += '<div class="compta-resultat-line grand-total"><span class="lbl" style="color:var(--gold);">RESULTAT NET DE L\'EXERCICE</span><span class="val" style="color:' + (resultatNet >= 0 ? 'var(--green)' : 'var(--red)') + ';font-size:1.1rem;">' + fmtXOF(resultatNet) + '</span></div>';
+  html += '</div>';
+
+  el.innerHTML = html;
 }
 
 // PWA Service Worker
