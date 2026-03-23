@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WASI Ecosystem — Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #030B15;
+  --bg-light: #0A1628;
+  --bg-card: #0D1B2A;
+  --gold: #C8922A;
+  --gold-light: #E2B65A;
+  --green: #00E676;
+  --red: #FF5252;
+  --white: #F0F0F0;
+  --gray: #8899AA;
+  --gray-dark: #445566;
+  --font-head: 'Sora', sans-serif;
+  --font-data: 'IBM Plex Mono', monospace;
+  --slide-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-head);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transition: width 0.4s ease;
+}
+
+/* ===== SLIDE COUNTER ===== */
+#slide-counter {
+  position: fixed; bottom: 24px; right: 32px; z-index: 1000;
+  font-family: var(--font-data); font-size: 13px; color: var(--gray);
+  letter-spacing: 1px;
+}
+
+/* ===== SLIDES CONTAINER ===== */
+#deck {
+  width: 100%; height: 100vh;
+  position: relative; overflow: hidden;
+}
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 60px 80px;
+  opacity: 0;
+  transform: translateX(60px);
+  pointer-events: none;
+  transition: opacity var(--slide-transition), transform var(--slide-transition);
+  overflow-y: auto;
+}
+.slide.active {
+  opacity: 1; transform: translateX(0);
+  pointer-events: all;
+}
+.slide.prev {
+  opacity: 0; transform: translateX(-60px);
+}
+.slide-inner {
+  width: 100%; max-width: 1100px; margin: 0 auto;
+}
+
+/* ===== OVERVIEW MODE ===== */
+body.overview-mode #deck {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  height: 100vh;
+  overflow: auto;
+}
+body.overview-mode .slide {
+  position: relative !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: all !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 16px !important;
+  border: 1px solid var(--gray-dark);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 6px !important;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+body.overview-mode .slide:hover {
+  border-color: var(--gold);
+}
+body.overview-mode .slide * {
+  font-size: inherit !important;
+  line-height: 1.2 !important;
+}
+body.overview-mode #progress-bar { display: none; }
+body.overview-mode #slide-counter { display: none; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-title {
+  font-family: var(--font-head);
+  font-size: clamp(28px, 3.2vw, 48px);
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 36px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+.slide-subtitle {
+  font-family: var(--font-head);
+  font-size: clamp(16px, 1.6vw, 22px);
+  font-weight: 300;
+  color: var(--gray);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.data-text {
+  font-family: var(--font-data);
+  font-size: clamp(13px, 1.1vw, 16px);
+  color: var(--white);
+  line-height: 1.7;
+}
+.gold { color: var(--gold); }
+.green { color: var(--green); }
+.red { color: var(--red); }
+.gray { color: var(--gray); }
+.bold { font-weight: 700; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(200, 146, 42, 0.15);
+  border-radius: 12px;
+  padding: 28px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.card-title {
+  font-family: var(--font-head);
+  font-size: clamp(15px, 1.3vw, 19px);
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+}
+.card-body {
+  font-family: var(--font-data);
+  font-size: clamp(12px, 0.95vw, 14px);
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+/* ===== GRID HELPERS ===== */
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.flex-row { display: flex; gap: 20px; align-items: stretch; }
+.flex-center { display: flex; justify-content: center; align-items: center; }
+
+/* ===== STAT BLOCK ===== */
+.stat { text-align: center; padding: 16px; }
+.stat-number {
+  font-family: var(--font-data);
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 700;
+  color: var(--green);
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-data);
+  font-size: clamp(11px, 0.85vw, 13px);
+  color: var(--gray);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== TABLE ===== */
+.deck-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-data);
+  font-size: clamp(11px, 0.9vw, 13px);
+}
+.deck-table th {
+  background: var(--bg-card);
+  color: var(--gold);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--gold);
+  white-space: nowrap;
+}
+.deck-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: var(--white);
+  vertical-align: middle;
+}
+.deck-table tr:hover td { background: rgba(200,146,42,0.04); }
+.check { color: var(--green); font-weight: 700; }
+.cross { color: var(--red); opacity: 0.5; }
+
+/* ===== QUOTE ===== */
+.quote-block {
+  border-left: 3px solid var(--gold);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: rgba(200,146,42,0.05);
+  border-radius: 0 8px 8px 0;
+}
+.quote-text {
+  font-family: var(--font-head);
+  font-size: clamp(15px, 1.3vw, 20px);
+  font-weight: 400;
+  color: var(--white);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ===== GAP DIAGRAM (Slide 2) ===== */
+.gap-diagram {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin: 28px 0 12px;
+}
+.gap-box {
+  padding: 18px 28px;
+  border-radius: 10px;
+  font-family: var(--font-data);
+  font-size: clamp(12px, 1vw, 15px);
+  font-weight: 600;
+  text-align: center;
+  min-width: 180px;
+}
+.gap-left { background: var(--red); color: #fff; opacity: 0.85; }
+.gap-right { background: var(--green); color: #030B15; opacity: 0.85; }
+.gap-center {
+  width: 120px; text-align: center;
+  font-family: var(--font-data);
+  font-size: 40px; font-weight: 800;
+  color: var(--gold);
+  position: relative;
+}
+.gap-center span {
+  display: block; font-size: 11px; font-weight: 400;
+  color: var(--gray); text-transform: uppercase; letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+/* ===== LAYERS (Slide 4) ===== */
+.layer-stack { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+.layer {
+  padding: 20px 28px;
+  font-family: var(--font-data);
+  font-size: clamp(12px, 1vw, 14px);
+  color: #fff;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.layer:first-child { border-radius: 10px 10px 0 0; }
+.layer:last-child { border-radius: 0 0 10px 10px; }
+.layer-1 { background: rgba(200,146,42,0.25); }
+.layer-2 { background: rgba(200,146,42,0.15); }
+.layer-3 { background: rgba(200,146,42,0.08); }
+.layer-pct {
+  font-weight: 700; font-size: clamp(20px, 2vw, 30px);
+  color: var(--gold);
+}
+
+/* ===== HOCKEY STICK (Slide 7) ===== */
+.hockey-chart {
+  display: flex; align-items: flex-end; gap: 12px;
+  height: 160px; margin: 20px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--gray-dark);
+}
+.hockey-bar {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+}
+.hockey-bar-inner {
+  width: 100%; max-width: 56px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  border-radius: 6px 6px 0 0;
+  transition: height 0.6s ease;
+}
+.hockey-bar-label {
+  font-family: var(--font-data); font-size: 11px;
+  color: var(--gray); margin-top: 8px;
+}
+.hockey-bar-value {
+  font-family: var(--font-data); font-size: clamp(11px, 0.9vw, 13px);
+  color: var(--gold-light); font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ===== PIE CHART (Slide 10) ===== */
+.pie-container {
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto;
+}
+.pie-legend {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pie-legend-item {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-data); font-size: clamp(11px, 0.9vw, 13px);
+  color: var(--white);
+}
+.pie-swatch {
+  width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+}
+
+/* ===== PILL / BADGE ===== */
+.pill {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: var(--font-data);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.pill-gold { background: rgba(200,146,42,0.15); color: var(--gold); border: 1px solid var(--gold); }
+.pill-green { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
+.pill-red { background: rgba(255,82,82,0.1); color: var(--red); border: 1px solid rgba(255,82,82,0.3); }
+
+/* ===== ICONS (SVG inline) ===== */
+.icon-row { display: flex; gap: 32px; justify-content: center; margin: 28px 0; flex-wrap: wrap; }
+.icon-item {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  width: 140px;
+}
+.icon-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(200,146,42,0.08);
+}
+.icon-circle svg { width: 24px; height: 24px; }
+.icon-label {
+  font-family: var(--font-data);
+  font-size: 11px; color: var(--gray);
+  text-align: center; letter-spacing: 0.5px;
+}
+
+/* ===== COMPARTMENTS (Slide 5) ===== */
+.compartments { display: flex; gap: 16px; margin: 20px 0; }
+.compartment {
+  flex: 1; padding: 20px; border-radius: 10px;
+  text-align: center;
+  border: 1px solid rgba(200,146,42,0.2);
+  background: var(--bg-card);
+}
+.compartment-name {
+  font-family: var(--font-head); font-weight: 700;
+  font-size: clamp(14px, 1.2vw, 18px);
+  margin-bottom: 6px;
+}
+.compartment-desc {
+  font-family: var(--font-data);
+  font-size: clamp(11px, 0.85vw, 13px);
+  color: var(--gray); line-height: 1.5;
+}
+
+/* ===== SLIDE 1 SPECIAL ===== */
+.title-main {
+  font-family: var(--font-head);
+  font-size: clamp(48px, 6vw, 88px);
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 6px;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.title-tagline {
+  font-family: var(--font-head);
+  font-size: clamp(16px, 1.6vw, 24px);
+  font-weight: 300;
+  color: var(--gray);
+  text-align: center;
+  margin-bottom: 32px;
+  letter-spacing: 2px;
+}
+.title-founder {
+  font-family: var(--font-data);
+  font-size: clamp(13px, 1.1vw, 16px);
+  color: var(--white);
+  text-align: center;
+  line-height: 2;
+}
+.title-confidential {
+  font-family: var(--font-data);
+  font-size: 12px;
+  color: var(--red);
+  text-align: center;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 32px;
+  opacity: 0.7;
+}
+
+/* ===== BULLET LIST ===== */
+.bullet-list {
+  list-style: none; padding: 0;
+}
+.bullet-list li {
+  font-family: var(--font-data);
+  font-size: clamp(13px, 1vw, 15px);
+  color: var(--white);
+  padding: 8px 0 8px 24px;
+  position: relative;
+  line-height: 1.5;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute; left: 0; top: 15px;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+.bullet-list li span.red-stat {
+  color: var(--red); font-weight: 600;
+}
+
+/* ===== TRACTION ITEMS ===== */
+.traction-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;
+}
+.traction-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+}
+.traction-item .ti-icon {
+  font-size: 20px; line-height: 1;
+}
+.traction-item .ti-text {
+  font-family: var(--font-data);
+  font-size: clamp(12px, 0.9vw, 14px);
+  color: var(--white); line-height: 1.5;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .slide { padding: 32px 28px; }
+  .grid-2x2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-5 { grid-template-columns: repeat(2, 1fr); }
+  .flex-row { flex-direction: column; }
+  .gap-diagram { flex-direction: column; gap: 8px; }
+  .gap-center { width: auto; }
+  .compartments { flex-direction: column; }
+  .hockey-chart { height: 120px; }
+  body.overview-mode #deck { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+  .icon-row { gap: 16px; }
+  .traction-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 500px) {
+  .slide { padding: 24px 16px; }
+  body.overview-mode #deck { grid-template-columns: 1fr; }
+  .icon-row { gap: 12px; }
+  .icon-item { width: 100px; }
+}
+
+/* ===== PRINT ===== */
+@media print {
+  body, html { overflow: visible; height: auto; }
+  #progress-bar, #slide-counter { display: none; }
+  #deck { display: block; height: auto; }
+  .slide {
+    position: relative !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: all !important;
+    page-break-after: always;
+    page-break-inside: avoid;
+    height: 100vh;
+    min-height: 100vh;
+  }
+  .slide:last-child { page-break-after: auto; }
+  .card:hover { transform: none; }
+  @page { size: landscape; margin: 0; }
+}
+
+/* ===== SUBTLE ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.slide.active .anim-1 { animation: fadeInUp 0.5s 0.1s both; }
+.slide.active .anim-2 { animation: fadeInUp 0.5s 0.25s both; }
+.slide.active .anim-3 { animation: fadeInUp 0.5s 0.4s both; }
+.slide.active .anim-4 { animation: fadeInUp 0.5s 0.55s both; }
+.slide.active .anim-5 { animation: fadeInUp 0.5s 0.7s both; }
+
+/* Background decoration */
+.slide::before {
+  content: '';
+  position: absolute; top: -50%; right: -30%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(200,146,42,0.03) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="slide-counter"></div>
+
+<div id="deck">
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide active" data-slide="1">
+  <div class="slide-inner" style="text-align:center;">
+    <div class="anim-1 title-main">WASI ECOSYSTEM</div>
+    <div class="anim-2 title-tagline">West African Shipping &amp; Investment Intelligence</div>
+    <div class="anim-3 icon-row">
+      <div class="icon-item">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/><line x1="8" y1="7" x2="8" y2="13"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="16" y1="5" x2="16" y2="13"/></svg>
+        </div>
+        <div class="icon-label">Terminal DEX</div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="18" cy="15" r="2"/></svg>
+        </div>
+        <div class="icon-label">AfriTrade Bank</div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="icon-label">Multi-Market</div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="icon-label">Private Market Studio</div>
+      </div>
+    </div>
+    <div class="anim-4 title-founder">
+      <strong style="color:var(--gold);">Tarawendesida Thomas KABORE, FMVA</strong><br>
+      Fondateur &amp; CEO &nbsp;|&nbsp; Ouagadougou, Burkina Faso &nbsp;|&nbsp; Mars 2026
+    </div>
+    <div class="anim-5 title-confidential">CONFIDENTIEL</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: THE PROBLEM ==================== -->
+<div class="slide" data-slide="2">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">Le Probl&egrave;me : $42 Mds de Gap de Financement</div>
+    <div class="anim-2" style="display:flex;gap:32px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <ul class="bullet-list">
+          <li><strong class="gold">420M+</strong> habitants, PIB <strong class="gold">$700 Mds</strong>, croissance <strong class="green">4.5%</strong></li>
+          <li>&lt;20% bancarisation UEMOA <span class="red-stat">&mdash; excl. mobile money</span></li>
+          <li>&lt;5% capitalisation BRVM vs PIB <span class="red-stat">&mdash; vs 150% NYSE</span></li>
+          <li>&lt;800K investisseurs retail sur <strong>420M</strong> habitants</li>
+          <li>Donn&eacute;es fragment&eacute;es, non agr&eacute;g&eacute;es, non standardis&eacute;es</li>
+          <li>Transferts intra-CEDEAO : <span class="red-stat">2-7 jours, co&ucirc;t 8-12%</span></li>
+        </ul>
+      </div>
+      <div style="flex:1;min-width:280px;">
+        <div class="anim-3 gap-diagram">
+          <div class="gap-box gap-left">
+            Microfinance<br><span style="font-size:20px;font-weight:800;">IMF / SFD</span><br>
+            <span style="font-size:11px;opacity:0.8;">Pr&ecirc;ts &lt; $5K</span>
+          </div>
+          <div class="gap-center">
+            <span style="font-size:13px;color:var(--gold);letter-spacing:2px;">$42 Mds</span>
+            <svg width="80" height="40" viewBox="0 0 80 40" style="margin:8px 0;">
+              <line x1="5" y1="20" x2="75" y2="20" stroke="#C8922A" stroke-width="2" stroke-dasharray="6,4"/>
+              <polygon points="5,14 5,26 15,20" fill="#FF5252"/>
+              <polygon points="75,14 75,26 65,20" fill="#00E676"/>
+            </svg>
+            <span>le gap</span>
+          </div>
+          <div class="gap-box gap-right">
+            March&eacute;s<br><span style="font-size:20px;font-weight:800;">BRVM</span><br>
+            <span style="font-size:11px;opacity:0.8;">&gt; $2M seulement</span>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:16px;">
+          <span class="pill pill-red">450,000 PME sans solution de financement adapt&eacute;e</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: THE SOLUTION ==================== -->
+<div class="slide" data-slide="3">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">WASI : L'Infrastructure Financi&egrave;re de l'Afrique de l'Ouest</div>
+    <div class="anim-2 grid-2x2">
+      <div class="card">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2" style="vertical-align:middle;margin-right:8px;"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="7" x2="8" y2="13"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="16" y1="5" x2="16" y2="13"/></svg>
+          WASI Terminal DEX
+        </div>
+        <div class="card-body">
+          Intelligence &eacute;conomique temps r&eacute;el sur <strong class="gold">16 pays</strong> CEDEAO. WASI Index propri&eacute;taire, analyses portuaires, alertes march&eacute;s publics, donn&eacute;es macro agr&eacute;g&eacute;es.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2" style="vertical-align:middle;margin-right:8px;"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          AfriTrade Bank
+        </div>
+        <div class="card-body">
+          N&eacute;obanque multidevises (XOF, NGN, GHS, USD, EUR). Transferts intra-CEDEAO <strong class="green">&lt;1.5%</strong>, virements &lt;30 min. Orange Money &amp; MTN MoMo int&eacute;gr&eacute;s.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2" style="vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>
+          Multi-Market Investments
+        </div>
+        <div class="card-body">
+          Acc&egrave;s unifi&eacute; : <strong class="gold">BRVM</strong> + <strong class="gold">NGX</strong> + <strong class="gold">GSE</strong> + <strong class="gold">NYSE</strong> + <strong class="gold">Crypto</strong>. Portefeuille fractionnaire d&egrave;s 1,000 XOF. Robo-advisor int&eacute;gr&eacute;.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8922A" stroke-width="2" style="vertical-align:middle;margin-right:8px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Private Market Studio
+        </div>
+        <div class="card-body">
+          IPO simplifi&eacute;e pour PME ouest-africaines. Scoring IA, due diligence automatis&eacute;e, documentation juridique standardis&eacute;e. De la lev&eacute;e Seed au <em>listing</em> BRVM.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: DATA ADVANTAGE ==================== -->
+<div class="slide" data-slide="4">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">Notre Avantage D&eacute;fendable : 20 Ans de Donn&eacute;es</div>
+    <div class="anim-2 slide-subtitle">Architecture de donn&eacute;es propri&eacute;taire &mdash; 3 couches d'intelligence</div>
+    <div class="anim-3 layer-stack">
+      <div class="layer layer-1">
+        <div>
+          <strong>Couche 1 &mdash; Ports Autonomes</strong><br>
+          <span style="font-size:12px;color:var(--gray);">8 ports : Dakar, Abidjan, Lom&eacute;, Tema, Conakry, Cotonou, Lagos (Apapa/Tin Can)</span>
+        </div>
+        <div class="layer-pct">40%</div>
+      </div>
+      <div class="layer layer-2">
+        <div>
+          <strong>Couche 2 &mdash; March&eacute;s Publics</strong><br>
+          <span style="font-size:12px;color:var(--gray);">16 autorit&eacute;s nationales &bull; <strong style="color:var(--gold);">4,341 &eacute;ditions</strong> collect&eacute;es (Burkina Faso)</span>
+        </div>
+        <div class="layer-pct">40%</div>
+      </div>
+      <div class="layer layer-3">
+        <div>
+          <strong>Couche 3 &mdash; Intelligence Sectorielle</strong><br>
+          <span style="font-size:12px;color:var(--gray);">COCOBOD, SNIM, BCEAO, UEMOA, CEDEAO &bull; Macro, trade flows, indices propri&eacute;taires</span>
+        </div>
+        <div class="layer-pct">20%</div>
+      </div>
+    </div>
+    <div class="anim-4 quote-block">
+      <div class="quote-text">&laquo; Bloomberg n'a pas ces donn&eacute;es. Refinitiv non plus. WASI, oui. &raquo;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: WASI STOCK MARKET ==================== -->
+<div class="slide" data-slide="5">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">WASI Stock Market &mdash; La Bourse Priv&eacute;e des PME</div>
+    <div class="anim-2 compartments">
+      <div class="compartment" style="border-color:var(--red);">
+        <div class="compartment-name" style="color:var(--red);">Venture</div>
+        <div class="compartment-desc">Pre-revenue &amp; early stage<br>Lev&eacute;e $50K &ndash; $500K<br>Valorisation &lt; $2M</div>
+      </div>
+      <div class="compartment" style="border-color:var(--gold);">
+        <div class="compartment-name" style="color:var(--gold);">Growth</div>
+        <div class="compartment-desc">PME en croissance<br>Lev&eacute;e $500K &ndash; $5M<br>CA &gt; $200K</div>
+      </div>
+      <div class="compartment" style="border-color:var(--green);">
+        <div class="compartment-name" style="color:var(--green);">Premier</div>
+        <div class="compartment-desc">Scale-ups &amp; pr&eacute;-IPO<br>Lev&eacute;e $5M &ndash; $50M<br>Passerelle vers BRVM</div>
+      </div>
+    </div>
+    <div class="anim-3" style="display:flex;gap:24px;flex-wrap:wrap;margin:20px 0;">
+      <div class="stat" style="flex:1;">
+        <div class="stat-number" style="color:var(--red);">450K</div>
+        <div class="stat-label">PME formelles</div>
+      </div>
+      <div class="stat" style="flex:1;">
+        <div class="stat-number">&lt;0.02%</div>
+        <div class="stat-label">ont lev&eacute; via march&eacute;</div>
+      </div>
+      <div class="stat" style="flex:1;">
+        <div class="stat-number" style="color:var(--gold);">&plusmn;7%</div>
+        <div class="stat-label">circuit breaker</div>
+      </div>
+      <div class="stat" style="flex:1;">
+        <div class="stat-number" style="color:var(--gold);">XOF/NGN/GHS</div>
+        <div class="stat-label" style="font-size:10px;">devises support&eacute;es</div>
+      </div>
+    </div>
+    <div class="anim-4 quote-block" style="border-left-color:var(--green);">
+      <div class="quote-text" style="font-size:clamp(13px,1.1vw,17px);">Objectif 2030 : <strong class="green">130 &eacute;metteurs</strong> &bull; <strong class="gold">$280M lev&eacute;s</strong> &bull; <strong>45,000 investisseurs</strong> &bull; Fixing hebdomadaire</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: MARKET OPPORTUNITY ==================== -->
+<div class="slide" data-slide="6">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">March&eacute; : $4.2 Mds TAM</div>
+    <div class="anim-2 grid-5" style="margin-bottom:28px;">
+      <div class="card" style="padding:18px;text-align:center;">
+        <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--green);">15M</div>
+        <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);margin-top:4px;">Investisseurs<br>retail</div>
+      </div>
+      <div class="card" style="padding:18px;text-align:center;">
+        <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--green);">450K</div>
+        <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);margin-top:4px;">PME &amp;<br>op&eacute;rateurs</div>
+      </div>
+      <div class="card" style="padding:18px;text-align:center;">
+        <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--green);">350+</div>
+        <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);margin-top:4px;">Institutions<br>financi&egrave;res</div>
+      </div>
+      <div class="card" style="padding:18px;text-align:center;">
+        <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--green);">12</div>
+        <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);margin-top:4px;">DFI<br>(AFD, IFC, BOAD)</div>
+      </div>
+      <div class="card" style="padding:18px;text-align:center;">
+        <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--gold);">$42B</div>
+        <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);margin-top:4px;">Gap de<br>financement</div>
+      </div>
+    </div>
+    <div class="anim-3 slide-subtitle" style="margin-bottom:16px;">Catalyseurs de croissance</div>
+    <div class="anim-4" style="display:flex;gap:12px;flex-wrap:wrap;">
+      <span class="pill pill-gold">P&eacute;trole S&eacute;n&eacute;gal (Sangomar)</span>
+      <span class="pill pill-gold">Port de Lom&eacute; (Hub r&eacute;gional)</span>
+      <span class="pill pill-gold">Pipeline Niger-B&eacute;nin</span>
+      <span class="pill pill-gold">GTA LNG (Mauritanie-S&eacute;n&eacute;gal)</span>
+      <span class="pill pill-green">ZLECAF &mdash; March&eacute; unique africain</span>
+      <span class="pill pill-green">ECO &mdash; Monnaie unique CEDEAO</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: BUSINESS MODEL ==================== -->
+<div class="slide" data-slide="7">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">Mod&egrave;le de Revenus &mdash; 8 Flux</div>
+    <div class="anim-2" style="display:flex;gap:32px;flex-wrap:wrap;">
+      <div style="flex:1.3;min-width:320px;">
+        <table class="deck-table">
+          <thead><tr><th>Flux</th><th>Type</th><th>Marge</th></tr></thead>
+          <tbody>
+            <tr><td>Terminal DEX SaaS</td><td>Abo. mensuel</td><td class="green">85%</td></tr>
+            <tr><td>Commissions trading</td><td>Par transaction</td><td class="green">60%</td></tr>
+            <tr><td>FX &amp; transferts</td><td>Spread + fee</td><td class="green">45%</td></tr>
+            <tr><td>IPO listing fees</td><td>% lev&eacute;e</td><td class="green">70%</td></tr>
+            <tr><td>Data API licensing</td><td>Abo. annuel</td><td class="green">90%</td></tr>
+            <tr><td>Custody fees</td><td>bps/AUM</td><td class="green">75%</td></tr>
+            <tr><td>Scoring IA (PMS)</td><td>Par &eacute;valuation</td><td class="green">80%</td></tr>
+            <tr><td>Premium analytics</td><td>Abo. pro</td><td class="green">88%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="flex:1;min-width:260px;">
+        <div style="font-family:var(--font-data);font-size:12px;color:var(--gray);margin-bottom:8px;letter-spacing:1px;">TRAJECTOIRE ARR (USD)</div>
+        <div class="hockey-chart">
+          <div class="hockey-bar">
+            <div class="hockey-bar-value">$450K</div>
+            <div class="hockey-bar-inner" style="height:8%;"></div>
+            <div class="hockey-bar-label">2026</div>
+          </div>
+          <div class="hockey-bar">
+            <div class="hockey-bar-value">$1.9M</div>
+            <div class="hockey-bar-inner" style="height:18%;"></div>
+            <div class="hockey-bar-label">2027</div>
+          </div>
+          <div class="hockey-bar">
+            <div class="hockey-bar-value">$5.8M</div>
+            <div class="hockey-bar-inner" style="height:35%;"></div>
+            <div class="hockey-bar-label">2028</div>
+          </div>
+          <div class="hockey-bar">
+            <div class="hockey-bar-value">$16M</div>
+            <div class="hockey-bar-inner" style="height:62%;"></div>
+            <div class="hockey-bar-label">2029</div>
+          </div>
+          <div class="hockey-bar">
+            <div class="hockey-bar-value">$38M</div>
+            <div class="hockey-bar-inner" style="height:100%;"></div>
+            <div class="hockey-bar-label">2030</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;">
+          <div class="card" style="flex:1;padding:14px;text-align:center;min-width:100px;">
+            <div style="font-family:var(--font-data);font-size:22px;font-weight:700;color:var(--gold);">14x</div>
+            <div style="font-family:var(--font-data);font-size:10px;color:var(--gray);">LTV/CAC Terminal</div>
+          </div>
+          <div class="card" style="flex:1;padding:14px;text-align:center;min-width:100px;">
+            <div style="font-family:var(--font-data);font-size:22px;font-weight:700;color:var(--green);">32x</div>
+            <div style="font-family:var(--font-data);font-size:10px;color:var(--gray);">LTV/CAC AfriTrade</div>
+          </div>
+          <div class="card" style="flex:1;padding:14px;text-align:center;min-width:100px;">
+            <div style="font-family:var(--font-data);font-size:22px;font-weight:700;color:var(--gold);">8x</div>
+            <div style="font-family:var(--font-data);font-size:10px;color:var(--gray);">LTV/CAC PMS</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:12px;">
+          <span class="pill pill-green">Breakeven : T3 2028</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: COMPETITIVE LANDSCAPE ==================== -->
+<div class="slide" data-slide="8">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">Positionnement Concurrentiel</div>
+    <div class="anim-2" style="overflow-x:auto;">
+      <table class="deck-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Data &amp; Analytics</th>
+            <th>N&eacute;obanque</th>
+            <th>Trading Multi-March&eacute;</th>
+            <th>March&eacute; Priv&eacute;</th>
+            <th>R&eacute;gion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Bloomberg</strong></td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td style="color:var(--gray);">Global (faible AO)</td>
+          </tr>
+          <tr>
+            <td><strong>Flutterwave</strong></td>
+            <td class="cross">&#10007;</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+            <td style="color:var(--gray);">Afrique (paiements)</td>
+          </tr>
+          <tr>
+            <td><strong>PiggyVest</strong></td>
+            <td class="cross">&#10007;</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+            <td style="color:var(--gray);">Nigeria</td>
+          </tr>
+          <tr>
+            <td><strong>Daba Finance</strong></td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td style="color:var(--gray);">BRVM uniquement</td>
+          </tr>
+          <tr>
+            <td><strong>BRVM Direct</strong></td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td style="color:var(--gray);">UEMOA</td>
+          </tr>
+          <tr style="background:rgba(200,146,42,0.1);">
+            <td><strong style="color:var(--gold);font-size:15px;">WASI</strong></td>
+            <td class="check" style="font-size:18px;">&#10003;</td>
+            <td class="check" style="font-size:18px;">&#10003;</td>
+            <td class="check" style="font-size:18px;">&#10003;</td>
+            <td class="check" style="font-size:18px;">&#10003;</td>
+            <td style="color:var(--gold);font-weight:600;">CEDEAO 16 pays</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="anim-3 quote-block" style="margin-top:28px;">
+      <div class="quote-text">&laquo; Seule plateforme combinant les 4 piliers : Data + Banking + Trading + Private Markets &raquo;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: TEAM & TRACTION ==================== -->
+<div class="slide" data-slide="9">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">&Eacute;quipe &amp; Traction</div>
+    <div class="anim-2" style="display:flex;gap:32px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title" style="font-size:17px;">Fondateur</div>
+          <div class="card-body">
+            <strong style="color:var(--white);font-size:15px;">Tarawendesida Thomas KABORE</strong><br>
+            <span class="pill pill-gold" style="margin:8px 0;display:inline-block;">FMVA &mdash; Financial Modeling</span><br>
+            Corporate Finance &bull; ESG Finance Paris<br>
+            Expertise march&eacute;s ouest-africains, shipping &amp; commodities
+          </div>
+        </div>
+        <div style="font-family:var(--font-data);font-size:13px;color:var(--gray);margin-bottom:10px;">Recrutements cl&eacute;s</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span class="pill pill-gold">CTO</span>
+          <span class="pill pill-gold">Head Compliance</span>
+          <span class="pill pill-gold">Head Growth</span>
+        </div>
+        <div style="font-family:var(--font-data);font-size:13px;color:var(--gray);margin:16px 0 10px;">R&eacute;seau &amp; Advisors</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span class="pill pill-green">BCEAO</span>
+          <span class="pill pill-green">BRVM</span>
+          <span class="pill pill-green">ESG Finance Paris</span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:280px;">
+        <div style="font-family:var(--font-data);font-size:13px;color:var(--gray);margin-bottom:12px;letter-spacing:1px;">TRACTION</div>
+        <div class="traction-grid" style="grid-template-columns:1fr;">
+          <div class="traction-item">
+            <div class="ti-icon" style="color:var(--green);">&#9679;</div>
+            <div class="ti-text">Plateforme <strong class="green">live</strong> &mdash; infrastructure d&eacute;ploy&eacute;e</div>
+          </div>
+          <div class="traction-item">
+            <div class="ti-icon" style="color:var(--gold);">&#9679;</div>
+            <div class="ti-text"><strong class="gold">4,341 &eacute;ditions</strong> de donn&eacute;es collect&eacute;es (march&eacute;s publics BF)</div>
+          </div>
+          <div class="traction-item">
+            <div class="ti-icon" style="color:var(--gold);">&#9679;</div>
+            <div class="ti-text"><strong class="gold">3 bourses</strong> int&eacute;gr&eacute;es (BRVM, NGX, GSE)</div>
+          </div>
+          <div class="traction-item">
+            <div class="ti-icon" style="color:var(--gold);">&#9679;</div>
+            <div class="ti-text">Partenaires distribution : <strong>Orange Money</strong> &amp; <strong>MTN MoMo</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: THE ASK ==================== -->
+<div class="slide" data-slide="10">
+  <div class="slide-inner">
+    <div class="anim-1 slide-title">Seed Round : $2.2M USD</div>
+    <div class="anim-2" style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="flex:1;min-width:240px;">
+        <!-- PIE CHART via SVG -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 200 200" width="220" height="220" style="transform:rotate(-90deg);">
+            <!-- Capital reglementaire 30% = 108deg -->
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#C8922A" stroke-width="36"
+              stroke-dasharray="150.8 503.2" stroke-dashoffset="0"/>
+            <!-- Dev produit 21% = 75.6deg -->
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#00E676" stroke-width="36"
+              stroke-dasharray="105.56 503.2" stroke-dashoffset="-150.8"/>
+            <!-- Equipe 23% = 82.8deg -->
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#E2B65A" stroke-width="36"
+              stroke-dasharray="115.6 503.2" stroke-dashoffset="-256.36"/>
+            <!-- Marketing 9% = 32.4deg -->
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#FF5252" stroke-width="36"
+              stroke-dasharray="45.24 503.2" stroke-dashoffset="-371.96"/>
+            <!-- Infra+Legal 14% = 50.4deg -->
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#445566" stroke-width="36"
+              stroke-dasharray="70.36 503.2" stroke-dashoffset="-417.2"/>
+            <!-- Tresorerie 5% (remainder) -->
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#8899AA" stroke-width="36"
+              stroke-dasharray="25.12 503.2" stroke-dashoffset="-487.56"/>
+          </svg>
+        </div>
+        <div class="pie-legend" style="margin-top:16px;">
+          <div class="pie-legend-item"><div class="pie-swatch" style="background:#C8922A;"></div>Capital r&eacute;glementaire &mdash; $650K (30%)</div>
+          <div class="pie-legend-item"><div class="pie-swatch" style="background:#E2B65A;"></div>&Eacute;quipe &mdash; $500K (23%)</div>
+          <div class="pie-legend-item"><div class="pie-swatch" style="background:#00E676;"></div>D&eacute;v. produit &mdash; $450K (21%)</div>
+          <div class="pie-legend-item"><div class="pie-swatch" style="background:#445566;"></div>Infra + Legal &mdash; $300K (14%)</div>
+          <div class="pie-legend-item"><div class="pie-swatch" style="background:#FF5252;"></div>Marketing &mdash; $200K (9%)</div>
+          <div class="pie-legend-item"><div class="pie-swatch" style="background:#8899AA;"></div>Tr&eacute;sorerie &mdash; $100K (5%)</div>
+        </div>
+      </div>
+      <div style="flex:1.2;min-width:280px;">
+        <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+          <div class="card" style="flex:1;padding:18px;text-align:center;min-width:140px;">
+            <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;">Valorisation Pre-Money</div>
+            <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--gold);margin-top:6px;">$5-7M</div>
+          </div>
+          <div class="card" style="flex:1;padding:18px;text-align:center;min-width:140px;">
+            <div style="font-family:var(--font-data);font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;">S&eacute;rie A (2028)</div>
+            <div style="font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--green);margin-top:6px;">$15-25M</div>
+          </div>
+        </div>
+        <div class="anim-4 quote-block" style="border-left-color:var(--gold);margin-top:24px;">
+          <div class="quote-text" style="font-size:clamp(14px,1.2vw,18px);">
+            &laquo; L'Afrique de l'Ouest n'a pas besoin d'attendre que Wall Street la remarque. Elle peut financer ses propres champions &mdash; aujourd'hui. &raquo;
+          </div>
+        </div>
+        <div class="anim-5" style="margin-top:24px;text-align:center;">
+          <div style="font-family:var(--font-data);font-size:14px;color:var(--white);margin-bottom:4px;">
+            <strong style="color:var(--gold);">thomas@wasi.africa</strong>
+          </div>
+          <div style="font-family:var(--font-data);font-size:12px;color:var(--gray);">
+            Tarawendesida Thomas KABORE &bull; Fondateur &amp; CEO
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #deck -->
+
+<script>
+(function() {
+  'use strict';
+
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  let overviewMode = false;
+
+  const progressBar = document.getElementById('progress-bar');
+  const slideCounter = document.getElementById('slide-counter');
+
+  function updateUI() {
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    slideCounter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total || overviewMode) return;
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === index) s.classList.add('active');
+      else if (i < index) s.classList.add('prev');
+    });
+    current = index;
+    updateUI();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function toggleOverview() {
+    overviewMode = !overviewMode;
+    document.body.classList.toggle('overview-mode', overviewMode);
+    if (!overviewMode) {
+      goTo(current);
+    }
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault(); next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); prev();
+    } else if (e.key === 'Escape') {
+      e.preventDefault(); toggleOverview();
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault(); toggleFullscreen();
+      }
+    } else if (e.key === 'Home') {
+      e.preventDefault(); goTo(0);
+    } else if (e.key === 'End') {
+      e.preventDefault(); goTo(total - 1);
+    }
+  });
+
+  // Click to advance (not in overview)
+  document.getElementById('deck').addEventListener('click', function(e) {
+    if (overviewMode) {
+      const slide = e.target.closest('.slide');
+      if (slide) {
+        const idx = Array.from(slides).indexOf(slide);
+        toggleOverview();
+        setTimeout(() => goTo(idx), 50);
+      }
+      return;
+    }
+    // Click left 30% = prev, rest = next
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x < rect.width * 0.3) prev();
+    else next();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+
+  // Init
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>
