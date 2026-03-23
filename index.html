@@ -1500,12 +1500,14 @@ input, select, textarea { font-family: inherit; outline: none; }
       </div>
       <div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>
       <div class="chat-suggestions">
+        <button class="chat-sugg" onclick="sendSugg(this)">Presentez WASI Ecosystem</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">WASI Terminal DEX et sources de donnees</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Qu'est-ce que le WASI Stock Market ?</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Analyse du corridor Abidjan-Lagos</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Opportunites BRVM 2026</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Opportunites BRVM + NGX + GSE 2026</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Comment coter ma PME sur WASI ?</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Impact du franc CFA</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Projections financieres WASI 2030</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
       </div>
       <div class="chat-input-bar">
         <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -3738,6 +3740,315 @@ ${sorted.map((c, i) => {
 4. Eau & assainissement — 40% population sans acces eau potable
 
 Score infrastructure moyen WASI : 41/100 — le secteur le plus deficitaire.`;
+  }
+
+  // WASI Ecosystem / Business Plan / About WASI
+  if (msg.includes('wasi ecosystem') || msg.includes('business plan') || msg.includes('plan strategique') || msg.includes('qui est wasi') || msg.includes('c\'est quoi wasi') || msg.includes('kabore') || msg.includes('fondateur') || msg.includes('thomas') || msg.includes('presentation') || msg.includes('about') || msg.includes('a propos')) {
+    return `━━━ WASI ECOSYSTEM — PRÉSENTATION COMPLÈTE ━━━
+
+🏛️ WASI Ecosystem est une infrastructure financiere et economique dediee a l'Afrique de l'Ouest, concue pour transformer la maniere dont les investisseurs accedent, analysent et deploient des capitaux dans les 16 marches de la region.
+
+👤 FONDATEUR : Tarawendesida Thomas KABORE, FMVA
+   CEO — WASI Ecosystem | Ouagadougou, Burkina Faso
+   ESG Finance Paris, M1 Corporate Finance
+
+📊 CHIFFRES CLÉS :
+• Marche adressable (TAM) : $4.2 Mds USD
+• Objectif ARR 2030 : $38M USD
+• 16 pays couverts | 420+ millions d'habitants
+• 4 341+ editions de journaux officiels de marches publics
+• 20 ans de donnees historiques (Burkina Faso)
+
+🏗️ LES 4 PILIERS :
+
+1. 🖥️ WASI TERMINAL DEX — Intelligence economique temps reel
+   Indice composite WASI (0-100) calcule a partir de 3 couches de donnees :
+   • Layer 1 (40%) : Ports — NPA Lagos, Abidjan, Tema, Dakar, Lome, Cotonou
+   • Layer 2 (40%) : Marches publics — 16 sources gouvernementales officielles
+   • Layer 3 (20%) : Intelligence sectorielle — COCOBOD, SNIM, CBN, BCEAO
+   ARR 2030 : $7.8M | 60 000 abonnes
+
+2. 🏦 AFRITRADE BANK — Neobanque de l'investisseur ouest-africain
+   Comptes multidevises (XOF, NGN, GHS, USD, EUR)
+   Transferts intra-CEDEAO < 24h, frais < 1.5% (vs 8-12% marche)
+   Micro-credit PME score par le WASI Index
+   Licence BCEAO (EME) — capital reglementaire 300M FCFA
+   ARR 2030 : $16M | 250 000 comptes
+
+3. 📈 MULTI-MARKET INVESTMENTS — Investissement centralise
+   BRVM (45 valeurs UEMOA) + NGX (Lagos) + GSE (Accra) + JSE
+   NYSE/NASDAQ via partenaire broker agree
+   Crypto (BTC, ETH, USDC) + Obligations souveraines UEMOA
+   Fractionnement d'actions des 1 000 FCFA
+   ARR 2030 : $7.2M
+
+4. 📊 PRIVATE MARKET STUDIO — IPO pour PME africaines
+   Analyse des etats financiers SYSCOHADA/IFRS par IA
+   Scoring de maturite boursiere (0-100)
+   Production dossier d'emission complet (valorisation DCF, memorandum)
+   Mise en relation avec marches prives et investisseurs
+   ARR 2030 : $7M | 320 dossiers/an
+
+📅 CALENDRIER DE LANCEMENT :
+• T1-T2 2026 : Finalisation pipeline donnees BF+NG+CI, recrutement
+• T3 2026 : Go-live WASI Terminal DEX (1 200 abonnes)
+• T4 2026 : Lancement AfriTrade Bank (wallet + carte virtuelle)
+• T1 2027 : Multi-Market (BRVM d'abord, puis NYSE/NASDAQ)
+• T2 2027 : Private Market Studio (pilote 12 PME)
+• 2028+ : Expansion Nigeria, Ghana, API institutionnelle
+
+💰 FINANCEMENT :
+Seed Round : $2.2M USD
+• Capital reglementaire AfriTrade : $650K (30%)
+• Dev produit : $450K (21%)
+• Equipe 12 mois : $500K (23%)
+• Marketing : $200K (9%)
+• Infra + Legal : $300K (14%)
+• Tresorerie : $100K (5%)
+Valorisation pre-money : $5-7M USD | Dilution : 25-35%
+Serie A prevue 2028 (ARR > $5M) : $15-25M USD
+
+"Nous ne simulons pas. Nous calculons."
+Bloomberg n'a pas ces donnees. Refinitiv non plus. WASI, oui.`;
+  }
+
+  // Terminal DEX / Data / Index
+  if (msg.includes('terminal') || msg.includes('dex') || msg.includes('index') || msg.includes('donnee') || msg.includes('data') || msg.includes('scraping') || msg.includes('layer') || msg.includes('couche') || msg.includes('indice wasi') || msg.includes('pipeline') || msg.includes('source') || msg.includes('journal officiel')) {
+    return `━━━ WASI TERMINAL DEX — INTELLIGENCE ÉCONOMIQUE ━━━
+
+📊 Le WASI Terminal est un tableau de bord d'intelligence economique en temps reel pour les 16 pays d'Afrique de l'Ouest. Il calcule l'indice composite WASI a partir de donnees officielles.
+
+🔑 ARCHITECTURE DES DONNÉES (3 COUCHES) :
+
+📦 LAYER 1 — PORTS (40% du poids)
+   Sources : NPA Nigeria, Port Abidjan, Tema Ghana, Port Dakar,
+   Port Lome, Port Cotonou, Port Conakry, PANPA Mauritanie
+   Donnees : Trafic container (TEU), tonnage, escales de navires
+   Frequence : Mensuelle
+
+📋 LAYER 2 — MARCHÉS PUBLICS (40% du poids)
+   Sources par pays :
+   • BF : DGCMEF (4 341 editions — 20 ans de donnees!)
+   • NG : NOCOPO
+   • CI : ARCOP / SIGOMAP
+   • GH : GHANEPS
+   • SN : ARMP
+   • ML : ARMDS
+   • BJ/TG : DNCMP
+   • SL : NPPA
+   Donnees : Attributions de marches hebdomadaires par secteur
+   Classification : BTP, Transport, Agriculture, Mines, Sante, IT
+
+🏭 LAYER 3 — INTELLIGENCE SECTORIELLE (20% du poids)
+   Sources : COCOBOD Ghana (cacao), SNIM Mauritanie (fer),
+   Min. Mines Guinee (bauxite), CBN Nigeria (petrole),
+   BCEAO (8 pays UEMOA simultanement)
+
+📊 PONDÉRATION PAR PAYS :
+┌──────────────────┬────────┬───────────────────────┐
+│ Pays             │ Poids  │ Source primaire        │
+├──────────────────┼────────┼───────────────────────┤
+│ 🇳🇬 Nigeria       │  28%   │ NOCOPO + NPA Lagos    │
+│ 🇨🇮 Cote d'Ivoire │  22%   │ Port Abidjan + ARCOP  │
+│ 🇬🇭 Ghana         │  15%   │ GHANEPS + Tema Port   │
+│ 🇸🇳 Senegal       │  10%   │ ARMP + Port Dakar     │
+│ 🇧🇫 Burkina Faso  │   4%   │ DGCMEF (4 341 ed.)    │
+│ 🌍 11 autres      │  21%   │ Sources officielles   │
+└──────────────────┴────────┴───────────────────────┘
+
+📈 INDICATEURS DU TERMINAL :
+• WASI Composite Index (0-100) : EXPANSION ≥70 | STABLE 50-69 | CONTRACTION <50
+• 16 indices pays avec indicateur de confiance
+• Alertes sectorielles temps reel
+• Historique jusqu'a 20 ans
+• Export CSV/Excel | API REST pour institutions
+
+💰 TARIFICATION :
+• Particulier : 9 900 FCFA/mois (~15 EUR)
+• Professionnel : 49 000 FCFA/mois (~75 EUR)
+• Institutionnel : 250 000 FCFA/mois (~380 EUR)
+• API : 100K - 1.5M FCFA/mois selon volume
+
+🏆 AVANTAGE DÉFENDABLE :
+Bloomberg et Refinitiv ne disposent PAS de ces donnees.
+WASI est la SEULE plateforme a agreger 4 341+ editions de journaux officiels de marches publics ouest-africains.
+Barriere a l'entree : 20 ans de donnees historiques incopiables.`;
+  }
+
+  // AfriTrade Bank specific
+  if (msg.includes('afritrade') || msg.includes('neobanque') || msg.includes('neo-banque') || msg.includes('compte') || msg.includes('carte') || msg.includes('transfert') || msg.includes('wallet') || msg.includes('bceao') || msg.includes('licence')) {
+    return `━━━ AFRITRADE BANK — NÉOBANQUE WASI ━━━
+
+🏦 AfriTrade Bank est la neobanque de l'investisseur ouest-africain, integree a l'ecosysteme WASI.
+
+📱 SERVICES :
+• Compte Multidevises : XOF, NGN, GHS, GNF, USD, EUR — conversion auto
+• Transferts Intra-CEDEAO : < 24h, frais < 1.5% (vs 8-12% marche actuel)
+• Carte de Debit Virtuelle : paiements en ligne internationaux
+• Compte d'Investissement : lie directement au Multi-Market
+• Micro-credit PME : 500K a 50M FCFA, scoring WASI Index
+• Epargne Automatisee : allocation vers les actifs du portefeuille
+
+🏛️ CADRE RÉGLEMENTAIRE :
+• Licence EME (Etablissement de Monnaie Electronique) — BCEAO
+• Capital minimum reglementaire : 300M FCFA (~500K USD)
+• Partenariat banque correspondante pour NGN et GHS
+• Conformite FATF, KYC/AML, BCEAO Instruction n°008-05-2015
+
+💡 DIFFÉRENCIATION :
+AfriTrade Bank est la SEULE neobanque dont le scoring de credit PME est alimente par des donnees de marches publics et de flux portuaires reels — une methodologie proprietaire impossible a repliquer sans le WASI Index.
+
+📊 PROJECTIONS :
+┌──────────┬─────────┬─────────┬─────────┬──────────┐
+│          │  2027   │  2028   │  2029   │   2030   │
+├──────────┼─────────┼─────────┼─────────┼──────────┤
+│ Comptes  │ 15 000  │ 45 000  │ 110 000 │ 250 000  │
+│ ARR kUSD │   520   │  2 100  │  6 500  │  16 000  │
+└──────────┴─────────┴─────────┴─────────┴──────────┘
+
+📱 DISTRIBUTION :
+• Partenariat Orange Money, MTN MoMo, Moov Africa
+• Influenceurs finance West Africa
+• USSD pour zones sans smartphone
+
+💰 REVENUS :
+• Interchange carte : 0.6-1.2%
+• Spread transfert : 0.8-1.5%
+• Marge nette d'interet micro-credit : 8-12%/an
+• Unit Economics : CAC $12, LTV $380, ratio 32x, payback 5 mois`;
+  }
+
+  // Private Market Studio
+  if (msg.includes('private market') || msg.includes('studio') || msg.includes('introduction en bourse') || msg.includes('valorisation') || msg.includes('dcf') || msg.includes('memorandum') || msg.includes('dossier') || msg.includes('syscohada') || msg.includes('ohada') || msg.includes('emission') || msg.includes('non cotee') || msg.includes('non-cotee')) {
+    return `━━━ WASI PRIVATE MARKET STUDIO ━━━
+
+📊 Le Private Market Studio est un module B2B permettant a une PME ou ETI africaine de soumettre ses etats financiers et d'obtenir un dossier complet d'introduction sur un marche boursier prive reglemente.
+
+📋 PROCESSUS EN 5 ÉTAPES :
+1. DÉPÔT — Etats financiers (3 exercices, SYSCOHADA/IFRS/PCG)
+2. ANALYSE IA — Ratios rentabilite, solvabilite, liquidite, croissance
+   Benchmark sectoriel BRVM automatique
+3. SCORING — Maturite boursiere (0-100) + identification gaps reglementaires
+4. DOSSIER — Note de valorisation (DCF + Multiples), memorandum d'information,
+   structure de l'action a emettre
+5. MISE EN RELATION — Marches prives partenaires : BRVM Croissance, NGX Alt, OTC UEMOA
+
+📑 LIVRABLES :
+┌───────────────────────────────────┬───────────────────────────────────┐
+│ Livrable                          │ Valeur                            │
+├───────────────────────────────────┼───────────────────────────────────┤
+│ Rapport analyse financiere        │ Diagnostic 30-50 pages            │
+│ Note de valorisation DCF+Mult.    │ Fourchette prix d'emission        │
+│ Memorandum d'information (IM)     │ Document pour roadshow            │
+│ Dossier reglementaire CREPMF/SEC  │ Conformite pour cotation          │
+│ Mise en relation investisseurs    │ Reseau WASI (fonds, family offices│
+└───────────────────────────────────┴───────────────────────────────────┘
+
+🎯 MARCHES CIBLES :
+• PME en croissance (CA > 500M FCFA, rentabilite positive)
+• Institutions de microfinance en recapitalisation
+• Cooperatives agricoles (parts sociales)
+• Promoteurs immobiliers (OPCI, SCPI type OHADA)
+
+💰 TARIFICATION :
+• Analyse : 500 000 a 2 500 000 FCFA par dossier
+• Success fee : 1.5-3% des fonds leves
+• Unit Economics : CAC $2 200, LTV $18 000, ratio 8x
+
+📊 PROJECTIONS :
+• 2027 : 40 dossiers | ARR $600K
+• 2028 : 90 dossiers | ARR $1.5M
+• 2029 : 180 dossiers | ARR $3.5M
+• 2030 : 320 dossiers | ARR $7M
+
+🔧 TECHNOLOGIE :
+Analyse par IA (Claude API / Anthropic) — benchmark sectoriel automatique,
+scoring maturite, production de rapports normalises SYSCOHADA.`;
+  }
+
+  // Competitors / concurrence
+  if (msg.includes('concurrent') || msg.includes('competition') || msg.includes('bloomberg') || msg.includes('refinitiv') || msg.includes('flutterwave') || msg.includes('chipper') || msg.includes('piggy') || msg.includes('bamboo') || msg.includes('daba')) {
+    return `━━━ ANALYSE CONCURRENTIELLE — WASI vs MARCHÉ ━━━
+
+┌────────────────────┬──────────────────────────────────────────────────┐
+│ Concurrent         │ Forces / Faiblesses vs WASI                     │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ Bloomberg/Refinitiv│ Donnees mondiales excellentes, mais ZERO donnees │
+│                    │ marches publics Afrique de l'Ouest.              │
+│                    │ Prix : >$2 000/mois — inaccessible en Afrique.   │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ Stanbic / StdBank  │ Presence pan-africaine, mais pas d'indice        │
+│                    │ proprietaire ni d'investissement multi-marches.  │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ Flutterwave/Chipper│ Excellents paiements, mais absence totale de     │
+│                    │ donnees economiques et d'investissement.         │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ PiggyVest/Bamboo   │ Bons sur epargne/invest retail Nigeria, mais     │
+│                    │ mono-pays et sans couche data institutionnelle.  │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ BRVM Direct        │ Acces BRVM uniquement, sans analyse ni           │
+│                    │ multi-marches.                                   │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ Daba Finance       │ Concurrent direct investissement BRVM+US — mais  │
+│                    │ sans donnees macro ni banking integre.           │
+├────────────────────┼──────────────────────────────────────────────────┤
+│ WASI Ecosystem     │ SEULE plateforme combinant :                     │
+│                    │ ✅ Donnees officielles 16 pays                   │
+│                    │ ✅ Neobanque integree                            │
+│                    │ ✅ Courtage multi-marches                        │
+│                    │ ✅ Acces marches prives                          │
+│                    │ ✅ 20 ans de donnees historiques                  │
+└────────────────────┴──────────────────────────────────────────────────┘
+
+🏆 AVANTAGE DÉFENDABLE :
+La profondeur historique de 20 ans de donnees officielles constitue une barriere a l'entree quasi-infranchissable pour tout concurrent entrant apres 2027.
+
+"Nous ne simulons pas. Nous calculons."
+Bloomberg n'a pas ces donnees. Refinitiv non plus. WASI, oui.`;
+  }
+
+  // Fundraising / Investment / ARR / projections
+  if (msg.includes('lever') && !msg.includes('levee') || msg.includes('seed') || msg.includes('serie a') || msg.includes('valorisation') || msg.includes('arr') || msg.includes('projection') || msg.includes('financier') || msg.includes('investir dans wasi') || msg.includes('rentabilite') || msg.includes('ebitda') || msg.includes('unit economics')) {
+    return `━━━ WASI ECOSYSTEM — PROJECTIONS FINANCIÈRES ━━━
+
+📊 PROJECTIONS ARR 2026-2030 (kUSD) :
+
+                    2026     2027     2028     2029      2030
+┌──────────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ Terminal DEX │    120  │    480  │  1 250  │  3 200  │   7 800 │
+│ AfriTrade Bk │     90  │    520  │  2 100  │  6 500  │  16 000 │
+│ Multi-Market │     60  │    280  │    900  │  2 800  │   7 200 │
+│ Priv. Market │    180  │    600  │  1 500  │  3 500  │   7 000 │
+├──────────────┼─────────┼─────────┼─────────┼─────────┼─────────┤
+│ ARR TOTAL    │    450  │  1 880  │  5 750  │ 16 000  │  38 000 │
+│ Marge brute  │    65%  │    70%  │    74%  │    76%  │     78% │
+│ EBITDA       │   -380  │   -120  │    920  │  4 800  │  12 500 │
+└──────────────┴─────────┴─────────┴─────────┴─────────┴─────────┘
+
+📈 Point de rentabilite : T3 2028 (ARR > $5M)
+
+💰 UNIT ECONOMICS :
+┌──────────────────┬──────────┬──────────┬──────────┐
+│ Metrique         │ Terminal │ AfriTrade│ Priv.Mkt │
+├──────────────────┼──────────┼──────────┼──────────┤
+│ CAC              │   $85    │   $12    │  $2 200  │
+│ LTV              │  $1 200  │   $380   │ $18 000  │
+│ Ratio LTV/CAC    │   14x    │   32x    │    8x    │
+│ Payback          │  8 mois  │  5 mois  │ 14 mois  │
+└──────────────────┴──────────┴──────────┴──────────┘
+
+🏗️ SEED ROUND : $2.2M USD
+• Valorisation pre-money : $5-7M USD
+• Dilution visee : 25-35%
+• Serie A prevue 2028 : $15-25M USD (ARR > $5M)
+• Chemin vers cotation BRVM/NGX a horizon 2030-2031
+
+🎯 INVESTISSEURS CIBLÉS :
+• Fonds d'impact Afrique (IFC, Proparco, AfricInvest)
+• Family Offices diaspora africaine
+• Accelerateurs Fintech (Y Combinator, Catalyst Fund, Seedstars)
+• Banques de developpement (BOAD, BIDC)
+• Business Angels ESG Finance / HEC Paris`;
   }
 
   // Default — intelligent fallback based on focus country
