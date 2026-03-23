@@ -1767,6 +1767,20 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="dex-tab active" onclick="switchDexTab('brvm',this)">BRVM (UEMOA)</button>
       <button class="dex-tab" onclick="switchDexTab('ngx',this)">NGX (Nigeria)</button>
       <button class="dex-tab" onclick="switchDexTab('gse',this)">GSE (Ghana)</button>
+      <button class="dex-tab" onclick="switchDexTab('jse',this)">JSE (Afr. Sud)</button>
+      <button class="dex-tab" onclick="switchDexTab('egx',this)">EGX (Egypte)</button>
+      <button class="dex-tab" onclick="switchDexTab('cse',this)">CSE (Maroc)</button>
+      <button class="dex-tab" onclick="switchDexTab('nse',this)">NSE (Kenya)</button>
+      <button class="dex-tab" onclick="switchDexTab('dse',this)">DSE (Tanzanie)</button>
+      <button class="dex-tab" onclick="switchDexTab('use',this)">USE (Ouganda)</button>
+      <button class="dex-tab" onclick="switchDexTab('rse',this)">RSE (Rwanda)</button>
+      <button class="dex-tab" onclick="switchDexTab('bse',this)">BSE (Botswana)</button>
+      <button class="dex-tab" onclick="switchDexTab('luse',this)">LuSE (Zambie)</button>
+      <button class="dex-tab" onclick="switchDexTab('zse',this)">ZSE (Zimbabwe)</button>
+      <button class="dex-tab" onclick="switchDexTab('sem',this)">SEM (Maurice)</button>
+      <button class="dex-tab" onclick="switchDexTab('bvmt',this)">BVMT (Tunisie)</button>
+      <button class="dex-tab" onclick="switchDexTab('bvmac',this)">BVMAC (CEMAC)</button>
+      <button class="dex-tab" onclick="switchDexTab('nsx',this)">NSX (Namibie)</button>
       <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
       <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
       <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
@@ -1815,6 +1829,244 @@ input, select, textarea { font-family: inherit; outline: none; }
           <table class="data-table">
             <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (GHS)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
             <tbody id="gse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-jse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Johannesburg Stock Exchange (JSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Johannesburg, Afrique du Sud | Devise: ZAR | Top 40: 72,450</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">18.2 T ZAR (~$980 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (ZAR)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="jse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-egx">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Egyptian Exchange (EGX)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Le Caire, Egypte | Devise: EGP | EGX 30: 28,450</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">2.8 T EGP (~$57 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (EGP)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="egx-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-cse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Casablanca Stock Exchange (CSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Casablanca, Maroc | Devise: MAD | MASI: 13,250</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">720 Mds MAD (~$72 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (MAD)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="cse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-nse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Nairobi Securities Exchange (NSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Nairobi, Kenya | Devise: KES | NSE 20: 1,845</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">2.8 T KES (~$18 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (KES)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="nse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-dse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Dar es Salaam Stock Exchange (DSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Dar es Salaam, Tanzanie | Devise: TZS | DSE ASI: 1,920</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">12.5 T TZS (~$4.8 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (TZS)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="dse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-use">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Uganda Securities Exchange (USE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Kampala, Ouganda | Devise: UGX | USE ASI: 1,050</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">28 T UGX (~$7.2 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (UGX)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="use-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-rse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Rwanda Stock Exchange (RSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Kigali, Rwanda | Devise: RWF | RSE ASI: 145</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">1.2 T RWF (~$950 M)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (RWF)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="rse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-bse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Botswana Stock Exchange (BSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Gaborone, Botswana | Devise: BWP | BSE DCI: 8,250</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">52 Mds BWP (~$3.8 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (BWP)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="bse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-luse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Lusaka Securities Exchange (LuSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Lusaka, Zambie | Devise: ZMW | LuSE ASI: 7,840</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">85 Mds ZMW (~$3.2 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (ZMW)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="luse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-zse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Zimbabwe Stock Exchange (ZSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Harare, Zimbabwe | Devise: ZWG | ZSE Ind: 18,500</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">Donnees limitees</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (ZWG)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="zse-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-sem">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Stock Exchange of Mauritius (SEM)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Port-Louis, Maurice | Devise: MUR | SEMDEX: 2,180</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">320 Mds MUR (~$7.1 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (MUR)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="sem-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-bvmt">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Bourse de Tunis (BVMT)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Tunis, Tunisie | Devise: TND | TUNINDEX: 9,450</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">32 Mds TND (~$10 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (TND)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="bvmt-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-bvmac">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">BVMAC (CEMAC)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Douala, Cameroun | Devise: XAF | BVMAC ASI: 210</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">Donnees limitees</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (XAF)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="bvmac-body"></tbody>
+          </table>
+        </div>
+
+        <div class="dex-panel" id="panel-nsx">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Namibian Stock Exchange (NSX)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Windhoek, Namibie | Devise: NAD | NSX OI: 1,580</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">180 Mds NAD (~$9.5 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (NAD)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="nsx-body"></tbody>
           </table>
         </div>
         <!-- ETF panel -->
@@ -2734,6 +2986,128 @@ const GSE_STOCKS=[
   {name:'AngloGold Ashanti',ticker:'AGA',sector:'Mines',price:62.00,change:2.2,volume:28000,per:12.7,signal:'ACHAT'},
 ];
 
+const JSE_STOCKS=[
+  {name:'Naspers',ticker:'NPN',sector:'Tech',price:321500,change:1.8,volume:1200000,per:22.4,signal:'ACHAT'},
+  {name:'Anglo American Plat',ticker:'AMS',sector:'Mines',price:78500,change:-2.1,volume:890000,per:8.5,signal:'NEUTRE'},
+  {name:'Sasol',ticker:'SOL',sector:'Chimie',price:14200,change:0.9,volume:2100000,per:6.8,signal:'NEUTRE'},
+  {name:'FirstRand',ticker:'FSR',sector:'Banque',price:6850,change:1.5,volume:5400000,per:11.2,signal:'ACHAT'},
+  {name:'Standard Bank',ticker:'SBK',sector:'Banque',price:18900,change:0.7,volume:3200000,per:9.8,signal:'ACHAT'},
+  {name:'MTN Group',ticker:'MTN',sector:'Telecom',price:8950,change:2.3,volume:4100000,per:14.1,signal:'ACHAT'},
+  {name:'Shoprite',ticker:'SHP',sector:'Distribution',price:25600,change:1.2,volume:1800000,per:18.7,signal:'ACHAT'},
+  {name:'Gold Fields',ticker:'GFI',sector:'Mines',price:28400,change:3.1,volume:2500000,per:10.3,signal:'ACHAT'},
+  {name:'Impala Platinum',ticker:'IMP',sector:'Mines',price:7250,change:-1.4,volume:3800000,per:5.2,signal:'VENTE'},
+  {name:'Sibanye-Stillwater',ticker:'SSW',sector:'Mines',price:2180,change:-0.8,volume:6200000,per:4.1,signal:'NEUTRE'},
+  {name:'Vodacom',ticker:'VOD',sector:'Telecom',price:9850,change:0.5,volume:1500000,per:13.6,signal:'NEUTRE'},
+  {name:'Capitec',ticker:'CPI',sector:'Banque',price:265000,change:1.9,volume:420000,per:28.5,signal:'ACHAT'},
+];
+const EGX_STOCKS=[
+  {name:'Commercial Intl Bank',ticker:'COMI',sector:'Banque',price:78.50,change:2.1,volume:8500000,per:6.8,signal:'ACHAT'},
+  {name:'Eastern Company',ticker:'EAST',sector:'Tabac',price:24.80,change:0.5,volume:3200000,per:5.2,signal:'NEUTRE'},
+  {name:'Fawry',ticker:'FWRY',sector:'Fintech',price:5.85,change:3.8,volume:12000000,per:22.1,signal:'ACHAT'},
+  {name:'Telecom Egypt',ticker:'ETEL',sector:'Telecom',price:32.40,change:1.2,volume:4100000,per:8.9,signal:'ACHAT'},
+  {name:'EFG Hermes',ticker:'HRHO',sector:'Finance',price:22.60,change:-0.6,volume:5800000,per:9.4,signal:'NEUTRE'},
+  {name:'Elsewedy Electric',ticker:'SWDY',sector:'Industrie',price:42.30,change:1.9,volume:2900000,per:7.6,signal:'ACHAT'},
+  {name:'Orascom Construction',ticker:'ORAS',sector:'BTP',price:55.20,change:-1.1,volume:1800000,per:11.3,signal:'NEUTRE'},
+  {name:'TMG Holding',ticker:'TMGH',sector:'Immobilier',price:12.90,change:2.5,volume:9500000,per:14.7,signal:'ACHAT'},
+  {name:'Abu Qir Fertilizers',ticker:'ABUK',sector:'Chimie',price:38.70,change:0.8,volume:1600000,per:6.1,signal:'NEUTRE'},
+  {name:'Juhayna',ticker:'JUFO',sector:'Agro',price:8.45,change:-0.3,volume:4800000,per:10.8,signal:'NEUTRE'},
+];
+const CSE_STOCKS=[
+  {name:'Attijariwafa Bank',ticker:'ATW',sector:'Banque',price:580.00,change:1.4,volume:120000,per:16.8,signal:'ACHAT'},
+  {name:'Maroc Telecom',ticker:'IAM',sector:'Telecom',price:128.50,change:0.8,volume:350000,per:18.2,signal:'NEUTRE'},
+  {name:'BCP',ticker:'BCP',sector:'Banque',price:285.00,change:1.1,volume:95000,per:14.5,signal:'ACHAT'},
+  {name:'LafargeHolcim Maroc',ticker:'LHM',sector:'Ciment',price:1850.00,change:-0.4,volume:12000,per:20.1,signal:'NEUTRE'},
+  {name:'Ciments du Maroc',ticker:'CMA',sector:'Ciment',price:2100.00,change:0.6,volume:8500,per:17.3,signal:'NEUTRE'},
+  {name:'Cosumar',ticker:'CSR',sector:'Agro',price:198.00,change:1.9,volume:45000,per:12.6,signal:'ACHAT'},
+  {name:'BMCE Bank of Africa',ticker:'BOA',sector:'Banque',price:195.00,change:0.3,volume:78000,per:13.2,signal:'NEUTRE'},
+  {name:'Taqa Morocco',ticker:'TAQA',sector:'Energie',price:1220.00,change:-0.9,volume:5200,per:9.8,signal:'NEUTRE'},
+  {name:'Label Vie',ticker:'LBV',sector:'Distribution',price:4350.00,change:2.2,volume:3800,per:24.5,signal:'ACHAT'},
+  {name:'Managem',ticker:'MNG',sector:'Mines',price:1680.00,change:3.5,volume:18000,per:15.7,signal:'ACHAT'},
+];
+const NSE_STOCKS=[
+  {name:'Safaricom',ticker:'SCOM',sector:'Telecom',price:28.50,change:2.4,volume:12000000,per:14.8,signal:'ACHAT'},
+  {name:'Equity Group',ticker:'EQTY',sector:'Banque',price:42.80,change:1.6,volume:3500000,per:6.2,signal:'ACHAT'},
+  {name:'KCB Group',ticker:'KCB',sector:'Banque',price:35.20,change:0.9,volume:2800000,per:5.8,signal:'ACHAT'},
+  {name:'East African Breweries',ticker:'EABL',sector:'Boissons',price:155.00,change:-0.5,volume:420000,per:18.2,signal:'NEUTRE'},
+  {name:'BAT Kenya',ticker:'BAT',sector:'Tabac',price:320.00,change:-1.2,volume:25000,per:8.5,signal:'NEUTRE'},
+  {name:'Co-op Bank',ticker:'COOP',sector:'Banque',price:13.80,change:1.8,volume:1900000,per:4.9,signal:'ACHAT'},
+  {name:'Bamburi Cement',ticker:'BAMB',sector:'Ciment',price:28.00,change:0.4,volume:180000,per:12.1,signal:'NEUTRE'},
+  {name:'NCBA Group',ticker:'NCBA',sector:'Banque',price:42.50,change:0.7,volume:850000,per:5.5,signal:'NEUTRE'},
+];
+const DSE_STOCKS=[
+  {name:'CRDB Bank',ticker:'CRDB',sector:'Banque',price:550,change:1.8,volume:420000,per:5.2,signal:'ACHAT'},
+  {name:'NMB Bank',ticker:'NMB',sector:'Banque',price:3800,change:0.9,volume:180000,per:6.8,signal:'ACHAT'},
+  {name:'Tanzania Breweries',ticker:'TBL',sector:'Boissons',price:9200,change:-0.3,volume:45000,per:16.5,signal:'NEUTRE'},
+  {name:'Tanga Cement',ticker:'TCCL',sector:'Ciment',price:2100,change:0.5,volume:95000,per:9.4,signal:'NEUTRE'},
+  {name:'VODACOM Tanzania',ticker:'VODA',sector:'Telecom',price:780,change:2.1,volume:350000,per:11.2,signal:'ACHAT'},
+  {name:'Swissport Tanzania',ticker:'SWIS',sector:'Transport',price:4500,change:-0.8,volume:12000,per:8.7,signal:'NEUTRE'},
+];
+const USE_STOCKS=[
+  {name:'Stanbic Uganda',ticker:'SBU',sector:'Banque',price:35.00,change:1.5,volume:180000,per:5.8,signal:'ACHAT'},
+  {name:'MTN Uganda',ticker:'MTNU',sector:'Telecom',price:210,change:2.8,volume:520000,per:12.4,signal:'ACHAT'},
+  {name:'Bank of Baroda UG',ticker:'BOBU',sector:'Banque',price:8.50,change:0.3,volume:95000,per:4.2,signal:'NEUTRE'},
+  {name:'Uganda Clays',ticker:'UCL',sector:'Industrie',price:18.00,change:-1.1,volume:42000,per:7.5,signal:'NEUTRE'},
+  {name:'DFCU Group',ticker:'DFCU',sector:'Banque',price:420,change:0.7,volume:65000,per:3.9,signal:'NEUTRE'},
+];
+const RSE_STOCKS=[
+  {name:'Bank of Kigali',ticker:'BK',sector:'Banque',price:280,change:1.2,volume:85000,per:7.8,signal:'ACHAT'},
+  {name:'I&M Bank Rwanda',ticker:'IMR',sector:'Banque',price:95,change:0.5,volume:42000,per:6.2,signal:'NEUTRE'},
+  {name:'Bralirwa',ticker:'BLR',sector:'Boissons',price:180,change:-0.3,volume:28000,per:14.5,signal:'NEUTRE'},
+  {name:'Equity Bank Rwanda',ticker:'EQRW',sector:'Banque',price:420,change:1.8,volume:35000,per:8.1,signal:'ACHAT'},
+  {name:'BK Group',ticker:'BKG',sector:'Finance',price:350,change:0.9,volume:52000,per:9.3,signal:'NEUTRE'},
+];
+const BSE_STOCKS=[
+  {name:'First National Bank BW',ticker:'FNBB',sector:'Banque',price:3.25,change:1.1,volume:320000,per:8.5,signal:'ACHAT'},
+  {name:'Chobe Holdings',ticker:'CHOBE',sector:'Tourisme',price:9.80,change:0.4,volume:15000,per:12.3,signal:'NEUTRE'},
+  {name:'Sefalana Group',ticker:'SEFA',sector:'Distribution',price:12.50,change:1.8,volume:85000,per:10.2,signal:'ACHAT'},
+  {name:'Letshego Holdings',ticker:'LETSHEGO',sector:'Finance',price:1.45,change:2.5,volume:250000,per:5.8,signal:'ACHAT'},
+  {name:'Sechaba Breweries',ticker:'SECHABA',sector:'Boissons',price:28.00,change:-0.6,volume:8500,per:14.1,signal:'NEUTRE'},
+  {name:'Botswana Insurance',ticker:'BIHL',sector:'Assurance',price:18.20,change:0.3,volume:12000,per:7.2,signal:'NEUTRE'},
+];
+const LUSE_STOCKS=[
+  {name:'Zambeef Products',ticker:'ZAMBEEF',sector:'Agro',price:5.80,change:1.2,volume:180000,per:8.5,signal:'ACHAT'},
+  {name:'Copperbelt Energy',ticker:'CEC',sector:'Energie',price:12.50,change:0.8,volume:95000,per:6.9,signal:'NEUTRE'},
+  {name:'Zanaco',ticker:'ZNCO',sector:'Banque',price:2.80,change:1.5,volume:320000,per:5.1,signal:'ACHAT'},
+  {name:'Standard Chartered ZM',ticker:'SCBL',sector:'Banque',price:18.00,change:-0.4,volume:42000,per:7.8,signal:'NEUTRE'},
+  {name:'Puma Energy Zambia',ticker:'PUMA',sector:'Energie',price:4.20,change:0.3,volume:65000,per:9.2,signal:'NEUTRE'},
+];
+const ZSE_STOCKS=[
+  {name:'Econet Wireless',ticker:'ECO',sector:'Telecom',price:85.50,change:3.2,volume:1200000,per:8.4,signal:'ACHAT'},
+  {name:'Delta Corporation',ticker:'DLTA',sector:'Boissons',price:210.00,change:0.8,volume:450000,per:12.5,signal:'NEUTRE'},
+  {name:'Innscor Africa',ticker:'INN',sector:'Conglomerat',price:320.00,change:1.5,volume:280000,per:7.9,signal:'ACHAT'},
+  {name:'Cassava Smartech',ticker:'CSMA',sector:'Fintech',price:42.00,change:4.5,volume:850000,per:15.2,signal:'ACHAT'},
+  {name:'FBC Holdings',ticker:'FBC',sector:'Banque',price:38.00,change:-0.6,volume:320000,per:4.8,signal:'NEUTRE'},
+  {name:'National Foods',ticker:'NATF',sector:'Agro',price:5800.00,change:0.9,volume:18000,per:10.1,signal:'NEUTRE'},
+];
+const SEM_STOCKS=[
+  {name:'MCB Group',ticker:'MCB',sector:'Banque',price:385.00,change:1.2,volume:42000,per:11.5,signal:'ACHAT'},
+  {name:'SBM Holdings',ticker:'SBM',sector:'Banque',price:5.80,change:0.8,volume:120000,per:8.2,signal:'NEUTRE'},
+  {name:'New Mauritius Hotels',ticker:'NMH',sector:'Tourisme',price:42.50,change:2.1,volume:35000,per:18.4,signal:'ACHAT'},
+  {name:'Phoenix Beverages',ticker:'PBL',sector:'Boissons',price:680.00,change:-0.3,volume:5200,per:14.8,signal:'NEUTRE'},
+  {name:'Rogers & Co',ticker:'ROGERS',sector:'Conglomerat',price:38.00,change:0.5,volume:18000,per:9.6,signal:'NEUTRE'},
+];
+const BVMT_STOCKS=[
+  {name:'BIAT',ticker:'BIAT',sector:'Banque',price:118.00,change:1.4,volume:45000,per:8.5,signal:'ACHAT'},
+  {name:'Amen Bank',ticker:'AB',sector:'Banque',price:32.50,change:0.6,volume:28000,per:6.8,signal:'NEUTRE'},
+  {name:'Attijari Bank TN',ticker:'ATTIJ',sector:'Banque',price:42.80,change:1.1,volume:18000,per:9.2,signal:'ACHAT'},
+  {name:'Poulina Group',ticker:'PGH',sector:'Agro',price:12.40,change:-0.5,volume:95000,per:11.4,signal:'NEUTRE'},
+  {name:'Sotipapier',ticker:'STIP',sector:'Industrie',price:8.90,change:2.8,volume:35000,per:7.1,signal:'ACHAT'},
+  {name:'Carthage Cement',ticker:'CC',sector:'Ciment',price:2.15,change:-1.2,volume:180000,per:5.6,signal:'NEUTRE'},
+];
+const BVMAC_STOCKS=[
+  {name:'SEMC (Cameroun)',ticker:'SEMC',sector:'Industrie',price:8500,change:0.5,volume:2200,per:9.8,signal:'NEUTRE'},
+  {name:'SOCAPALM',ticker:'SOCPL',sector:'Agri',price:22000,change:1.2,volume:1800,per:7.5,signal:'ACHAT'},
+  {name:'SAFACAM',ticker:'SFCAM',sector:'Agri',price:35000,change:-0.3,volume:850,per:8.2,signal:'NEUTRE'},
+  {name:'BICEC',ticker:'BICEC',sector:'Banque',price:6500,change:0.8,volume:3200,per:6.1,signal:'NEUTRE'},
+];
+const NSX_STOCKS=[
+  {name:'FirstRand Namibia',ticker:'FNB-N',sector:'Banque',price:42.50,change:1.2,volume:85000,per:9.8,signal:'ACHAT'},
+  {name:'Namibia Breweries',ticker:'NBS',sector:'Boissons',price:35.00,change:0.5,volume:32000,per:12.4,signal:'NEUTRE'},
+  {name:'Old Mutual Namibia',ticker:'OMN',sector:'Assurance',price:18.80,change:-0.3,volume:45000,per:8.1,signal:'NEUTRE'},
+  {name:'Paladin Energy NAM',ticker:'PDN',sector:'Mines',price:8.50,change:3.8,volume:120000,per:15.2,signal:'ACHAT'},
+  {name:'Capricorn Group',ticker:'CGP',sector:'Finance',price:22.00,change:0.9,volume:28000,per:7.5,signal:'NEUTRE'},
+];
+
 const WASI_ETFS=[
   {ticker:'WASI-UEMOA',name:'WASI UEMOA Index Fund',strategy:'Indice large UEMOA',nav:4850,change:1.2,aum:'1.8 Mds',fees:'0.45%',score:72},
   {ticker:'WASI-SAHEL',name:'WASI Sahel Resilience',strategy:'Resilience zone Sahel',nav:2100,change:-0.8,aum:'420 M',fees:'0.65%',score:38},
@@ -3148,6 +3522,20 @@ function initApp() {
   renderBRVM();
   renderNGX();
   renderGSE();
+  renderJSE();
+  renderEGX();
+  renderCSE();
+  renderNSE();
+  renderDSE();
+  renderUSE();
+  renderRSE();
+  renderBSE();
+  renderLUSE();
+  renderZSE();
+  renderSEM();
+  renderBVMT();
+  renderBVMAC();
+  renderNSX();
   renderETFs();
   renderCrypto();
   renderFX();
@@ -5081,6 +5469,133 @@ function renderGSE() {
       <td>${s.per}</td>
       <td><span class="signal-badge ${s.signal}">${s.signal}</span></td>
     </tr>`;
+  }).join('');
+}
+
+
+function renderJSE() {
+  const mx = Math.max(...JSE_STOCKS.map(s => s.volume));
+  document.getElementById('jse-body').innerHTML = JSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderEGX() {
+  const mx = Math.max(...EGX_STOCKS.map(s => s.volume));
+  document.getElementById('egx-body').innerHTML = EGX_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderCSE() {
+  const mx = Math.max(...CSE_STOCKS.map(s => s.volume));
+  document.getElementById('cse-body').innerHTML = CSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderNSE() {
+  const mx = Math.max(...NSE_STOCKS.map(s => s.volume));
+  document.getElementById('nse-body').innerHTML = NSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderDSE() {
+  const mx = Math.max(...DSE_STOCKS.map(s => s.volume));
+  document.getElementById('dse-body').innerHTML = DSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderUSE() {
+  const mx = Math.max(...USE_STOCKS.map(s => s.volume));
+  document.getElementById('use-body').innerHTML = USE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderRSE() {
+  const mx = Math.max(...RSE_STOCKS.map(s => s.volume));
+  document.getElementById('rse-body').innerHTML = RSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderBSE() {
+  const mx = Math.max(...BSE_STOCKS.map(s => s.volume));
+  document.getElementById('bse-body').innerHTML = BSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderLUSE() {
+  const mx = Math.max(...LUSE_STOCKS.map(s => s.volume));
+  document.getElementById('luse-body').innerHTML = LUSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderZSE() {
+  const mx = Math.max(...ZSE_STOCKS.map(s => s.volume));
+  document.getElementById('zse-body').innerHTML = ZSE_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderSEM() {
+  const mx = Math.max(...SEM_STOCKS.map(s => s.volume));
+  document.getElementById('sem-body').innerHTML = SEM_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderBVMT() {
+  const mx = Math.max(...BVMT_STOCKS.map(s => s.volume));
+  document.getElementById('bvmt-body').innerHTML = BVMT_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderBVMAC() {
+  const mx = Math.max(...BVMAC_STOCKS.map(s => s.volume));
+  document.getElementById('bvmac-body').innerHTML = BVMAC_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
+  }).join('');
+}
+
+function renderNSX() {
+  const mx = Math.max(...NSX_STOCKS.map(s => s.volume));
+  document.getElementById('nsx-body').innerHTML = NSX_STOCKS.map(s => {
+    const c = chgClass(s.change);
+    const v = Math.round((s.volume / mx) * 100);
+    return '<tr><td style="font-weight:600;">'+s.name+'</td><td style="color:var(--gold);">'+s.ticker+'</td><td>'+s.sector+'</td><td>'+(s.price < 100 ? s.price.toFixed(2) : fmt(s.price))+'</td><td class="'+c+'">'+chgSign(s.change)+'</td><td><div class="vol-bar"><div class="vol-fill" style="width:'+v+'%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">'+fmt(s.volume)+'</span></td><td>'+s.per+'</td><td><span class="signal-badge '+s.signal+'">'+s.signal+'</span></td></tr>';
   }).join('');
 }
 
