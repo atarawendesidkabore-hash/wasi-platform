@@ -2479,27 +2479,667 @@ function generateLocalResponse(message, focus) {
   const msg = message.toLowerCase();
   const country = focus || 'la zone CEDEAO';
 
-  if (msg.includes('corridor') || msg.includes('abidjan') || msg.includes('lagos')) {
-    return `Le corridor Abidjan-Lagos est l'axe commercial le plus dynamique d'Afrique de l'Ouest, reliant 5 pays (Cote d'Ivoire, Ghana, Togo, Benin, Nigeria) et representant environ 75% du commerce regional. Les principaux defis restent les postes de controle multiples, les delais douaniers et l'harmonisation des normes CEDEAO. Les investissements dans le projet d'autoroute Abidjan-Lagos (15.6 milliards USD) devraient reduire le temps de transit de 50% d'ici 2030.`;
+  // Try to find a matching country in the question
+  const matchedCountry = COUNTRIES.find(x =>
+    msg.includes(x.name.toLowerCase()) ||
+    msg.includes(x.code.toLowerCase()) ||
+    (x.name === "Cote d'Ivoire" && (msg.includes('ivoire') || msg.includes('cote d'))) ||
+    (x.name === "Burkina Faso" && msg.includes('burkina')) ||
+    (x.name === "Sierra Leone" && msg.includes('sierra')) ||
+    (x.name === "Guinee-Bissau" && msg.includes('bissau')) ||
+    (x.name === "Cap-Vert" && (msg.includes('cap-vert') || msg.includes('cap vert') || msg.includes('cabo')))
+  );
+
+  // Deep country analysis
+  if (matchedCountry || (currentCountry && (msg.includes('analyse') || msg.includes('detail') || msg.includes('complete') || msg.includes('profil') || msg.includes('situation') || msg.includes('comment') || msg.includes('quoi')))) {
+    const c = matchedCountry || COUNTRIES.find(x => x.code === currentCountry);
+    if (c) {
+      const d = COUNTRY_DETAILS[c.code];
+      if (d) return buildDeepCountryAnalysis(c, d);
+    }
   }
-  if (msg.includes('risque') || msg.includes('sahel') || msg.includes('coup') || msg.includes('politique')) {
-    return `Le Sahel presente actuellement le profil de risque le plus eleve de la zone CEDEAO. Le Burkina Faso (score 38), le Mali (35), le Niger (32) et la Guinee (42) sont sous regime militaire ou de transition. Les facteurs de risque principaux incluent : instabilite securitaire (groupes armes), sanctions regionales, retrait des partenaires occidentaux, et pression sur le franc CFA. Recommandation WASI : prudence maximale, privilegier les investissements dans la zone cotiere (Cote d'Ivoire, Senegal, Benin).`;
+
+  // Corridor analysis
+  if (msg.includes('corridor') || msg.includes('logistique') || msg.includes('transport') || msg.includes('route') || msg.includes('port') || msg.includes('maritime')) {
+    if (msg.includes('abidjan') || msg.includes('lagos') || msg.includes('cotier') || msg.includes('golfe')) {
+      return `━━━ ANALYSE DU CORRIDOR ABIDJAN — LAGOS ━━━
+
+📍 TRACÉ : Abidjan (CI) → Accra (GH) → Lome (TG) → Cotonou (BJ) → Lagos (NG)
+📏 Distance : 1 028 km | 5 pays traverses | ~75% du commerce intra-CEDEAO
+
+🔑 DONNÉES CLÉS :
+• Volume annuel : ~45 milliards USD de marchandises
+• Temps de transit moyen : 4-7 jours (objectif 2 jours post-autoroute)
+• Postes de controle : 69 checkpoints identifies (objectif CEDEAO : 0)
+• Cout moyen transport : 7-12 USD/tonne/km (vs 2-3 USD en Asie)
+
+🏗️ PROJET AUTOROUTE (PAAL) :
+• Budget : 15.6 milliards USD | Financement : BAD, BM, UE, PPP
+• Statut : Phase 2 en cours — segments Abidjan-Accra et Cotonou-Lagos en construction
+• Livraison prevue : 2028-2030 (segments) | 2032 (complet)
+• Impact estime : reduction 50% temps transit, +30% volume commercial
+
+📊 SCORE WASI PAR SEGMENT :
+• Abidjan — Accra : 68/100 (infrastructure correcte, douane lente)
+• Accra — Lome : 55/100 (route vieillissante, bonnes douanes)
+• Lome — Cotonou : 72/100 (segment le plus fluide, port de Lome moderne)
+• Cotonou — Lagos : 42/100 (congestion, corruption, Seme-Krake problematique)
+
+⚠️ RISQUES :
+• Seme-Krake (frontiere BJ/NG) : goulot majeur, delais 12-48h frequents
+• Insecurite sur le segment ghaneen de nuit
+• Fluctuation du Naira rendant les couts imprevisibles cote Nigeria
+
+💡 RECOMMANDATIONS WASI :
+1. Privilegier le transit maritime Abidjan-Lagos pour gros volumes (5-7 jours, moins cher)
+2. Le corridor Lome-Cotonou est le segment le plus fiable pour le trade finance
+3. Anticiper les couts cachets Nigeria (frais informels estimes 15-25% du cout formel)
+4. Surveiller le projet ECOWAS Trade Liberalisation Scheme (ETLS) pour exemptions douanieres`;
+    }
+    if (msg.includes('dakar') || msg.includes('bamako') || msg.includes('sahel') || msg.includes('interieur')) {
+      return `━━━ ANALYSE DU CORRIDOR DAKAR — BAMAKO ━━━
+
+📍 TRACÉ : Dakar (SN) → Tambacounda → Kayes → Bamako (ML)
+📏 Distance : 1 250 km ferroviaire / 1 400 km routier
+
+🔑 DONNÉES CLÉS :
+• Volume annuel : ~8 milliards USD | Vital pour le Mali (pays enclava)
+• Le Mali depend a ~70% du port de Dakar pour ses importations
+• Temps de transit routier : 3-5 jours | Ferroviaire : en rehabilitation
+• Alternative : corridor via Abidjan (CI) — plus long mais route en meilleur etat
+
+🏗️ INFRASTRUCTURES :
+• Voie ferree Dakar-Bamako : rehabilitation en cours (Chine/Turquie), budget 2.7 Mds USD
+• Route nationale : qualite moyenne, degradee apres Tambacounda
+• Port de Dakar : capacite 18 millions tonnes, extension 3eme terminal en cours
+• Dry port de Bamako : modernisation prevue 2026
+
+⚠️ CONTEXTE GÉOPOLITIQUE :
+• Mali sous regime militaire (Assimi Goita) — sanctions CEDEAO levees partiellement
+• Alliance AES (Mali-Burkina-Niger) redefinit les flux logistiques
+• Risque securitaire eleve sur l'axe Kayes-Bamako
+• France et partenaires occidentaux en retrait, remplacas par Russie/Chine/Turquie
+
+💡 RECOMMANDATIONS WASI :
+1. Corridor a risque modere-eleve — assurance transport obligatoire
+2. Privilegier les convois groupes pour la securite
+3. Le corridor Abidjan-Bamako est plus sur mais 40% plus cher
+4. Opportunite : le Mali cherche activement a diversifier ses corridors — potentiel pour les operateurs logistiques`;
+    }
+    return `━━━ CORRIDORS COMMERCIAUX CEDEAO — VUE D'ENSEMBLE ━━━
+
+La zone CEDEAO compte 8 corridors principaux reliant 16 pays sur 5.1 millions km² avec 420+ millions d'habitants.
+
+📊 TOP 5 CORRIDORS PAR VOLUME :
+
+1. 🥇 Abidjan — Lagos (CI-GH-TG-BJ-NG)
+   Volume : ~45 Mds USD | Score WASI : 58/100
+   Le corridor le plus dense, 75% du commerce regional
+
+2. 🥈 Tema/Accra — Ouagadougou (GH-BF)
+   Volume : ~12 Mds USD | Score WASI : 45/100
+   Axe vital pour le Burkina Faso (pays enclava)
+
+3. 🥉 Dakar — Bamako (SN-ML)
+   Volume : ~8 Mds USD | Score WASI : 42/100
+   Corridor historique, rehabilitation ferroviaire en cours
+
+4. Abidjan — Ouagadougou (CI-BF)
+   Volume : ~6 Mds USD | Score WASI : 52/100
+   Route en bon etat, mais contexte securitaire BF fragile
+
+5. Lome — Ouagadougou (TG-BF)
+   Volume : ~4 Mds USD | Score WASI : 48/100
+   Port de Lome = hub de transit le plus efficace de la region
+
+🚢 PORTS PRINCIPAUX (tonnage annuel) :
+• Lagos/Apapa (NG) : 78 M tonnes — le plus grand mais congestione
+• Tema (GH) : 22 M tonnes — le plus moderne (expansion MPS)
+• Abidjan (CI) : 25 M tonnes — hub regional en croissance
+• Dakar (SN) : 18 M tonnes — gateway Sahel
+• Lome (TG) : 14 M tonnes — port en eaux profondes, zone franche
+
+📦 COÛTS MOYENS DE TRANSPORT :
+• Maritime intra-CEDEAO : 25-45 USD/tonne
+• Routier : 7-12 USD/tonne/km (3x plus cher qu'en Asie)
+• Ferroviaire : quasi inexistant sauf Dakar-Bamako et Abidjan-Ouaga
+• Temps moyen de dedouanement : 5-12 jours (vs 1-2 en Asie du SE)
+
+💡 RECOMMANDATIONS WASI :
+• Les meilleurs corridors pour le trade finance : Abidjan-Accra et Lome-Cotonou
+• Eviter les corridors Sahel pour les marchandises sensibles
+• Le cabotage maritime est sous-exploite — opportunite majeure
+• Investir dans la logistique du dernier kilometre (marche fragmente)`;
   }
-  if (msg.includes('brvm') || msg.includes('bourse') || msg.includes('action') || msg.includes('opportunit')) {
-    return `La BRVM affiche une dynamique positive en 2026. Les titres a surveiller : Sonatel (SNTS) reste le leader avec un PER de 12.3 et un signal d'achat fort. Coris Bank (CBIBF, +2.4%) et SIFCA (SIFC, +1.8%) beneficient de la reprise economique. Le secteur telecom surperforme avec la croissance du mobile money. WASI recommande une allocation 40% telecom, 30% banque, 20% agri, 10% energie pour un portefeuille equilibre zone UEMOA.`;
+
+  // BRVM / Stock market deep analysis
+  if (msg.includes('brvm') || msg.includes('bourse') || msg.includes('action') || (msg.includes('march') && !msg.includes('mars'))) {
+    return `━━━ ANALYSE BRVM — BOURSE RÉGIONALE (ABIDJAN) ━━━
+
+📊 INDICATEURS GÉNÉRAUX :
+• Capitalisation boursiere : ~8 900 milliards XOF (~13.5 Mds EUR)
+• Nombre de societes cotees : 46 | Indice BRVM Composite : +4.2% YTD
+• Volume moyen journalier : ~850 M XOF | PER moyen : 10.8x
+• Secteurs : Banque (38%), Telecom (22%), Agri/Industrie (18%), Distribution (12%), Autres (10%)
+
+📈 TOP PICKS WASI — MARS 2026 :
+
+1. SONATEL (SNTS) — 16 500 XOF | +2.1%
+   PER: 12.3 | Div. yield: 5.8% | Signal: ACHAT FORT
+   Le leader inconteste des telecoms en Afrique de l'Ouest. Croissance portee par Orange Money (+40% transactions en 2025), expansion en Guinee et Sierra Leone. Objectif: 19 000 XOF (+15%).
+
+2. CORIS BANK (CBIBF) — 8 450 XOF | +2.4%
+   PER: 10.2 | Div. yield: 3.2% | Signal: ACHAT
+   Banque panafricaine en forte croissance, presente dans 10 pays. Beneficie de la digitalisation bancaire et du financement PME. Risque: exposition Sahel (BF siege). Objectif: 10 000 XOF.
+
+3. SIFCA (SIFC) — 4 700 XOF | +1.8%
+   PER: 10.4 | Div. yield: 4.1% | Signal: ACHAT
+   Leader agro-industriel (palmier, hevea, sucre). Beneficie de la hausse des cours mondiaux des matieres premieres. Integration verticale offrant des marges solides.
+
+4. ECOBANK CI (ECOC) — 6 200 XOF | -0.8%
+   PER: 8.7 | Div. yield: 4.5% | Signal: NEUTRE
+   Valorisation attractive mais croissance moderee. Position forte en Cote d'Ivoire mais concurrence accrue des fintechs. Attendre un point d'entree sous 5 800 XOF.
+
+5. NESTLE CI (NTLC) — 7 500 XOF | +1.1%
+   PER: 16.2 | Signal: ACHAT (long terme)
+   Valeur defensive par excellence. Positionnement premium sur les produits de consommation. PER eleve justifie par la visibilite des resultats.
+
+⚠️ À ÉVITER :
+• SAPH (SAPH, -1.2%) — pression sur les marges, prix du caoutchouc en baisse
+• TOTAL CI (TTLC) — transition energetique incertaine, volumes en stagnation
+
+📋 ALLOCATION RECOMMANDÉE PAR WASI :
+┌──────────────┬───────┬────────────────────────────────┐
+│ Secteur      │ Poids │ Titres                         │
+├──────────────┼───────┼────────────────────────────────┤
+│ Telecom      │  35%  │ SNTS, ONTBF                    │
+│ Banque       │  30%  │ CBIBF, BOAB, ECOC              │
+│ Agri/Indust. │  20%  │ SIFC, SLBC, NTLC               │
+│ Energie      │  10%  │ TTLC (position reduite)        │
+│ Cash         │   5%  │ Reserve pour opportunites      │
+└──────────────┴───────┴────────────────────────────────┘
+
+📌 NOTE : la BRVM est un marche frontiere avec une liquidite limitee. Entrer progressivement, eviter les ordres de grande taille en une seule fois.`;
   }
-  if (msg.includes('franc') || msg.includes('cfa') || msg.includes('monnaie') || msg.includes('devise')) {
-    return `Le franc CFA (XOF) reste arrime a l'euro au taux fixe de 655.957 XOF/EUR. Ce mecanisme offre stabilite et faible inflation dans la zone UEMOA, mais limite la competitivite a l'export. Le debat sur la reforme monetaire se poursuit avec le projet ECO de la CEDEAO. Le taux USD/XOF fluctue autour de 603 XOF. Impact pour les investisseurs : exposition de change minimale intra-UEMOA, mais risque EUR/USD a couvrir pour les operations internationales.`;
+
+  // Risk analysis
+  if (msg.includes('risque') || msg.includes('sahel') || msg.includes('coup') || msg.includes('politique') || msg.includes('securite') || msg.includes('militaire') || msg.includes('geopolitique')) {
+    return `━━━ ANALYSE DES RISQUES — ZONE CEDEAO ━━━
+
+🔴 ZONE ROUGE — RISQUE ÉLEVÉ (Score WASI < 45)
+
+• Niger (32/100) — Regime militaire (Tchiani). Sanctions CEDEAO. Alliance AES. Base francaise fermee. Uranium = levier strategique. Risque d'instabilite prolongee.
+
+• Mali (35/100) — Regime militaire (Goita). Groupe Wagner/Africa Corps present. Conflit arme au nord. Sanctions partiellement levees mais economie affaiblie. Risque securitaire maximal.
+
+• Liberia (37/100) — Fragilite institutionnelle post-conflit. Infrastructure deficiente. Economie dependante de l'aide et des matieres premieres. Cadre juridique faible.
+
+• Burkina Faso (38/100) — Regime militaire (Traore). Crise securitaire majeure (20% du territoire hors controle). Alliance AES. Depart des ONG. Population deplaces: 2+ millions.
+
+• Sierra Leone (40/100) — Post-conflit en reconstruction. Dependance aux diamants et rutile. Inflation a 35%. Infrastructure limitee. Potentiel minier inexploite.
+
+• Guinee (42/100) — Regime militaire (Doumbouya). Bauxite = 1er exportateur mondial. Potentiel enorme mais cadre d'investissement incertain. Transition politique sans calendrier clair.
+
+🟡 ZONE ORANGE — RISQUE MODÉRÉ (Score 45-64)
+
+• Gambie (45/100) — Petite economie, dependante du tourisme et de l'arachide. Transition democratique fragile post-Jammeh. Enclavee dans le Senegal.
+
+• Mauritanie (50/100) — Democratie fragile. Ressources : fer, peche, gaz (projet GTA avec BP). Potentiel gazier majeur a horizon 2027. Risque: instabilite frontiere Mali.
+
+• Togo (55/100) — Stabilite politique sous Gnassingbe (20+ ans). Port de Lome = atout strategique. Croissance 5%+. Risque: succession politique non planifiee.
+
+• Nigeria (58/100) — 1ere economie africaine mais fragmentee. Reformes Tinubu (retrait subventions, flottement Naira). Insecurite (Boko Haram, banditisme nord-ouest). Potentiel enorme mais execution incertaine.
+
+🟢 ZONE VERTE — RISQUE FAIBLE (Score 65+)
+
+• Ghana (65/100) — Democratie solide. Programme FMI en cours. Restructuration de la dette. Reprise progressive. Or + cacao + petrole.
+
+• Benin (68/100) — Croissance 5.8%. Port de Cotonou modernise. Politique pro-business sous Talon. Fiscalite attractive. Hub logistique pour le Nigeria.
+
+• Senegal (70/100) — Nouvelle ere politique (Faye). Gaz offshore (GTA 2027). Hub Tech (Dakar). Croissance 8.3%. Risque: integration politique/economique du nouvel executif.
+
+• Cote d'Ivoire (72/100) — Locomotive UEMOA. Croissance 6.5%. 1er producteur mondial cacao. BRVM siege a Abidjan. Investissements infra massifs. Risque: succession Ouattara 2025-2030.
+
+• Cap-Vert (74/100) — Le meilleur score WASI. Democratie exemplaire. Tourisme + services. Vulnerabilite: petite ile, dependante des importations. Potentiel: hub digital atlantique.
+
+📊 MATRICE RISQUE/OPPORTUNITÉ WASI :
+┌────────────────┬──────────┬──────────────────────────────┐
+│ Zone           │ Strategie│ Horizon                      │
+├────────────────┼──────────┼──────────────────────────────┤
+│ Cotiere stable │ Investir │ Long terme (5-10 ans)        │
+│ Nigeria/Ghana  │ Selectif │ Moyen terme (2-5 ans)        │
+│ Sahel          │ Couvrir  │ Court terme, instruments sec │
+│ AES (BF/ML/NE) │ Eviter   │ Attendre stabilisation       │
+└────────────────┴──────────┴──────────────────────────────┘`;
   }
-  if (msg.includes('etf') || msg.includes('fonds') || msg.includes('indice')) {
-    return `Les ETF WASI offrent une exposition diversifiee a la zone CEDEAO. Le WASI-UEMOA (NAV 4 850 XOF, +1.2%) est le fonds phare avec 1.8 Mds XOF d'AUM. Le WASI-TELECOM (+2.3%) surperforme grace a la croissance du secteur. Pour les profils prudents, le WASI-INFRA (score 65) offre un bon couple rendement/risque. A eviter : WASI-SAHEL (score 38) en raison de l'instabilite regionale.`;
+
+  // CFA / Currency
+  if (msg.includes('franc') || msg.includes('cfa') || msg.includes('monnaie') || msg.includes('devise') || msg.includes('change') || msg.includes('eco') || msg.includes('naira') || msg.includes('devaluation')) {
+    return `━━━ ANALYSE MONÉTAIRE — ZONE CEDEAO ━━━
+
+💰 FRANC CFA (XOF) — ZONE UEMOA (8 pays)
+• Taux fixe : 1 EUR = 655.957 XOF (depuis 1994)
+• Taux USD/XOF : ~603 XOF (fluctue avec EUR/USD)
+• Inflation moyenne UEMOA : 3.8% (cible BCEAO < 3%)
+• Taux directeur BCEAO : 3.50%
+• Reserve obligatoire : 3%
+• Garantie : Tresor francais (compte d'operations) — reformee en 2020 (fin du depot obligatoire de 50% des reserves)
+
+📊 AVANTAGES DU FRANC CFA :
+✅ Stabilite des prix — inflation maitrisee vs Nigeria (28%) ou Ghana (22%)
+✅ Convertibilite garantie — pas de risque de change intra-UEMOA
+✅ Credibilite internationale — facilite le financement exterieur
+✅ Previsibilite — les entreprises planifient sans risque de devaluation
+✅ Transferts intra-zone gratuits et instantanes
+
+⚠️ INCONVÉNIENTS :
+❌ Surévaluation estimee a 10-15% — penalise les exportations
+❌ Politique monetaire exogene — pas adaptee aux chocs locaux
+❌ Dependance a l'euro — quand l'EUR monte, le XOF monte aussi
+❌ Contrainte sur le financement du deficit budgetaire
+❌ Debat politique sensible — percu comme un vestige colonial
+
+🔄 PROJET ECO — MONNAIE UNIQUE CEDEAO :
+• Objectif initial : 2020, reporte a 2027+
+• 15 pays concernes (UEMOA + Nigeria, Ghana, etc.)
+• Criteres de convergence : deficit < 3%, inflation < 10%, dette < 70%
+• En 2026, seuls 3 pays remplissent tous les criteres
+• Realite : le projet est au point mort. Le Nigeria (1ere economie) et la zone UEMOA ont des structures trop divergentes
+
+💱 AUTRES DEVISES CEDEAO :
+• Naira (NGN) : 1 USD = ~1 600 NGN — volatilite extreme, devaluation de 70% depuis 2023
+• Cedi (GHS) : 1 USD = ~14.5 GHS — stabilisation post-restructuration FMI
+• Leone (SLL) : hyperinflation, redenomination en 2022
+• Franc guineen (GNF) : marche parallele actif, decote 15-20%
+• Dalasi (GMD) : relativement stable mais illiquide
+
+💡 RECOMMANDATIONS WASI POUR INVESTISSEURS :
+1. Zone UEMOA : risque de change quasi nul intra-zone. Ideal pour diversification regionale.
+2. Nigeria : couvrir systematiquement le risque NGN/USD. Utiliser des instruments indexes.
+3. Ghana : le Cedi se stabilise — opportunite d'entree si restructuration FMI reussit.
+4. Eviter les devises Sahel hors CFA (GNF) — marche informel dominant.
+5. Pour les transferts : Mobile Money (Orange, Wave) offre les meilleurs taux XOF.`;
   }
-  // Default
-  const c = COUNTRIES.find(x => x.name.toLowerCase().includes(msg) || x.code.toLowerCase() === msg);
-  if (c) {
-    return `${c.flag} ${c.name} — Score WASI: ${c.score}/100 (tendance: ${c.trend})\nPIB: ${c.gdp} | Risque: ${c.risk}${c.coup ? ' | ATTENTION: Regime militaire/transition' : ''}\n\nLe pays presente un profil ${c.risk.toLowerCase()} pour les investissements. ${c.score >= 65 ? 'Environnement favorable aux affaires avec un cadre institutionnel relativement stable.' : c.score >= 45 ? 'Opportunites selectionnees possibles mais vigilance requise sur le cadre reglementaire.' : 'Risque eleve. Recommandation WASI: exposition minimale, privilegier les instruments couverts.'}`;
+
+  // ETF deep analysis
+  if (msg.includes('etf') || msg.includes('fonds') || msg.includes('indice') || msg.includes('investir') || msg.includes('placement') || msg.includes('portefeuille') || msg.includes('allocation')) {
+    return `━━━ GUIDE DES ETF WASI — INVESTIR EN AFRIQUE DE L'OUEST ━━━
+
+📊 VUE D'ENSEMBLE DES 8 FONDS ETF WASI :
+AUM Total : 4.2 milliards XOF | Volume 24h : 183 M XOF
+
+${WASI_ETFS.map(e => {
+  const signal = e.score >= 65 ? '🟢 ACHAT' : e.score >= 45 ? '🟡 NEUTRE' : '🔴 EVITER';
+  return `• ${e.ticker} — ${e.name}
+  NAV: ${fmt(e.nav)} XOF | Var: ${chgSign(e.change)} | AUM: ${e.aum} | Frais: ${e.fees}
+  Strategie: ${e.strategy} | Score: ${e.score}/100 | Signal: ${signal}`;
+}).join('\n\n')}
+
+📋 ALLOCATIONS RECOMMANDÉES PAR PROFIL :
+
+🛡️ PROFIL PRUDENT (risque faible) :
+• 40% WASI-UEMOA (large cap, diversifie)
+• 25% WASI-INFRA (infrastructure, long terme)
+• 20% WASI-TELECOM (croissance stable)
+• 15% Cash/Obligations
+• Rendement attendu : 6-8% / an | Volatilite : faible
+
+⚖️ PROFIL ÉQUILIBRÉ (risque modere) :
+• 30% WASI-UEMOA
+• 20% WASI-TELECOM
+• 15% WASI-AGRI
+• 15% WASI-FINTECH
+• 10% WASI-INFRA
+• 10% WASI-SHIPPING
+• Rendement attendu : 9-13% / an | Volatilite : moderee
+
+🚀 PROFIL DYNAMIQUE (risque eleve) :
+• 25% WASI-FINTECH (forte croissance digitale)
+• 20% WASI-TELECOM
+• 15% WASI-CRYPTO (exposition crypto-XOF)
+• 15% WASI-SAHEL (decote = opportunite contrariante)
+• 15% WASI-AGRI
+• 10% WASI-SHIPPING
+• Rendement attendu : 15-22% / an | Volatilite : elevee
+
+💡 CONSEILS WASI :
+1. Entree progressive : investir en 3-4 tranches sur 2-3 mois
+2. Rebalancement trimestriel recommande
+3. Le WASI-SAHEL est un pari contrarien — ne pas depasser 15% de l'allocation
+4. Le WASI-CRYPTO est volatile — convient aux investisseurs experimentes
+5. Frais d'entree : 0.5% | Frais de gestion : 0.40-0.85% selon le fonds
+6. Minimum de souscription : 50 000 XOF (~76 EUR)`;
   }
-  return `Analyse WASI pour ${country} :\n\nLa zone CEDEAO (16 pays, 400+ millions d'habitants) presente un indice composite moyen de ${Math.round(COUNTRIES.reduce((s,c)=>s+c.score,0)/COUNTRIES.length)}/100. Les economies les plus performantes sont le Cap-Vert (74), la Cote d'Ivoire (72) et le Senegal (70). Les secteurs porteurs incluent les telecommunications, les services financiers et l'agriculture. N'hesitez pas a poser une question plus specifique sur un pays, un secteur ou un corridor commercial.`;
+
+  // Trade finance / banking
+  if (msg.includes('banque') || msg.includes('credit') || msg.includes('financement') || msg.includes('trade finance') || msg.includes('pret') || msg.includes('emprunt') || msg.includes('bancaire')) {
+    return `━━━ ANALYSE BANCAIRE & TRADE FINANCE — CEDEAO ━━━
+
+🏦 PAYSAGE BANCAIRE UEMOA :
+• 130+ etablissements bancaires dans la zone UEMOA
+• Taux de bancarisation : 22% (vs 48% Afrique du Sud)
+• Taux directeur BCEAO : 3.50%
+• Taux de pret moyen : 7-12% (entreprises) | 12-18% (particuliers)
+• Mobile Money : 150+ millions de comptes actifs (croissance 30%/an)
+
+📊 TOP BANQUES PAR BILAN (ZONE UEMOA) :
+1. Societe Generale CI — 2 800 Mds XOF
+2. Ecobank CI — 2 100 Mds XOF
+3. NSIA Banque — 1 800 Mds XOF
+4. Coris Bank International — 1 500 Mds XOF
+5. BOA (Bank of Africa) — 1 200 Mds XOF
+
+💰 TRADE FINANCE — PRODUITS DISPONIBLES :
+• Lettre de credit (LC) : 0.5-2% du montant | 30-180 jours
+• Garantie bancaire : 1-3% / an
+• Affacturage : 3-5% discount | 60-90 jours
+• Financement import/export : 7-10% | 90-360 jours
+• Credit documentaire : le plus utilise pour le commerce intra-CEDEAO
+
+📱 FINTECH & MOBILE MONEY :
+• Orange Money : leader UEMOA (60M+ comptes), transferts, paiements, epargne
+• Wave : disruption tarifaire (1% vs 5%), croissance explosive au Senegal et CI
+• MTN MoMo : leader au Ghana et dans les pays anglophones
+• Moov Money : 3eme acteur UEMOA
+• Impact : les volumes Mobile Money depassent les volumes bancaires classiques dans 6 pays
+
+⚠️ RISQUES BANCAIRES PAR ZONE :
+• UEMOA : NPL moyen 8.5% — en amelioration. Risque concentre sur le coton et l'immobilier
+• Nigeria : NPL 5% mais risque de change extreme. Lettre de credit en USD quasi impossible
+• Ghana : restructuration en cours post-crise 2022. Acces au forex limite
+• Sahel : credit gelé dans les zones de conflit. Banques en mode survival
+
+💡 RECOMMANDATIONS WASI :
+1. Pour l'import/export intra-UEMOA : credit documentaire via Ecobank ou BOA (couverture multi-pays)
+2. Pour le financement PME : Coris Bank et NSIA offrent les meilleures conditions
+3. Mobile Money > virement bancaire pour les petits montants (< 5M XOF)
+4. Eviter le trade finance vers les pays AES (BF, ML, NE) — delais impravisibles
+5. Le corridor CI-SN-BJ est le plus fiable pour le credit documentaire`;
+  }
+
+  // Agriculture / commodities
+  if (msg.includes('agri') || msg.includes('cacao') || msg.includes('cafe') || msg.includes('coton') || msg.includes('cajou') || msg.includes('or') || msg.includes('matieres') || msg.includes('commodit') || msg.includes('ressource')) {
+    return `━━━ MATIÈRES PREMIÈRES & AGRICULTURE — CEDEAO ━━━
+
+🌍 La CEDEAO represente une part majeure de la production mondiale de matieres premieres agricoles et minieres.
+
+🍫 CACAO :
+• Production mondiale : CI (40%) + GH (18%) = 58% du marche mondial
+• Prix spot : ~4 200 USD/tonne (record historique en 2025)
+• Enjeux : deforestation, travail des enfants, reglementation UE (EUDR)
+• Tendance : les prix devraient rester eleves (deficit structural)
+• Investissement : SIFCA, SAPH (BRVM) — exposition directe
+
+🥜 NOIX DE CAJOU :
+• 1er producteur mondial : Cote d'Ivoire, suivi de Benin et Guinee-Bissau
+• Prix : ~1 800 USD/tonne (RCN)
+• Enjeu majeur : transformation locale (< 10% transforme en Afrique)
+• Opportunite : investir dans les unites de transformation (valeur ajoutee x3)
+
+🌾 COTON :
+• Producteurs : Mali, Burkina Faso, Benin, Cote d'Ivoire
+• Le "coton CFA" est repute pour sa qualite (fibre longue)
+• Defi : competition avec le coton subsidie US et indien
+• Risque Sahel : production perturbee au BF et ML par l'insecurite
+
+⛏️ OR :
+• Production : Ghana (1er Afrique), Mali (3eme), Burkina Faso, Senegal, Guinee
+• Production CEDEAO : ~250 tonnes/an (~8% production mondiale)
+• Prix : ~2 300 USD/once
+• Enjeu : exploitation artisanale (orpaillage) vs mines industrielles
+• Le secteur minier represente 20-40% du PIB au Mali et Burkina
+
+🛢️ PÉTROLE & GAZ :
+• Nigeria : 1er producteur africain (~1.2M barils/jour), en declin
+• Ghana : Jubilee Field (~120K bpd)
+• Senegal : projet GTA (Grand Tortue Ahmeyim) avec BP — gaz offshore, production 2027
+• Niger : pipeline Niger-Benin (CNPC) — 90K bpd, operationnel 2024
+• Mauritanie : projet GTA partage avec Senegal
+
+🏗️ MINERAIS :
+• Bauxite : Guinee = 1er producteur mondial (SMB, CBG, GAC)
+• Fer : Mauritanie (SNIM), Guinee (Simandou — le plus grand gisement mondial non exploite)
+• Phosphates : Togo, Senegal
+• Uranium : Niger (Orano/ex-Areva) — enjeu geopolitique majeur
+
+📊 IMPACT SUR L'INDICE WASI :
+Les pays a forte dependance aux matieres premieres ont un score WASI plus volatile. La diversification economique (CI, SN, GH) est correlée a un score plus stable.
+
+💡 RECOMMANDATIONS :
+1. ETF WASI-AGRI pour une exposition diversifiee aux commodites agricoles
+2. Or : refuge contre l'instabilite — allocation strategique 5-10%
+3. Gaz SN/MR : opportunite a horizon 2027 (GTA)
+4. Eviter l'exposition directe au petrole nigerien (risque NGN + vol de brut)`;
+  }
+
+  // Telecom / digital / fintech
+  if (msg.includes('telecom') || msg.includes('mobile') || msg.includes('digital') || msg.includes('fintech') || msg.includes('tech') || msg.includes('numerique') || msg.includes('internet') || msg.includes('orange') || msg.includes('mtn') || msg.includes('wave')) {
+    return `━━━ TELECOMS, DIGITAL & FINTECH — CEDEAO ━━━
+
+📱 MARCHÉ TELECOM OUEST-AFRICAIN :
+• 400+ millions d'abonnes mobiles | Penetration : 85%+
+• Croissance data mobile : +35%/an | 4G en expansion, 5G en test (NG, CI, SN)
+• Revenu secteur : ~18 milliards USD/an
+
+📊 OPÉRATEURS DOMINANTS :
+1. Orange (France) — Leader UEMOA : CI, SN, ML, BF, GN, SL, LR
+   Orange Money : 60M+ comptes | Revenus Afrique : 7+ Mds EUR
+   Cote : Sonatel (SNTS) sur BRVM — meilleur titre telecom
+
+2. MTN (Afrique du Sud) — Leader NG, GH, CI, GN-Bissau, LR
+   MTN MoMo : 80M+ comptes (hors UEMOA principalement)
+   Cote : MTN Ghana sur GSE, MTN Nigeria sur NGX
+
+3. Airtel (Inde) — Challenger NG, GH, NE, TG
+   Forte croissance data. Airtel Money en expansion.
+
+4. Moov Africa (Maroc Telecom) — CI, BJ, TG, BF, ML, MR, GW, NE
+   3eme acteur UEMOA. Moov Money en croissance.
+
+💸 MOBILE MONEY — LA RÉVOLUTION :
+• Volume de transactions UEMOA : 45 000+ milliards XOF/an (>60 Mds EUR)
+• Les volumes Mobile Money depassent les volumes bancaires dans 6/8 pays UEMOA
+• Acteurs cles :
+  - Orange Money : dominant UEMOA, integration bancaire avancee
+  - Wave : tarifs 1% (vs 5% Orange), croissance 200%/an au SN et CI
+  - MTN MoMo : dominant anglophone
+  - Free Money : nouveau challenger au SN
+
+🚀 FINTECH — ÉCOSYSTÈME EN EXPLOSION :
+• 500+ startups fintech en CEDEAO (50% au Nigeria)
+• Licornes potentielles : Flutterwave (NG), OPay (NG), Wave (SN)
+• Secteurs : paiements (45%), credit (20%), epargne (15%), assurance (10%), invest (10%)
+• Financement : 2.5+ Mds USD leves par les fintechs ouest-africaines (2020-2025)
+• Hubs : Lagos, Dakar, Accra, Abidjan
+
+📈 INVESTIR DANS LE DIGITAL OUEST-AFRICAIN :
+• BRVM : Sonatel (SNTS) — proxy blue-chip pour le secteur
+• ETF : WASI-TELECOM (score 70, +2.3%) et WASI-FINTECH (score 58, +3.1%)
+• Non cote : Wave, Flutterwave, OPay, InTouch via fonds de VC
+
+💡 THÈSES D'INVESTISSEMENT WASI :
+1. La penetration smartphone passe de 45% a 70% d'ici 2030 — all digital
+2. L'interoperabilite Mobile Money (BCEAO) va creer un marche unifie de paiement
+3. Le credit digital (scoring alternatif) va multiplier l'inclusion financiere par 3
+4. Le e-commerce reste embryonnaire (<2% retail) — potentiel enorme
+5. La 5G va transformer les services financiers et la logistique`;
+  }
+
+  // Compare countries
+  if (msg.includes('compar') || msg.includes('vs') || msg.includes('versus') || msg.includes('meilleur') || msg.includes('class') || msg.includes('rang') || msg.includes('top')) {
+    const sorted = [...COUNTRIES].sort((a, b) => b.score - a.score);
+    return `━━━ CLASSEMENT WASI — 16 PAYS CEDEAO ━━━
+
+${sorted.map((c, i) => {
+  const d = COUNTRY_DETAILS[c.code];
+  const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${(i+1).toString().padStart(2,' ')}.`;
+  const bar = '█'.repeat(Math.round(c.score/5)) + '░'.repeat(20 - Math.round(c.score/5));
+  const status = c.coup ? ' ⚠️ REGIME MILITAIRE' : '';
+  return `${medal} ${c.flag} ${c.name.padEnd(16)} ${bar} ${c.score}/100 ${c.trend}${status}
+   PIB: ${c.gdp} | Risque: ${c.risk}${d ? ' | Croiss: ' + d.growth : ''}`;
+}).join('\n\n')}
+
+📊 SYNTHÈSE :
+• Moyenne CEDEAO : ${Math.round(COUNTRIES.reduce((s,c)=>s+c.score,0)/COUNTRIES.length)}/100
+• Zone UEMOA (8 pays) : ${Math.round(COUNTRIES.filter(c=>['CI','SN','BF','ML','BJ','TG','NE','GW'].includes(c.code)).reduce((s,c)=>s+c.score,0)/8)}/100
+• Zone cotiere (CI,GH,SN,BJ,TG) : ${Math.round(COUNTRIES.filter(c=>['CI','GH','SN','BJ','TG'].includes(c.code)).reduce((s,c)=>s+c.score,0)/5)}/100
+• Zone Sahel (BF,ML,NE) : ${Math.round(COUNTRIES.filter(c=>['BF','ML','NE'].includes(c.code)).reduce((s,c)=>s+c.score,0)/3)}/100
+
+💡 Pour un investissement PME, WASI recommande : Cote d'Ivoire (hub UEMOA), Senegal (gaz + tech), ou Benin (fiscalite attractive).`;
+  }
+
+  // Specific deep country analysis if a country is detected
+  if (matchedCountry) {
+    const d = COUNTRY_DETAILS[matchedCountry.code];
+    if (d) return buildDeepCountryAnalysis(matchedCountry, d);
+  }
+
+  // Infrastructure
+  if (msg.includes('infra') || msg.includes('route') || msg.includes('electri') || msg.includes('energie') || msg.includes('eau') || msg.includes('construction')) {
+    return `━━━ INFRASTRUCTURE — ÉTAT DES LIEUX CEDEAO ━━━
+
+⚡ ÉNERGIE :
+• Taux d'electrification moyen : 52% (de 95% au Cap-Vert a 19% au Niger)
+• Puissance installee CEDEAO : ~35 GW (vs 50 GW pour l'Afrique du Sud seule)
+• Mix : thermique 65%, hydro 25%, renouvelable 10%
+• Cout moyen kWh : 0.18-0.35 USD (2x plus cher qu'en Asie)
+• Projets phares : barrage Souapiti (GN), centrales solaires Sahel, interconnexion WAPP
+
+🛣️ ROUTES :
+• Reseau routier CEDEAO : ~400 000 km dont 15% bitumees
+• Projet phare : Autoroute Abidjan-Lagos (15.6 Mds USD)
+• Corridor Dakar-Bamako : rehabilitation en cours
+• Qualite : CI et SN meilleur reseau, Sahel le plus degrade
+
+🚂 FERROVIAIRE :
+• Quasi inexistant — heritage colonial non modernise
+• Projets : Train Express Regional Dakar (operationnel), rehabilitiation Dakar-Bamako, metro Abidjan (etude)
+
+🏗️ OPPORTUNITÉS D'INVESTISSEMENT :
+1. Energie solaire — irradiation 5-7 kWh/m²/jour au Sahel (meilleur au monde)
+2. Logement — deficit 50+ millions unites en CEDEAO
+3. Routes & ponts — besoins de 15+ Mds USD de maintenance annuelle
+4. Eau & assainissement — 40% population sans acces eau potable
+
+Score infrastructure moyen WASI : 41/100 — le secteur le plus deficitaire.`;
+  }
+
+  // Default — intelligent fallback based on focus country
+  if (currentCountry) {
+    const c = COUNTRIES.find(x => x.code === currentCountry);
+    const d = COUNTRY_DETAILS[currentCountry];
+    if (c && d) return buildDeepCountryAnalysis(c, d);
+  }
+
+  // Generic but detailed
+  const avg = Math.round(COUNTRIES.reduce((s,c)=>s+c.score,0)/COUNTRIES.length);
+  return `━━━ WASI INTELLIGENCE — SYNTHÈSE CEDEAO ━━━
+
+📊 INDICE COMPOSITE WASI : ${avg}/100 (stable)
+🌍 Zone : 16 pays | 420+ millions habitants | PIB combine : ~750 Mds USD
+
+📈 DYNAMIQUES CLÉS MARS 2026 :
+
+1. CROISSANCE : L'Afrique de l'Ouest croit a 4.5% en moyenne (vs 3.5% monde). Les locomotives : Senegal (+8.3%, gaz), Cote d'Ivoire (+6.5%, cacao), Benin (+5.8%, logistique).
+
+2. COMMERCE : La ZLECAf (Zone de Libre-Echange Continentale Africaine) progresse lentement. Le commerce intra-CEDEAO reste a ~15% du total (vs 60% en Europe). Les corridors cotiers dominent.
+
+3. SECURITE : Le Sahel reste la zone de fracture. L'Alliance AES (BF-ML-NE) se separe de la CEDEAO. Impact : reorganisation des flux commerciaux et des corridors logistiques.
+
+4. MONNAIE : Le franc CFA reste stable. Le projet ECO (monnaie unique CEDEAO) est au point mort. Le Naira continue sa volatilite.
+
+5. DIGITAL : La revolution Mobile Money transforme l'inclusion financiere. 150M+ comptes actifs. Wave et Orange Money en competition feroce.
+
+📋 QUESTIONS QUE VOUS POUVEZ ME POSER :
+• "Analyse complete de [pays]" — profil detaille avec macro, risques, opportunites
+• "Corridor Abidjan-Lagos" — analyse logistique et commerciale
+• "Comparer CI vs SN vs GH" — classement et benchmarking
+• "Risques Sahel" — analyse geopolitique approfondie
+• "Investir en BRVM" — analyse des actions et ETF
+• "Trade finance UEMOA" — produits bancaires et fintech
+• "Matieres premieres" — cacao, or, gaz, agriculture
+• "Telecoms et fintech" — secteur digital et mobile money
+
+💡 Selectionnez un pays dans le panneau gauche pour un focus pays, ou posez votre question.`;
+}
+
+function buildDeepCountryAnalysis(c, d) {
+  const scoreCol = c.score >= 65 ? '🟢' : c.score >= 45 ? '🟡' : '🔴';
+  const indices = d.indices;
+  function bar(val) {
+    const filled = Math.round(val / 5);
+    return '█'.repeat(filled) + '░'.repeat(20 - filled) + ' ' + val + '/100';
+  }
+
+  return `━━━ ANALYSE APPROFONDIE — ${c.flag} ${c.name.toUpperCase()} ━━━
+
+${scoreCol} SCORE WASI : ${c.score}/100 | Tendance : ${c.trend} | Risque : ${c.risk}
+${c.coup ? '⚠️ ATTENTION : REGIME MILITAIRE / TRANSITION EN COURS\n' : ''}
+📋 FICHE PAYS :
+• President : ${d.president}
+• Capital : ${d.capital} | Centre economique : ${d.eco_center}
+• Population : ${d.pop} | Zone : ${d.zone}
+• PIB : ${c.gdp} | Croissance : ${d.growth}
+• Devise : ${d.currency}
+• Inflation : ${d.inflation} | Dette/PIB : ${d.dette_pib}
+
+📊 DÉCOMPOSITION INDICE WASI :
+• Stabilite politique   ${bar(indices.politique)}
+• Env. economique       ${bar(indices.economie)}
+• Infrastructure        ${bar(indices.infra)}
+• Cadre juridique       ${bar(indices.juridique)}
+• Capital humain        ${bar(indices.humain)}
+• Integration regionale ${bar(indices.integration)}
+
+⛏️ RESSOURCES NATURELLES :
+${d.resources.map(r => '  • ' + r).join('\n')}
+
+📦 EXPORTATIONS PRINCIPALES :
+${d.exports.map(e => '  • ' + e).join('\n')}
+
+${c.score >= 65 ? `💡 OPPORTUNITÉS :
+• Environnement d'investissement favorable avec un cadre institutionnel stable
+• Croissance superieure a la moyenne regionale (${d.growth})
+• Acces aux marches UEMOA/CEDEAO depuis ce pays
+• Secteurs porteurs : telecoms, agri-transformation, services financiers, BTP
+• Recommandation WASI : allocation strategique recommandee, horizon long terme
+
+⚠️ POINTS DE VIGILANCE :
+• Dependance aux matieres premieres pour les recettes d'exportation
+• Infrastructure encore deficiente dans certaines zones rurales
+• Risque de succession politique a surveiller
+• Bureaucratie et delais administratifs dans certains secteurs`
+: c.score >= 45 ? `💡 OPPORTUNITÉS SÉLECTIVES :
+• Potentiel de croissance significatif si stabilisation politique confirmee
+• Ressources naturelles sous-exploitees
+• Cout de la main d'oeuvre competitif
+• Marche interieur en expansion (classe moyenne emergente)
+• Recommandation WASI : investissements cibles, due diligence approfondie
+
+⚠️ RISQUES MAJEURS :
+• Instabilite politique/securitaire potentielle
+• Cadre juridique encore fragile pour la protection des investissements
+• Infrastructure deficiente (energie, transport, eau)
+• Acces au financement bancaire limite
+• Inflation et pression sur le pouvoir d'achat`
+: `🔴 ZONE À RISQUE ÉLEVÉ :
+• Instabilite politique majeure — regime militaire ou transition
+• Sanctions regionales CEDEAO impactant le commerce
+• Insecurite physique dans certaines regions du pays
+• Cadre d'investissement imprevisible — risque d'expropriation ou de changement reglementaire brutal
+• Fuite des capitaux et des competences
+• Recommandation WASI : exposition minimale, instruments couverts uniquement
+
+💡 MALGRÉ LES RISQUES :
+• Les ressources naturelles restent exploitables via des partenariats internationaux
+• Le secteur humanitaire et les infrastructures de base offrent des debouches
+• A moyen terme (3-5 ans), une normalisation politique pourrait offrir des opportunites d'entree a prix decoté`}
+
+📊 COMPARAISON RÉGIONALE :
+• Score vs moyenne CEDEAO (${Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length)}) : ${c.score > Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length) ? 'SUPÉRIEUR ↑' : c.score === Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length) ? 'EGAL →' : 'INFÉRIEUR ↓'}
+• Rang CEDEAO : ${[...COUNTRIES].sort((a,b)=>b.score-a.score).findIndex(x=>x.code===c.code)+1}/16
+• Meilleur indice : ${Object.entries(indices).sort((a,b)=>b[1]-a[1])[0][0]} (${Object.entries(indices).sort((a,b)=>b[1]-a[1])[0][1]}/100)
+• Plus faible indice : ${Object.entries(indices).sort((a,b)=>a[1]-b[1])[0][0]} (${Object.entries(indices).sort((a,b)=>a[1]-b[1])[0][1]}/100)`;
 }
 
 /* ========== BRVM ========== */
