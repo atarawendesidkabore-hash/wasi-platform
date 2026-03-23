@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WASI Stock Market — Executive Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C8922A;
+    --gold-light: #E8C87A;
+    --navy: #030B15;
+    --navy-light: #0A1628;
+    --white: #FFFFFF;
+    --gray-50: #F8F9FA;
+    --gray-100: #F0F1F3;
+    --gray-200: #DFE1E6;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+
+  html, body {
+    font-family: 'Sora', sans-serif;
+    font-size: 8.5px;
+    line-height: 1.35;
+    color: var(--navy);
+    background: var(--white);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 8px 0;
+    border-bottom: 2.5px solid var(--gold);
+    margin-bottom: 8px;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .logo-text { font-weight: 800; font-size: 16px; color: var(--navy); letter-spacing: 1.5px; }
+  .logo-sub { font-size: 7.5px; color: var(--gold); font-weight: 500; letter-spacing: 0.5px; font-style: italic; }
+  .header-right { text-align: right; }
+  .header-title { font-size: 8px; font-weight: 600; color: var(--navy); letter-spacing: 0.8px; text-transform: uppercase; }
+  .header-conf {
+    display: inline-block;
+    margin-top: 3px;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 6.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 1.5px;
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+    border-bottom: 1.5px solid var(--gold-light);
+  }
+
+  /* ── TWO-COLUMN PROBLEM/SOLUTION ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .col ul { list-style: none; padding: 0; }
+  .col li {
+    padding: 2px 0;
+    padding-left: 10px;
+    position: relative;
+    font-size: 8px;
+    color: var(--gray-700);
+    line-height: 1.4;
+  }
+  .col li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 6px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  .col li strong { color: var(--navy); font-weight: 600; }
+  .highlight-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ── KEY METRICS BAR ── */
+  .metrics-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .metric-box {
+    background: var(--navy);
+    border-radius: 5px;
+    padding: 8px 10px;
+    text-align: center;
+    border-left: 3px solid var(--gold);
+  }
+  .metric-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.1;
+  }
+  .metric-label {
+    font-size: 6.5px;
+    color: var(--gray-200);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  /* ── THREE-COLUMN MID SECTION ── */
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  /* ── ADVANTAGES ── */
+  .adv-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-size: 7.5px;
+    color: var(--gray-700);
+    line-height: 1.35;
+  }
+  .adv-num {
+    flex-shrink: 0;
+    width: 14px; height: 14px;
+    background: var(--gold);
+    color: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .adv-item strong { color: var(--navy); font-weight: 600; }
+
+  /* ── REVENUE TABLE ── */
+  .rev-table { width: 100%; border-collapse: collapse; }
+  .rev-table th {
+    font-size: 6.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gold);
+    text-align: left;
+    padding: 2px 4px;
+    border-bottom: 1px solid var(--gold-light);
+    font-weight: 600;
+  }
+  .rev-table td {
+    font-size: 7.5px;
+    padding: 2.5px 4px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+  }
+  .rev-table td:last-child {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* ── REGULATORY ── */
+  .reg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 10px;
+  }
+  .reg-item {
+    font-size: 7.5px;
+    color: var(--gray-700);
+    padding: 2px 0;
+    display: flex;
+    gap: 4px;
+  }
+  .reg-label {
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    min-width: 52px;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 8px;
+    background: var(--gray-50);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+  .tl-item {
+    flex: 1;
+    padding: 5px 6px;
+    text-align: center;
+    border-right: 1px solid var(--gray-200);
+    position: relative;
+  }
+  .tl-item:last-child { border-right: none; }
+  .tl-item.active { background: var(--navy); }
+  .tl-item.active .tl-date { color: var(--gold); }
+  .tl-item.active .tl-desc { color: var(--gray-200); }
+  .tl-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 1px;
+  }
+  .tl-desc {
+    font-size: 6.5px;
+    color: var(--gray-500);
+    line-height: 1.3;
+  }
+
+  /* ── FUNDING ── */
+  .funding-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: 5px;
+    border-left: 4px solid var(--gold);
+  }
+  .funding-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .funding-amount span {
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--gray-200);
+    display: block;
+    margin-top: 1px;
+  }
+  .funding-details { flex: 1; }
+  .funding-rec {
+    font-size: 7.5px;
+    color: var(--gold-light);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .funding-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 8px;
+  }
+  .fb-item {
+    font-size: 6.5px;
+    color: var(--gray-200);
+    white-space: nowrap;
+  }
+  .fb-item strong {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 2px solid var(--gold);
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .footer-left .founder-name {
+    font-size: 8.5px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .footer-left .founder-title {
+    font-size: 7px;
+    color: var(--gray-500);
+  }
+  .footer-left .founder-loc {
+    font-size: 6.5px;
+    color: var(--gray-500);
+    margin-top: 1px;
+  }
+  .footer-right {
+    text-align: right;
+    max-width: 55%;
+  }
+  .footer-quote {
+    font-size: 7px;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 1.4;
+    font-weight: 500;
+  }
+  .footer-contact {
+    font-size: 6.5px;
+    color: var(--gray-500);
+    margin-bottom: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── PRINT BUTTON ── */
+  .print-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    z-index: 1000;
+  }
+  .print-btn:hover {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  @media print {
+    .print-btn { display: none !important; }
+    html, body { background: white; }
+    .page { width: 100%; max-width: 100%; }
+    .metric-box, .funding-row, .tl-item.active {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+
+  @media screen {
+    body { background: #E8E8E8; padding: 20px 0 60px 0; }
+    .page {
+      background: white;
+      padding: 10mm 12mm;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      border-radius: 2px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark">W</div>
+      <div>
+        <div class="logo-text">WASI STOCK MARKET</div>
+        <div class="logo-sub">La Bourse Priv&eacute;e de l'Afrique de l'Ouest</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-title">Executive Summary &mdash; Mars 2026</div>
+      <div class="header-conf">CONFIDENTIEL</div>
+    </div>
+  </header>
+
+  <!-- PROBLEM / SOLUTION -->
+  <div class="two-col">
+    <div class="col">
+      <div class="section-title">The Problem</div>
+      <ul>
+        <li><span class="highlight-num">450 000</span> PME formelles dans la CEDEAO &mdash; quasi aucun acc&egrave;s au march&eacute; financier</li>
+        <li><strong class="highlight-num">$42Mds</strong> de d&eacute;ficit de financement annuel <em style="font-size:6.5px;color:#999">(AfDB 2024)</em></li>
+        <li>Moins de <span class="highlight-num">0,02%</span> ont lev&eacute; des fonds via un march&eacute; organis&eacute;</li>
+        <li>La BRVM exige <span class="highlight-num">200M&nbsp;FCFA</span> de capital, 2&nbsp;ans de profit, processus de <span class="highlight-num">12-24&nbsp;mois</span></li>
+        <li>Aucun march&eacute; interm&eacute;diaire entre le cr&eacute;dit bancaire et la bourse nationale</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="section-title">The Solution</div>
+      <ul>
+        <li>Bourse priv&eacute;e r&eacute;glement&eacute;e &mdash; <strong>SMN</strong> (Syst&egrave;me Multilat&eacute;ral de N&eacute;gociation)</li>
+        <li><strong>3&nbsp;compartiments :</strong> Venture (<span class="highlight-num">10M&nbsp;FCFA</span>), Growth (<span class="highlight-num">50M</span>), Premier (<span class="highlight-num">150M</span>)</li>
+        <li>Sessions de fixing hebdomadaires &mdash; <strong>Mercredi 10h-14h WAT</strong></li>
+        <li><span class="highlight-num">6&nbsp;mois</span> pour la cotation vs 24&nbsp;mois sur la BRVM</li>
+        <li>Int&eacute;gr&eacute; avec le <strong>WASI Index</strong> &mdash; 16&nbsp;pays, scoring en temps r&eacute;el</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- KEY METRICS -->
+  <div class="metrics-bar">
+    <div class="metric-box">
+      <div class="metric-value">130</div>
+      <div class="metric-label">&Eacute;metteurs d'ici 2030</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-value">$280M</div>
+      <div class="metric-label">Capital lev&eacute; pour PME</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-value">45K</div>
+      <div class="metric-label">Investisseurs actifs</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-value">$8.5M</div>
+      <div class="metric-label">ARR (revenu r&eacute;current)</div>
+    </div>
+  </div>
+
+  <!-- THREE-COL: ADVANTAGES / REVENUE / REGULATORY -->
+  <div class="three-col">
+    <!-- COMPETITIVE ADVANTAGES -->
+    <div>
+      <div class="section-title">Avantages Comp&eacute;titifs</div>
+      <div class="adv-item">
+        <div class="adv-num">1</div>
+        <div><strong>WASI Index</strong> &mdash; due diligence automatis&eacute;e en 48h <em style="font-size:6.5px;color:#999">(vs 3 mois)</em></div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-num">2</div>
+        <div><strong>AfriTrade Bank</strong> &mdash; r&eacute;seau investisseurs pr&eacute;-int&eacute;gr&eacute;</div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-num">3</div>
+        <div><strong>Private Market Studio</strong> &mdash; pipeline d'&eacute;metteurs qualifi&eacute;s</div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-num">4</div>
+        <div><strong>20 ans</strong> de donn&eacute;es SYSCOHADA / OHADA</div>
+      </div>
+    </div>
+
+    <!-- REVENUE MODEL -->
+    <div>
+      <div class="section-title">Mod&egrave;le de Revenus</div>
+      <table class="rev-table">
+        <tr><th>Source</th><th style="text-align:right">Montant</th></tr>
+        <tr><td>Frais de cotation</td><td>2-5M FCFA</td></tr>
+        <tr><td>Commission / transaction</td><td>0,5% / c&ocirc;t&eacute;</td></tr>
+        <tr><td>Succ&egrave;s fee IPO</td><td>1,5-2,5%</td></tr>
+        <tr><td>Abonnement data</td><td>300K-2M / mois</td></tr>
+        <tr><td>Maintenance annuelle</td><td>500K-2M / an</td></tr>
+        <tr><td>Graduation vers BRVM</td><td>5-15M FCFA</td></tr>
+      </table>
+    </div>
+
+    <!-- REGULATORY -->
+    <div>
+      <div class="section-title">Cadre R&eacute;glementaire</div>
+      <div class="reg-grid">
+        <div class="reg-item"><span class="reg-label">Structure</span> SMN sous CREPMF (UEMOA)</div>
+        <div class="reg-item"><span class="reg-label">Juridique</span> Acte Uniforme OHADA</div>
+        <div class="reg-item"><span class="reg-label">D&eacute;positaire</span> Partenariat DC/BR (BRVM)</div>
+        <div class="reg-item"><span class="reg-label">Protection</span> Fonds de garantie 500M FCFA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div style="margin-bottom:8px;">
+    <div class="section-title">Feuille de Route</div>
+    <div class="timeline">
+      <div class="tl-item active">
+        <div class="tl-date">T2 2026</div>
+        <div class="tl-desc">Cr&eacute;ation de WASI Markets&nbsp;SA</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">T3 2026</div>
+        <div class="tl-desc">D&eacute;p&ocirc;t dossier CREPMF</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">T1 2027</div>
+        <div class="tl-desc">B&ecirc;ta priv&eacute;e (5 &eacute;metteurs pilotes)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">T3 2027</div>
+        <div class="tl-desc">Lancement public</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2028-30</div>
+        <div class="tl-desc">Expansion Nigeria &amp; Ghana</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNDING -->
+  <div class="funding-row">
+    <div class="funding-amount">$2.35M<span>USD &mdash; Besoin de financement</span></div>
+    <div class="funding-details">
+      <div class="funding-rec">Recommandation : partenariat co-fondateur BRVM (Option C)</div>
+      <div class="funding-breakdown">
+        <div class="fb-item">Capital r&eacute;glementaire <strong>$500K</strong></div>
+        <div class="fb-item">Fonds de garantie <strong>$850K</strong></div>
+        <div class="fb-item">Tech <strong>$350K</strong></div>
+        <div class="fb-item">&Eacute;quipe <strong>$280K</strong></div>
+        <div class="fb-item">Juridique <strong>$120K</strong></div>
+        <div class="fb-item">Marketing <strong>$150K</strong></div>
+        <div class="fb-item">Infra <strong>$100K</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="founder-name">Tarawendesida Thomas KABOR&Eacute;, FMVA</div>
+      <div class="founder-title">Fondateur &amp; CEO &mdash; WASI Ecosystem</div>
+      <div class="founder-loc">Ouagadougou, Burkina Faso &nbsp;|&nbsp; Mars 2026</div>
+    </div>
+    <div class="footer-right">
+      <div class="footer-contact">thomas@wasi.africa</div>
+      <div class="footer-quote">&laquo;&nbsp;WASI Stock Market n'est pas une bourse concurrente de la BRVM. C'est le march&eacute; d'acc&egrave;s.&nbsp;&raquo;</div>
+    </div>
+  </footer>
+</div>
+
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+
+</body>
+</html>

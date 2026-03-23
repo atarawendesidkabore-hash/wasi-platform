@@ -1309,6 +1309,134 @@ input, select, textarea { font-family: inherit; outline: none; }
   .chat-msg.bot { font-size: 0.74rem; }
   .bcard-big-val { font-size: 1.3rem; }
 }
+
+/* ========== STOCK MARKET SCREEN ========== */
+#screen-stock { padding: 0; }
+#screen-stock.active { display: block; }
+.sm-header {
+  padding: 14px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.sm-header-title { font-size: 1rem; font-weight: 600; color: var(--gold); }
+.sm-header-sub { font-size: 0.75rem; color: var(--text-secondary); }
+.sm-header-stats { display: flex; gap: 16px; font-size: 0.78rem; color: var(--text-dim); }
+.sm-header-stats span { color: var(--gold); font-weight: 600; }
+.sm-tabs {
+  display: flex; gap: 4px; padding: 10px 20px;
+  background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+}
+.sm-tab {
+  padding: 8px 16px; background: transparent; color: var(--text-secondary);
+  font-size: 0.82rem; font-weight: 500; border-radius: var(--radius); transition: all .2s;
+}
+.sm-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
+.sm-tab.active { color: var(--gold); background: rgba(200,146,42,.12); }
+.sm-body { padding: 20px; overflow-y: auto; max-height: calc(100vh - 200px); }
+.sm-panel { display: none; }
+.sm-panel.active { display: block; }
+
+.sm-comp-badge {
+  padding: 3px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600;
+}
+.sm-comp-venture { background: rgba(24,255,255,.12); color: var(--cyan); }
+.sm-comp-growth { background: rgba(200,146,42,.12); color: var(--gold); }
+.sm-comp-premier { background: rgba(0,230,118,.12); color: var(--green); }
+.sm-score-badge {
+  padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600;
+}
+
+.sm-fixing-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; margin-top: 20px;
+}
+.sm-fixing-card h3 { font-size: 0.85rem; color: var(--gold); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.sm-fixing-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.sm-fixing-stat { text-align: center; }
+.sm-fixing-stat .val { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.sm-fixing-stat .lab { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; }
+
+.sm-comp-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; margin-bottom: 16px;
+}
+.sm-comp-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+.sm-comp-card .desc { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px; }
+.sm-req-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px;
+}
+.sm-req-item { text-align: center; background: var(--bg-secondary); border-radius: var(--radius); padding: 10px 6px; }
+.sm-req-item .val { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+.sm-req-item .lab { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; }
+.sm-comp-footer { display: flex; align-items: center; justify-content: space-between; }
+.sm-comp-count { font-size: 0.78rem; color: var(--text-secondary); }
+.sm-comp-btn {
+  padding: 8px 16px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600;
+  background: rgba(200,146,42,.12); color: var(--gold); border: 1px solid var(--gold-dim);
+}
+
+.sm-stepper {
+  display: flex; align-items: center; gap: 0; overflow-x: auto; padding: 16px 0;
+}
+.sm-step {
+  display: flex; flex-direction: column; align-items: center; min-width: 100px; position: relative;
+}
+.sm-step-num {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: #000;
+  display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700;
+}
+.sm-step-label { font-size: 0.68rem; color: var(--text-secondary); margin-top: 6px; text-align: center; }
+.sm-step-arrow { color: var(--gold-dim); font-size: 1.2rem; margin: 0 2px; margin-bottom: 18px; }
+
+.sm-port-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+.sm-port-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px; text-align: center;
+}
+.sm-port-card .val { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+.sm-port-card .lab { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 4px; }
+
+.sm-order-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; margin-top: 20px;
+}
+.sm-order-card h3 { font-size: 0.85rem; color: var(--gold); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+
+.sm-form-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 24px; max-width: 700px;
+}
+.sm-form-card h3 { font-size: 1rem; color: var(--gold); margin-bottom: 16px; }
+.sm-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.sm-score-card {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; margin-top: 16px; text-align: center;
+}
+.sm-score-card h3 { font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 10px; }
+.sm-score-result { font-size: 1.1rem; font-weight: 700; }
+
+@media (max-width: 1024px) {
+  .sm-fixing-grid { grid-template-columns: repeat(3, 1fr); }
+  .sm-req-grid { grid-template-columns: repeat(3, 1fr); }
+  .sm-port-grid { grid-template-columns: 1fr 1fr; }
+  .sm-form-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .sm-header { padding: 10px 14px; }
+  .sm-header-title { font-size: 0.88rem; }
+  .sm-header-stats { gap: 8px; font-size: 0.7rem; flex-wrap: wrap; }
+  .sm-tabs { padding: 8px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 2px; }
+  .sm-tab { padding: 6px 10px; font-size: 0.72rem; white-space: nowrap; flex-shrink: 0; }
+  .sm-body { padding: 14px; max-height: none; }
+  .sm-fixing-grid { grid-template-columns: 1fr 1fr; }
+  .sm-req-grid { grid-template-columns: 1fr 1fr; }
+  .sm-port-grid { grid-template-columns: 1fr; }
+  .sm-form-grid { grid-template-columns: 1fr; }
+  .sm-stepper { flex-wrap: wrap; gap: 4px; }
+  .sm-step { min-width: 80px; }
+}
 </style>
 </head>
 <body>
@@ -1340,6 +1468,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="active" onclick="showScreen('intel',this)">Intelligence</button>
       <button onclick="showScreen('dex',this)">DEX</button>
       <button onclick="showScreen('bank',this)">Banking</button>
+      <button onclick="showScreen('stock',this)">Stock Market</button>
     </div>
     <div class="topbar-right">
       <span class="topbar-user">Bienvenue, <strong id="user-name">Operateur</strong></span>
@@ -1808,6 +1937,122 @@ input, select, textarea { font-family: inherit; outline: none; }
     </div>
   </div>
 
+  <!-- ===== STOCK MARKET SCREEN ===== -->
+  <div id="screen-stock" class="screen">
+    <div class="sm-header">
+      <div>
+        <div class="sm-header-title">WASI STOCK MARKET &mdash; Bourse Priv&eacute;e de l'Afrique de l'Ouest</div>
+        <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
+      </div>
+      <div class="sm-header-stats">
+        <span>8</span> &eacute;metteurs &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
+      </div>
+    </div>
+    <div class="sm-tabs" id="sm-tabs">
+      <button class="sm-tab active" onclick="switchSMTab('marche',this)">March&eacute;</button>
+      <button class="sm-tab" onclick="switchSMTab('emetteurs',this)">&Eacute;metteurs</button>
+      <button class="sm-tab" onclick="switchSMTab('portfolio',this)">Mon Portefeuille SM</button>
+      <button class="sm-tab" onclick="switchSMTab('soumettre',this)">Soumettre une PME</button>
+    </div>
+    <div class="sm-body">
+      <!-- MARCHÉ tab -->
+      <div class="sm-panel active" id="sm-panel-marche">
+        <table class="data-table" id="sm-market-table">
+          <thead>
+            <tr><th>TICKER</th><th>ENTREPRISE</th><th>SECTEUR</th><th>PAYS</th><th>COMPARTIMENT</th><th>COURS (XOF)</th><th>VAR%</th><th>VOLUME</th><th>SCORE</th><th>CAP.</th></tr>
+          </thead>
+          <tbody id="sm-market-body"></tbody>
+        </table>
+        <div class="sm-fixing-card">
+          <h3>Derni&egrave;re s&eacute;ance de fixing</h3>
+          <div class="sm-fixing-grid">
+            <div class="sm-fixing-stat"><div class="val">19 mars 2026</div><div class="lab">Date</div></div>
+            <div class="sm-fixing-stat"><div class="val">10h00-14h00 WAT</div><div class="lab">Horaires</div></div>
+            <div class="sm-fixing-stat"><div class="val">847</div><div class="lab">Ordres ex&eacute;cut&eacute;s</div></div>
+            <div class="sm-fixing-stat"><div class="val">229 700</div><div class="lab">Actions &eacute;chang&eacute;es</div></div>
+            <div class="sm-fixing-stat"><div class="val">892 M XOF</div><div class="lab">Valeur totale</div></div>
+          </div>
+          <div style="margin-top:12px;font-size:.78rem;color:var(--text-secondary);">Prochaine s&eacute;ance : <span style="color:var(--gold);font-weight:600;">Mercredi 26 mars 2026</span></div>
+        </div>
+      </div>
+      <!-- ÉMETTEURS tab -->
+      <div class="sm-panel" id="sm-panel-emetteurs">
+        <div id="sm-emetteurs-content"></div>
+      </div>
+      <!-- MON PORTEFEUILLE SM tab -->
+      <div class="sm-panel" id="sm-panel-portfolio">
+        <div id="sm-portfolio-content"></div>
+      </div>
+      <!-- SOUMETTRE UNE PME tab -->
+      <div class="sm-panel" id="sm-panel-soumettre">
+        <div class="sm-form-card">
+          <h3>Candidature &Eacute;metteur &mdash; WASI Stock Market</h3>
+          <div class="sm-form-grid">
+            <div class="form-group">
+              <label class="form-label">Nom de l'entreprise</label>
+              <input type="text" class="form-input" id="pme-name" placeholder="Ex: AgriPlus SA" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pays</label>
+              <select class="form-select" id="pme-country" onchange="updateSMScore()">
+                <option value="">-- S&eacute;lectionner --</option>
+                <option value="BJ">B&eacute;nin</option><option value="BF">Burkina Faso</option>
+                <option value="CV">Cap-Vert</option><option value="CI">C&ocirc;te d'Ivoire</option>
+                <option value="GM">Gambie</option><option value="GH">Ghana</option>
+                <option value="GN">Guin&eacute;e</option><option value="GW">Guin&eacute;e-Bissau</option>
+                <option value="LR">Lib&eacute;ria</option><option value="ML">Mali</option>
+                <option value="MR">Mauritanie</option><option value="NE">Niger</option>
+                <option value="NG">Nigeria</option><option value="SN">S&eacute;n&eacute;gal</option>
+                <option value="SL">Sierra Leone</option><option value="TG">Togo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secteur d'activit&eacute;</label>
+              <select class="form-select" id="pme-sector" onchange="updateSMScore()">
+                <option value="">-- S&eacute;lectionner --</option>
+                <option>Agro-industrie</option><option>BTP &amp; Mat&eacute;riaux</option>
+                <option>Transport &amp; Logistique</option><option>Sant&eacute; &amp; Pharmacie</option>
+                <option>Tech / Fintech</option><option>&Eacute;nergie</option>
+                <option>Microfinance</option><option>Immobilier</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chiffre d'affaires dernier exercice (XOF)</label>
+              <input type="number" class="form-input" id="pme-ca" placeholder="0" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Capital social (XOF)</label>
+              <input type="number" class="form-input" id="pme-capital" placeholder="0" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre d'exercices audit&eacute;s</label>
+              <select class="form-select" id="pme-exercices" onchange="updateSMScore()">
+                <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Montant de la lev&eacute;e souhait&eacute;e (XOF)</label>
+              <input type="number" class="form-input" id="pme-levee" placeholder="0" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Upload &eacute;tats financiers</label>
+              <input type="file" class="form-input" id="pme-files" accept=".pdf,.xlsx,.xls" style="padding:8px;">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label class="form-label">Description de l'activit&eacute;</label>
+            <textarea class="form-input" id="pme-desc" rows="4" placeholder="D&eacute;crivez votre entreprise, march&eacute;, avantage concurrentiel..." oninput="updateSMScore()"></textarea>
+          </div>
+          <div class="sm-score-card" id="pme-score-card">
+            <h3>Score WASI estim&eacute;</h3>
+            <div class="sm-score-result" id="pme-score-result" style="color:var(--text-dim);">Remplissez les champs ci-dessus</div>
+          </div>
+          <button class="order-exec-btn buy" style="margin-top:16px;" onclick="submitPME()">Soumettre la candidature</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /app -->
 
 <!-- ========== MOBILE COUNTRY PANEL ========== -->
@@ -2041,6 +2286,9 @@ function initApp() {
   renderBankDashboard();
   renderHistory();
   calcCredit();
+  renderStockMarket();
+  renderSMEmetteurs();
+  renderSMPortfolio();
   showNotif('Bienvenue sur la plateforme WASI. Mode demo actif.', 'success');
 }
 
@@ -3912,6 +4160,262 @@ function renderHistory() {
       <div class="btx-amt ${tx.type}">${tx.type === 'in' ? '+' : '-'}${fmt(tx.amount)} XOF</div>
     </div>`;
   }).join('') || '<div style="text-align:center;padding:20px;color:var(--bank-text2);">Aucune transaction trouvee.</div>';
+}
+
+/* ========== STOCK MARKET ========== */
+const STOCK_MARKET_LISTINGS = [
+  {ticker:'AGRIPLUS',name:'AgriPlus Transformation SA',sector:'Agro-industrie',country:'CI',compartment:'Growth',price:2500,change:3.2,volume:45000,score:'B+',marketCap:'1.2 Mds',status:'Cot\u00e9'},
+  {ticker:'SOLARBF',name:'SolarTech Burkina',sector:'\u00c9nergie solaire',country:'BF',compartment:'Venture',price:850,change:-1.5,volume:12000,score:'C+',marketCap:'340 M',status:'Cot\u00e9'},
+  {ticker:'TRANSLOG',name:'TransLog UEMOA',sector:'Transport & Logistique',country:'SN',compartment:'Growth',price:4200,change:1.8,volume:28000,score:'B',marketCap:'890 M',status:'Cot\u00e9'},
+  {ticker:'PHARMACI',name:'PharmaCI Distribution',sector:'Sant\u00e9 & Pharmacie',country:'CI',compartment:'Premier',price:6800,change:0.5,volume:18500,score:'A-',marketCap:'2.8 Mds',status:'Cot\u00e9'},
+  {ticker:'DIGIPAY',name:'DigiPay West Africa',sector:'Fintech',country:'GH',compartment:'Venture',price:1200,change:5.4,volume:67000,score:'B',marketCap:'480 M',status:'Cot\u00e9'},
+  {ticker:'BTPOUAGA',name:'BTP Ouaga Construction',sector:'BTP & Mat\u00e9riaux',country:'BF',compartment:'Growth',price:3100,change:-0.8,volume:9200,score:'B-',marketCap:'620 M',status:'Cot\u00e9'},
+  {ticker:'CASHEWBJ',name:'Cajou du B\u00e9nin SA',sector:'Agro-industrie',country:'BJ',compartment:'Growth',price:1900,change:2.1,volume:34000,score:'B+',marketCap:'760 M',status:'Cot\u00e9'},
+  {ticker:'MICROSEN',name:'MicroFinance S\u00e9n\u00e9gal',sector:'Microfinance',country:'SN',compartment:'Premier',price:5500,change:0.3,volume:15000,score:'A',marketCap:'1.6 Mds',status:'Cot\u00e9'},
+];
+
+const SM_PORTFOLIO = [
+  {ticker:'AGRIPLUS',name:'AgriPlus',qty:200,pru:2350,current:2500},
+  {ticker:'DIGIPAY',name:'DigiPay West Africa',qty:500,pru:1050,current:1200},
+  {ticker:'CASHEWBJ',name:'Cajou du B\u00e9nin',qty:150,pru:1800,current:1900},
+];
+
+let smOrderSide = 'buy';
+
+function switchSMTab(tab, btn) {
+  document.querySelectorAll('.sm-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('sm-panel-' + tab).classList.add('active');
+  document.querySelectorAll('#sm-tabs .sm-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function compBadge(comp) {
+  const cls = comp === 'Venture' ? 'sm-comp-venture' : comp === 'Growth' ? 'sm-comp-growth' : 'sm-comp-premier';
+  return '<span class="sm-comp-badge ' + cls + '">' + comp + '</span>';
+}
+
+function scoreBadge(score) {
+  let col;
+  if (score.startsWith('A')) col = 'var(--green)';
+  else if (score.startsWith('B')) col = 'var(--gold)';
+  else if (score.startsWith('C')) col = 'var(--orange)';
+  else col = 'var(--red)';
+  return '<span class="sm-score-badge" style="background:' + col.replace('var(','rgba(').replace(')','') + ';background:rgba(0,0,0,.15);color:' + col + ';">' + score + '</span>';
+}
+
+function renderStockMarket() {
+  const tbody = document.getElementById('sm-market-body');
+  tbody.innerHTML = STOCK_MARKET_LISTINGS.map(s => {
+    const cls = chgClass(s.change);
+    const compCls = s.compartment === 'Venture' ? 'sm-comp-venture' : s.compartment === 'Growth' ? 'sm-comp-growth' : 'sm-comp-premier';
+    let scoreCol;
+    if (s.score.startsWith('A')) scoreCol = 'var(--green)';
+    else if (s.score.startsWith('B')) scoreCol = 'var(--gold)';
+    else if (s.score.startsWith('C')) scoreCol = 'var(--orange)';
+    else scoreCol = 'var(--red)';
+    return '<tr>' +
+      '<td style="color:var(--gold);font-weight:600;">' + s.ticker + '</td>' +
+      '<td>' + s.name + '</td>' +
+      '<td style="color:var(--text-secondary);">' + s.sector + '</td>' +
+      '<td>' + s.country + '</td>' +
+      '<td><span class="sm-comp-badge ' + compCls + '">' + s.compartment + '</span></td>' +
+      '<td style="font-weight:600;">' + fmt(s.price) + '</td>' +
+      '<td class="' + cls + '">' + chgSign(s.change) + '</td>' +
+      '<td>' + fmt(s.volume) + '</td>' +
+      '<td><span style="color:' + scoreCol + ';font-weight:600;">' + s.score + '</span></td>' +
+      '<td>' + s.marketCap + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderSMEmetteurs() {
+  const compartments = [
+    {name:'WASI Venture', cls:'sm-comp-venture', color:'var(--cyan)',
+      desc:'Start-ups et jeunes entreprises avec un produit valid\u00e9 et un march\u00e9 identifi\u00e9.',
+      ca:'100M XOF', capital:'10M XOF', exercices:'1', score:'C+', levee:'25M XOF',
+      count: STOCK_MARKET_LISTINGS.filter(s=>s.compartment==='Venture').length},
+    {name:'WASI Growth', cls:'sm-comp-growth', color:'var(--gold)',
+      desc:'PME en croissance avec une rentabilit\u00e9 d\u00e9montr\u00e9e et un historique financier solide.',
+      ca:'500M XOF', capital:'50M XOF', exercices:'2', score:'B', levee:'100M XOF',
+      count: STOCK_MARKET_LISTINGS.filter(s=>s.compartment==='Growth').length},
+    {name:'WASI Premier', cls:'sm-comp-premier', color:'var(--green)',
+      desc:'ETI pr\u00eates pour la BRVM \u2014 vitrine pre-IPO avec les standards les plus \u00e9lev\u00e9s.',
+      ca:'2 Mds XOF', capital:'150M XOF', exercices:'3+', score:'A/B', levee:'500M XOF',
+      count: STOCK_MARKET_LISTINGS.filter(s=>s.compartment==='Premier').length},
+  ];
+
+  let html = compartments.map(c => {
+    return '<div class="sm-comp-card">' +
+      '<h3 style="color:' + c.color + ';">' + c.name + '</h3>' +
+      '<div class="desc">' + c.desc + '</div>' +
+      '<div class="sm-req-grid">' +
+        '<div class="sm-req-item"><div class="val">' + c.ca + '</div><div class="lab">CA min</div></div>' +
+        '<div class="sm-req-item"><div class="val">' + c.capital + '</div><div class="lab">Capital min</div></div>' +
+        '<div class="sm-req-item"><div class="val">' + c.exercices + '</div><div class="lab">Exercices</div></div>' +
+        '<div class="sm-req-item"><div class="val">' + c.score + '</div><div class="lab">Score WASI</div></div>' +
+        '<div class="sm-req-item"><div class="val">' + c.levee + '</div><div class="lab">Lev\u00e9e min</div></div>' +
+      '</div>' +
+      '<div class="sm-comp-footer">' +
+        '<span class="sm-comp-count">' + c.count + ' \u00e9metteur' + (c.count > 1 ? 's' : '') + ' cot\u00e9' + (c.count > 1 ? 's' : '') + '</span>' +
+        '<button class="sm-comp-btn">Voir les \u00e9metteurs</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Process stepper
+  html += '<div class="sm-comp-card"><h3 style="color:var(--gold);">Processus d\u2019\u00e9mission</h3>';
+  const steps = ['Candidature','Analyse WASI (48h)','Compartiment','Structuration','Book Building (15j)','Admission (30j)','Cotation','Suivi'];
+  html += '<div class="sm-stepper">';
+  steps.forEach((s, i) => {
+    html += '<div class="sm-step"><div class="sm-step-num">' + (i+1) + '</div><div class="sm-step-label">' + s + '</div></div>';
+    if (i < steps.length - 1) html += '<span class="sm-step-arrow">\u2192</span>';
+  });
+  html += '</div></div>';
+
+  document.getElementById('sm-emetteurs-content').innerHTML = html;
+}
+
+function renderSMPortfolio() {
+  let totalVal = 0, totalCost = 0;
+  SM_PORTFOLIO.forEach(h => { totalVal += h.qty * h.current; totalCost += h.qty * h.pru; });
+  const totalPnl = totalVal - totalCost;
+  const pnlPct = totalCost > 0 ? (totalPnl / totalCost * 100) : 0;
+
+  let html = '<div class="sm-port-grid">' +
+    '<div class="sm-port-card"><div class="val">' + fmt(totalVal) + ' <span style="font-size:.8rem;">XOF</span></div><div class="lab">Valeur totale SM</div></div>' +
+    '<div class="sm-port-card"><div class="val" style="color:' + (totalPnl >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + (totalPnl >= 0 ? '+' : '') + fmt(totalPnl) + '</div><div class="lab">P&L total</div></div>' +
+    '<div class="sm-port-card"><div class="val" style="color:' + (pnlPct >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + (pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%</div><div class="lab">Performance</div></div>' +
+  '</div>';
+
+  html += '<table class="data-table"><thead><tr><th>Ticker</th><th>Entreprise</th><th>Qt\u00e9</th><th>PRU (XOF)</th><th>Cours (XOF)</th><th>Valeur</th><th>P&L</th><th>P&L %</th></tr></thead><tbody>';
+  SM_PORTFOLIO.forEach(h => {
+    const val = h.qty * h.current;
+    const pnl = (h.current - h.pru) * h.qty;
+    const pct = ((h.current - h.pru) / h.pru * 100);
+    const cls = pnl >= 0 ? 'up' : 'dn';
+    html += '<tr>' +
+      '<td style="color:var(--gold);font-weight:600;">' + h.ticker + '</td>' +
+      '<td>' + h.name + '</td>' +
+      '<td>' + h.qty + '</td>' +
+      '<td>' + fmt(h.pru) + '</td>' +
+      '<td>' + fmt(h.current) + '</td>' +
+      '<td>' + fmt(val) + '</td>' +
+      '<td class="' + cls + '">' + (pnl >= 0 ? '+' : '') + fmt(pnl) + '</td>' +
+      '<td class="' + cls + '">' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%</td>' +
+    '</tr>';
+  });
+  html += '</tbody></table>';
+
+  // Order form
+  html += '<div class="sm-order-card"><h3>Passer un ordre — Stock Market</h3>';
+  html += '<div class="order-side-btns">' +
+    '<button class="order-side-btn active-buy" id="sm-btn-buy" onclick="setSMOrderSide(\'buy\')">ACHAT</button>' +
+    '<button class="order-side-btn" id="sm-btn-sell" onclick="setSMOrderSide(\'sell\')">VENTE</button>' +
+  '</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">';
+  html += '<div class="form-group"><label class="form-label">Titre</label>' +
+    '<select class="form-select" id="sm-ord-ticker" onchange="calcSMOrder()">' +
+    STOCK_MARKET_LISTINGS.map(s => '<option value="' + s.ticker + '" data-price="' + s.price + '">' + s.ticker + ' - ' + s.name + '</option>').join('') +
+    '</select></div>';
+  html += '<div class="form-group"><label class="form-label">Quantit\u00e9</label>' +
+    '<input type="number" class="form-input" id="sm-ord-qty" value="100" min="1" oninput="calcSMOrder()"></div>';
+  html += '<div class="form-group"><label class="form-label">Prix limite (XOF)</label>' +
+    '<input type="number" class="form-input" id="sm-ord-price" value="2500" oninput="calcSMOrder()"></div>';
+  html += '<div class="form-group"><label class="form-label">C\u00f4t\u00e9</label>' +
+    '<div id="sm-ord-side-label" style="padding:10px 12px;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius);color:var(--green);font-weight:600;">ACHAT</div></div>';
+  html += '</div>';
+  html += '<div class="order-summary" id="sm-ord-summary">' +
+    '<div class="order-summary-row"><span class="lab">Sous-total</span><span class="val" id="sm-ord-subtotal">--</span></div>' +
+    '<div class="order-summary-row"><span class="lab">Commission (0.5%)</span><span class="val" id="sm-ord-fee">--</span></div>' +
+    '<div class="order-summary-row"><span class="lab">Total</span><span class="val" id="sm-ord-total">--</span></div>' +
+  '</div>';
+  html += '<button class="order-exec-btn buy" id="sm-ord-exec-btn" onclick="submitSMOrder()">Soumettre l\u2019ordre (prochaine s\u00e9ance)</button>';
+  html += '</div>';
+
+  document.getElementById('sm-portfolio-content').innerHTML = html;
+  calcSMOrder();
+}
+
+function setSMOrderSide(side) {
+  smOrderSide = side;
+  var buyBtn = document.getElementById('sm-btn-buy');
+  var sellBtn = document.getElementById('sm-btn-sell');
+  var execBtn = document.getElementById('sm-ord-exec-btn');
+  var sideLabel = document.getElementById('sm-ord-side-label');
+  if (buyBtn) buyBtn.className = 'order-side-btn' + (side === 'buy' ? ' active-buy' : '');
+  if (sellBtn) sellBtn.className = 'order-side-btn' + (side === 'sell' ? ' active-sell' : '');
+  if (execBtn) {
+    execBtn.className = 'order-exec-btn ' + side;
+    execBtn.textContent = side === 'buy' ? 'Soumettre l\u2019ordre (prochaine s\u00e9ance)' : 'Soumettre l\u2019ordre (prochaine s\u00e9ance)';
+  }
+  if (sideLabel) {
+    sideLabel.textContent = side === 'buy' ? 'ACHAT' : 'VENTE';
+    sideLabel.style.color = side === 'buy' ? 'var(--green)' : 'var(--red)';
+  }
+  calcSMOrder();
+}
+
+function calcSMOrder() {
+  var sel = document.getElementById('sm-ord-ticker');
+  if (!sel) return;
+  var opt = sel.options[sel.selectedIndex];
+  if (opt) {
+    var price = parseInt(opt.getAttribute('data-price'));
+    var priceInput = document.getElementById('sm-ord-price');
+    if (priceInput && !priceInput._userEdited) priceInput.value = price;
+  }
+  var qty = parseInt(document.getElementById('sm-ord-qty').value) || 0;
+  var prc = parseInt(document.getElementById('sm-ord-price').value) || 0;
+  var subtotal = qty * prc;
+  var fee = Math.round(subtotal * 0.005);
+  var total = smOrderSide === 'buy' ? subtotal + fee : subtotal - fee;
+  var elSub = document.getElementById('sm-ord-subtotal');
+  var elFee = document.getElementById('sm-ord-fee');
+  var elTotal = document.getElementById('sm-ord-total');
+  if (elSub) elSub.textContent = fmt(subtotal) + ' XOF';
+  if (elFee) elFee.textContent = fmt(fee) + ' XOF';
+  if (elTotal) elTotal.textContent = fmt(total) + ' XOF';
+}
+
+function submitSMOrder() {
+  var sel = document.getElementById('sm-ord-ticker');
+  var ticker = sel ? sel.value : '';
+  var qty = document.getElementById('sm-ord-qty').value;
+  var action = smOrderSide === 'buy' ? 'Achat' : 'Vente';
+  showNotif('Ordre soumis : ' + action + ' de ' + qty + ' ' + ticker + ' pour la prochaine s\u00e9ance de fixing (mercredi).', 'success');
+}
+
+function updateSMScore() {
+  var ca = parseFloat(document.getElementById('pme-ca').value) || 0;
+  var capital = parseFloat(document.getElementById('pme-capital').value) || 0;
+  var exercices = parseInt(document.getElementById('pme-exercices').value) || 1;
+  var resultEl = document.getElementById('pme-score-result');
+  if (!resultEl) return;
+
+  if (ca >= 2000000000 && capital >= 150000000 && exercices >= 3) {
+    resultEl.textContent = 'WASI Premier \u2014 Score estim\u00e9 : A/B';
+    resultEl.style.color = 'var(--green)';
+  } else if (ca >= 500000000 && capital >= 50000000 && exercices >= 2) {
+    resultEl.textContent = 'WASI Growth \u2014 Score estim\u00e9 : B';
+    resultEl.style.color = 'var(--gold)';
+  } else if (ca >= 100000000 && capital >= 10000000) {
+    resultEl.textContent = 'WASI Venture \u2014 Score estim\u00e9 : C';
+    resultEl.style.color = 'var(--cyan)';
+  } else if (ca > 0 || capital > 0) {
+    resultEl.textContent = 'Non \u00e9ligible \u2014 crit\u00e8res minimum non atteints';
+    resultEl.style.color = 'var(--red)';
+  } else {
+    resultEl.textContent = 'Remplissez les champs ci-dessus';
+    resultEl.style.color = 'var(--text-dim)';
+  }
+}
+
+function submitPME() {
+  var name = document.getElementById('pme-name').value.trim();
+  if (!name) { showNotif('Veuillez saisir le nom de l\u2019entreprise.', 'error'); return; }
+  var country = document.getElementById('pme-country').value;
+  if (!country) { showNotif('Veuillez s\u00e9lectionner un pays.', 'error'); return; }
+  showNotif('Candidature de "' + name + '" soumise avec succ\u00e8s. Analyse WASI sous 48h.', 'success');
 }
 
 </script>
