@@ -2606,6 +2606,25 @@ const WASI_ETFS=[
   {ticker:'WASI-FINTECH',name:'WASI Fintech Afri',strategy:'Fintech & digital',nav:2750,change:3.1,aum:'180 M',fees:'0.75%',score:58},
   {ticker:'WASI-SHIPPING',name:'WASI Shipping Index',strategy:'Transport maritime',nav:6100,change:-0.4,aum:'210 M',fees:'0.60%',score:55},
   {ticker:'WASI-CRYPTO',name:'WASI Crypto Bridge',strategy:'Crypto-XOF bridge',nav:1200,change:4.2,aum:'90 M',fees:'0.85%',score:42},
+  {ticker:'WAEX',name:'WAEX Family — West Africa Export Index',strategy:'Famille indices export Afrique Ouest',nav:10000,change:1.4,aum:'— (pre-lancement)',fees:'0.50%',score:68,
+   detail:{
+     fullName:'West Africa Export Index Fund Family',
+     benchmark:'WAEX Family (umbrella)',
+     currency:'XOF',
+     domicile:'West Africa / UEMOA',
+     vehicle:'Famille de fonds indiciels (concept)',
+     replication:'Rules-based index tracking par pays',
+     rebalancing:'Trimestriel',
+     reconstitution:'Annuel',
+     weighting:'Ponderation par tonnage export moyen 20 ans',
+     constituents:[
+       {name:'CIREX — Cote d\'Ivoire',category:'Fonds cotier',weight:55,futures:true},
+       {name:'BUREX — Burkina Faso',category:'Fonds enclava',weight:45,futures:false},
+     ],
+     risks:['Volatilite matieres premieres','Concentration export','Risque corridor enclaves','Risque reglementaire CREPMF'],
+     targetInvestors:['HNWI UEMOA','Family offices','Institutions Afrique','Allocateurs thematiques commodites'],
+     status:'Pre-lancement — famille umbrella | Pipeline: GHAEX, TOGEX, BENEX, MALIEX, NIGEX'
+   }},
   {ticker:'CIREX',name:'CIREX Fund — CI Raw Export Index',strategy:'Matieres premieres export CI',nav:10000,change:1.8,aum:'— (pre-lancement)',fees:'0.60%',score:72,
    detail:{
      fullName:"Cote d'Ivoire Raw Export Index Fund",
@@ -2633,6 +2652,29 @@ const WASI_ETFS=[
      risks:['Volatilite prix matieres premieres','Concentration export CI','Liquidite constituants sans futures','Risque reglementaire','Qualite donnees portuaires'],
      targetInvestors:['HNWI UEMOA','Family offices','Institutions Afrique','Allocateurs thematiques commodites'],
      status:'Pre-lancement — profil conceptuel'
+   }},
+  {ticker:'BUREX',name:'BUREX Fund — BF Raw Export Index',strategy:'Matieres premieres export BF (enclava)',nav:10000,change:0.9,aum:'— (pre-lancement)',fees:'0.65%',score:38,
+   detail:{
+     fullName:'Burkina Faso Raw Export Index Fund',
+     benchmark:'BUREX Index (base 100, 01/01/2023)',
+     currency:'XOF',
+     domicile:'Burkina Faso / UEMOA',
+     vehicle:'Fonds indiciel reglemente (concept)',
+     replication:'Rules-based index tracking — modele corridor enclava',
+     rebalancing:'Trimestriel',
+     reconstitution:'Annuel',
+     weighting:'Ponderation par tonnage export moyen 20 ans (route, rail, air, transit)',
+     constituents:[
+       {name:'Graines oleagineuses',category:'Softs',weight:41.94,futures:false},
+       {name:'Noix de cajou',category:'Softs',weight:25.26,futures:false},
+       {name:'Coton brut',category:'Softs',weight:24.52,futures:true},
+       {name:'Sesame',category:'Softs',weight:8.24,futures:false},
+       {name:'Minerai de zinc',category:'Metaux',weight:0.04,futures:false},
+       {name:'Or',category:'Metaux',weight:0,futures:true},
+     ],
+     risks:['Volatilite matieres premieres','Pays enclava — dependance corridors transit','Concentration export agri','Regime militaire — risque politique eleve','Sortie CEDEAO (jan. 2025)','Qualite donnees douanieres'],
+     targetInvestors:['HNWI UEMOA','Family offices','Institutions Afrique','Allocateurs thematiques commodites'],
+     status:'Pre-lancement — profil conceptuel | Modele corridor: GH, TG, BJ, CI, ML, NE'
    }},
 ];
 
