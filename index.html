@@ -1530,7 +1530,9 @@ input, select, textarea { font-family: inherit; outline: none; }
   <!-- ===== DEX SCREEN ===== -->
   <div id="screen-dex" class="screen">
     <div class="dex-tabs" id="dex-tabs">
-      <button class="dex-tab active" onclick="switchDexTab('brvm',this)">BRVM</button>
+      <button class="dex-tab active" onclick="switchDexTab('brvm',this)">BRVM (UEMOA)</button>
+      <button class="dex-tab" onclick="switchDexTab('ngx',this)">NGX (Nigeria)</button>
+      <button class="dex-tab" onclick="switchDexTab('gse',this)">GSE (Ghana)</button>
       <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
       <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
       <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
@@ -1545,6 +1547,40 @@ input, select, textarea { font-family: inherit; outline: none; }
               <tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (XOF)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr>
             </thead>
             <tbody id="brvm-body"></tbody>
+          </table>
+        </div>
+        <!-- NGX panel -->
+        <div class="dex-panel" id="panel-ngx">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Nigerian Exchange Group (NGX)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Lagos, Nigeria · Devise: NGN · ASI: 97,842.50</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">56.2 T NGN (~$35 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (NGN)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="ngx-body"></tbody>
+          </table>
+        </div>
+        <!-- GSE panel -->
+        <div class="dex-panel" id="panel-gse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:1rem;font-weight:600;color:var(--gold);">Ghana Stock Exchange (GSE)</div>
+              <div style="font-size:.78rem;color:var(--text-secondary);">Accra, Ghana · Devise: GHS · GSE-CI: 3,845.20</div>
+            </div>
+            <div style="text-align:right;font-size:.78rem;">
+              <div style="color:var(--text-dim);">Cap. boursiere</div>
+              <div style="color:var(--gold);font-weight:600;">78.5 Mds GHS (~$5.4 Mds)</div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (GHS)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
+            <tbody id="gse-body"></tbody>
           </table>
         </div>
         <!-- ETF panel -->
@@ -2166,6 +2202,34 @@ const BRVM_STOCKS=[
   {name:'Nestle CI',ticker:'NTLC',sector:'Conso.',price:7500,change:1.1,volume:4100,per:16.2,signal:'ACHAT'},
 ];
 
+const NGX_STOCKS=[
+  {name:'Dangote Cement',ticker:'DANGCEM',sector:'Ciment',price:290.00,change:1.5,volume:2800000,per:14.2,signal:'ACHAT'},
+  {name:'MTN Nigeria',ticker:'MTNN',sector:'Telecom',price:215.50,change:3.2,volume:5200000,per:18.5,signal:'ACHAT'},
+  {name:'Airtel Africa',ticker:'AIRTELAFRI',sector:'Telecom',price:1850.00,change:-0.8,volume:1100000,per:12.8,signal:'NEUTRE'},
+  {name:'BUA Cement',ticker:'BUACEMENT',sector:'Ciment',price:78.50,change:0.6,volume:980000,per:16.3,signal:'NEUTRE'},
+  {name:'Zenith Bank',ticker:'ZENITHBANK',sector:'Banque',price:38.90,change:2.8,volume:8500000,per:4.2,signal:'ACHAT'},
+  {name:'GTBank Holdings',ticker:'GTCO',sector:'Banque',price:45.20,change:1.9,volume:6300000,per:5.1,signal:'ACHAT'},
+  {name:'Access Holdings',ticker:'ACCESSCORP',sector:'Banque',price:19.80,change:-1.2,volume:4200000,per:3.8,signal:'NEUTRE'},
+  {name:'UBA',ticker:'UBA',sector:'Banque',price:22.50,change:0.9,volume:3800000,per:4.5,signal:'ACHAT'},
+  {name:'Seplat Energy',ticker:'SEPLAT',sector:'Petrole',price:3200.00,change:-2.1,volume:420000,per:8.7,signal:'NEUTRE'},
+  {name:'BUA Foods',ticker:'BUAFOODS',sector:'Agro',price:145.00,change:1.2,volume:1500000,per:22.1,signal:'NEUTRE'},
+  {name:'Nestle Nigeria',ticker:'NESTLE',sector:'Conso.',price:885.00,change:-0.5,volume:85000,per:28.4,signal:'VENTE'},
+  {name:'Oando',ticker:'OANDO',sector:'Petrole',price:12.80,change:4.5,volume:9200000,per:6.3,signal:'ACHAT'},
+];
+
+const GSE_STOCKS=[
+  {name:'MTN Ghana',ticker:'MTNGH',sector:'Telecom',price:1.82,change:2.8,volume:3400000,per:11.5,signal:'ACHAT'},
+  {name:'GCB Bank',ticker:'GCB',sector:'Banque',price:5.80,change:1.4,volume:890000,per:6.2,signal:'ACHAT'},
+  {name:'Ecobank Ghana',ticker:'EGH',sector:'Banque',price:8.20,change:-0.6,volume:520000,per:7.8,signal:'NEUTRE'},
+  {name:'Cal Bank',ticker:'CAL',sector:'Banque',price:0.95,change:3.3,volume:2100000,per:4.5,signal:'ACHAT'},
+  {name:'Fan Milk',ticker:'FML',sector:'Agro',price:3.40,change:0.3,volume:180000,per:15.2,signal:'NEUTRE'},
+  {name:'Total Energies GH',ticker:'TOTAL',sector:'Petrole',price:4.75,change:-1.1,volume:95000,per:9.8,signal:'NEUTRE'},
+  {name:'Unilever Ghana',ticker:'UNIL',sector:'Conso.',price:7.60,change:0.8,volume:42000,per:18.9,signal:'NEUTRE'},
+  {name:'Enterprise Group',ticker:'EGL',sector:'Assurance',price:2.15,change:1.9,volume:310000,per:8.4,signal:'ACHAT'},
+  {name:'Benso Oil Palm',ticker:'BOPP',sector:'Agri',price:3.90,change:-0.5,volume:67000,per:10.2,signal:'NEUTRE'},
+  {name:'AngloGold Ashanti',ticker:'AGA',sector:'Mines',price:62.00,change:2.2,volume:28000,per:12.7,signal:'ACHAT'},
+];
+
 const WASI_ETFS=[
   {ticker:'WASI-UEMOA',name:'WASI UEMOA Index Fund',strategy:'Indice large UEMOA',nav:4850,change:1.2,aum:'1.8 Mds',fees:'0.45%',score:72},
   {ticker:'WASI-SAHEL',name:'WASI Sahel Resilience',strategy:'Resilience zone Sahel',nav:2100,change:-0.8,aum:'420 M',fees:'0.65%',score:38},
@@ -2275,6 +2339,8 @@ function initApp() {
   renderCountries();
   renderComposite();
   renderBRVM();
+  renderNGX();
+  renderGSE();
   renderETFs();
   renderCrypto();
   renderFX();
@@ -2331,6 +2397,14 @@ function renderTicker() {
   BRVM_STOCKS.forEach(s => {
     const cls = chgClass(s.change);
     html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)}</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  NGX_STOCKS.slice(0,6).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} NGN</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  GSE_STOCKS.slice(0,4).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price.toFixed(2)} GHS</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
   });
   FX_RATES.forEach(f => {
     const cls = f.change.includes('+') ? 'up' : f.change.includes('-') ? 'dn' : 'flat';
@@ -3795,6 +3869,42 @@ function renderBRVM() {
       <td style="color:var(--gold);">${s.ticker}</td>
       <td>${s.sector}</td>
       <td>${fmt(s.price)}</td>
+      <td class="${cls}">${chgSign(s.change)}</td>
+      <td><div class="vol-bar"><div class="vol-fill" style="width:${volPct}%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">${fmt(s.volume)}</span></td>
+      <td>${s.per}</td>
+      <td><span class="signal-badge ${s.signal}">${s.signal}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderNGX() {
+  const maxVol = Math.max(...NGX_STOCKS.map(s => s.volume));
+  document.getElementById('ngx-body').innerHTML = NGX_STOCKS.map(s => {
+    const cls = chgClass(s.change);
+    const volPct = Math.round((s.volume / maxVol) * 100);
+    return `<tr>
+      <td style="font-weight:600;">${s.name}</td>
+      <td style="color:var(--gold);">${s.ticker}</td>
+      <td>${s.sector}</td>
+      <td>${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)}</td>
+      <td class="${cls}">${chgSign(s.change)}</td>
+      <td><div class="vol-bar"><div class="vol-fill" style="width:${volPct}%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">${fmt(s.volume)}</span></td>
+      <td>${s.per}</td>
+      <td><span class="signal-badge ${s.signal}">${s.signal}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderGSE() {
+  const maxVol = Math.max(...GSE_STOCKS.map(s => s.volume));
+  document.getElementById('gse-body').innerHTML = GSE_STOCKS.map(s => {
+    const cls = chgClass(s.change);
+    const volPct = Math.round((s.volume / maxVol) * 100);
+    return `<tr>
+      <td style="font-weight:600;">${s.name}</td>
+      <td style="color:var(--gold);">${s.ticker}</td>
+      <td>${s.sector}</td>
+      <td>${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)}</td>
       <td class="${cls}">${chgSign(s.change)}</td>
       <td><div class="vol-bar"><div class="vol-fill" style="width:${volPct}%"></div></div><span style="font-size:.7rem;color:var(--text-dim);">${fmt(s.volume)}</span></td>
       <td>${s.per}</td>
