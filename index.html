@@ -3613,6 +3613,62 @@ function renderTicker() {
     const cls = chgClass(s.change);
     html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price.toFixed(2)} GHS</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
   });
+  JSE_STOCKS.slice(0,4).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} ZAR</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  EGX_STOCKS.slice(0,3).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} EGP</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  CSE_STOCKS.slice(0,3).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} MAD</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  NSE_STOCKS.slice(0,3).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} KES</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  DSE_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} TZS</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  USE_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} UGX</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  RSE_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} RWF</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  BSE_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} BWP</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  LUSE_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} ZMW</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  ZSE_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} ZWG</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  SEM_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} MUR</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  BVMT_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} TND</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  BVMAC_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} XAF</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
+  NSX_STOCKS.slice(0,2).forEach(s => {
+    const cls = chgClass(s.change);
+    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} NAD</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  });
   FX_RATES.forEach(f => {
     const cls = f.change.includes('+') ? 'up' : f.change.includes('-') ? 'dn' : 'flat';
     html += `<span class="ticker-item"><span class="sym">${f.pair}</span><span class="val">${f.buy}</span><span class="chg ${cls}">${f.change}</span></span>`;
