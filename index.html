@@ -475,6 +475,9 @@ input, select, textarea { font-family: inherit; outline: none; }
 #screen-dex { padding: 0; }
 #screen-dex.active { display: block; }
 .dex-tabs {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap;
   display: flex;
   gap: 4px;
   padding: 10px 20px;
@@ -1205,6 +1208,9 @@ input, select, textarea { font-family: inherit; outline: none; }
 
   /* DEX screen */
   .dex-tabs {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap;
     padding: 8px 10px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
