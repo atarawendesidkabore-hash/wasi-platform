@@ -1381,13 +1381,18 @@ input, select, textarea { font-family: inherit; outline: none; }
         <button class="chat-send" onclick="sendChat()">Envoyer</button>
       </div>
     </div>
-    <!-- Right: Composite -->
+    <!-- Right: Composite + Country Detail -->
     <div class="intel-right">
-      <div class="comp-title">Indice Composite WASI</div>
-      <div class="comp-score-big"><div class="val" id="comp-score-val">--</div><div class="label">Score moyen CEDEAO</div></div>
-      <div id="comp-top5" class="comp-section"></div>
-      <div id="comp-coups" class="comp-section"></div>
-      <div id="comp-components" class="comp-section"></div>
+      <!-- Default: composite overview -->
+      <div id="right-composite">
+        <div class="comp-title">Indice Composite WASI</div>
+        <div class="comp-score-big"><div class="val" id="comp-score-val">--</div><div class="label">Score moyen CEDEAO</div></div>
+        <div id="comp-top5" class="comp-section"></div>
+        <div id="comp-coups" class="comp-section"></div>
+        <div id="comp-components" class="comp-section"></div>
+      </div>
+      <!-- Country detail (shown when a country is selected) -->
+      <div id="right-country-detail" style="display:none;"></div>
     </div>
   </div>
 
@@ -2109,10 +2114,118 @@ function selectCountry(code) {
   const c = COUNTRIES.find(x => x.code === code);
   document.getElementById('chat-focus').textContent = 'Focus: ' + c.name;
   renderCountries();
-  // On mobile, show country detail
+  // On mobile, show country detail overlay
   if (window.innerWidth <= 640) {
     showMobileCountryDetail(code);
+  } else {
+    // On desktop, render detail in right panel
+    renderDesktopCountryDetail(code);
   }
+}
+
+function clearCountryFocus() {
+  currentCountry = null;
+  document.getElementById('chat-focus').textContent = 'Focus: CEDEAO';
+  document.getElementById('right-composite').style.display = '';
+  document.getElementById('right-country-detail').style.display = 'none';
+  renderCountries();
+}
+
+function renderDesktopCountryDetail(code) {
+  const c = COUNTRIES.find(x => x.code === code);
+  const d = COUNTRY_DETAILS[code];
+  if (!c || !d) return;
+
+  document.getElementById('right-composite').style.display = 'none';
+  const panel = document.getElementById('right-country-detail');
+  panel.style.display = 'block';
+
+  const scoreCol = c.score >= 65 ? 'var(--green)' : c.score >= 45 ? 'var(--orange)' : 'var(--red)';
+  const riskCol = c.risk === 'Faible' ? 'var(--green)' : c.risk === 'Modere' ? 'var(--orange)' : 'var(--red)';
+
+  function bar(label, val) {
+    const col = val >= 65 ? 'var(--green)' : val >= 45 ? 'var(--orange)' : 'var(--red)';
+    return `<div class="comp-row">
+      <span class="clabel">${label}</span>
+      <div class="comp-bar-wrap"><div class="comp-bar-fill" style="width:${val}%;background:${col};"></div></div>
+      <span class="cval" style="color:${col};">${val}</span>
+    </div>`;
+  }
+
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <button onclick="clearCountryFocus()" style="background:var(--bg-tertiary);color:var(--text-secondary);border:none;border-radius:var(--radius);padding:4px 10px;font-size:.78rem;cursor:pointer;">← Retour</button>
+      <span style="font-size:.78rem;color:var(--text-dim);">Detail pays</span>
+    </div>
+
+    <div style="text-align:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+      <div style="font-size:2.4rem;">${c.flag}</div>
+      <div style="font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-top:4px;">${c.name}</div>
+      <div style="font-size:.72rem;color:var(--text-dim);">${c.code} · ${d.zone}</div>
+      <div style="font-size:2.2rem;font-weight:700;color:${scoreCol};margin-top:8px;">${c.score}</div>
+      <div style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">WASI Score / 100</div>
+    </div>
+
+    ${c.coup ? '<div style="padding:8px;background:var(--red-dim);border:1px solid var(--red);border-radius:var(--radius);margin-bottom:12px;font-size:.75rem;color:var(--red);text-align:center;">⚠ Regime militaire</div>' : ''}
+
+    <div class="comp-section-title" style="margin-top:0;">Profil</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;font-size:.78rem;">
+      <div style="padding:8px;background:var(--bg-primary);border-radius:var(--radius);">
+        <div style="color:var(--text-dim);font-size:.65rem;text-transform:uppercase;">President</div>
+        <div style="color:var(--text-primary);font-weight:500;margin-top:2px;">${d.president}</div>
+      </div>
+      <div style="padding:8px;background:var(--bg-primary);border-radius:var(--radius);">
+        <div style="color:var(--text-dim);font-size:.65rem;text-transform:uppercase;">Capital</div>
+        <div style="color:var(--text-primary);font-weight:500;margin-top:2px;">${d.capital}</div>
+      </div>
+      <div style="padding:8px;background:var(--bg-primary);border-radius:var(--radius);">
+        <div style="color:var(--text-dim);font-size:.65rem;text-transform:uppercase;">Population</div>
+        <div style="color:var(--text-primary);font-weight:500;margin-top:2px;">${d.pop}</div>
+      </div>
+      <div style="padding:8px;background:var(--bg-primary);border-radius:var(--radius);">
+        <div style="color:var(--text-dim);font-size:.65rem;text-transform:uppercase;">PIB</div>
+        <div style="color:var(--text-primary);font-weight:500;margin-top:2px;">${c.gdp}</div>
+      </div>
+      <div style="padding:8px;background:var(--bg-primary);border-radius:var(--radius);">
+        <div style="color:var(--text-dim);font-size:.65rem;text-transform:uppercase;">Devise</div>
+        <div style="color:var(--text-primary);font-weight:500;margin-top:2px;">${d.currency}</div>
+      </div>
+      <div style="padding:8px;background:var(--bg-primary);border-radius:var(--radius);">
+        <div style="color:var(--text-dim);font-size:.65rem;text-transform:uppercase;">Risque</div>
+        <div style="font-weight:600;margin-top:2px;color:${riskCol};">${c.risk}</div>
+      </div>
+    </div>
+
+    <div class="comp-section-title">Macro</div>
+    <div style="font-size:.78rem;margin-bottom:14px;">
+      <div class="comp-row"><span class="clabel">Croissance</span><span class="cval" style="color:var(--green);">${d.growth}</span></div>
+      <div class="comp-row"><span class="clabel">Inflation</span><span class="cval">${d.inflation}</span></div>
+      <div class="comp-row"><span class="clabel">Dette / PIB</span><span class="cval">${d.dette_pib}</span></div>
+    </div>
+
+    <div class="comp-section-title">Indice WASI</div>
+    ${bar('Politique', d.indices.politique)}
+    ${bar('Economie', d.indices.economie)}
+    ${bar('Infra', d.indices.infra)}
+    ${bar('Juridique', d.indices.juridique)}
+    ${bar('Humain', d.indices.humain)}
+    ${bar('Integration', d.indices.integration)}
+
+    <div class="comp-section-title" style="margin-top:14px;">Ressources</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
+      ${d.resources.map(r => `<span style="padding:3px 8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;font-size:.7rem;color:var(--text-secondary);">⛏ ${r}</span>`).join('')}
+    </div>
+
+    <div class="comp-section-title">Exports</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">
+      ${d.exports.map(e => `<span style="padding:3px 8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;font-size:.7rem;color:var(--text-secondary);">📦 ${e}</span>`).join('')}
+    </div>
+
+    <button onclick="document.getElementById('chat-input').value='Analyse complete de ${c.name} : opportunites, risques, corridors et previsions';sendChat();" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${c.name}</button>
+    <button onclick="clearCountryFocus()" style="width:100%;padding:8px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--radius);font-size:.78rem;cursor:pointer;">← Vue composite</button>
+  `;
+
+  panel.scrollTop = 0;
 }
 
 /* ========== MOBILE COUNTRY PANEL ========== */
