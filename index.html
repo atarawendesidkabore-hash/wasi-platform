@@ -2494,11 +2494,12 @@ input, select, textarea { font-family: inherit; outline: none; }
         <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
       </div>
       <div class="sm-header-stats">
-        <span>8</span> &eacute;metteurs &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
+        <span>8</span> PME + <span>17</span> bourses &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
       </div>
     </div>
     <div class="sm-tabs" id="sm-tabs">
       <button class="sm-tab active" onclick="switchSMTab('marche',this)">March&eacute;</button>
+      <button class="sm-tab" onclick="switchSMTab('bourses',this)">Bourses Africaines (17)</button>
       <button class="sm-tab" onclick="switchSMTab('emetteurs',this)">&Eacute;metteurs</button>
       <button class="sm-tab" onclick="switchSMTab('portfolio',this)">Mon Portefeuille SM</button>
       <button class="sm-tab" onclick="switchSMTab('soumettre',this)">Soumettre une PME</button>
@@ -3559,6 +3560,7 @@ function initApp() {
   // Banking and Compta are empty by default — load when documents are uploaded
   calcCredit();
   renderStockMarket();
+  renderSMExchanges();
   renderSMEmetteurs();
   renderSMPortfolio();
   // Compta & Banking: empty by default, loaded when documents are uploaded
@@ -6082,6 +6084,51 @@ function scoreBadge(score) {
   else if (score.startsWith('C')) col = 'var(--orange)';
   else col = 'var(--red)';
   return '<span class="sm-score-badge" style="background:' + col.replace('var(','rgba(').replace(')','') + ';background:rgba(0,0,0,.15);color:' + col + ';">' + score + '</span>';
+}
+
+
+const AFRICAN_EXCHANGES = [
+  {id:'brvm',name:'BRVM',full:'Bourse Regionale (UEMOA)',city:'Abidjan',country:'UEMOA',ccy:'XOF',idx:'BRVM-C: 262',cap:'~$20 Mds',n:46,arr:'BRVM_STOCKS'},
+  {id:'ngx',name:'NGX',full:'Nigerian Exchange Group',city:'Lagos',country:'Nigeria',ccy:'NGN',idx:'ASI: 97,842',cap:'~$35 Mds',n:154,arr:'NGX_STOCKS'},
+  {id:'gse',name:'GSE',full:'Ghana Stock Exchange',city:'Accra',country:'Ghana',ccy:'GHS',idx:'GSE-CI: 3,845',cap:'~$5.4 Mds',n:42,arr:'GSE_STOCKS'},
+  {id:'jse',name:'JSE',full:'Johannesburg Stock Exchange',city:'Johannesburg',country:'Afr. du Sud',ccy:'ZAR',idx:'Top40: 72,450',cap:'~$980 Mds',n:340,arr:'JSE_STOCKS'},
+  {id:'egx',name:'EGX',full:'Egyptian Exchange',city:'Le Caire',country:'Egypte',ccy:'EGP',idx:'EGX30: 28,450',cap:'~$57 Mds',n:220,arr:'EGX_STOCKS'},
+  {id:'cse',name:'CSE',full:'Casablanca SE',city:'Casablanca',country:'Maroc',ccy:'MAD',idx:'MASI: 13,250',cap:'~$72 Mds',n:76,arr:'CSE_STOCKS'},
+  {id:'nse',name:'NSE',full:'Nairobi SE',city:'Nairobi',country:'Kenya',ccy:'KES',idx:'NSE20: 1,845',cap:'~$18 Mds',n:65,arr:'NSE_STOCKS'},
+  {id:'dse',name:'DSE',full:'Dar es Salaam SE',city:'Dar es Salaam',country:'Tanzanie',ccy:'TZS',idx:'DSE: 1,920',cap:'~$4.8 Mds',n:28,arr:'DSE_STOCKS'},
+  {id:'use',name:'USE',full:'Uganda SE',city:'Kampala',country:'Ouganda',ccy:'UGX',idx:'USE: 1,050',cap:'~$7.2 Mds',n:17,arr:'USE_STOCKS'},
+  {id:'rse',name:'RSE',full:'Rwanda SE',city:'Kigali',country:'Rwanda',ccy:'RWF',idx:'RSE: 145',cap:'~$950 M',n:9,arr:'RSE_STOCKS'},
+  {id:'bse',name:'BSE',full:'Botswana SE',city:'Gaborone',country:'Botswana',ccy:'BWP',idx:'DCI: 8,250',cap:'~$3.8 Mds',n:32,arr:'BSE_STOCKS'},
+  {id:'luse',name:'LuSE',full:'Lusaka SE',city:'Lusaka',country:'Zambie',ccy:'ZMW',idx:'LuSE: 7,840',cap:'~$3.2 Mds',n:24,arr:'LUSE_STOCKS'},
+  {id:'zse',name:'ZSE',full:'Zimbabwe SE',city:'Harare',country:'Zimbabwe',ccy:'ZWG',idx:'ZSE: 18,500',cap:'N/A',n:55,arr:'ZSE_STOCKS'},
+  {id:'sem',name:'SEM',full:'Stock Exchange of Mauritius',city:'Port-Louis',country:'Maurice',ccy:'MUR',idx:'SEMDEX: 2,180',cap:'~$7.1 Mds',n:52,arr:'SEM_STOCKS'},
+  {id:'bvmt',name:'BVMT',full:'Bourse de Tunis',city:'Tunis',country:'Tunisie',ccy:'TND',idx:'TUNINDEX: 9,450',cap:'~$10 Mds',n:78,arr:'BVMT_STOCKS'},
+  {id:'bvmac',name:'BVMAC',full:'BVMAC (CEMAC)',city:'Douala',country:'CEMAC',ccy:'XAF',idx:'BVMAC: 210',cap:'N/A',n:5,arr:'BVMAC_STOCKS'},
+  {id:'nsx',name:'NSX',full:'Namibian SE',city:'Windhoek',country:'Namibie',ccy:'NAD',idx:'NSX: 1,580',cap:'~$9.5 Mds',n:40,arr:'NSX_STOCKS'},
+];
+function renderSMExchanges() {
+  var g = document.getElementById('sm-exchanges-grid');
+  if (!g) return;
+  var arrs = {BRVM_STOCKS:BRVM_STOCKS,NGX_STOCKS:NGX_STOCKS,GSE_STOCKS:GSE_STOCKS,JSE_STOCKS:JSE_STOCKS,EGX_STOCKS:EGX_STOCKS,CSE_STOCKS:CSE_STOCKS,NSE_STOCKS:NSE_STOCKS,DSE_STOCKS:DSE_STOCKS,USE_STOCKS:USE_STOCKS,RSE_STOCKS:RSE_STOCKS,BSE_STOCKS:BSE_STOCKS,LUSE_STOCKS:LUSE_STOCKS,ZSE_STOCKS:ZSE_STOCKS,SEM_STOCKS:SEM_STOCKS,BVMT_STOCKS:BVMT_STOCKS,BVMAC_STOCKS:BVMAC_STOCKS,NSX_STOCKS:NSX_STOCKS};
+  g.innerHTML = AFRICAN_EXCHANGES.map(function(ex) {
+    var stocks = arrs[ex.arr] || [];
+    var rows = stocks.slice(0,5).map(function(s) {
+      var cl = chgClass(s.change);
+      return '<tr><td style="color:var(--gold);font-weight:600;font-size:.72rem;">'+s.ticker+'</td><td style="font-size:.72rem;">'+s.name+'</td><td style="font-size:.72rem;">'+(s.price<100?s.price.toFixed(2):fmt(s.price))+' '+ex.ccy+'</td><td class="'+cl+'" style="font-size:.72rem;">'+chgSign(s.change)+'</td></tr>';
+    }).join('');
+    return '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;">'+
+        '<div><div style="font-size:1rem;font-weight:700;color:var(--gold);">'+ex.name+'</div><div style="font-size:.75rem;color:var(--text-secondary);">'+ex.full+'</div><div style="font-size:.68rem;color:var(--text-dim);">'+ex.city+' | '+ex.country+'</div></div>'+
+        '<div style="text-align:right;"><div style="font-size:.68rem;color:var(--text-dim);">Cap.</div><div style="font-size:.78rem;font-weight:600;color:var(--text-primary);">'+ex.cap+'</div></div>'+
+      '</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;">'+
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius);padding:6px;text-align:center;"><div style="font-size:.9rem;font-weight:700;color:var(--text-primary);">'+ex.n+'</div><div style="font-size:.6rem;color:var(--text-dim);">Titres</div></div>'+
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius);padding:6px;text-align:center;"><div style="font-size:.75rem;font-weight:600;color:var(--cyan);font-family:var(--font-mono);">'+ex.ccy+'</div><div style="font-size:.6rem;color:var(--text-dim);">Devise</div></div>'+
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius);padding:6px;text-align:center;"><div style="font-size:.68rem;font-weight:600;color:var(--gold);font-family:var(--font-mono);">'+ex.idx+'</div><div style="font-size:.6rem;color:var(--text-dim);">Indice</div></div>'+
+      '</div>'+
+      '<table class="data-table" style="font-size:.75rem;"><thead><tr><th>Ticker</th><th>Titre</th><th>Prix</th><th>Var%</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '</div>';
+  }).join('');
 }
 
 function renderStockMarket() {
