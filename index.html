@@ -1588,10 +1588,10 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .compta-gl-mode-btn.active { background: rgba(200,146,42,.15); color: var(--gold); }
 
-/* Bilan two-column */
+/* Bilan two-column with SYSCOHADA DGI table */
 .compta-bilan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .compta-bilan-col {
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; overflow-x: auto;
 }
 .compta-bilan-col h3 {
   font-size: 0.88rem; font-weight: 600; margin-bottom: 12px; padding-bottom: 8px;
@@ -1599,24 +1599,29 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .compta-bilan-col h3.actif-title { color: var(--cyan); }
 .compta-bilan-col h3.passif-title { color: var(--gold); }
-.compta-bilan-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
-.compta-bilan-line.section-head { font-weight: 700; color: var(--gold); font-size: 0.8rem; border-bottom: none; padding-top: 10px; }
-.compta-bilan-line.sub-total { font-weight: 600; color: var(--cyan); border-bottom: 1px dashed var(--border); }
-.compta-bilan-line.total { font-weight: 700; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; }
-.compta-bilan-line .lbl { color: var(--text-secondary); }
-.compta-bilan-line .val { color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.compta-bilan-line .val-n1 { color: var(--text-dim); font-variant-numeric: tabular-nums; font-size: 0.72rem; }
-.compta-bilan-header { display: flex; justify-content: space-between; padding: 0 0 8px; font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.syscohada-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+.syscohada-table th { background: var(--bg-secondary); color: var(--text-dim); font-size: 0.68rem; text-transform: uppercase; letter-spacing: .5px; padding: 6px 4px; text-align: right; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.syscohada-table th:first-child, .syscohada-table th:nth-child(2) { text-align: left; }
+.syscohada-table td { padding: 4px 4px; border-bottom: 1px solid var(--border); text-align: right; color: var(--text-primary); }
+.syscohada-table td:first-child { text-align: left; color: var(--gold); font-weight: 600; font-size: 0.72rem; width: 28px; white-space: nowrap; }
+.syscohada-table td:nth-child(2) { text-align: left; color: var(--text-secondary); }
+.syscohada-table tr.section-head td { font-weight: 700; color: var(--gold); background: rgba(255,215,0,0.06); border-bottom: 1px solid var(--gold); padding-top: 8px; }
+.syscohada-table tr.section-head td:nth-child(2) { color: var(--gold); }
+.syscohada-table tr.sub-total td { font-weight: 600; color: var(--cyan); border-top: 1px dashed var(--border); }
+.syscohada-table tr.sub-total td:nth-child(2) { color: var(--cyan); }
+.syscohada-table tr.grand-total td { font-weight: 700; border-top: 2px solid var(--gold); padding-top: 8px; font-size: 0.8rem; }
+.syscohada-table tr.grand-total td:first-child, .syscohada-table tr.grand-total td:nth-child(2) { color: var(--gold); }
+.syscohada-table .val-pos { color: var(--green); }
+.syscohada-table .val-neg { color: var(--red); }
+.syscohada-table .val-n1 { color: var(--text-dim); }
+.syscohada-table .val-zero { color: var(--text-dim); opacity: 0.5; }
 .compta-equilibre { text-align: center; margin-top: 16px; padding: 10px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600; }
 .compta-equilibre.ok { background: rgba(0,230,118,.1); color: var(--green); border: 1px solid var(--green); }
 .compta-equilibre.nok { background: rgba(255,82,82,.1); color: var(--red); border: 1px solid var(--red); }
 
-/* Resultat sections */
-.compta-resultat-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
-.compta-resultat-section h3 { font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 10px; }
-.compta-resultat-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
-.compta-resultat-line.subtotal { font-weight: 700; border-top: 2px solid var(--border); border-bottom: none; padding-top: 8px; margin-top: 4px; }
-.compta-resultat-line.grand-total { font-weight: 700; font-size: 0.92rem; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; }
+/* Resultat / Flux DGI tables */
+.compta-resultat-wrap, .compta-flux-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; overflow-x: auto; }
+.compta-resultat-wrap h3, .compta-flux-wrap h3 { font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 10px; }
 
 /* Notes & Liasse */
 .compta-notes-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px; }
@@ -1631,16 +1636,8 @@ input, select, textarea { font-family: inherit; outline: none; }
 .compta-liasse-row.liasse-total .liasse-label { color: var(--gold); }
 .compta-liasse-row.liasse-total .liasse-val { color: var(--gold); font-size: 0.85rem; }
 
-/* Flux de tresorerie */
-.compta-flux-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
-.compta-flux-section h3 { font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 10px; }
-.compta-flux-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
-.compta-flux-line .lbl { color: var(--text-secondary); }
-.compta-flux-line .val { color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.compta-flux-line.flux-subtotal { font-weight: 700; border-top: 1px dashed var(--border); border-bottom: none; padding-top: 8px; margin-top: 4px; }
-.compta-flux-line.flux-subtotal .lbl { color: var(--cyan); }
-.compta-flux-line.flux-grand-total { font-weight: 700; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; font-size: 0.85rem; }
-.compta-flux-line.flux-grand-total .lbl { color: var(--gold); }
+/* Flux de tresorerie - now uses .syscohada-table */
+/* Legacy flux classes removed - using syscohada-table */
 
 @media (max-width: 900px) {
   .compta-metrics { grid-template-columns: repeat(2, 1fr); }
@@ -1652,6 +1649,16 @@ input, select, textarea { font-family: inherit; outline: none; }
   .compta-tabs { padding: 8px 10px; gap: 2px; }
   .compta-tab { padding: 6px 10px; font-size: 0.72rem; }
   .compta-plan-toggle { flex-direction: column; }
+}
+@media print {
+  .syscohada-table { font-size: 9pt; }
+  .syscohada-table th, .syscohada-table td { padding: 2px 3px; }
+  .compta-bilan-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compta-bilan-col, .compta-resultat-wrap, .compta-flux-wrap { border: 1px solid #ccc; padding: 8px; background: #fff; }
+  .syscohada-table tr.section-head td { background: #f5f5dc; }
+  .syscohada-table .val-pos { color: #006600; }
+  .syscohada-table .val-neg { color: #cc0000; }
+  .syscohada-table td:first-child { color: #b8860b; }
 }
 </style>
 </head>
@@ -5690,124 +5697,190 @@ function renderBalance() {
    ================================================================ */
 function renderBilan() {
   var el = document.getElementById('compta-panel-bilan');
-  var accounts = getAllAccounts();
   var isSys = activePlan === 'syscohada';
 
-  // Helper to filter by code prefix
-  function byPrefix(prefix) {
-    return accounts.filter(function(a){ return a.code.substring(0, prefix.length) === prefix; });
-  }
-  function netByPrefix(prefix) {
-    return byPrefix(prefix).reduce(function(s,a){ return s + a.debit - a.credit; }, 0);
-  }
-  function creditByPrefix(prefix) {
-    return byPrefix(prefix).reduce(function(s,a){ return s + a.credit - a.debit; }, 0);
+  /* --- Helper: format amount with color class --- */
+  function fmtCell(v, isDim) {
+    if (v === 0) return '<span class="val-zero">0</span>';
+    var cls = isDim ? 'val-n1' : (v > 0 ? 'val-pos' : 'val-neg');
+    return '<span class="' + cls + '">' + fmtN(v) + '</span>';
   }
 
-  // ACTIF IMMOBILISE
-  var immoIncorp = netByPrefix('21');
-  var immoCorp = netByPrefix('23') + netByPrefix('24') + netByPrefix('22');
-  var immoFin = netByPrefix('27');
-  var amortImmo = creditByPrefix('28');
-  var actifImmoNet = immoIncorp + immoCorp + immoFin - amortImmo;
+  /* --- ACTIF data (DGI-BF SYSCOHADA revise) --- */
+  var actifData, passifData;
+  if (isSys) {
+    actifData = [
+      {ref:'',lbl:'IMMOBILISATIONS INCORPORELLES',brut:0,amort:0,net:0,n1:0,hd:true,computed:true},
+      {ref:'AD',lbl:'IMMOBILISATIONS INCORPORELLES',brut:12000000,amort:2550000,net:9450000,n1:8200000,hd:true},
+      {ref:'AE',lbl:'Frais de d\u00e9veloppement et de prospection',brut:3500000,amort:700000,net:2800000,n1:2450000},
+      {ref:'AF',lbl:'Brevets, licences, logiciels, droits similaires',brut:8500000,amort:1850000,net:6650000,n1:5750000},
+      {ref:'AG',lbl:'Fonds commercial et droit au bail',brut:0,amort:0,net:0,n1:0},
+      {ref:'AH',lbl:'Autres immobilisations incorporelles',brut:0,amort:0,net:0,n1:0},
+      {ref:'AI',lbl:'IMMOBILISATIONS CORPORELLES',brut:21700000,amort:3000000,net:18700000,n1:16800000,hd:true},
+      {ref:'AJ',lbl:'Terrains',brut:0,amort:0,net:0,n1:0},
+      {ref:'AK',lbl:'B\u00e2timents',brut:15000000,amort:3000000,net:12000000,n1:10500000},
+      {ref:'AL',lbl:'Am\u00e9nagements, agencements et installations',brut:0,amort:0,net:0,n1:0},
+      {ref:'AM',lbl:'Mat\u00e9riel, mobilier et actifs biologiques',brut:2200000,amort:0,net:2200000,n1:2000000},
+      {ref:'AN',lbl:'Mat\u00e9riel de transport',brut:4500000,amort:0,net:4500000,n1:4300000},
+      {ref:'AP',lbl:'AVANCES ET ACOMPTES VERS\u00c9S SUR IMMOB.',brut:0,amort:0,net:0,n1:0,hd:true},
+      {ref:'AQ',lbl:'IMMOBILISATIONS FINANCI\u00c8RES',brut:1000000,amort:0,net:1000000,n1:900000,hd:true},
+      {ref:'AR',lbl:'Titres de participation',brut:0,amort:0,net:0,n1:0},
+      {ref:'AS',lbl:'Autres immobilisations financi\u00e8res',brut:1000000,amort:0,net:1000000,n1:900000},
+      {ref:'AZ',lbl:'TOTAL ACTIF IMMOBILIS\u00c9',brut:34700000,amort:5550000,net:29150000,n1:25900000,total:true},
+      {ref:'BA',lbl:'ACTIF CIRCULANT HAO',brut:0,amort:0,net:0,n1:0,hd:true},
+      {ref:'BB',lbl:'STOCKS ET ENCOURS',brut:1250000,amort:0,net:1250000,n1:1100000,hd:true},
+      {ref:'BG',lbl:'CR\u00c9ANCES ET EMPLOIS ASSIMIL\u00c9S',brut:6660000,amort:0,net:6660000,n1:5800000,hd:true},
+      {ref:'BH',lbl:'Fournisseurs avances vers\u00e9es',brut:0,amort:0,net:0,n1:0},
+      {ref:'BI',lbl:'Clients',brut:5800000,amort:0,net:5800000,n1:5200000},
+      {ref:'BJ',lbl:'Autres cr\u00e9ances',brut:860000,amort:0,net:860000,n1:600000},
+      {ref:'BK',lbl:'TOTAL ACTIF CIRCULANT',brut:7910000,amort:0,net:7910000,n1:6900000,total:true},
+      {ref:'BQ',lbl:'Titres de placement',brut:0,amort:0,net:0,n1:0},
+      {ref:'BR',lbl:'Valeurs \u00e0 encaisser',brut:180000,amort:0,net:180000,n1:150000},
+      {ref:'BS',lbl:'Banques, ch\u00e8ques postaux, caisse',brut:7650000,amort:0,net:7650000,n1:6800000},
+      {ref:'BT',lbl:'TOTAL TR\u00c9SORERIE-ACTIF',brut:7830000,amort:0,net:7830000,n1:6950000,total:true},
+      {ref:'BU',lbl:'\u00c9cart de conversion-Actif',brut:0,amort:0,net:0,n1:0},
+      {ref:'BZ',lbl:'TOTAL G\u00c9N\u00c9RAL',brut:50440000,amort:5550000,net:44890000,n1:39750000,grand:true}
+    ];
+    passifData = [
+      {ref:'CA',lbl:'Capital',net:10000000,n1:10000000},
+      {ref:'CB',lbl:'Apporteurs capital non appel\u00e9 (-)',net:0,n1:0},
+      {ref:'CD',lbl:'Primes li\u00e9es au capital social',net:0,n1:0},
+      {ref:'CE',lbl:'\u00c9carts de r\u00e9\u00e9valuation',net:0,n1:0},
+      {ref:'CF',lbl:'R\u00e9serves indisponibles',net:0,n1:0},
+      {ref:'CG',lbl:'R\u00e9serves libres',net:2500000,n1:2000000},
+      {ref:'CH',lbl:'Report \u00e0 nouveau (+ ou -)',net:800000,n1:500000},
+      {ref:'CJ',lbl:'R\u00e9sultat net de l\u2019exercice (b\u00e9n\u00e9fice + ou perte -)',net:1850000,n1:1400000},
+      {ref:'CL',lbl:'Subventions d\u2019investissement',net:500000,n1:600000},
+      {ref:'CM',lbl:'Provisions r\u00e9glement\u00e9es',net:0,n1:0},
+      {ref:'CP',lbl:'TOTAL CAPITAUX PROPRES ET RESSOURCES ASSIMIL\u00c9ES',net:15650000,n1:14500000,total:true},
+      {ref:'DA',lbl:'Emprunts et dettes financi\u00e8res diverses',net:15000000,n1:6000000},
+      {ref:'DB',lbl:'Dettes de location-acquisition',net:0,n1:0},
+      {ref:'DC',lbl:'Provisions pour risques et charges',net:350000,n1:300000},
+      {ref:'DD',lbl:'TOTAL DETTES FINANCI\u00c8RES ET RESS. ASSIMIL\u00c9ES',net:15350000,n1:6300000,total:true},
+      {ref:'DF',lbl:'TOTAL RESSOURCES STABLES',net:31000000,n1:20800000,total:true},
+      {ref:'DH',lbl:'Dettes circulantes HAO',net:0,n1:0},
+      {ref:'DI',lbl:'Clients, avances re\u00e7ues',net:0,n1:0},
+      {ref:'DJ',lbl:'Fournisseurs d\u2019exploitation',net:8540000,n1:3200000},
+      {ref:'DK',lbl:'Dettes fiscales et sociales',net:2200000,n1:1900000},
+      {ref:'DM',lbl:'Autres dettes',net:3150000,n1:0},
+      {ref:'DN',lbl:'Provisions pour risques \u00e0 court terme',net:0,n1:0},
+      {ref:'DP',lbl:'TOTAL PASSIF CIRCULANT',net:13890000,n1:5100000,total:true},
+      {ref:'DQ',lbl:'Banques, cr\u00e9dits d\u2019escompte',net:0,n1:0},
+      {ref:'DR',lbl:'Banques, \u00e9tab. financiers, cr\u00e9dits tr\u00e9sorerie',net:0,n1:0},
+      {ref:'DT',lbl:'TOTAL TR\u00c9SORERIE-PASSIF',net:0,n1:0,total:true},
+      {ref:'DV',lbl:'\u00c9cart de conversion-Passif',net:0,n1:0},
+      {ref:'DZ',lbl:'TOTAL G\u00c9N\u00c9RAL',net:44890000,n1:25900000,grand:true}
+    ];
+  } else {
+    /* SYCEBNL mode: adapted labels and different mock data */
+    actifData = [
+      {ref:'AD',lbl:'IMMOBILISATIONS INCORPORELLES',brut:8000000,amort:1500000,net:6500000,n1:5800000,hd:true},
+      {ref:'AE',lbl:'Frais de d\u00e9veloppement',brut:2000000,amort:400000,net:1600000,n1:1400000},
+      {ref:'AF',lbl:'Brevets, licences, logiciels',brut:6000000,amort:1100000,net:4900000,n1:4400000},
+      {ref:'AG',lbl:'Fonds commercial',brut:0,amort:0,net:0,n1:0},
+      {ref:'AH',lbl:'Autres immobilisations incorporelles',brut:0,amort:0,net:0,n1:0},
+      {ref:'AI',lbl:'IMMOBILISATIONS CORPORELLES',brut:15000000,amort:2000000,net:13000000,n1:11500000,hd:true},
+      {ref:'AJ',lbl:'Terrains',brut:0,amort:0,net:0,n1:0},
+      {ref:'AK',lbl:'B\u00e2timents',brut:10000000,amort:2000000,net:8000000,n1:7000000},
+      {ref:'AL',lbl:'Am\u00e9nagements et installations',brut:0,amort:0,net:0,n1:0},
+      {ref:'AM',lbl:'Mat\u00e9riel et mobilier',brut:2000000,amort:0,net:2000000,n1:1800000},
+      {ref:'AN',lbl:'Mat\u00e9riel de transport',brut:3000000,amort:0,net:3000000,n1:2700000},
+      {ref:'AP',lbl:'AVANCES ET ACOMPTES SUR IMMOB.',brut:0,amort:0,net:0,n1:0,hd:true},
+      {ref:'AQ',lbl:'IMMOBILISATIONS FINANCI\u00c8RES',brut:500000,amort:0,net:500000,n1:400000,hd:true},
+      {ref:'AR',lbl:'Titres de participation',brut:0,amort:0,net:0,n1:0},
+      {ref:'AS',lbl:'Autres immobilisations financi\u00e8res',brut:500000,amort:0,net:500000,n1:400000},
+      {ref:'AZ',lbl:'TOTAL ACTIF IMMOBILIS\u00c9',brut:23500000,amort:3500000,net:20000000,n1:17700000,total:true},
+      {ref:'BA',lbl:'ACTIF CIRCULANT HAO',brut:0,amort:0,net:0,n1:0,hd:true},
+      {ref:'BB',lbl:'STOCKS ET ENCOURS',brut:800000,amort:0,net:800000,n1:700000,hd:true},
+      {ref:'BG',lbl:'CR\u00c9ANCES ET EMPLOIS ASSIMIL\u00c9S',brut:4500000,amort:0,net:4500000,n1:3900000,hd:true},
+      {ref:'BH',lbl:'Subventions \u00e0 recevoir',brut:0,amort:0,net:0,n1:0},
+      {ref:'BI',lbl:'Usagers / Adh\u00e9rents',brut:3800000,amort:0,net:3800000,n1:3400000},
+      {ref:'BJ',lbl:'Autres cr\u00e9ances',brut:700000,amort:0,net:700000,n1:500000},
+      {ref:'BK',lbl:'TOTAL ACTIF CIRCULANT',brut:5300000,amort:0,net:5300000,n1:4600000,total:true},
+      {ref:'BQ',lbl:'Titres de placement',brut:0,amort:0,net:0,n1:0},
+      {ref:'BR',lbl:'Valeurs \u00e0 encaisser',brut:100000,amort:0,net:100000,n1:80000},
+      {ref:'BS',lbl:'Banques, ch\u00e8ques postaux, caisse',brut:5600000,amort:0,net:5600000,n1:5020000},
+      {ref:'BT',lbl:'TOTAL TR\u00c9SORERIE-ACTIF',brut:5700000,amort:0,net:5700000,n1:5100000,total:true},
+      {ref:'BU',lbl:'\u00c9cart de conversion-Actif',brut:0,amort:0,net:0,n1:0},
+      {ref:'BZ',lbl:'TOTAL G\u00c9N\u00c9RAL',brut:34500000,amort:3500000,net:31000000,n1:27400000,grand:true}
+    ];
+    passifData = [
+      {ref:'CA',lbl:'Dotation / Fonds associatifs sans droit de reprise',net:8000000,n1:8000000},
+      {ref:'CB',lbl:'Fonds associatifs avec droit de reprise',net:0,n1:0},
+      {ref:'CD',lbl:'Primes li\u00e9es aux fonds associatifs',net:0,n1:0},
+      {ref:'CE',lbl:'\u00c9carts de r\u00e9\u00e9valuation',net:0,n1:0},
+      {ref:'CF',lbl:'R\u00e9serves indisponibles',net:0,n1:0},
+      {ref:'CG',lbl:'R\u00e9serves libres',net:1500000,n1:1200000},
+      {ref:'CH',lbl:'Report \u00e0 nouveau (+ ou -)',net:600000,n1:400000},
+      {ref:'CJ',lbl:'Exc\u00e9dent/D\u00e9ficit de l\u2019exercice',net:1200000,n1:900000},
+      {ref:'CL',lbl:'Subventions d\u2019investissement',net:400000,n1:500000},
+      {ref:'CM',lbl:'Provisions r\u00e9glement\u00e9es',net:0,n1:0},
+      {ref:'CP',lbl:'TOTAL FONDS ASSOCIATIFS ET RESSOURCES ASSIMIL\u00c9ES',net:11700000,n1:11000000,total:true},
+      {ref:'DA',lbl:'Emprunts et dettes financi\u00e8res',net:10000000,n1:5000000},
+      {ref:'DB',lbl:'Dettes de location-acquisition',net:0,n1:0},
+      {ref:'DC',lbl:'Provisions pour risques et charges',net:300000,n1:250000},
+      {ref:'DD',lbl:'TOTAL DETTES FINANCI\u00c8RES',net:10300000,n1:5250000,total:true},
+      {ref:'DF',lbl:'TOTAL RESSOURCES STABLES',net:22000000,n1:16250000,total:true},
+      {ref:'DH',lbl:'Dettes circulantes HAO',net:0,n1:0},
+      {ref:'DI',lbl:'Usagers, avances re\u00e7ues',net:0,n1:0},
+      {ref:'DJ',lbl:'Fournisseurs d\u2019exploitation',net:5500000,n1:2800000},
+      {ref:'DK',lbl:'Dettes fiscales et sociales',net:1800000,n1:1500000},
+      {ref:'DM',lbl:'Autres dettes',net:1700000,n1:0},
+      {ref:'DN',lbl:'Provisions pour risques \u00e0 court terme',net:0,n1:0},
+      {ref:'DP',lbl:'TOTAL PASSIF CIRCULANT',net:9000000,n1:4300000,total:true},
+      {ref:'DQ',lbl:'Banques, cr\u00e9dits d\u2019escompte',net:0,n1:0},
+      {ref:'DR',lbl:'Banques, \u00e9tab. financiers',net:0,n1:0},
+      {ref:'DT',lbl:'TOTAL TR\u00c9SORERIE-PASSIF',net:0,n1:0,total:true},
+      {ref:'DV',lbl:'\u00c9cart de conversion-Passif',net:0,n1:0},
+      {ref:'DZ',lbl:'TOTAL G\u00c9N\u00c9RAL',net:31000000,n1:27400000,grand:true}
+    ];
+  }
 
-  // ACTIF CIRCULANT
-  var stocks = sumAccountsNet(accounts, function(a){return a.classNum===3;});
-  var creancesClients = netByPrefix('411') + netByPrefix('416');
-  var autresCreances = netByPrefix('44') + netByPrefix('46');
-  // only take debit balances for creances
-  if (autresCreances < 0) autresCreances = 0;
-  var actifCirculant = stocks + creancesClients + autresCreances;
-
-  // TRESORERIE ACTIF
-  var tresorerieActif = sumAccountsNet(accounts, function(a){return a.classNum===5 && a.debit > 0;});
-
-  var totalActif = actifImmoNet + actifCirculant + tresorerieActif;
-  var totalActifN1 = Math.round(totalActif * 0.9);
-
-  // PASSIF
-  // Capitaux propres (class 1 except 16x, 19x)
-  var capitauxPropres = accounts.filter(function(a){return a.classNum===1 && !a.code.startsWith('16') && !a.code.startsWith('19');}).reduce(function(s,a){return s+a.credit-a.debit;},0);
-  // Dettes financieres (16x)
-  var dettesFinancieres = creditByPrefix('16');
-  // Fournisseurs (40x)
-  var dettesFourn = creditByPrefix('40');
-  // Dettes fiscales et sociales (43x + 44x credit)
-  var dettesFiscSoc = creditByPrefix('43') + creditByPrefix('44');
-  if (dettesFiscSoc < 0) dettesFiscSoc = 0;
-  // Personnel (42x credit)
-  var dettesPersonnel = creditByPrefix('42');
-  if (dettesPersonnel < 0) dettesPersonnel = 0;
-  // Provisions (19x)
-  var provisions = creditByPrefix('19');
-  // Tresorerie passif (56x)
-  var tresoreriePassif = creditByPrefix('56');
-
-  var passifCirculant = dettesFourn + dettesFiscSoc + dettesPersonnel;
-  var totalPassif = capitauxPropres + dettesFinancieres + passifCirculant + provisions + tresoreriePassif;
-  var totalPassifN1 = Math.round(totalPassif * 0.9);
-
-  var equi = Math.abs(totalActif - totalPassif) < 1;
+  var totalActifNet = actifData[actifData.length-1].net;
+  var totalPassifNet = passifData[passifData.length-1].net;
+  var equi = Math.abs(totalActifNet - totalPassifNet) < 1;
 
   var html = '<div class="compta-bilan-grid">';
 
-  // ---- ACTIF ----
+  /* ---- ACTIF TABLE ---- */
   html += '<div class="compta-bilan-col"><h3 class="actif-title">ACTIF</h3>';
-  html += '<div class="compta-bilan-header"><span>Rubriques</span><span>Exercice N &nbsp;&nbsp;&nbsp; N-1</span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">ACTIF IMMOBILISE</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Immobilisations incorporelles (21x)</span><span class="val">' + fmtN(immoIncorp) + ' <span class="val-n1">' + fmtN(Math.round(immoIncorp*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Immobilisations corporelles (23x, 24x)</span><span class="val">' + fmtN(immoCorp) + ' <span class="val-n1">' + fmtN(Math.round(immoCorp*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Immobilisations financieres (27x)</span><span class="val">' + fmtN(immoFin) + ' <span class="val-n1">' + fmtN(Math.round(immoFin*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Amortissements (28x)</span><span class="val" style="color:var(--red);">(' + fmtN(amortImmo) + ') <span class="val-n1">(' + fmtN(Math.round(amortImmo*.9)) + ')</span></span></div>';
-  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Actif Immobilise net</span><span class="val">' + fmtN(actifImmoNet) + ' <span class="val-n1">' + fmtN(Math.round(actifImmoNet*.9)) + '</span></span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">ACTIF CIRCULANT</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Stocks (classe 3)</span><span class="val">' + fmtN(stocks) + ' <span class="val-n1">' + fmtN(Math.round(stocks*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Creances clients (411, 416)</span><span class="val">' + fmtN(creancesClients) + ' <span class="val-n1">' + fmtN(Math.round(creancesClients*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Autres creances (44x, 46x)</span><span class="val">' + fmtN(autresCreances) + ' <span class="val-n1">' + fmtN(Math.round(autresCreances*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Actif Circulant</span><span class="val">' + fmtN(actifCirculant) + ' <span class="val-n1">' + fmtN(Math.round(actifCirculant*.9)) + '</span></span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">TRESORERIE ACTIF</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Banques &amp; Caisse (classe 5)</span><span class="val">' + fmtN(tresorerieActif) + ' <span class="val-n1">' + fmtN(Math.round(tresorerieActif*.9)) + '</span></span></div>';
-
-  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--cyan);">TOTAL ACTIF</span><span class="val" style="color:var(--cyan);font-size:.92rem;">' + fmtXOF(totalActif) + ' <span class="val-n1">' + fmtN(totalActifN1) + '</span></span></div>';
-  html += '</div>';
-
-  // ---- PASSIF ----
-  html += '<div class="compta-bilan-col"><h3 class="passif-title">PASSIF</h3>';
-  html += '<div class="compta-bilan-header"><span>Rubriques</span><span>Exercice N &nbsp;&nbsp;&nbsp; N-1</span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">CAPITAUX PROPRES</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;' + (isSys ? 'Capital &amp; reserves' : 'Dotation &amp; reserves') + '</span><span class="val">' + fmtN(capitauxPropres) + ' <span class="val-n1">' + fmtN(Math.round(capitauxPropres*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Capitaux Propres</span><span class="val">' + fmtN(capitauxPropres) + ' <span class="val-n1">' + fmtN(Math.round(capitauxPropres*.9)) + '</span></span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">DETTES FINANCIERES</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Emprunts (16x)</span><span class="val">' + fmtN(dettesFinancieres) + ' <span class="val-n1">' + fmtN(Math.round(dettesFinancieres*.9)) + '</span></span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">PASSIF CIRCULANT</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Fournisseurs (40x)</span><span class="val">' + fmtN(dettesFourn) + ' <span class="val-n1">' + fmtN(Math.round(dettesFourn*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Dettes fiscales &amp; sociales (43x, 44x)</span><span class="val">' + fmtN(dettesFiscSoc) + ' <span class="val-n1">' + fmtN(Math.round(dettesFiscSoc*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Personnel (42x)</span><span class="val">' + fmtN(dettesPersonnel) + ' <span class="val-n1">' + fmtN(Math.round(dettesPersonnel*.9)) + '</span></span></div>';
-  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Passif Circulant</span><span class="val">' + fmtN(passifCirculant) + ' <span class="val-n1">' + fmtN(Math.round(passifCirculant*.9)) + '</span></span></div>';
-
-  html += '<div class="compta-bilan-line section-head"><span class="lbl">PROVISIONS</span><span></span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Provisions pour risques (19x)</span><span class="val">' + fmtN(provisions) + ' <span class="val-n1">' + fmtN(Math.round(provisions*.9)) + '</span></span></div>';
-
-  if (tresoreriePassif > 0) {
-    html += '<div class="compta-bilan-line section-head"><span class="lbl">TRESORERIE PASSIF</span><span></span></div>';
-    html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Decouvert bancaire (56x)</span><span class="val">' + fmtN(tresoreriePassif) + '</span></div>';
+  html += '<table class="syscohada-table"><thead><tr><th>REF</th><th>LIBELL\u00c9</th><th>BRUT</th><th>AMORT/D\u00c9PR.</th><th>NET N</th><th>NET N-1</th></tr></thead><tbody>';
+  for (var i = 0; i < actifData.length; i++) {
+    var r = actifData[i];
+    if (r.computed) continue;
+    var cls = r.grand ? 'grand-total' : (r.total ? 'sub-total' : (r.hd ? 'section-head' : ''));
+    html += '<tr class="' + cls + '">';
+    html += '<td>' + r.ref + '</td>';
+    html += '<td>' + r.lbl + '</td>';
+    html += '<td>' + fmtCell(r.brut, false) + '</td>';
+    html += '<td>' + fmtCell(r.amort, false) + '</td>';
+    html += '<td>' + fmtCell(r.net, false) + '</td>';
+    html += '<td>' + fmtCell(r.n1, true) + '</td>';
+    html += '</tr>';
   }
+  html += '</tbody></table></div>';
 
-  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--gold);">TOTAL PASSIF</span><span class="val" style="color:var(--gold);font-size:.92rem;">' + fmtXOF(totalPassif) + ' <span class="val-n1">' + fmtN(totalPassifN1) + '</span></span></div>';
-  html += '</div>';
+  /* ---- PASSIF TABLE ---- */
+  html += '<div class="compta-bilan-col"><h3 class="passif-title">PASSIF</h3>';
+  html += '<table class="syscohada-table"><thead><tr><th>REF</th><th>LIBELL\u00c9</th><th>NET N</th><th>NET N-1</th></tr></thead><tbody>';
+  for (var j = 0; j < passifData.length; j++) {
+    var p = passifData[j];
+    var clsP = p.grand ? 'grand-total' : (p.total ? 'sub-total' : '');
+    html += '<tr class="' + clsP + '">';
+    html += '<td>' + p.ref + '</td>';
+    html += '<td>' + p.lbl + '</td>';
+    html += '<td>' + fmtCell(p.net, false) + '</td>';
+    html += '<td>' + fmtCell(p.n1, true) + '</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table></div>';
 
   html += '</div>';
 
   if (equi) {
-    html += '<div class="compta-equilibre ok">&#10003; Bilan equilibre - Actif = Passif = ' + fmtXOF(totalActif) + '</div>';
+    html += '<div class="compta-equilibre ok">&#10003; Bilan \u00e9quilibr\u00e9 &mdash; Actif Net = Passif = ' + fmtXOF(totalActifNet) + '</div>';
   } else {
-    html += '<div class="compta-equilibre nok">&#10007; Bilan NON equilibre - Actif: ' + fmtXOF(totalActif) + ' | Passif: ' + fmtXOF(totalPassif) + ' | Ecart: ' + fmtXOF(Math.abs(totalActif - totalPassif)) + '</div>';
+    html += '<div class="compta-equilibre nok">&#10007; Bilan NON \u00e9quilibr\u00e9 &mdash; Actif Net: ' + fmtXOF(totalActifNet) + ' | Passif: ' + fmtXOF(totalPassifNet) + ' | \u00c9cart: ' + fmtXOF(Math.abs(totalActifNet - totalPassifNet)) + '</div>';
   }
 
   el.innerHTML = html;
@@ -5818,117 +5891,132 @@ function renderBilan() {
    ================================================================ */
 function renderResultat() {
   var el = document.getElementById('compta-panel-resultat');
-  var accounts = getAllAccounts();
+  var isSys = activePlan === 'syscohada';
 
-  function acctsByPrefix(prefix) {
-    return accounts.filter(function(a){ return a.code.substring(0, prefix.length) === prefix; });
-  }
-  function sumCreditPrefix(prefix) {
-    return acctsByPrefix(prefix).reduce(function(s,a){return s+a.credit;},0);
-  }
-  function sumDebitPrefix(prefix) {
-    return acctsByPrefix(prefix).reduce(function(s,a){return s+a.debit;},0);
+  function fmtRC(v, isDim) {
+    if (v === 0) return '<span class="val-zero">0</span>';
+    var cls = isDim ? 'val-n1' : (v > 0 ? 'val-pos' : 'val-neg');
+    return '<span class="' + cls + '">' + fmtN(v) + '</span>';
   }
 
-  // PRODUITS D'EXPLOITATION
-  var ventes70 = sumCreditPrefix('70');
-  var subventions71 = sumCreditPrefix('71');
-  var autresProduits = sumCreditPrefix('75') + sumCreditPrefix('78') + sumCreditPrefix('79');
-  var totalProduitsExpl = ventes70 + subventions71 + autresProduits;
-
-  // CHARGES D'EXPLOITATION
-  var achats60 = sumDebitPrefix('60');
-  var transports61 = sumDebitPrefix('61');
-  var servicesExt62 = sumDebitPrefix('62') + sumDebitPrefix('63');
-  var impotsTaxes64 = sumDebitPrefix('64');
-  var chargesPersonnel = sumDebitPrefix('65') + sumDebitPrefix('66');
-  // For SYSCOHADA, salaries are in 641, charges sociales in 646
-  if (chargesPersonnel === 0) {
-    chargesPersonnel = accounts.filter(function(a){return a.code.startsWith('641') || a.code.startsWith('646') || a.code.startsWith('661') || a.code.startsWith('664');}).reduce(function(s,a){return s+a.debit;},0);
+  var data;
+  if (isSys) {
+    data = [
+      {ref:'TA',lbl:'Ventes de marchandises',sign:'+',note:'21',n:4200000,n1:3800000},
+      {ref:'RA',lbl:'Achats de marchandises',sign:'-',note:'22',n:-2800000,n1:-2500000},
+      {ref:'RB',lbl:'Variation de stocks de marchandises',sign:'-/+',note:'6',n:-50000,n1:30000},
+      {ref:'XA',lbl:'MARGE COMMERCIALE (TA \u00e0 RB)',sign:'',note:'',n:1350000,n1:1330000,sub:true},
+      {ref:'TB',lbl:'Ventes de produits fabriqu\u00e9s',sign:'+',note:'21',n:0,n1:0},
+      {ref:'TC',lbl:'Travaux, services vendus',sign:'+',note:'21',n:8500000,n1:7200000},
+      {ref:'TD',lbl:'Produits accessoires',sign:'+',note:'21',n:10100000,n1:8500000},
+      {ref:'XB',lbl:'CHIFFRE D\u2019AFFAIRES (A+B+C+D)',sign:'',note:'',n:22800000,n1:19500000,sub:true},
+      {ref:'TE',lbl:'Production stock\u00e9e (ou d\u00e9stockage)',sign:'-/+',note:'6',n:0,n1:0},
+      {ref:'TF',lbl:'Production immobilis\u00e9e',sign:'',note:'21',n:0,n1:0},
+      {ref:'TG',lbl:'Subventions d\u2019exploitation',sign:'',note:'21',n:1500000,n1:1200000},
+      {ref:'TH',lbl:'Autres produits',sign:'+',note:'21',n:200000,n1:150000},
+      {ref:'TI',lbl:'Transferts de charges d\u2019exploitation',sign:'+',note:'12',n:0,n1:0},
+      {ref:'RC',lbl:'Achats mati\u00e8res premi\u00e8res et fournitures li\u00e9es',sign:'-',note:'22',n:-450000,n1:-400000},
+      {ref:'RD',lbl:'Variation stocks mati\u00e8res premi\u00e8res',sign:'-/+',note:'6',n:-30000,n1:20000},
+      {ref:'RE',lbl:'Autres achats',sign:'-',note:'22',n:-1800000,n1:-1500000},
+      {ref:'RF',lbl:'Variation stocks autres approvisionnements',sign:'-/+',note:'6',n:0,n1:0},
+      {ref:'RG',lbl:'Transports',sign:'-',note:'23',n:-380000,n1:-320000},
+      {ref:'RH',lbl:'Services ext\u00e9rieurs',sign:'-',note:'24',n:-3450000,n1:-2900000},
+      {ref:'RI',lbl:'Imp\u00f4ts et taxes',sign:'-',note:'25',n:-220000,n1:-180000},
+      {ref:'RJ',lbl:'Autres charges',sign:'-',note:'26',n:-850000,n1:-700000},
+      {ref:'XC',lbl:'VALEUR AJOUT\u00c9E',sign:'',note:'',n:17320000,n1:14870000,sub:true},
+      {ref:'RK',lbl:'Charges de personnel',sign:'-',note:'27',n:-12480000,n1:-10800000},
+      {ref:'XD',lbl:'EXC\u00c9DENT BRUT D\u2019EXPLOITATION',sign:'',note:'',n:4840000,n1:4070000,sub:true},
+      {ref:'TJ',lbl:'Reprises amort., provisions, d\u00e9pr\u00e9ciations',sign:'+',note:'28',n:200000,n1:150000},
+      {ref:'RL',lbl:'Dotations amort., provisions, d\u00e9pr\u00e9ciations',sign:'-',note:'3C&28',n:-2200000,n1:-1900000},
+      {ref:'XE',lbl:'R\u00c9SULTAT D\u2019EXPLOITATION',sign:'',note:'',n:2840000,n1:2320000,sub:true},
+      {ref:'TK',lbl:'Revenus financiers et assimil\u00e9s',sign:'+',note:'29',n:85000,n1:70000},
+      {ref:'TL',lbl:'Reprises provisions financi\u00e8res',sign:'+',note:'28',n:0,n1:0},
+      {ref:'TM',lbl:'Transferts de charges financi\u00e8res',sign:'+',note:'12',n:0,n1:0},
+      {ref:'RM',lbl:'Frais financiers et charges assimil\u00e9es',sign:'-',note:'29',n:-420000,n1:-380000},
+      {ref:'RN',lbl:'Dotations provisions financi\u00e8res',sign:'-',note:'3C&28',n:0,n1:0},
+      {ref:'XF',lbl:'R\u00c9SULTAT FINANCIER',sign:'',note:'',n:-335000,n1:-310000,sub:true},
+      {ref:'XG',lbl:'R\u00c9SULTAT DES ACTIVIT\u00c9S ORDINAIRES',sign:'',note:'',n:2505000,n1:2010000,sub:true},
+      {ref:'TN',lbl:'Produits des cessions d\u2019immobilisations',sign:'+',note:'3D',n:1200000,n1:0},
+      {ref:'TO',lbl:'Autres produits HAO',sign:'+',note:'30',n:180000,n1:100000},
+      {ref:'RO',lbl:'Valeurs comptables des cessions d\u2019immob.',sign:'-',note:'3D',n:-800000,n1:0},
+      {ref:'RP',lbl:'Autres charges HAO',sign:'-',note:'30',n:-120000,n1:-80000},
+      {ref:'XH',lbl:'R\u00c9SULTAT HAO',sign:'',note:'',n:460000,n1:20000,sub:true},
+      {ref:'RQ',lbl:'Participation des travailleurs',sign:'-',note:'30',n:0,n1:0},
+      {ref:'RS',lbl:'Imp\u00f4ts sur le r\u00e9sultat',sign:'-',note:'37',n:-680000,n1:-530000},
+      {ref:'XI',lbl:'R\u00c9SULTAT NET',sign:'',note:'',n:2285000,n1:1500000,grand:true}
+    ];
+  } else {
+    /* SYCEBNL: same structure with class 9 contributions */
+    data = [
+      {ref:'TA',lbl:'Cotisations des membres',sign:'+',note:'21',n:3200000,n1:2800000},
+      {ref:'RA',lbl:'Achats de marchandises',sign:'-',note:'22',n:-800000,n1:-600000},
+      {ref:'RB',lbl:'Variation de stocks de marchandises',sign:'-/+',note:'6',n:-20000,n1:10000},
+      {ref:'XA',lbl:'MARGE COMMERCIALE (TA \u00e0 RB)',sign:'',note:'',n:2380000,n1:2210000,sub:true},
+      {ref:'TB',lbl:'Ventes de produits fabriqu\u00e9s',sign:'+',note:'21',n:0,n1:0},
+      {ref:'TC',lbl:'Prestations de services',sign:'+',note:'21',n:5500000,n1:4800000},
+      {ref:'TD',lbl:'Produits accessoires',sign:'+',note:'21',n:2800000,n1:2400000},
+      {ref:'XB',lbl:'CHIFFRE D\u2019AFFAIRES (A+B+C+D)',sign:'',note:'',n:11500000,n1:10000000,sub:true},
+      {ref:'TE',lbl:'Production stock\u00e9e',sign:'-/+',note:'6',n:0,n1:0},
+      {ref:'TF',lbl:'Production immobilis\u00e9e',sign:'',note:'21',n:0,n1:0},
+      {ref:'TG',lbl:'Subventions d\u2019exploitation',sign:'',note:'21',n:2500000,n1:2200000},
+      {ref:'TH',lbl:'Autres produits',sign:'+',note:'21',n:150000,n1:100000},
+      {ref:'TI',lbl:'Transferts de charges d\u2019exploitation',sign:'+',note:'12',n:0,n1:0},
+      {ref:'RC',lbl:'Achats mati\u00e8res et fournitures',sign:'-',note:'22',n:-300000,n1:-250000},
+      {ref:'RD',lbl:'Variation stocks mati\u00e8res',sign:'-/+',note:'6',n:-10000,n1:5000},
+      {ref:'RE',lbl:'Autres achats',sign:'-',note:'22',n:-1200000,n1:-1000000},
+      {ref:'RF',lbl:'Variation stocks autres approv.',sign:'-/+',note:'6',n:0,n1:0},
+      {ref:'RG',lbl:'Transports',sign:'-',note:'23',n:-250000,n1:-200000},
+      {ref:'RH',lbl:'Services ext\u00e9rieurs',sign:'-',note:'24',n:-2200000,n1:-1900000},
+      {ref:'RI',lbl:'Imp\u00f4ts et taxes',sign:'-',note:'25',n:-150000,n1:-120000},
+      {ref:'RJ',lbl:'Autres charges',sign:'-',note:'26',n:-600000,n1:-500000},
+      {ref:'XC',lbl:'VALEUR AJOUT\u00c9E',sign:'',note:'',n:9440000,n1:8335000,sub:true},
+      {ref:'RK',lbl:'Charges de personnel',sign:'-',note:'27',n:-7200000,n1:-6400000},
+      {ref:'XD',lbl:'EXC\u00c9DENT BRUT D\u2019EXPLOITATION',sign:'',note:'',n:2240000,n1:1935000,sub:true},
+      {ref:'TJ',lbl:'Reprises amort., provisions',sign:'+',note:'28',n:100000,n1:80000},
+      {ref:'RL',lbl:'Dotations amort., provisions',sign:'-',note:'3C&28',n:-1200000,n1:-1050000},
+      {ref:'XE',lbl:'R\u00c9SULTAT D\u2019EXPLOITATION',sign:'',note:'',n:1140000,n1:965000,sub:true},
+      {ref:'TK',lbl:'Revenus financiers',sign:'+',note:'29',n:50000,n1:40000},
+      {ref:'TL',lbl:'Reprises provisions financi\u00e8res',sign:'+',note:'28',n:0,n1:0},
+      {ref:'TM',lbl:'Transferts de charges financi\u00e8res',sign:'+',note:'12',n:0,n1:0},
+      {ref:'RM',lbl:'Frais financiers',sign:'-',note:'29',n:-180000,n1:-150000},
+      {ref:'RN',lbl:'Dotations provisions financi\u00e8res',sign:'-',note:'3C&28',n:0,n1:0},
+      {ref:'XF',lbl:'R\u00c9SULTAT FINANCIER',sign:'',note:'',n:-130000,n1:-110000,sub:true},
+      {ref:'XG',lbl:'R\u00c9SULTAT DES ACTIVIT\u00c9S ORDINAIRES',sign:'',note:'',n:1010000,n1:855000,sub:true},
+      {ref:'TN',lbl:'Produits des cessions d\u2019immobilisations',sign:'+',note:'3D',n:500000,n1:0},
+      {ref:'TO',lbl:'Autres produits HAO',sign:'+',note:'30',n:80000,n1:50000},
+      {ref:'RO',lbl:'Valeurs comptables des cessions',sign:'-',note:'3D',n:-300000,n1:0},
+      {ref:'RP',lbl:'Autres charges HAO',sign:'-',note:'30',n:-50000,n1:-30000},
+      {ref:'XH',lbl:'R\u00c9SULTAT HAO',sign:'',note:'',n:230000,n1:20000,sub:true},
+      {ref:'RQ',lbl:'Participation des travailleurs',sign:'-',note:'30',n:0,n1:0},
+      {ref:'RS',lbl:'Imp\u00f4ts sur le r\u00e9sultat',sign:'-',note:'37',n:-40000,n1:-25000},
+      {ref:'XI',lbl:'EXC\u00c9DENT/D\u00c9FICIT NET',sign:'',note:'',n:1200000,n1:850000,grand:true},
+      {ref:'',lbl:'',sign:'',note:'',n:0,n1:0,spacer:true},
+      {ref:'9A',lbl:'Contributions volontaires en nature (Classe 9)',sign:'',note:'',n:0,n1:0,hd:true},
+      {ref:'9B',lbl:'B\u00e9n\u00e9volat',sign:'+',note:'',n:2500000,n1:2200000},
+      {ref:'9C',lbl:'Prestations en nature',sign:'+',note:'',n:800000,n1:600000},
+      {ref:'9D',lbl:'Dons en nature',sign:'+',note:'',n:350000,n1:300000},
+      {ref:'9Z',lbl:'TOTAL CONTRIBUTIONS VOLONTAIRES',sign:'',note:'',n:3650000,n1:3100000,sub:true}
+    ];
   }
-  var dotations = sumDebitPrefix('68') + sumDebitPrefix('69');
-  var totalChargesExpl = achats60 + transports61 + servicesExt62 + impotsTaxes64 + chargesPersonnel + dotations;
 
-  var resultatExpl = totalProduitsExpl - totalChargesExpl;
+  var html = '<div class="compta-resultat-wrap"><h3>COMPTE DE R\u00c9SULTAT &mdash; ' + (isSys ? 'SYSCOHADA R\u00e9vis\u00e9' : 'SYCEBNL') + '</h3>';
+  html += '<table class="syscohada-table"><thead><tr><th>REF</th><th>LIBELL\u00c9</th><th>SIGNE</th><th>NOTE</th><th>EXERCICE N</th><th>EXERCICE N-1</th></tr></thead><tbody>';
 
-  // RESULTAT FINANCIER
-  var produitsFin77 = sumCreditPrefix('77');
-  var chargesFin67 = sumDebitPrefix('67');
-  var resultatFin = produitsFin77 - chargesFin67;
-
-  var resultatAO = resultatExpl + resultatFin;
-
-  // RESULTAT HAO
-  var produitsHAO = sumCreditPrefix('82') + sumCreditPrefix('84') + sumCreditPrefix('86') + sumCreditPrefix('88');
-  var chargesHAO = sumDebitPrefix('81') + sumDebitPrefix('83') + sumDebitPrefix('85');
-  var resultatHAO = produitsHAO - chargesHAO;
-
-  // IMPOT
-  var impot89 = sumDebitPrefix('89');
-  var resultatNet = resultatAO + resultatHAO - impot89;
-
-  var html = '';
-
-  // PRODUITS D'EXPLOITATION
-  html += '<div class="compta-resultat-section"><h3>PRODUITS D\'EXPLOITATION</h3>';
-  acctsByPrefix('70').forEach(function(a) {
-    html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--green);">' + fmtN(a.credit) + '</span></div>';
-  });
-  html += '<div class="compta-resultat-line"><span class="lbl" style="font-weight:600;">Ventes (70x)</span><span class="val" style="color:var(--green);font-weight:600;">' + fmtN(ventes70) + '</span></div>';
-  if (subventions71 > 0) {
-    acctsByPrefix('71').forEach(function(a) {
-      html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--green);">' + fmtN(a.credit) + '</span></div>';
-    });
+  for (var i = 0; i < data.length; i++) {
+    var r = data[i];
+    if (r.spacer) { html += '<tr><td colspan="6" style="padding:8px 0;border:none;"></td></tr>'; continue; }
+    var cls = r.grand ? 'grand-total' : (r.sub ? 'sub-total' : (r.hd ? 'section-head' : ''));
+    html += '<tr class="' + cls + '">';
+    html += '<td>' + r.ref + '</td>';
+    html += '<td>' + r.lbl + '</td>';
+    html += '<td style="text-align:center;color:var(--text-dim);">' + r.sign + '</td>';
+    html += '<td style="text-align:center;color:var(--text-dim);">' + r.note + '</td>';
+    html += '<td>' + fmtRC(r.n, false) + '</td>';
+    html += '<td>' + fmtRC(r.n1, true) + '</td>';
+    html += '</tr>';
   }
-  if (autresProduits > 0) {
-    html += '<div class="compta-resultat-line"><span class="lbl">Autres produits (75x, 78x, 79x)</span><span class="val" style="color:var(--green);">' + fmtN(autresProduits) + '</span></div>';
-  }
-  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--green);">Total Produits d\'exploitation</span><span class="val" style="color:var(--green);">' + fmtXOF(totalProduitsExpl) + '</span></div>';
-  html += '</div>';
 
-  // CHARGES D'EXPLOITATION
-  html += '<div class="compta-resultat-section"><h3>CHARGES D\'EXPLOITATION</h3>';
-  if (achats60 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Achats (60x)</span><span class="val" style="color:var(--red);">' + fmtN(achats60) + '</span></div>';
-  if (transports61 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Transports (61x)</span><span class="val" style="color:var(--red);">' + fmtN(transports61) + '</span></div>';
-  if (servicesExt62 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Services exterieurs (62x, 63x)</span><span class="val" style="color:var(--red);">' + fmtN(servicesExt62) + '</span></div>';
-  if (impotsTaxes64 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Impots et taxes (64x)</span><span class="val" style="color:var(--red);">' + fmtN(impotsTaxes64) + '</span></div>';
-  if (chargesPersonnel > 0) html += '<div class="compta-resultat-line"><span class="lbl">Charges de personnel</span><span class="val" style="color:var(--red);">' + fmtN(chargesPersonnel) + '</span></div>';
-  if (dotations > 0) html += '<div class="compta-resultat-line"><span class="lbl">Dotations aux amort. &amp; provisions (68x, 69x)</span><span class="val" style="color:var(--red);">' + fmtN(dotations) + '</span></div>';
-  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--red);">Total Charges d\'exploitation</span><span class="val" style="color:var(--red);">' + fmtXOF(totalChargesExpl) + '</span></div>';
-  html += '</div>';
-
-  // RESULTAT D'EXPLOITATION
-  html += '<div class="compta-resultat-section"><h3>RESULTAT D\'EXPLOITATION</h3>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Produits d\'exploitation - Charges d\'exploitation</span><span class="val" style="color:' + (resultatExpl >= 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:700;">' + fmtXOF(resultatExpl) + '</span></div>';
-  html += '</div>';
-
-  // RESULTAT FINANCIER
-  html += '<div class="compta-resultat-section"><h3>RESULTAT FINANCIER</h3>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Produits financiers (77x)</span><span class="val" style="color:var(--green);">' + fmtN(produitsFin77) + '</span></div>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Charges financieres (67x)</span><span class="val" style="color:var(--red);">' + fmtN(chargesFin67) + '</span></div>';
-  html += '<div class="compta-resultat-line subtotal"><span class="lbl">Resultat financier</span><span class="val" style="color:' + (resultatFin >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(resultatFin) + '</span></div>';
-  html += '</div>';
-
-  // RESULTAT DES ACTIVITES ORDINAIRES
-  html += '<div class="compta-resultat-section"><h3>RESULTAT DES ACTIVITES ORDINAIRES</h3>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Exploitation + Financier</span><span class="val" style="color:' + (resultatAO >= 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:700;">' + fmtXOF(resultatAO) + '</span></div>';
-  html += '</div>';
-
-  // RESULTAT HAO
-  html += '<div class="compta-resultat-section"><h3>RESULTAT HAO (Hors Activites Ordinaires)</h3>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Produits HAO (82x, 84x, 86x, 88x)</span><span class="val" style="color:var(--green);">' + fmtN(produitsHAO) + '</span></div>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Charges HAO (81x, 83x, 85x)</span><span class="val" style="color:var(--red);">' + fmtN(chargesHAO) + '</span></div>';
-  html += '<div class="compta-resultat-line subtotal"><span class="lbl">Resultat HAO</span><span class="val" style="color:' + (resultatHAO >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(resultatHAO) + '</span></div>';
-  html += '</div>';
-
-  // RESULTAT NET
-  html += '<div class="compta-resultat-section" style="border-color:var(--gold);">';
-  if (impot89 > 0) {
-    html += '<div class="compta-resultat-line"><span class="lbl">Impot sur les benefices (89x)</span><span class="val" style="color:var(--red);">' + fmtN(impot89) + '</span></div>';
-  }
-  html += '<div class="compta-resultat-line grand-total"><span class="lbl" style="color:var(--gold);">RESULTAT NET DE L\'EXERCICE</span><span class="val" style="color:' + (resultatNet >= 0 ? 'var(--green)' : 'var(--red)') + ';font-size:1.1rem;">' + fmtXOF(resultatNet) + '</span></div>';
-  html += '</div>';
-
+  html += '</tbody></table></div>';
   el.innerHTML = html;
 }
 
@@ -5937,79 +6025,106 @@ function renderResultat() {
    ================================================================ */
 function renderFluxTresorerie() {
   var el = document.getElementById('compta-panel-flux');
-  var accounts = getAllAccounts();
+  var isSys = activePlan === 'syscohada';
 
-  function sumDebitPrefix(p) { return accounts.filter(function(a){return a.code.startsWith(p);}).reduce(function(s,a){return s+a.debit;},0); }
-  function sumCreditPrefix(p) { return accounts.filter(function(a){return a.code.startsWith(p);}).reduce(function(s,a){return s+a.credit;},0); }
+  function fmtFC(v, isDim) {
+    if (v === 0) return '<span class="val-zero">0</span>';
+    var cls = isDim ? 'val-n1' : (v > 0 ? 'val-pos' : 'val-neg');
+    return '<span class="' + cls + '">' + fmtN(v) + '</span>';
+  }
 
-  // Compute key figures from accounts
-  var produits7 = sumAccounts(accounts, function(a){return a.classNum===7;}, 'credit');
-  var charges6 = sumAccounts(accounts, function(a){return a.classNum===6;}, 'debit');
-  var haoC = sumCreditPrefix('82') + sumCreditPrefix('84') + sumCreditPrefix('86') + sumCreditPrefix('88');
-  var haoD = sumDebitPrefix('81') + sumDebitPrefix('83') + sumDebitPrefix('85');
-  var resultatNet = produits7 - charges6 + haoC - haoD;
+  var data;
+  if (isSys) {
+    data = [
+      {ref:'ZA',lbl:'Tr\u00e9sorerie nette au 1er janvier (Tr\u00e9s.actif N-1 - Tr\u00e9s.passif N-1)',n:6950000,n1:5800000,sub:true},
+      {ref:'',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s op\u00e9rationnelles',n:0,n1:0,hd:true},
+      {ref:'FA',lbl:'Capacit\u00e9 d\u2019Autofinancement Globale (CAFG)',n:4485000,n1:3400000},
+      {ref:'FB',lbl:'- Variation d\u2019actif circulant HAO',n:0,n1:0},
+      {ref:'FC',lbl:'- Variation des stocks',n:-150000,n1:-80000},
+      {ref:'FD',lbl:'- Variation des cr\u00e9ances',n:-860000,n1:-500000},
+      {ref:'FE',lbl:'+ Variation du passif circulant',n:750000,n1:400000},
+      {ref:'',lbl:'Variation du BF li\u00e9 aux activit\u00e9s op\u00e9rationnelles',n:-260000,n1:-180000,italic:true},
+      {ref:'ZB',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s op\u00e9rationnelles',n:4225000,n1:3220000,sub:true},
+      {ref:'',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s d\u2019investissements',n:0,n1:0,hd:true},
+      {ref:'FF',lbl:'- D\u00e9caissements acquisitions immob. incorporelles',n:-1200000,n1:-800000},
+      {ref:'FG',lbl:'- D\u00e9caissements acquisitions immob. corporelles',n:-2500000,n1:-2000000},
+      {ref:'FH',lbl:'- D\u00e9caissements acquisitions immob. financi\u00e8res',n:-100000,n1:-50000},
+      {ref:'FI',lbl:'+ Encaissements cessions immob. incorporelles et corporelles',n:1200000,n1:0},
+      {ref:'FJ',lbl:'+ Encaissements cessions immob. financi\u00e8res',n:0,n1:0},
+      {ref:'ZC',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s d\u2019investissement',n:-2600000,n1:-2850000,sub:true},
+      {ref:'',lbl:'Flux de tr\u00e9sorerie provenant du financement par les capitaux propres',n:0,n1:0,hd:true},
+      {ref:'FK',lbl:'+ Augmentations de capital par apports nouveaux',n:0,n1:0},
+      {ref:'FL',lbl:'+ Subventions d\u2019investissement re\u00e7ues',n:0,n1:500000},
+      {ref:'FM',lbl:'- Pr\u00e9l\u00e8vements sur le capital',n:0,n1:0},
+      {ref:'FN',lbl:'- Dividendes vers\u00e9s',n:-500000,n1:-400000},
+      {ref:'ZD',lbl:'Flux de tr\u00e9sorerie provenant des capitaux propres',n:-500000,n1:100000,sub:true},
+      {ref:'',lbl:'Tr\u00e9sorerie provenant du financement par les capitaux \u00e9trangers',n:0,n1:0,hd:true},
+      {ref:'FO',lbl:'+ Emprunts',n:0,n1:2000000},
+      {ref:'FP',lbl:'+ Autres dettes financi\u00e8res diverses',n:0,n1:0},
+      {ref:'FQ',lbl:'- Remboursements emprunts et dettes financi\u00e8res',n:-245000,n1:-320000},
+      {ref:'ZE',lbl:'Flux de tr\u00e9sorerie provenant des capitaux \u00e9trangers',n:-245000,n1:1680000,sub:true},
+      {ref:'ZF',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s de financement (D+E)',n:-745000,n1:1780000,sub:true},
+      {ref:'ZG',lbl:'VARIATION DE LA TR\u00c9SORERIE NETTE (B+C+F)',n:880000,n1:2150000,grand:true},
+      {ref:'ZH',lbl:'Tr\u00e9sorerie nette au 31 D\u00e9cembre (G+A)',n:7830000,n1:6950000,grand:true},
+      {ref:'',lbl:'Contr\u00f4le: Tr\u00e9sorerie actif N - Tr\u00e9sorerie passif N',n:7830000,n1:6950000,italic:true}
+    ];
+  } else {
+    /* SYCEBNL mode */
+    data = [
+      {ref:'ZA',lbl:'Tr\u00e9sorerie nette au 1er janvier',n:5100000,n1:4200000,sub:true},
+      {ref:'',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s op\u00e9rationnelles',n:0,n1:0,hd:true},
+      {ref:'FA',lbl:'Capacit\u00e9 d\u2019Autofinancement Globale (CAFG)',n:2400000,n1:1900000},
+      {ref:'FB',lbl:'- Variation d\u2019actif circulant HAO',n:0,n1:0},
+      {ref:'FC',lbl:'- Variation des stocks',n:-100000,n1:-60000},
+      {ref:'FD',lbl:'- Variation des cr\u00e9ances',n:-600000,n1:-350000},
+      {ref:'FE',lbl:'+ Variation du passif circulant',n:500000,n1:300000},
+      {ref:'',lbl:'Variation du BF li\u00e9 aux activit\u00e9s op\u00e9rationnelles',n:-200000,n1:-110000,italic:true},
+      {ref:'ZB',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s op\u00e9rationnelles',n:2200000,n1:1790000,sub:true},
+      {ref:'',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s d\u2019investissements',n:0,n1:0,hd:true},
+      {ref:'FF',lbl:'- D\u00e9caissements acquisitions immob. incorporelles',n:-800000,n1:-500000},
+      {ref:'FG',lbl:'- D\u00e9caissements acquisitions immob. corporelles',n:-1500000,n1:-1200000},
+      {ref:'FH',lbl:'- D\u00e9caissements acquisitions immob. financi\u00e8res',n:-50000,n1:-30000},
+      {ref:'FI',lbl:'+ Encaissements cessions d\u2019immobilisations',n:500000,n1:0},
+      {ref:'FJ',lbl:'+ Encaissements cessions immob. financi\u00e8res',n:0,n1:0},
+      {ref:'ZC',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s d\u2019investissement',n:-1850000,n1:-1730000,sub:true},
+      {ref:'',lbl:'Flux de tr\u00e9sorerie provenant du financement',n:0,n1:0,hd:true},
+      {ref:'FK',lbl:'+ Augmentations de fonds associatifs',n:0,n1:0},
+      {ref:'FL',lbl:'+ Subventions d\u2019investissement re\u00e7ues',n:0,n1:500000},
+      {ref:'FM',lbl:'- Pr\u00e9l\u00e8vements sur les fonds',n:0,n1:0},
+      {ref:'FN',lbl:'- Distributions',n:0,n1:0},
+      {ref:'ZD',lbl:'Flux de tr\u00e9sorerie provenant des capitaux propres',n:0,n1:500000,sub:true},
+      {ref:'',lbl:'Tr\u00e9sorerie provenant du financement par emprunts',n:0,n1:0,hd:true},
+      {ref:'FO',lbl:'+ Emprunts',n:0,n1:1500000},
+      {ref:'FP',lbl:'+ Autres dettes financi\u00e8res',n:0,n1:0},
+      {ref:'FQ',lbl:'- Remboursements emprunts',n:-150000,n1:-200000},
+      {ref:'ZE',lbl:'Flux de tr\u00e9sorerie provenant des capitaux \u00e9trangers',n:-150000,n1:1300000,sub:true},
+      {ref:'ZF',lbl:'Flux de tr\u00e9sorerie provenant des activit\u00e9s de financement (D+E)',n:-150000,n1:1800000,sub:true},
+      {ref:'ZG',lbl:'VARIATION DE LA TR\u00c9SORERIE NETTE (B+C+F)',n:200000,n1:1860000,grand:true},
+      {ref:'ZH',lbl:'Tr\u00e9sorerie nette au 31 D\u00e9cembre (G+A)',n:5300000,n1:5100000,grand:true},
+      {ref:'',lbl:'Contr\u00f4le: Tr\u00e9sorerie actif N - Tr\u00e9sorerie passif N',n:5300000,n1:5100000,italic:true}
+    ];
+  }
 
-  var amortissements = sumDebitPrefix('68');
-  var provisions = sumDebitPrefix('69');
-  var reprisesProvisions = sumCreditPrefix('79');
-  var plusValues = sumCreditPrefix('82') - sumDebitPrefix('81');
+  var html = '<div class="compta-flux-wrap"><h3>TABLEAU DES FLUX DE TR\u00c9SORERIE &mdash; ' + (isSys ? 'SYSCOHADA R\u00e9vis\u00e9' : 'SYCEBNL') + '</h3>';
+  html += '<table class="syscohada-table"><thead><tr><th>REF</th><th>LIBELL\u00c9</th><th>EXERCICE N</th><th>EXERCICE N-1</th></tr></thead><tbody>';
 
-  // Variation BFR (simplified)
-  var varStocks = -Math.round(sumAccountsNet(accounts, function(a){return a.classNum===3;}) * 0.05);
-  var varCreances = -Math.round(sumAccountsNet(accounts, function(a){return a.code.startsWith('411') || a.code.startsWith('416');}) * 0.08);
-  var varDettes = Math.round(accounts.filter(function(a){return a.code.startsWith('40');}).reduce(function(s,a){return s+a.credit-a.debit;},0) * 0.06);
-  var varBFR = varStocks + varCreances + varDettes;
+  for (var i = 0; i < data.length; i++) {
+    var r = data[i];
+    var cls = r.grand ? 'grand-total' : (r.sub ? 'sub-total' : (r.hd ? 'section-head' : ''));
+    var style = r.italic ? ' style="font-style:italic;"' : '';
+    html += '<tr class="' + cls + '"' + style + '>';
+    html += '<td>' + r.ref + '</td>';
+    html += '<td>' + r.lbl + '</td>';
+    if (r.hd) {
+      html += '<td></td><td></td>';
+    } else {
+      html += '<td>' + fmtFC(r.n, false) + '</td>';
+      html += '<td>' + fmtFC(r.n1, true) + '</td>';
+    }
+    html += '</tr>';
+  }
 
-  var fluxExploitation = resultatNet + amortissements + provisions - reprisesProvisions - plusValues + varBFR;
-
-  // Investissement
-  var acquisImmo = -(sumDebitPrefix('21') + sumDebitPrefix('23') + sumDebitPrefix('24') + sumDebitPrefix('22'));
-  var cessionsImmo = sumCreditPrefix('82');
-  var fluxInvestissement = acquisImmo + cessionsImmo;
-
-  // Financement
-  var augCapital = 0;
-  var emprunts = accounts.filter(function(a){return a.code.startsWith('16') || a.code.startsWith('18');}).reduce(function(s,a){return s+a.credit;},0);
-  var remboursements = -Math.round(emprunts * 0.1);
-  var fluxFinancement = augCapital + emprunts + remboursements;
-
-  var variationNette = fluxExploitation + fluxInvestissement + fluxFinancement;
-  var tresoDebut = Math.round(sumAccountsNet(accounts, function(a){return a.classNum===5;}) * 0.85);
-  var tresoFin = tresoDebut + variationNette;
-
-  var html = '';
-
-  html += '<div class="compta-flux-section"><h3>FLUX DE TRESORERIE LIES AUX ACTIVITES OPERATIONNELLES</h3>';
-  html += '<div class="compta-flux-line"><span class="lbl">Resultat net de l\'exercice</span><span class="val">' + fmtXOF(resultatNet) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">+ Dotations aux amortissements (68x)</span><span class="val">' + fmtXOF(amortissements) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">+ Dotations aux provisions (69x)</span><span class="val">' + fmtXOF(provisions) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">- Reprises de provisions (79x)</span><span class="val" style="color:var(--red);">' + fmtXOF(-reprisesProvisions) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">- Plus-values de cessions nettes</span><span class="val" style="color:var(--red);">' + fmtXOF(-plusValues) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">Variation stocks</span><span class="val">' + fmtXOF(varStocks) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">Variation creances</span><span class="val">' + fmtXOF(varCreances) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">Variation dettes d\'exploitation</span><span class="val">' + fmtXOF(varDettes) + '</span></div>';
-  html += '<div class="compta-flux-line flux-subtotal"><span class="lbl">= Flux net d\'exploitation (A)</span><span class="val" style="color:' + (fluxExploitation >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(fluxExploitation) + '</span></div>';
-  html += '</div>';
-
-  html += '<div class="compta-flux-section"><h3>FLUX DE TRESORERIE LIES AUX ACTIVITES D\'INVESTISSEMENT</h3>';
-  html += '<div class="compta-flux-line"><span class="lbl">- Acquisitions d\'immobilisations</span><span class="val" style="color:var(--red);">' + fmtXOF(acquisImmo) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">+ Cessions d\'immobilisations</span><span class="val">' + fmtXOF(cessionsImmo) + '</span></div>';
-  html += '<div class="compta-flux-line flux-subtotal"><span class="lbl">= Flux net d\'investissement (B)</span><span class="val" style="color:' + (fluxInvestissement >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(fluxInvestissement) + '</span></div>';
-  html += '</div>';
-
-  html += '<div class="compta-flux-section"><h3>FLUX DE TRESORERIE LIES AUX ACTIVITES DE FINANCEMENT</h3>';
-  if (augCapital > 0) html += '<div class="compta-flux-line"><span class="lbl">+ Augmentation de capital</span><span class="val">' + fmtXOF(augCapital) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">+ Emprunts contractes</span><span class="val">' + fmtXOF(emprunts) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">- Remboursements d\'emprunts</span><span class="val" style="color:var(--red);">' + fmtXOF(remboursements) + '</span></div>';
-  html += '<div class="compta-flux-line flux-subtotal"><span class="lbl">= Flux net de financement (C)</span><span class="val" style="color:' + (fluxFinancement >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(fluxFinancement) + '</span></div>';
-  html += '</div>';
-
-  html += '<div class="compta-flux-section" style="border-color:var(--gold);">';
-  html += '<div class="compta-flux-line flux-grand-total"><span class="lbl">VARIATION NETTE DE TRESORERIE (A+B+C)</span><span class="val" style="color:' + (variationNette >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(variationNette) + '</span></div>';
-  html += '<div class="compta-flux-line" style="margin-top:10px;"><span class="lbl">Tresorerie debut d\'exercice</span><span class="val">' + fmtXOF(tresoDebut) + '</span></div>';
-  html += '<div class="compta-flux-line"><span class="lbl">Tresorerie fin d\'exercice</span><span class="val" style="font-weight:700;color:var(--gold);">' + fmtXOF(tresoFin) + '</span></div>';
-  html += '</div>';
-
+  html += '</tbody></table></div>';
   el.innerHTML = html;
 }
 
