@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wasi-v2';
+const CACHE_NAME = 'wasi-v3-africa';
 const ASSETS = [
   './',
   './index.html',
