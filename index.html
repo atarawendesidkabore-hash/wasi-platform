@@ -2606,6 +2606,34 @@ const WASI_ETFS=[
   {ticker:'WASI-FINTECH',name:'WASI Fintech Afri',strategy:'Fintech & digital',nav:2750,change:3.1,aum:'180 M',fees:'0.75%',score:58},
   {ticker:'WASI-SHIPPING',name:'WASI Shipping Index',strategy:'Transport maritime',nav:6100,change:-0.4,aum:'210 M',fees:'0.60%',score:55},
   {ticker:'WASI-CRYPTO',name:'WASI Crypto Bridge',strategy:'Crypto-XOF bridge',nav:1200,change:4.2,aum:'90 M',fees:'0.85%',score:42},
+  {ticker:'CIREX',name:'CIREX Fund — CI Raw Export Index',strategy:'Matieres premieres export CI',nav:10000,change:1.8,aum:'— (pre-lancement)',fees:'0.60%',score:72,
+   detail:{
+     fullName:"Cote d'Ivoire Raw Export Index Fund",
+     benchmark:'CIREX Index (base 100, 01/01/2023)',
+     currency:'XOF',
+     domicile:"Cote d'Ivoire / UEMOA",
+     vehicle:'Fonds indiciel reglemente (concept)',
+     replication:'Rules-based index tracking',
+     rebalancing:'Trimestriel',
+     reconstitution:'Annuel',
+     weighting:'Ponderation par tonnage moyen 20 ans',
+     constituents:[
+       {name:'Cacao',category:'Softs',weight:33.9,futures:true},
+       {name:'Caoutchouc naturel',category:'Agri industriel',weight:19.26,futures:true},
+       {name:'Noix de cajou',category:'Softs',weight:15.10,futures:false},
+       {name:'Petrole brut',category:'Energie',weight:11.71,futures:true},
+       {name:'Manganese',category:'Metaux',weight:7.86,futures:false},
+       {name:'Huile de palme',category:'Agri industriel',weight:4.47,futures:true},
+       {name:'Coton brut',category:'Softs',weight:3.70,futures:true},
+       {name:'Cafe',category:'Softs',weight:2.39,futures:true},
+       {name:'Nickel',category:'Metaux',weight:1.62,futures:true},
+       {name:'Or',category:'Metaux',weight:0,futures:true},
+       {name:'Diamants',category:'Metaux',weight:0,futures:false},
+     ],
+     risks:['Volatilite prix matieres premieres','Concentration export CI','Liquidite constituants sans futures','Risque reglementaire','Qualite donnees portuaires'],
+     targetInvestors:['HNWI UEMOA','Family offices','Institutions Afrique','Allocateurs thematiques commodites'],
+     status:'Pre-lancement — profil conceptuel'
+   }},
 ];
 
 const CRYPTO_PRICES=[
@@ -4647,6 +4675,23 @@ function selectETF(idx) {
       <div class="etf-stat"><div class="val">${e.score}</div><div class="lab">Score WASI</div></div>
       <div class="etf-stat"><div class="val">${e.score >= 65 ? 'Faible' : e.score >= 45 ? 'Modere' : 'Eleve'}</div><div class="lab">Risque</div></div>
     </div>
+    ${e.detail ? `
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+      <div style="font-size:.82rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Composition du fonds</div>
+      <div style="font-size:.75rem;color:var(--text-dim);margin-bottom:8px;">${e.detail.weighting || ''}</div>
+      <table class="data-table" style="font-size:.78rem;">
+        <thead><tr><th>Constituant</th><th>Categorie</th><th>Poids</th><th>Futures</th></tr></thead>
+        <tbody>
+          ${e.detail.constituents.filter(c=>c.weight>0).map(c => `<tr>
+            <td style="font-weight:500;">${c.name}</td>
+            <td style="color:var(--text-secondary);">${c.category}</td>
+            <td style="color:var(--gold);font-weight:600;">${c.weight.toFixed(1)}%</td>
+            <td>${c.futures ? '<span style="color:var(--green);">Oui</span>' : '<span style="color:var(--text-dim);">Non</span>'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      ${e.detail.status ? `<div style="margin-top:10px;padding:8px 12px;background:rgba(200,146,42,.08);border:1px solid var(--gold-dim);border-radius:var(--radius);font-size:.75rem;color:var(--gold);">${e.detail.status}</div>` : ''}
+    </div>` : ''}
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="order-exec-btn buy" style="flex:1;" onclick="etfOrder('subscribe')">Souscrire</button>
       <button class="order-exec-btn sell" style="flex:1;" onclick="etfOrder('redeem')">Racheter</button>
