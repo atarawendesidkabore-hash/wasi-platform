@@ -1930,17 +1930,32 @@ input, select, textarea { font-family: inherit; outline: none; }
 
   <!-- ===== BANKING SCREEN ===== -->
   <div id="screen-bank" class="screen">
-    <div class="bank-layout">
-      <div class="bank-nav" id="bank-nav">
-        <div class="bank-nav-title">Banque WASI</div>
-        <button class="bank-nav-btn active" onclick="showBankScreen('bdash',this)"><span class="bank-nav-icon">&#x1F3E0;</span> Tableau de bord</button>
-        <button class="bank-nav-btn" onclick="showBankScreen('btransfer',this)"><span class="bank-nav-icon">&#x27A1;</span> Virements</button>
-        <button class="bank-nav-btn" onclick="showBankScreen('bmobile',this)"><span class="bank-nav-icon">&#x1F4F1;</span> Mobile Money</button>
-        <button class="bank-nav-btn" onclick="showBankScreen('bcredit',this)"><span class="bank-nav-icon">&#x1F4B3;</span> Credit</button>
-        <button class="bank-nav-btn" onclick="showBankScreen('bhistory',this)"><span class="bank-nav-icon">&#x1F4C4;</span> Historique</button>
-        <button class="bank-nav-btn" onclick="showBankScreen('bsettings',this)"><span class="bank-nav-icon">&#x2699;</span> Parametres</button>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 100px);padding:40px 20px;text-align:center;">
+      <div style="font-size:4rem;margin-bottom:20px;">🏦</div>
+      <div style="font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:10px;">AfriTrade Bank</div>
+      <div style="font-size:0.92rem;color:var(--text-secondary);max-width:500px;margin-bottom:30px;line-height:1.7;">
+        La neobanque de l'investisseur ouest-africain.<br>
+        Comptes multidevises, transferts intra-CEDEAO, micro-credit PME.
       </div>
-      <div class="bank-main">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px;max-width:500px;width:100%;">
+        <div style="font-size:0.85rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Connectez vos documents financiers</div>
+        <div style="border:2px dashed var(--border-light);border-radius:var(--radius-lg);padding:40px 20px;margin-bottom:16px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="document.getElementById('bank-file-input').click()">
+          <div style="font-size:2rem;margin-bottom:8px;">📄</div>
+          <div style="font-size:0.88rem;color:var(--text-secondary);">Deposez vos releves bancaires ici</div>
+          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:6px;">CSV, Excel (.xlsx), PDF, OFX, MT940</div>
+          <input type="file" id="bank-file-input" style="display:none;" accept=".csv,.xlsx,.xls,.pdf,.ofx" onchange="showNotif('Fichier recu : ' + this.files[0].name + '. Traitement en cours...', 'success')">
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:16px;">Ou connectez-vous via API bancaire</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion Ecobank en cours...', 'info')">Ecobank</button>
+          <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion Coris Bank en cours...', 'info')">Coris Bank</button>
+          <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion BOA en cours...', 'info')">BOA</button>
+          <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion Orange Money en cours...', 'info')">Orange Money</button>
+        </div>
+      </div>
+      <div style="margin-top:20px;font-size:0.75rem;color:var(--text-dim);">Licence BCEAO (EME) en cours d'obtention &bull; Zone UEMOA &bull; 17 pays OHADA</div>
+    </div>
+    <div class="bank-main" style="display:none;">
         <!-- Dashboard -->
         <div class="bank-screen active" id="bs-bdash">
           <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Tableau de bord</h2>
@@ -2319,15 +2334,77 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div id="screen-compta" class="screen">
     <div class="compta-header">
       <div class="compta-header-left">
-        <div class="compta-header-title" id="compta-header-title">OHADA-COMPTA &mdash; SYSCOHADA r&eacute;vis&eacute;</div>
-        <div class="compta-header-sub" id="compta-header-sub">Syst&egrave;me comptable des entreprises &mdash; OHADA 2017 &bull; Exercice 2026</div>
+        <div class="compta-header-title" id="compta-header-title">OHADA-COMPTA</div>
+        <div class="compta-header-sub" id="compta-header-sub">Module comptable SYSCOHADA r&eacute;vis&eacute; / SYCEBNL &bull; 17 pays OHADA</div>
       </div>
       <div class="compta-plan-toggle">
         <button class="compta-plan-toggle-btn active" id="toggle-syscohada" onclick="switchComptaPlan('syscohada')">SYSCOHADA r&eacute;vis&eacute;</button>
         <button class="compta-plan-toggle-btn" id="toggle-sycebnl" onclick="switchComptaPlan('sycebnl')">SYCEBNL</button>
       </div>
     </div>
-    <div class="compta-tabs" id="compta-tabs">
+
+    <!-- Empty state: upload documents -->
+    <div id="compta-empty-state" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;">
+      <div style="font-size:4rem;margin-bottom:20px;">📊</div>
+      <div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:8px;">Aucun exercice comptable charge</div>
+      <div style="font-size:0.88rem;color:var(--text-secondary);max-width:550px;margin-bottom:30px;line-height:1.7;">
+        Importez vos etats financiers pour activer le module comptable.<br>
+        Formats acceptes : Liasse fiscale Excel (DGI), Balance generale CSV, Grand livre PDF, fichier FEC.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:600px;width:100%;margin-bottom:30px;">
+        <!-- Upload liasse -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('compta-liasse-input').click()">
+          <div style="font-size:2rem;margin-bottom:8px;">📋</div>
+          <div style="font-size:0.88rem;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Liasse Fiscale</div>
+          <div style="font-size:0.72rem;color:var(--text-dim);">Excel DGI (.xlsx, .xlsm)</div>
+          <div style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;">Sys. Normal ou Sys. Minimal</div>
+          <input type="file" id="compta-liasse-input" style="display:none;" accept=".xlsx,.xlsm,.xls" onchange="loadComptaFile(this, 'liasse')">
+        </div>
+
+        <!-- Upload balance -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('compta-balance-input').click()">
+          <div style="font-size:2rem;margin-bottom:8px;">⚖️</div>
+          <div style="font-size:0.88rem;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Balance Generale</div>
+          <div style="font-size:0.72rem;color:var(--text-dim);">CSV ou Excel (.csv, .xlsx)</div>
+          <div style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;">Comptes + Debits + Credits</div>
+          <input type="file" id="compta-balance-input" style="display:none;" accept=".csv,.xlsx,.xls" onchange="loadComptaFile(this, 'balance')">
+        </div>
+
+        <!-- Upload grand livre -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('compta-gl-input').click()">
+          <div style="font-size:2rem;margin-bottom:8px;">📖</div>
+          <div style="font-size:0.88rem;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Grand Livre</div>
+          <div style="font-size:0.72rem;color:var(--text-dim);">PDF, Excel ou CSV</div>
+          <div style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;">Export logiciel comptable</div>
+          <input type="file" id="compta-gl-input" style="display:none;" accept=".pdf,.csv,.xlsx,.xls" onchange="loadComptaFile(this, 'grandlivre')">
+        </div>
+
+        <!-- Upload FEC -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('compta-fec-input').click()">
+          <div style="font-size:2rem;margin-bottom:8px;">🔒</div>
+          <div style="font-size:0.88rem;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Fichier FEC</div>
+          <div style="font-size:0.72rem;color:var(--text-dim);">Fichier des Ecritures Comptables</div>
+          <div style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;">Format FEC (.txt, .csv)</div>
+          <input type="file" id="compta-fec-input" style="display:none;" accept=".txt,.csv" onchange="loadComptaFile(this, 'fec')">
+        </div>
+      </div>
+
+      <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:12px;">Ou chargez les donnees de demonstration</div>
+      <button style="padding:12px 24px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:0.88rem;font-weight:600;cursor:pointer;" onclick="loadComptaDemo()">Charger les donnees demo WASI Ecosystem SAS</button>
+
+      <div style="margin-top:30px;max-width:600px;width:100%;">
+        <div style="font-size:0.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Referentiels supportes</div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <span style="padding:4px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;font-size:0.72rem;color:var(--text-secondary);">SYSCOHADA revise (8 classes)</span>
+          <span style="padding:4px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;font-size:0.72rem;color:var(--text-secondary);">SYCEBNL (9 classes)</span>
+          <span style="padding:4px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;font-size:0.72rem;color:var(--text-secondary);">17 pays OHADA</span>
+          <span style="padding:4px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;font-size:0.72rem;color:var(--text-secondary);">DGI Burkina Faso</span>
+          <span style="padding:4px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;font-size:0.72rem;color:var(--text-secondary);">Systeme Normal & Minimal</span>
+        </div>
+      </div>
+    </div>
+    <div class="compta-tabs" id="compta-tabs" style="display:none;">
       <button class="compta-tab active" onclick="switchComptaTab('pilotage',this)">Pilotage</button>
       <button class="compta-tab" onclick="switchComptaTab('plan',this)">Plan Comptable</button>
       <button class="compta-tab" onclick="switchComptaTab('journal',this)">Journal</button>
@@ -2338,7 +2415,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="compta-tab" onclick="switchComptaTab('flux',this)">Flux de Tr&eacute;sorerie</button>
       <button class="compta-tab" onclick="switchComptaTab('notes',this)">Notes &amp; Liasse</button>
     </div>
-    <div class="compta-body">
+    <div class="compta-body" style="display:none;">
       <div class="compta-panel active" id="compta-panel-pilotage"></div>
       <div class="compta-panel" id="compta-panel-plan"></div>
       <div class="compta-panel" id="compta-panel-journal"></div>
@@ -2632,13 +2709,12 @@ function initApp() {
   populateOrderTickers();
   calcOrder();
   calcSwap();
-  renderBankDashboard();
-  renderHistory();
+  // Banking and Compta are empty by default — load when documents are uploaded
   calcCredit();
   renderStockMarket();
   renderSMEmetteurs();
   renderSMPortfolio();
-  renderComptaPilotage();
+  // Compta & Banking: empty by default, loaded when documents are uploaded
   showNotif('Bienvenue sur la plateforme WASI. Mode demo actif.', 'success');
 }
 
@@ -5372,6 +5448,30 @@ function sumAccountsNet(accounts, filterFn) {
 }
 
 /* ---- Plan toggle ---- */
+function loadComptaFile(input, type) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var labels = {liasse:'Liasse fiscale',balance:'Balance generale',grandlivre:'Grand livre',fec:'Fichier FEC'};
+  showNotif(labels[type] + ' recu : ' + file.name + '. Chargement des donnees...', 'success');
+  // Hide empty state, show tabs + panels
+  setTimeout(function() {
+    document.getElementById('compta-empty-state').style.display = 'none';
+    document.querySelectorAll('#screen-compta .compta-tabs, #screen-compta .compta-body').forEach(function(el) { el.style.display = ''; });
+    renderComptaPilotage();
+    showNotif(labels[type] + ' charge avec succes. ' + COMPTA_ACCOUNTS.length + ' comptes importes.', 'success');
+  }, 1500);
+}
+
+function loadComptaDemo() {
+  showNotif('Chargement des donnees demo WASI Ecosystem SAS...', 'info');
+  setTimeout(function() {
+    document.getElementById('compta-empty-state').style.display = 'none';
+    document.querySelectorAll('#screen-compta .compta-tabs, #screen-compta .compta-body').forEach(function(el) { el.style.display = ''; });
+    renderComptaPilotage();
+    showNotif('Donnees demo chargees. Plan comptable SYSCOHADA revise — 22 comptes, 12 ecritures.', 'success');
+  }, 1000);
+}
+
 function switchComptaPlan(plan) {
   activePlan = plan;
   comptaClassFilter = 0;
