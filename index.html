@@ -1713,8 +1713,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   </div>
 
   <!-- Ticker bar -->
-  <div class="ticker-bar">
-    <div class="ticker-track" id="ticker-track"></div>
+  <div class="ticker-bar" style="height:auto;"><div style="overflow:hidden;height:32px;">
+    <div class="ticker-track" id="ticker-track"></div></div><div style="overflow:hidden;height:32px;border-top:1px solid var(--border);"><div class="ticker-track" id="ticker-track-africa" style="animation-direction:reverse;animation-duration:50s;"></div></div>
   </div>
 
   <!-- ===== INTELLIGENCE SCREEN ===== -->
@@ -3688,6 +3688,7 @@ function renderTicker() {
   });
   // duplicate for seamless scroll
   document.getElementById('ticker-track').innerHTML = html + html;
+// Africa-only ticker row  let af = '';  const afExchanges = [    {arr:JSE_STOCKS,ccy:'ZAR',n:4,lbl:'JSE'},{arr:EGX_STOCKS,ccy:'EGP',n:3,lbl:'EGX'},{arr:CSE_STOCKS,ccy:'MAD',n:3,lbl:'CSE'},    {arr:NSE_STOCKS,ccy:'KES',n:3,lbl:'NSE'},{arr:DSE_STOCKS,ccy:'TZS',n:2,lbl:'DSE'},{arr:USE_STOCKS,ccy:'UGX',n:2,lbl:'USE'},    {arr:RSE_STOCKS,ccy:'RWF',n:2,lbl:'RSE'},{arr:BSE_STOCKS,ccy:'BWP',n:2,lbl:'BSE'},{arr:LUSE_STOCKS,ccy:'ZMW',n:2,lbl:'LuSE'},    {arr:ZSE_STOCKS,ccy:'ZWG',n:2,lbl:'ZSE'},{arr:SEM_STOCKS,ccy:'MUR',n:2,lbl:'SEM'},{arr:BVMT_STOCKS,ccy:'TND',n:2,lbl:'BVMT'},    {arr:BVMAC_STOCKS,ccy:'XAF',n:2,lbl:'BVMAC'},{arr:NSX_STOCKS,ccy:'NAD',n:2,lbl:'NSX'}  ];  afExchanges.forEach(function(ex) {    af += '<span class="ticker-item" style="margin-right:4px;"><span style="color:var(--cyan);font-size:.65rem;font-weight:700;">'+ex.lbl+'</span></span>';    ex.arr.slice(0,ex.n).forEach(function(s) {      var cls = chgClass(s.change);      af += '<span class="ticker-item"><span class="sym">'+s.ticker+'</span><span class="val">'+(s.price<100?s.price.toFixed(2):fmt(s.price))+' '+ex.ccy+'</span><span class="chg '+cls+'">'+chgSign(s.change)+'</span></span>';    });  });  document.getElementById('ticker-track-africa').innerHTML = af + af;
 }
 
 /* ========== COUNTRIES ========== */
