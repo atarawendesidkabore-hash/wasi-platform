@@ -1709,7 +1709,15 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div id="screen-intel" class="screen active">
     <!-- Left: Countries -->
     <div class="intel-left">
-      <div class="intel-left-title">Pays Africains</div>
+      <div class="intel-left-title">54 PAYS &middot; AFRIQUE &middot; EN LIGNE</div>
+      <div id="region-filter" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
+        <button class="region-btn active" onclick="filterRegion('TOUS',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:rgba(200,146,42,.15);color:var(--gold);cursor:pointer;">TOUS</button>
+        <button class="region-btn" onclick="filterRegion('CEDEAO',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">CEDEAO</button>
+        <button class="region-btn" onclick="filterRegion('CEMAC',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">CEMAC</button>
+        <button class="region-btn" onclick="filterRegion('EAC',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">EAC</button>
+        <button class="region-btn" onclick="filterRegion('SADC',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">SADC</button>
+        <button class="region-btn" onclick="filterRegion('UMA',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">AFR. NORD</button>
+      </div>
       <div id="country-list"></div>
     </div>
     <!-- Center: Chat -->
@@ -2494,6 +2502,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 const API = 'https://wasi-backend-api.onrender.com';
 let token = null;
 let currentCountry = null;
+let currentRegion = 'TOUS';
 let chatHistory = [];
 let orderSide = 'buy';
 let selectedETF = null;
@@ -2501,22 +2510,68 @@ let notifTimer = null;
 
 /* ========== DATA ========== */
 const COUNTRIES=[
-  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',score:58,trend:'\u2193',gdp:'$440B',risk:'Modere',coup:false},
-  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",score:72,trend:'\u2191',gdp:'$70B',risk:'Faible',coup:false},
-  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',score:65,trend:'\u2192',gdp:'$73B',risk:'Modere',coup:false},
-  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',score:70,trend:'\u2191',gdp:'$28B',risk:'Faible',coup:false},
-  {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',score:38,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true},
-  {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',score:35,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true},
-  {code:'GN',flag:'\u{1F1EC}\u{1F1F3}',name:'Guinee',score:42,trend:'\u2192',gdp:'$16B',risk:'Eleve',coup:true},
-  {code:'BJ',flag:'\u{1F1E7}\u{1F1EF}',name:'Benin',score:68,trend:'\u2191',gdp:'$18B',risk:'Faible',coup:false},
-  {code:'TG',flag:'\u{1F1F9}\u{1F1EC}',name:'Togo',score:55,trend:'\u2192',gdp:'$8B',risk:'Modere',coup:false},
-  {code:'NE',flag:'\u{1F1F3}\u{1F1EA}',name:'Niger',score:32,trend:'\u2193',gdp:'$14B',risk:'Eleve',coup:true},
-  {code:'MR',flag:'\u{1F1F2}\u{1F1F7}',name:'Mauritanie',score:50,trend:'\u2192',gdp:'$10B',risk:'Modere',coup:false},
-  {code:'GW',flag:'\u{1F1EC}\u{1F1FC}',name:'Guinee-Bissau',score:28,trend:'\u2193',gdp:'$2B',risk:'Eleve',coup:false},
-  {code:'SL',flag:'\u{1F1F8}\u{1F1F1}',name:'Sierra Leone',score:40,trend:'\u2192',gdp:'$4B',risk:'Eleve',coup:false},
-  {code:'LR',flag:'\u{1F1F1}\u{1F1F7}',name:'Liberia',score:37,trend:'\u2192',gdp:'$4B',risk:'Eleve',coup:false},
-  {code:'GM',flag:'\u{1F1EC}\u{1F1F2}',name:'Gambie',score:45,trend:'\u2192',gdp:'$2B',risk:'Modere',coup:false},
-  {code:'CV',flag:'\u{1F1E8}\u{1F1FB}',name:'Cap-Vert',score:74,trend:'\u2191',gdp:'$2B',risk:'Faible',coup:false},
+  // ══════ WEST AFRICA (CEDEAO) ══════
+  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',score:58,trend:'\u2193',gdp:'$440B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",score:72,trend:'\u2191',gdp:'$70B',risk:'Faible',coup:false,region:'CEDEAO'},
+  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',score:65,trend:'\u2192',gdp:'$73B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',score:70,trend:'\u2191',gdp:'$28B',risk:'Faible',coup:false,region:'CEDEAO'},
+  {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',score:38,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true,region:'CEDEAO'},
+  {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',score:35,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true,region:'CEDEAO'},
+  {code:'GN',flag:'\u{1F1EC}\u{1F1F3}',name:'Guinee',score:42,trend:'\u2192',gdp:'$16B',risk:'Eleve',coup:true,region:'CEDEAO'},
+  {code:'BJ',flag:'\u{1F1E7}\u{1F1EF}',name:'Benin',score:68,trend:'\u2191',gdp:'$18B',risk:'Faible',coup:false,region:'CEDEAO'},
+  {code:'TG',flag:'\u{1F1F9}\u{1F1EC}',name:'Togo',score:55,trend:'\u2192',gdp:'$8B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'NE',flag:'\u{1F1F3}\u{1F1EA}',name:'Niger',score:32,trend:'\u2193',gdp:'$14B',risk:'Eleve',coup:true,region:'CEDEAO'},
+  {code:'MR',flag:'\u{1F1F2}\u{1F1F7}',name:'Mauritanie',score:50,trend:'\u2192',gdp:'$10B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'GW',flag:'\u{1F1EC}\u{1F1FC}',name:'Guinee-Bissau',score:28,trend:'\u2193',gdp:'$2B',risk:'Eleve',coup:false,region:'CEDEAO'},
+  {code:'SL',flag:'\u{1F1F8}\u{1F1F1}',name:'Sierra Leone',score:40,trend:'\u2192',gdp:'$4B',risk:'Eleve',coup:false,region:'CEDEAO'},
+  {code:'LR',flag:'\u{1F1F1}\u{1F1F7}',name:'Liberia',score:37,trend:'\u2192',gdp:'$4B',risk:'Eleve',coup:false,region:'CEDEAO'},
+  {code:'GM',flag:'\u{1F1EC}\u{1F1F2}',name:'Gambie',score:45,trend:'\u2192',gdp:'$2B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'CV',flag:'\u{1F1E8}\u{1F1FB}',name:'Cap-Vert',score:74,trend:'\u2191',gdp:'$2B',risk:'Faible',coup:false,region:'CEDEAO'},
+
+  // ══════ CENTRAL AFRICA (CEMAC + RDC) ══════
+  {code:'CM',flag:'\u{1F1E8}\u{1F1F2}',name:'Cameroun',score:52,trend:'\u2192',gdp:'$45B',risk:'Modere',coup:false,region:'CEMAC'},
+  {code:'GA',flag:'\u{1F1EC}\u{1F1E6}',name:'Gabon',score:55,trend:'\u2192',gdp:'$20B',risk:'Modere',coup:true,region:'CEMAC'},
+  {code:'CG',flag:'\u{1F1E8}\u{1F1EC}',name:'Congo-Brazzaville',score:40,trend:'\u2193',gdp:'$14B',risk:'Eleve',coup:false,region:'CEMAC'},
+  {code:'CD',flag:'\u{1F1E8}\u{1F1E9}',name:'RD Congo',score:30,trend:'\u2193',gdp:'$64B',risk:'Eleve',coup:false,region:'CEMAC'},
+  {code:'CF',flag:'\u{1F1E8}\u{1F1EB}',name:'Centrafrique',score:18,trend:'\u2193',gdp:'$3B',risk:'Eleve',coup:false,region:'CEMAC'},
+  {code:'TD',flag:'\u{1F1F9}\u{1F1E9}',name:'Tchad',score:25,trend:'\u2193',gdp:'$12B',risk:'Eleve',coup:true,region:'CEMAC'},
+  {code:'GQ',flag:'\u{1F1EC}\u{1F1F6}',name:'Guinee Equatoriale',score:35,trend:'\u2193',gdp:'$12B',risk:'Eleve',coup:false,region:'CEMAC'},
+
+  // ══════ EAST AFRICA (EAC + Horn) ══════
+  {code:'KE',flag:'\u{1F1F0}\u{1F1EA}',name:'Kenya',score:68,trend:'\u2191',gdp:'$110B',risk:'Faible',coup:false,region:'EAC'},
+  {code:'TZ',flag:'\u{1F1F9}\u{1F1FF}',name:'Tanzanie',score:62,trend:'\u2191',gdp:'$75B',risk:'Modere',coup:false,region:'EAC'},
+  {code:'UG',flag:'\u{1F1FA}\u{1F1EC}',name:'Ouganda',score:48,trend:'\u2192',gdp:'$46B',risk:'Modere',coup:false,region:'EAC'},
+  {code:'RW',flag:'\u{1F1F7}\u{1F1FC}',name:'Rwanda',score:78,trend:'\u2191',gdp:'$13B',risk:'Faible',coup:false,region:'EAC'},
+  {code:'BI',flag:'\u{1F1E7}\u{1F1EE}',name:'Burundi',score:22,trend:'\u2193',gdp:'$3B',risk:'Eleve',coup:false,region:'EAC'},
+  {code:'SS',flag:'\u{1F1F8}\u{1F1F8}',name:'Soudan du Sud',score:12,trend:'\u2193',gdp:'$5B',risk:'Eleve',coup:false,region:'EAC'},
+  {code:'ET',flag:'\u{1F1EA}\u{1F1F9}',name:'Ethiopie',score:42,trend:'\u2193',gdp:'$126B',risk:'Eleve',coup:false,region:'IGAD'},
+  {code:'DJ',flag:'\u{1F1E9}\u{1F1EF}',name:'Djibouti',score:52,trend:'\u2192',gdp:'$4B',risk:'Modere',coup:false,region:'IGAD'},
+  {code:'ER',flag:'\u{1F1EA}\u{1F1F7}',name:'Erythree',score:15,trend:'\u2193',gdp:'$2B',risk:'Eleve',coup:false,region:'IGAD'},
+  {code:'SO',flag:'\u{1F1F8}\u{1F1F4}',name:'Somalie',score:10,trend:'\u2193',gdp:'$8B',risk:'Eleve',coup:false,region:'IGAD'},
+  {code:'SD',flag:'\u{1F1F8}\u{1F1E9}',name:'Soudan',score:12,trend:'\u2193',gdp:'$26B',risk:'Eleve',coup:true,region:'IGAD'},
+
+  // ══════ SOUTHERN AFRICA (SADC) ══════
+  {code:'ZA',flag:'\u{1F1FF}\u{1F1E6}',name:'Afrique du Sud',score:72,trend:'\u2192',gdp:'$399B',risk:'Faible',coup:false,region:'SADC'},
+  {code:'MZ',flag:'\u{1F1F2}\u{1F1FF}',name:'Mozambique',score:38,trend:'\u2193',gdp:'$17B',risk:'Eleve',coup:false,region:'SADC'},
+  {code:'ZW',flag:'\u{1F1FF}\u{1F1FC}',name:'Zimbabwe',score:28,trend:'\u2193',gdp:'$21B',risk:'Eleve',coup:false,region:'SADC'},
+  {code:'ZM',flag:'\u{1F1FF}\u{1F1F2}',name:'Zambie',score:52,trend:'\u2191',gdp:'$29B',risk:'Modere',coup:false,region:'SADC'},
+  {code:'BW',flag:'\u{1F1E7}\u{1F1FC}',name:'Botswana',score:78,trend:'\u2192',gdp:'$19B',risk:'Faible',coup:false,region:'SADC'},
+  {code:'NA',flag:'\u{1F1F3}\u{1F1E6}',name:'Namibie',score:65,trend:'\u2192',gdp:'$13B',risk:'Modere',coup:false,region:'SADC'},
+  {code:'MW',flag:'\u{1F1F2}\u{1F1FC}',name:'Malawi',score:35,trend:'\u2193',gdp:'$12B',risk:'Eleve',coup:false,region:'SADC'},
+  {code:'AO',flag:'\u{1F1E6}\u{1F1F4}',name:'Angola',score:42,trend:'\u2192',gdp:'$78B',risk:'Modere',coup:false,region:'SADC'},
+  {code:'MG',flag:'\u{1F1F2}\u{1F1EC}',name:'Madagascar',score:35,trend:'\u2193',gdp:'$15B',risk:'Eleve',coup:false,region:'SADC'},
+  {code:'MU',flag:'\u{1F1F2}\u{1F1FA}',name:'Maurice',score:80,trend:'\u2191',gdp:'$14B',risk:'Faible',coup:false,region:'SADC'},
+  {code:'SC',flag:'\u{1F1F8}\u{1F1E8}',name:'Seychelles',score:75,trend:'\u2192',gdp:'$2B',risk:'Faible',coup:false,region:'SADC'},
+  {code:'SZ',flag:'\u{1F1F8}\u{1F1FF}',name:'Eswatini',score:40,trend:'\u2192',gdp:'$5B',risk:'Modere',coup:false,region:'SADC'},
+  {code:'LS',flag:'\u{1F1F1}\u{1F1F8}',name:'Lesotho',score:38,trend:'\u2192',gdp:'$3B',risk:'Modere',coup:false,region:'SADC'},
+  {code:'KM',flag:'\u{1F1F0}\u{1F1F2}',name:'Comores',score:30,trend:'\u2192',gdp:'$1B',risk:'Eleve',coup:false,region:'SADC'},
+
+  // ══════ NORTH AFRICA (UMA) ══════
+  {code:'MA',flag:'\u{1F1F2}\u{1F1E6}',name:'Maroc',score:75,trend:'\u2191',gdp:'$142B',risk:'Faible',coup:false,region:'UMA'},
+  {code:'TN',flag:'\u{1F1F9}\u{1F1F3}',name:'Tunisie',score:55,trend:'\u2193',gdp:'$47B',risk:'Modere',coup:false,region:'UMA'},
+  {code:'EG',flag:'\u{1F1EA}\u{1F1EC}',name:'Egypte',score:58,trend:'\u2192',gdp:'$476B',risk:'Modere',coup:false,region:'UMA'},
+  {code:'DZ',flag:'\u{1F1E9}\u{1F1FF}',name:'Algerie',score:48,trend:'\u2192',gdp:'$192B',risk:'Modere',coup:false,region:'UMA'},
+  {code:'LY',flag:'\u{1F1F1}\u{1F1FE}',name:'Libye',score:18,trend:'\u2193',gdp:'$42B',risk:'Eleve',coup:false,region:'UMA'},
 ];
 
 const COUNTRY_DETAILS = {
@@ -2550,8 +2605,90 @@ const COUNTRY_DETAILS = {
     indices:{politique:40,economie:32,infra:18,juridique:28,humain:25,integration:38}},
   GM: {capital:'Banjul',eco_center:'Banjul',president:'Adama Barrow',pop:'3 M',currency:'Dalasi (GMD)',zone:'AFRIQUE',resources:['Arachide','Poisson','Tourisme','Bois'],exports:['Arachide','Poisson','Noix de cajou','Coton'],growth:'+5.2%',inflation:'11.8%',dette_pib:'58%',
     indices:{politique:48,economie:42,infra:30,juridique:38,humain:35,integration:52}},
-  CV: {capital:'Praia',eco_center:'Praia',president:'Jose Maria Neves',pop:'0.6 M',currency:'Escudo (CVE)',zone:'AFRIQUE',resources:['Poisson','Sel','Tourisme','Banane'],exports:['Poisson','Chaussures','Vetements','Banane'],growth:'+5.5%',inflation:'3.2%',dette_pib:'110%',
+  CV: {capital:'Praia',eco_center:'Praia',president:'Jose Maria Neves',pop:'0.6 M',currency:'Escudo (CVE)',zone:'CEDEAO',resources:['Poisson','Sel','Tourisme','Banane'],exports:['Poisson','Chaussures','Vetements','Banane'],growth:'+5.5%',inflation:'3.2%',dette_pib:'110%',
     indices:{politique:82,economie:68,infra:62,juridique:72,humain:70,integration:58}},
+
+  // ══════ CENTRAL AFRICA (CEMAC + RDC) ══════
+  CM: {capital:'Yaounde',eco_center:'Douala',president:'Paul Biya',pop:'28 M',currency:'Franc CFA (XAF)',zone:'CEMAC',resources:['Petrole','Cacao','Bois','Bauxite'],exports:['Petrole brut','Cacao','Bois','Banane'],growth:'+3.8%',inflation:'6.2%',dette_pib:'45%',
+    indices:{politique:42,economie:55,infra:48,juridique:45,humain:50,integration:52}},
+  GA: {capital:'Libreville',eco_center:'Libreville',president:'Brice Oligui Nguema (militaire)',pop:'2.4 M',currency:'Franc CFA (XAF)',zone:'CEMAC',resources:['Petrole','Manganese','Bois','Or'],exports:['Petrole brut','Manganese','Bois'],growth:'+2.8%',inflation:'3.5%',dette_pib:'52%',
+    indices:{politique:35,economie:58,infra:52,juridique:48,humain:55,integration:45}},
+  CG: {capital:'Brazzaville',eco_center:'Pointe-Noire',president:'Denis Sassou-Nguesso',pop:'6 M',currency:'Franc CFA (XAF)',zone:'CEMAC',resources:['Petrole','Bois','Potasse','Or'],exports:['Petrole brut','Bois','Sucre'],growth:'+2.5%',inflation:'4.8%',dette_pib:'85%',
+    indices:{politique:30,economie:42,infra:35,juridique:32,humain:38,integration:40}},
+  CD: {capital:'Kinshasa',eco_center:'Kinshasa',president:'Felix Tshisekedi',pop:'102 M',currency:'Franc congolais (CDF)',zone:'SADC',resources:['Cobalt','Cuivre','Coltan','Diamants','Or'],exports:['Cuivre','Cobalt','Or','Diamants','Coltan'],growth:'+6.2%',inflation:'18.5%',dette_pib:'22%',
+    indices:{politique:22,economie:35,infra:15,juridique:20,humain:25,integration:28}},
+  CF: {capital:'Bangui',eco_center:'Bangui',president:'Faustin-Archange Touadera',pop:'5.5 M',currency:'Franc CFA (XAF)',zone:'CEMAC',resources:['Diamants','Or','Bois','Uranium'],exports:['Diamants','Bois','Coton','Cafe'],growth:'+1.5%',inflation:'5.8%',dette_pib:'48%',
+    indices:{politique:10,economie:15,infra:8,juridique:12,humain:15,integration:18}},
+  TD: {capital:'N\'Djamena',eco_center:'N\'Djamena',president:'Mahamat Idriss Deby (militaire)',pop:'17 M',currency:'Franc CFA (XAF)',zone:'CEMAC',resources:['Petrole','Natron','Or','Uranium'],exports:['Petrole brut','Betail','Coton','Gomme arabique'],growth:'+3.0%',inflation:'8.5%',dette_pib:'42%',
+    indices:{politique:18,economie:28,infra:15,juridique:20,humain:18,integration:22}},
+  GQ: {capital:'Malabo',eco_center:'Bata',president:'Teodoro Obiang Nguema',pop:'1.5 M',currency:'Franc CFA (XAF)',zone:'CEMAC',resources:['Petrole','Gaz naturel','Bois'],exports:['Petrole brut','GNL','Methanol'],growth:'-2.0%',inflation:'4.2%',dette_pib:'38%',
+    indices:{politique:15,economie:40,infra:38,juridique:18,humain:32,integration:25}},
+
+  // ══════ EAST AFRICA (EAC + Horn) ══════
+  KE: {capital:'Nairobi',eco_center:'Nairobi',president:'William Ruto',pop:'55 M',currency:'Shilling kenyan (KES)',zone:'EAC',resources:['The','Cafe','Fleurs','Titane'],exports:['The','Fleurs coupees','Cafe','Legumes'],growth:'+5.5%',inflation:'6.8%',dette_pib:'68%',
+    indices:{politique:62,economie:72,infra:58,juridique:65,humain:60,integration:72}},
+  TZ: {capital:'Dodoma',eco_center:'Dar es Salaam',president:'Samia Suluhu Hassan',pop:'65 M',currency:'Shilling tanzanien (TZS)',zone:'EAC',resources:['Or','Tanzanite','Diamants','Gaz naturel'],exports:['Or','Noix de cajou','Cafe','Tabac'],growth:'+5.2%',inflation:'4.5%',dette_pib:'42%',
+    indices:{politique:58,economie:65,infra:45,juridique:55,humain:48,integration:62}},
+  UG: {capital:'Kampala',eco_center:'Kampala',president:'Yoweri Museveni',pop:'48 M',currency:'Shilling ougandais (UGX)',zone:'EAC',resources:['Cafe','Petrole','Or','Cobalt'],exports:['Cafe','Or','Poisson','Fleurs'],growth:'+5.8%',inflation:'5.2%',dette_pib:'52%',
+    indices:{politique:35,economie:52,infra:38,juridique:42,humain:45,integration:55}},
+  RW: {capital:'Kigali',eco_center:'Kigali',president:'Paul Kagame',pop:'14 M',currency:'Franc rwandais (RWF)',zone:'EAC',resources:['Coltan','Etain','Wolfram','Cafe'],exports:['Or','The','Cafe','Minerais'],growth:'+8.2%',inflation:'5.0%',dette_pib:'65%',
+    indices:{politique:72,economie:78,infra:68,juridique:75,humain:72,integration:78}},
+  BI: {capital:'Gitega',eco_center:'Bujumbura',president:'Evariste Ndayishimiye',pop:'13 M',currency:'Franc burundais (BIF)',zone:'EAC',resources:['Or','Coltan','Nickel','Cafe'],exports:['Cafe','The','Or','Minerais'],growth:'+3.0%',inflation:'12.5%',dette_pib:'62%',
+    indices:{politique:18,economie:22,infra:12,juridique:15,humain:20,integration:25}},
+  SS: {capital:'Juba',eco_center:'Juba',president:'Salva Kiir Mayardit',pop:'11 M',currency:'Livre sud-soudanaise (SSP)',zone:'EAC',resources:['Petrole','Bois','Or'],exports:['Petrole brut'],growth:'-1.5%',inflation:'45%',dette_pib:'55%',
+    indices:{politique:5,economie:10,infra:5,juridique:8,humain:8,integration:12}},
+  ET: {capital:'Addis-Abeba',eco_center:'Addis-Abeba',president:'PM Abiy Ahmed',pop:'126 M',currency:'Birr ethiopien (ETB)',zone:'IGAD',resources:['Cafe','Or','Gaz naturel','Platine'],exports:['Cafe','Or','Fleurs','Khat','Oilseeds'],growth:'+6.4%',inflation:'28%',dette_pib:'38%',
+    indices:{politique:30,economie:48,infra:42,juridique:35,humain:38,integration:42}},
+  DJ: {capital:'Djibouti',eco_center:'Djibouti',president:'Ismail Omar Guelleh',pop:'1 M',currency:'Franc djiboutien (DJF)',zone:'IGAD',resources:['Sel','Port strategique','Bases militaires'],exports:['Sel','Peaux','Betail (reexport)'],growth:'+5.5%',inflation:'3.2%',dette_pib:'68%',
+    indices:{politique:45,economie:55,infra:62,juridique:42,humain:40,integration:48}},
+  ER: {capital:'Asmara',eco_center:'Asmara',president:'Isaias Afwerki',pop:'3.6 M',currency:'Nakfa (ERN)',zone:'IGAD',resources:['Or','Cuivre','Zinc','Potasse'],exports:['Or','Zinc','Cuivre','Poisson'],growth:'+2.5%',inflation:'5%',dette_pib:'42%',
+    indices:{politique:8,economie:18,infra:15,juridique:10,humain:15,integration:8}},
+  SO: {capital:'Mogadiscio',eco_center:'Mogadiscio',president:'Hassan Sheikh Mohamud',pop:'18 M',currency:'Shilling somalien (SOS)',zone:'IGAD',resources:['Betail','Banane','Encens','Poisson'],exports:['Betail','Bananes','Peaux','Charbon'],growth:'+2.8%',inflation:'6.5%',dette_pib:'28%',
+    indices:{politique:5,economie:12,infra:5,juridique:8,humain:10,integration:10}},
+  SD: {capital:'Khartoum',eco_center:'Khartoum',president:'Conflit arme en cours',pop:'46 M',currency:'Livre soudanaise (SDG)',zone:'IGAD',resources:['Or','Petrole','Chrome','Gomme arabique'],exports:['Or','Petrole','Sesame','Gomme arabique'],growth:'-12%',inflation:'250%',dette_pib:'180%',
+    indices:{politique:5,economie:10,infra:15,juridique:8,humain:12,integration:10}},
+
+  // ══════ SOUTHERN AFRICA (SADC) ══════
+  ZA: {capital:'Pretoria',eco_center:'Johannesburg',president:'Cyril Ramaphosa',pop:'62 M',currency:'Rand (ZAR)',zone:'SADC',resources:['Or','Platine','Diamants','Chrome','Charbon','Fer'],exports:['Platine','Or','Vehicules','Fer','Charbon'],growth:'+1.8%',inflation:'5.5%',dette_pib:'72%',
+    indices:{politique:68,economie:72,infra:72,juridique:78,humain:62,integration:68}},
+  MZ: {capital:'Maputo',eco_center:'Maputo',president:'Daniel Chapo',pop:'33 M',currency:'Metical (MZN)',zone:'SADC',resources:['Gaz naturel','Charbon','Aluminium','Rubis'],exports:['Aluminium','Charbon','Gaz','Sucre'],growth:'+4.5%',inflation:'8.2%',dette_pib:'98%',
+    indices:{politique:28,economie:38,infra:30,juridique:32,humain:25,integration:42}},
+  ZW: {capital:'Harare',eco_center:'Harare',president:'Emmerson Mnangagwa',pop:'16 M',currency:'Dollar ZiG (ZWG)',zone:'SADC',resources:['Platine','Diamants','Or','Lithium','Chrome'],exports:['Or','Tabac','Platine','Diamants','Nickel'],growth:'+3.5%',inflation:'35%',dette_pib:'95%',
+    indices:{politique:20,economie:28,infra:32,juridique:22,humain:35,integration:30}},
+  ZM: {capital:'Lusaka',eco_center:'Lusaka',president:'Hakainde Hichilema',pop:'20 M',currency:'Kwacha (ZMW)',zone:'SADC',resources:['Cuivre','Cobalt','Emeraudes','Zinc'],exports:['Cuivre','Cobalt','Emeraudes','Tabac'],growth:'+4.2%',inflation:'12%',dette_pib:'80%',
+    indices:{politique:58,economie:48,infra:35,juridique:52,humain:42,integration:52}},
+  BW: {capital:'Gaborone',eco_center:'Gaborone',president:'Duma Boko',pop:'2.6 M',currency:'Pula (BWP)',zone:'SADC',resources:['Diamants','Cuivre','Nickel','Charbon'],exports:['Diamants','Cuivre','Nickel','Viande bovine'],growth:'+4.0%',inflation:'4.5%',dette_pib:'22%',
+    indices:{politique:78,economie:72,infra:62,juridique:80,humain:68,integration:72}},
+  NA: {capital:'Windhoek',eco_center:'Windhoek',president:'Netumbo Nandi-Ndaitwah',pop:'2.6 M',currency:'Dollar namibien (NAD)',zone:'SADC',resources:['Diamants','Uranium','Zinc','Or'],exports:['Diamants','Uranium','Zinc','Poisson'],growth:'+3.5%',inflation:'5.0%',dette_pib:'65%',
+    indices:{politique:68,economie:58,infra:55,juridique:65,humain:55,integration:58}},
+  MW: {capital:'Lilongwe',eco_center:'Blantyre',president:'Lazarus Chakwera',pop:'20 M',currency:'Kwacha (MWK)',zone:'SADC',resources:['Tabac','The','Sucre','Uranium'],exports:['Tabac','The','Sucre','Cafe'],growth:'+3.0%',inflation:'28%',dette_pib:'72%',
+    indices:{politique:42,economie:30,infra:18,juridique:35,humain:28,integration:35}},
+  AO: {capital:'Luanda',eco_center:'Luanda',president:'Joao Lourenco',pop:'35 M',currency:'Kwanza (AOA)',zone:'SADC',resources:['Petrole','Diamants','Fer','Phosphates'],exports:['Petrole brut','Diamants','Gaz','Cafe'],growth:'+3.2%',inflation:'15%',dette_pib:'62%',
+    indices:{politique:35,economie:45,infra:35,juridique:30,humain:32,integration:38}},
+  MG: {capital:'Antananarivo',eco_center:'Antananarivo',president:'Andry Rajoelina',pop:'30 M',currency:'Ariary (MGA)',zone:'SADC',resources:['Vanille','Nickel','Cobalt','Graphite','Saphirs'],exports:['Vanille','Nickel','Cobalt','Girofle'],growth:'+4.0%',inflation:'9.8%',dette_pib:'45%',
+    indices:{politique:32,economie:35,infra:20,juridique:28,humain:30,integration:25}},
+  MU: {capital:'Port-Louis',eco_center:'Port-Louis',president:'PM Pravind Jugnauth',pop:'1.3 M',currency:'Roupie mauricienne (MUR)',zone:'SADC',resources:['Sucre','Peche','Tourisme','Services financiers'],exports:['Sucre','Textiles','Poisson','Diamants (reexport)'],growth:'+5.0%',inflation:'4.2%',dette_pib:'88%',
+    indices:{politique:82,economie:78,infra:75,juridique:80,humain:78,integration:62}},
+  SC: {capital:'Victoria',eco_center:'Victoria',president:'Wavel Ramkalawan',pop:'0.1 M',currency:'Roupie seychelloise (SCR)',zone:'SADC',resources:['Poisson','Tourisme','Copra'],exports:['Poisson en conserve','Poisson congele'],growth:'+4.5%',inflation:'3.5%',dette_pib:'62%',
+    indices:{politique:78,economie:72,infra:68,juridique:75,humain:80,integration:55}},
+  SZ: {capital:'Mbabane',eco_center:'Manzini',president:'Roi Mswati III',pop:'1.2 M',currency:'Lilangeni (SZL)',zone:'SADC',resources:['Sucre','Bois','Charbon','Amiante'],exports:['Sucre','Concentre boissons','Textiles'],growth:'+3.2%',inflation:'5.5%',dette_pib:'42%',
+    indices:{politique:25,economie:42,infra:45,juridique:35,humain:38,integration:42}},
+  LS: {capital:'Maseru',eco_center:'Maseru',president:'Sam Matekane',pop:'2.3 M',currency:'Loti (LSL)',zone:'SADC',resources:['Diamants','Eau','Laine','Mohair'],exports:['Diamants','Vetements','Eau','Laine'],growth:'+2.5%',inflation:'6.8%',dette_pib:'52%',
+    indices:{politique:42,economie:32,infra:28,juridique:38,humain:35,integration:38}},
+  KM: {capital:'Moroni',eco_center:'Moroni',president:'Azali Assoumani',pop:'0.9 M',currency:'Franc comorien (KMF)',zone:'UA',resources:['Vanille','Girofle','Ylang-ylang','Copra'],exports:['Vanille','Girofle','Ylang-ylang','Copra'],growth:'+3.0%',inflation:'8.5%',dette_pib:'32%',
+    indices:{politique:28,economie:25,infra:18,juridique:22,humain:25,integration:20}},
+
+  // ══════ NORTH AFRICA (UMA) ══════
+  MA: {capital:'Rabat',eco_center:'Casablanca',president:'Roi Mohammed VI / PM Aziz Akhannouch',pop:'37 M',currency:'Dirham (MAD)',zone:'UMA',resources:['Phosphates','Poisson','Agrumes','Tourisme'],exports:['Phosphates','Automobiles','Textiles','Agrumes','Poisson'],growth:'+3.5%',inflation:'3.2%',dette_pib:'72%',
+    indices:{politique:68,economie:72,infra:68,juridique:65,humain:58,integration:72}},
+  TN: {capital:'Tunis',eco_center:'Tunis',president:'Kais Saied',pop:'12 M',currency:'Dinar tunisien (TND)',zone:'UMA',resources:['Phosphates','Petrole','Fer','Tourisme'],exports:['Textiles','Phosphates','Huile olive','Composants auto'],growth:'+2.2%',inflation:'8.5%',dette_pib:'82%',
+    indices:{politique:42,economie:52,infra:62,juridique:55,humain:65,integration:48}},
+  EG: {capital:'Le Caire',eco_center:'Le Caire',president:'Abdel Fattah al-Sissi',pop:'105 M',currency:'Livre egyptienne (EGP)',zone:'UMA',resources:['Petrole','Gaz naturel','Phosphates','Fer','Or'],exports:['Petrole','Gaz','Engrais','Textiles','Agrumes'],growth:'+3.8%',inflation:'25%',dette_pib:'88%',
+    indices:{politique:45,economie:55,infra:62,juridique:48,humain:52,integration:55}},
+  DZ: {capital:'Alger',eco_center:'Alger',president:'Abdelmadjid Tebboune',pop:'45 M',currency:'Dinar algerien (DZD)',zone:'UMA',resources:['Petrole','Gaz naturel','Fer','Phosphates','Zinc'],exports:['Petrole brut','GNL','Gaz naturel'],growth:'+3.2%',inflation:'7.5%',dette_pib:'48%',
+    indices:{politique:38,economie:45,infra:52,juridique:40,humain:48,integration:35}},
+  LY: {capital:'Tripoli',eco_center:'Tripoli',president:'Gouvernement divise',pop:'7 M',currency:'Dinar libyen (LYD)',zone:'UMA',resources:['Petrole','Gaz naturel','Fer','Gypse'],exports:['Petrole brut','Gaz naturel'],growth:'-1.0%',inflation:'4.5%',dette_pib:'8%',
+    indices:{politique:8,economie:22,infra:30,juridique:12,humain:28,integration:10}},
 };
 
 const BRVM_STOCKS=[
@@ -2933,9 +3070,33 @@ function renderTicker() {
 }
 
 /* ========== COUNTRIES ========== */
+function filterRegion(region, btn) {
+  currentRegion = region;
+  // Update button styles
+  document.querySelectorAll('#region-filter .region-btn').forEach(b => {
+    b.style.background = 'var(--bg-tertiary)';
+    b.style.color = 'var(--text-secondary)';
+    b.classList.remove('active');
+  });
+  if (btn) {
+    btn.style.background = 'rgba(200,146,42,.15)';
+    btn.style.color = 'var(--gold)';
+    btn.classList.add('active');
+  }
+  renderCountries();
+}
+
+function getFilteredCountries() {
+  if (currentRegion === 'TOUS') return COUNTRIES;
+  if (currentRegion === 'UMA') return COUNTRIES.filter(c => c.region === 'UMA');
+  if (currentRegion === 'EAC') return COUNTRIES.filter(c => c.region === 'EAC' || c.region === 'IGAD');
+  return COUNTRIES.filter(c => c.region === currentRegion);
+}
+
 function renderCountries() {
   const el = document.getElementById('country-list');
-  el.innerHTML = COUNTRIES.map(c => {
+  const filtered = getFilteredCountries();
+  el.innerHTML = filtered.map(c => {
     const sc = scoreClass(c.score);
     return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="selectCountry('${c.code}')">
       <span class="flag">${c.flag}</span>
@@ -3074,7 +3235,7 @@ function isMobile() { return window.innerWidth <= 640; }
 function openMobileCountries() {
   mobileCountryView = 'list';
   renderMobileCountryList();
-  document.getElementById('mobile-panel-title').textContent = 'Pays Africains (16)';
+  document.getElementById('mobile-panel-title').textContent = 'Pays Africains (54)';
   document.getElementById('mobile-country-panel').classList.add('show');
 }
 
@@ -3083,7 +3244,7 @@ function closeMobileCountries() {
     // Go back to list
     mobileCountryView = 'list';
     renderMobileCountryList();
-    document.getElementById('mobile-panel-title').textContent = 'Pays Africains (16)';
+    document.getElementById('mobile-panel-title').textContent = 'Pays Africains (54)';
   } else {
     document.getElementById('mobile-country-panel').classList.remove('show');
   }
@@ -3095,23 +3256,40 @@ function renderMobileCountryList() {
   const avg = Math.round(COUNTRIES.reduce((s, c) => s + c.score, 0) / COUNTRIES.length);
   let html = `<div style="text-align:center;padding:16px;margin-bottom:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);">
     <div style="font-size:2.2rem;font-weight:700;color:var(--gold);">${avg}</div>
-    <div style="font-size:.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Composite WASI / 100</div>
+    <div style="font-size:.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Composite WASI / 100 &middot; 54 pays</div>
   </div>`;
 
-  html += COUNTRIES.map(c => {
-    const sc = scoreClass(c.score);
-    const col = c.score >= 65 ? 'var(--green)' : c.score >= 45 ? 'var(--orange)' : 'var(--red)';
-    return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="showMobileCountryDetail('${c.code}')" style="padding:12px;">
-      <span class="flag" style="font-size:1.6rem;">${c.flag}</span>
-      <span style="flex:1;">
-        <span class="cname" style="display:block;font-size:.9rem;font-weight:500;">${c.name}</span>
-        <span style="font-size:.72rem;color:var(--text-dim);">${c.gdp} · ${c.risk}</span>
-      </span>
-      <span class="cscore ${sc}" style="font-size:.9rem;min-width:36px;text-align:center;">${c.score}</span>
-      <span class="ctrend">${c.trend}</span>
-      ${c.coup ? '<span class="coup-badge">COUP</span>' : ''}
-    </div>`;
-  }).join('');
+  // Region groups for mobile
+  const regionOrder = [
+    {key:'CEDEAO',label:'AFRIQUE DE L\'OUEST (CEDEAO)'},
+    {key:'CEMAC',label:'AFRIQUE CENTRALE (CEMAC)'},
+    {key:'EAC+IGAD',label:'AFRIQUE DE L\'EST (EAC + Corne)'},
+    {key:'SADC',label:'AFRIQUE AUSTRALE (SADC)'},
+    {key:'UMA',label:'AFRIQUE DU NORD (UMA)'},
+  ];
+
+  regionOrder.forEach(rg => {
+    const regionCountries = rg.key === 'EAC+IGAD'
+      ? COUNTRIES.filter(c => c.region === 'EAC' || c.region === 'IGAD')
+      : COUNTRIES.filter(c => c.region === rg.key);
+    if (regionCountries.length === 0) return;
+
+    html += `<div style="padding:8px 4px 4px;margin-top:8px;font-size:.72rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);">${rg.label}</div>`;
+
+    html += regionCountries.map(c => {
+      const sc = scoreClass(c.score);
+      return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="showMobileCountryDetail('${c.code}')" style="padding:12px;">
+        <span class="flag" style="font-size:1.6rem;">${c.flag}</span>
+        <span style="flex:1;">
+          <span class="cname" style="display:block;font-size:.9rem;font-weight:500;">${c.name}</span>
+          <span style="font-size:.72rem;color:var(--text-dim);">${c.gdp} · ${c.risk}</span>
+        </span>
+        <span class="cscore ${sc}" style="font-size:.9rem;min-width:36px;text-align:center;">${c.score}</span>
+        <span class="ctrend">${c.trend}</span>
+        ${c.coup ? '<span class="coup-badge">COUP</span>' : ''}
+      </div>`;
+    }).join('');
+  });
 
   body.innerHTML = html;
 }
@@ -3238,14 +3416,26 @@ function renderComposite() {
   chtml += '</div>';
   document.getElementById('comp-coups').innerHTML = chtml;
 
-  // Components
+  // Components — dynamically compute from all country details
+  const allCodes = COUNTRIES.map(c => c.code).filter(code => COUNTRY_DETAILS[code] && COUNTRY_DETAILS[code].indices);
+  const nDet = allCodes.length || 1;
+  const sumIdx = {politique:0,economie:0,infra:0,juridique:0,humain:0,integration:0};
+  allCodes.forEach(code => {
+    const idx = COUNTRY_DETAILS[code].indices;
+    sumIdx.politique += idx.politique;
+    sumIdx.economie += idx.economie;
+    sumIdx.infra += idx.infra;
+    sumIdx.juridique += idx.juridique;
+    sumIdx.humain += idx.humain;
+    sumIdx.integration += idx.integration;
+  });
   const components = [
-    {label: 'Stabilite politique', val: 52},
-    {label: 'Environnement economique', val: 58},
-    {label: 'Infrastructure', val: 41},
-    {label: 'Cadre juridique', val: 55},
-    {label: 'Capital humain', val: 47},
-    {label: 'Integration regionale', val: 63},
+    {label: 'Stabilite politique', val: Math.round(sumIdx.politique / nDet)},
+    {label: 'Environnement economique', val: Math.round(sumIdx.economie / nDet)},
+    {label: 'Infrastructure', val: Math.round(sumIdx.infra / nDet)},
+    {label: 'Cadre juridique', val: Math.round(sumIdx.juridique / nDet)},
+    {label: 'Capital humain', val: Math.round(sumIdx.humain / nDet)},
+    {label: 'Integration regionale', val: Math.round(sumIdx.integration / nDet)},
   ];
   let compHtml = '<div class="comp-section-title">Composantes WASI</div>';
   components.forEach(co => {
@@ -4198,7 +4388,7 @@ Les pays a forte dependance aux matieres premieres ont un score WASI plus volati
   // Compare countries
   if (msg.includes('compar') || msg.includes('vs') || msg.includes('versus') || msg.includes('meilleur') || msg.includes('class') || msg.includes('rang') || msg.includes('top')) {
     const sorted = [...COUNTRIES].sort((a, b) => b.score - a.score);
-    return `━━━ CLASSEMENT WASI — 16 PAYS AFRIQUE ━━━
+    return `━━━ CLASSEMENT WASI — 54 PAYS AFRIQUE ━━━
 
 ${sorted.map((c, i) => {
   const d = COUNTRY_DETAILS[c.code];
@@ -4209,13 +4399,15 @@ ${sorted.map((c, i) => {
    PIB: ${c.gdp} | Risque: ${c.risk}${d ? ' | Croiss: ' + d.growth : ''}`;
 }).join('\n\n')}
 
-📊 SYNTHÈSE :
-• Moyenne AFRIQUE : ${Math.round(COUNTRIES.reduce((s,c)=>s+c.score,0)/COUNTRIES.length)}/100
-• Zone UEMOA (8 pays) : ${Math.round(COUNTRIES.filter(c=>['CI','SN','BF','ML','BJ','TG','NE','GW'].includes(c.code)).reduce((s,c)=>s+c.score,0)/8)}/100
-• Zone cotiere (CI,GH,SN,BJ,TG) : ${Math.round(COUNTRIES.filter(c=>['CI','GH','SN','BJ','TG'].includes(c.code)).reduce((s,c)=>s+c.score,0)/5)}/100
-• Zone Sahel (BF,ML,NE) : ${Math.round(COUNTRIES.filter(c=>['BF','ML','NE'].includes(c.code)).reduce((s,c)=>s+c.score,0)/3)}/100
+📊 SYNTHÈSE PAR RÉGION :
+• Moyenne AFRIQUE (54 pays) : ${Math.round(COUNTRIES.reduce((s,c)=>s+c.score,0)/COUNTRIES.length)}/100
+• CEDEAO (${COUNTRIES.filter(c=>c.region==='CEDEAO').length} pays) : ${Math.round(COUNTRIES.filter(c=>c.region==='CEDEAO').reduce((s,c)=>s+c.score,0)/COUNTRIES.filter(c=>c.region==='CEDEAO').length)}/100
+• CEMAC (${COUNTRIES.filter(c=>c.region==='CEMAC').length} pays) : ${Math.round(COUNTRIES.filter(c=>c.region==='CEMAC').reduce((s,c)=>s+c.score,0)/COUNTRIES.filter(c=>c.region==='CEMAC').length)}/100
+• EAC + Corne (${COUNTRIES.filter(c=>c.region==='EAC'||c.region==='IGAD').length} pays) : ${Math.round(COUNTRIES.filter(c=>c.region==='EAC'||c.region==='IGAD').reduce((s,c)=>s+c.score,0)/COUNTRIES.filter(c=>c.region==='EAC'||c.region==='IGAD').length)}/100
+• SADC (${COUNTRIES.filter(c=>c.region==='SADC').length} pays) : ${Math.round(COUNTRIES.filter(c=>c.region==='SADC').reduce((s,c)=>s+c.score,0)/COUNTRIES.filter(c=>c.region==='SADC').length)}/100
+• Afrique du Nord UMA (${COUNTRIES.filter(c=>c.region==='UMA').length} pays) : ${Math.round(COUNTRIES.filter(c=>c.region==='UMA').reduce((s,c)=>s+c.score,0)/COUNTRIES.filter(c=>c.region==='UMA').length)}/100
 
-💡 Pour un investissement PME, WASI recommande : Cote d'Ivoire (hub UEMOA), Senegal (gaz + tech), ou Benin (fiscalite attractive).`;
+💡 Pour un investissement PME, WASI recommande : Cote d'Ivoire (hub UEMOA), Senegal (gaz + tech), Kenya (hub EAC), Rwanda (climat des affaires), Maroc (industrie + Europe), ou Maurice (finance + services).`;
   }
 
   // Specific deep country analysis if a country is detected
