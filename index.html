@@ -2335,11 +2335,38 @@ input, select, textarea { font-family: inherit; outline: none; }
     <div class="compta-header">
       <div class="compta-header-left">
         <div class="compta-header-title" id="compta-header-title">OHADA-COMPTA</div>
-        <div class="compta-header-sub" id="compta-header-sub">Module comptable SYSCOHADA r&eacute;vis&eacute; / SYCEBNL &bull; 17 pays OHADA</div>
+        <div class="compta-header-sub" id="compta-header-sub">Module comptable SYSCOHADA r&eacute;vis&eacute; / SYCEBNL &bull; 16 pays CEDEAO</div>
       </div>
-      <div class="compta-plan-toggle">
-        <button class="compta-plan-toggle-btn active" id="toggle-syscohada" onclick="switchComptaPlan('syscohada')">SYSCOHADA r&eacute;vis&eacute;</button>
-        <button class="compta-plan-toggle-btn" id="toggle-sycebnl" onclick="switchComptaPlan('sycebnl')">SYCEBNL</button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <select class="form-select" id="compta-country-select" onchange="selectComptaCountry(this.value)" style="width:auto;min-width:200px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border);padding:8px 12px;border-radius:var(--radius);">
+          <optgroup label="Zone UEMOA (SYSCOHADA)">
+            <option value="BF" selected>&#127463;&#127467; Burkina Faso</option>
+            <option value="CI">&#127464;&#127470; C&ocirc;te d'Ivoire</option>
+            <option value="SN">&#127480;&#127475; S&eacute;n&eacute;gal</option>
+            <option value="ML">&#127474;&#127473; Mali</option>
+            <option value="BJ">&#127463;&#127471; B&eacute;nin</option>
+            <option value="TG">&#127481;&#127468; Togo</option>
+            <option value="NE">&#127475;&#127466; Niger</option>
+            <option value="GW">&#127468;&#127484; Guin&eacute;e-Bissau</option>
+          </optgroup>
+          <optgroup label="OHADA (non-UEMOA)">
+            <option value="GN">&#127468;&#127475; Guin&eacute;e</option>
+            <option value="MR">&#127474;&#127479; Mauritanie</option>
+          </optgroup>
+          <optgroup label="CEDEAO (IFRS / Autres)">
+            <option value="NG">&#127475;&#127468; Nigeria (IFRS)</option>
+            <option value="GH">&#127468;&#127469; Ghana (IFRS)</option>
+            <option value="SL">&#127480;&#127473; Sierra Leone (IFRS)</option>
+            <option value="LR">&#127473;&#127479; Liberia (IFRS)</option>
+            <option value="GM">&#127468;&#127474; Gambie (IFRS)</option>
+            <option value="CV">&#127464;&#127483; Cap-Vert (SNCRF)</option>
+          </optgroup>
+        </select>
+        <span id="compta-country-info" style="font-size:0.75rem;color:var(--text-dim);">R&eacute;f&eacute;rentiel: SYSCOHADA r&eacute;vis&eacute; | Monnaie: XOF | R&eacute;gulateur: DGI-BF</span>
+      </div>
+      <div class="compta-plan-toggle" id="compta-plan-toggle">
+        <button class="compta-plan-toggle-btn active" data-plan="syscohada" onclick="switchComptaPlan('syscohada')">SYSCOHADA r&eacute;vis&eacute;</button>
+        <button class="compta-plan-toggle-btn" data-plan="sycebnl" onclick="switchComptaPlan('sycebnl')">SYCEBNL</button>
       </div>
     </div>
 
@@ -2348,6 +2375,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <div style="font-size:4rem;margin-bottom:20px;">📊</div>
       <div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:8px;">Aucun exercice comptable charge</div>
       <div style="font-size:0.88rem;color:var(--text-secondary);max-width:550px;margin-bottom:30px;line-height:1.7;">
+        Selectionnez un pays pour voir le referentiel applicable.<br>
         Importez vos etats financiers pour activer le module comptable.<br>
         Formats acceptes : Liasse fiscale Excel (DGI), Balance generale CSV, Grand livre PDF, fichier FEC.
       </div>
@@ -5402,8 +5430,244 @@ var SYCEBNL_JOURNAL = [
   {id:'EC-008',date:'2026-03-20',ref:'BEN-2026-01',journal:'OD',desc:'Valorisation benevolat T1',lines:[{account:'904000',label:'Personnel benevole',debit:200000,credit:0},{account:'914000',label:'Benevolat',debit:0,credit:200000}]},
 ];
 
+/* ---- CEDEAO Country → Accounting System mapping ---- */
+const CEDEAO_ACCOUNTING = [
+  {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-BF',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-CI',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGID-SN',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-ML',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'BJ',flag:'\u{1F1E7}\u{1F1EF}',name:'Benin',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-BJ',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'TG',flag:'\u{1F1F9}\u{1F1EC}',name:'Togo',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'OTR-TG',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'NE',flag:'\u{1F1F3}\u{1F1EA}',name:'Niger',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-NE',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'GW',flag:'\u{1F1EC}\u{1F1FC}',name:'Guinee-Bissau',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-GW',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'GN',flag:'\u{1F1EC}\u{1F1F3}',name:'Guinee',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'GNF',regulator:'DNI-GN',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'MR',flag:'\u{1F1F2}\u{1F1F7}',name:'Mauritanie',systems:['SYSCOHADA','PCM'],ohada:true,currency:'MRU',regulator:'DGI-MR',liasse:'PCM en transition vers SYSCOHADA'},
+  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',systems:['IFRS','SAS-NIGERIA'],ohada:false,currency:'NGN',regulator:'FIRS / FRCN',liasse:'Companies Income Tax Return'},
+  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',systems:['IFRS','GNAS'],ohada:false,currency:'GHS',regulator:'GRA / ICAG',liasse:'Annual Returns + Financial Statements'},
+  {code:'SL',flag:'\u{1F1F8}\u{1F1F1}',name:'Sierra Leone',systems:['IFRS'],ohada:false,currency:'SLL',regulator:'NRA-SL',liasse:'IFRS Financial Statements'},
+  {code:'LR',flag:'\u{1F1F1}\u{1F1F7}',name:'Liberia',systems:['IFRS','US-GAAP'],ohada:false,currency:'LRD',regulator:'LRA',liasse:'Annual Tax Return + IFRS Statements'},
+  {code:'GM',flag:'\u{1F1EC}\u{1F1F2}',name:'Gambie',systems:['IFRS'],ohada:false,currency:'GMD',regulator:'GRA-GM',liasse:'IFRS Financial Statements'},
+  {code:'CV',flag:'\u{1F1E8}\u{1F1FB}',name:'Cap-Vert',systems:['SNCRF'],ohada:false,currency:'CVE',regulator:'DNRE-CV',liasse:'SNCRF (norme portugaise)'},
+];
+
+/* ---- Default class colors for plans that don't define them ---- */
+var DEFAULT_CLASS_COLORS = ['var(--blue)','var(--cyan)','var(--orange)','var(--gold)','var(--green)','var(--red)','var(--green)','var(--text-dim)','var(--text-secondary)'];
+
+/* ---- IFRS Plan ---- */
+const IFRS_PLAN = {
+  title: 'IFRS',
+  subtitle: 'International Financial Reporting Standards \u2014 IASB',
+  classes: [
+    {num:1,label:'Assets',families:['Non-current assets','Current assets','Cash and cash equivalents'],color:'var(--blue)',
+     accounts:[
+       {code:'1100',label:'Property, plant and equipment',debit:15000000,credit:0},
+       {code:'1200',label:'Intangible assets',debit:5000000,credit:0},
+       {code:'1300',label:'Right-of-use assets (IFRS 16)',debit:3000000,credit:0},
+       {code:'1400',label:'Investment property',debit:0,credit:0},
+       {code:'1500',label:'Investments in associates',debit:1000000,credit:0},
+       {code:'2100',label:'Inventories',debit:800000,credit:0},
+       {code:'2200',label:'Trade and other receivables',debit:4500000,credit:0},
+       {code:'2300',label:'Prepayments',debit:200000,credit:0},
+       {code:'2400',label:'Cash and cash equivalents',debit:6000000,credit:0},
+     ]},
+    {num:2,label:'Liabilities',families:['Non-current liabilities','Current liabilities'],color:'var(--cyan)',
+     accounts:[
+       {code:'3100',label:'Long-term borrowings',debit:0,credit:8000000},
+       {code:'3200',label:'Lease liabilities (IFRS 16)',debit:0,credit:2500000},
+       {code:'3300',label:'Deferred tax liabilities',debit:0,credit:500000},
+       {code:'4100',label:'Trade and other payables',debit:0,credit:3200000},
+       {code:'4200',label:'Current tax liabilities',debit:0,credit:800000},
+       {code:'4300',label:'Short-term borrowings',debit:0,credit:1500000},
+       {code:'4400',label:'Provisions',debit:0,credit:400000},
+     ]},
+    {num:3,label:'Equity',families:['Share capital','Retained earnings','Reserves'],color:'var(--gold)',
+     accounts:[
+       {code:'5100',label:'Share capital',debit:0,credit:10000000},
+       {code:'5200',label:'Share premium',debit:0,credit:2000000},
+       {code:'5300',label:'Retained earnings',debit:0,credit:4500000},
+       {code:'5400',label:'Other reserves',debit:0,credit:800000},
+       {code:'5500',label:'Profit for the year',debit:0,credit:2200000},
+     ]},
+    {num:4,label:'Revenue',families:['Revenue from contracts','Other income','Finance income'],color:'var(--green)',
+     accounts:[
+       {code:'6100',label:'Revenue from contracts with customers (IFRS 15)',debit:0,credit:25000000},
+       {code:'6200',label:'Other operating income',debit:0,credit:500000},
+       {code:'6300',label:'Finance income',debit:0,credit:150000},
+     ]},
+    {num:5,label:'Expenses',families:['Cost of sales','Admin expenses','Finance costs','Tax'],color:'var(--red)',
+     accounts:[
+       {code:'7100',label:'Cost of sales',debit:12000000,credit:0},
+       {code:'7200',label:'Employee benefits expense',debit:5500000,credit:0},
+       {code:'7300',label:'Depreciation and amortisation',debit:2000000,credit:0},
+       {code:'7400',label:'Other operating expenses',debit:2200000,credit:0},
+       {code:'7500',label:'Finance costs',debit:800000,credit:0},
+       {code:'7600',label:'Income tax expense',debit:950000,credit:0},
+     ]},
+  ]
+};
+
+/* ---- SNCRF Plan (Cap-Vert) ---- */
+const SNCRF_PLAN = {
+  title: 'SNCRF',
+  subtitle: 'Sistema de Normalizacao Contabilistica e de Relato Financeiro \u2014 Cabo Verde',
+  classes: [
+    {num:1,label:'Meios financeiros liquidos',families:['Caixa','Depositos a ordem','Outros depositos'],color:'var(--green)',
+     accounts:[
+       {code:'11',label:'Caixa',debit:250000,credit:0},
+       {code:'12',label:'Depositos a ordem',debit:3200000,credit:0},
+       {code:'13',label:'Outros depositos bancarios',debit:800000,credit:0},
+     ]},
+    {num:2,label:'Contas a receber e a pagar',families:['Clientes','Fornecedores','Estado','Pessoal'],color:'var(--gold)',
+     accounts:[
+       {code:'21',label:'Clientes',debit:1500000,credit:0},
+       {code:'22',label:'Fornecedores',debit:0,credit:980000},
+       {code:'23',label:'Pessoal',debit:0,credit:320000},
+       {code:'24',label:'Estado e outros entes publicos',debit:0,credit:450000},
+     ]},
+    {num:3,label:'Inventarios e activos biologicos',families:['Mercadorias','Materias primas','Produtos acabados'],color:'var(--orange)',
+     accounts:[
+       {code:'31',label:'Compras',debit:2100000,credit:0},
+       {code:'32',label:'Mercadorias',debit:450000,credit:0},
+       {code:'33',label:'Materias primas',debit:180000,credit:0},
+     ]},
+    {num:4,label:'Investimentos',families:['Investimentos financeiros','Activos fixos tangiveis','Activos intangiveis'],color:'var(--cyan)',
+     accounts:[
+       {code:'41',label:'Investimentos financeiros',debit:500000,credit:0},
+       {code:'43',label:'Activos fixos tangiveis',debit:8000000,credit:0},
+       {code:'44',label:'Activos intangiveis',debit:1200000,credit:0},
+       {code:'48',label:'Amortizacoes acumuladas',debit:0,credit:2500000},
+     ]},
+    {num:5,label:'Capital, reservas e resultados',families:['Capital','Reservas','Resultados transitados'],color:'var(--blue)',
+     accounts:[
+       {code:'51',label:'Capital',debit:0,credit:8000000},
+       {code:'55',label:'Reservas',debit:0,credit:1500000},
+       {code:'56',label:'Resultados transitados',debit:0,credit:2200000},
+       {code:'59',label:'Resultado liquido do periodo',debit:0,credit:850000},
+     ]},
+    {num:6,label:'Gastos',families:['Custo mercadorias','Gastos com pessoal','Amortizacoes','Gastos financeiros'],color:'var(--red)',
+     accounts:[
+       {code:'61',label:'Custo das mercadorias vendidas',debit:4500000,credit:0},
+       {code:'62',label:'Fornecimentos e servicos externos',debit:1800000,credit:0},
+       {code:'63',label:'Gastos com pessoal',debit:3200000,credit:0},
+       {code:'64',label:'Amortizacoes e depreciaciones',debit:800000,credit:0},
+       {code:'69',label:'Gastos de financiamento',debit:250000,credit:0},
+     ]},
+    {num:7,label:'Rendimentos',families:['Vendas','Prestacoes de servicos','Outros rendimentos'],color:'var(--green)',
+     accounts:[
+       {code:'71',label:'Vendas',debit:0,credit:8500000},
+       {code:'72',label:'Prestacoes de servicos',debit:0,credit:3200000},
+       {code:'78',label:'Outros rendimentos',debit:0,credit:150000},
+     ]},
+  ]
+};
+
+/* ---- PCM Plan (Mauritanie) ---- */
+const PCM_PLAN = {
+  title: 'PCM',
+  subtitle: 'Plan Comptable Mauritanien \u2014 en transition vers SYSCOHADA',
+  classes: [
+    {num:1,label:'Comptes de capitaux',families:['Capital','Reserves','Resultat','Emprunts'],color:'var(--blue)',
+     accounts:[
+       {code:'10',label:'Capital',debit:0,credit:5000000},
+       {code:'11',label:'Reserves',debit:0,credit:800000},
+       {code:'12',label:'Resultat de l\'exercice',debit:0,credit:600000},
+       {code:'16',label:'Emprunts et dettes',debit:0,credit:2000000},
+     ]},
+    {num:2,label:'Comptes d\'immobilisations',families:['Incorporelles','Corporelles','Financieres'],color:'var(--cyan)',
+     accounts:[
+       {code:'21',label:'Immobilisations incorporelles',debit:800000,credit:0},
+       {code:'23',label:'Immobilisations corporelles',debit:6000000,credit:0},
+       {code:'28',label:'Amortissements',debit:0,credit:1500000},
+     ]},
+    {num:3,label:'Comptes de stocks',families:['Marchandises','Matieres premieres'],color:'var(--orange)',
+     accounts:[
+       {code:'31',label:'Marchandises',debit:350000,credit:0},
+       {code:'32',label:'Matieres premieres',debit:200000,credit:0},
+     ]},
+    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Clients','Etat','Personnel'],color:'var(--gold)',
+     accounts:[
+       {code:'40',label:'Fournisseurs',debit:0,credit:1200000},
+       {code:'41',label:'Clients',debit:1800000,credit:0},
+       {code:'44',label:'Etat',debit:0,credit:350000},
+     ]},
+    {num:5,label:'Comptes de tresorerie',families:['Banques','Caisse'],color:'var(--green)',
+     accounts:[
+       {code:'52',label:'Banques',debit:2100000,credit:0},
+       {code:'57',label:'Caisse',debit:150000,credit:0},
+     ]},
+    {num:6,label:'Comptes de charges',families:['Achats','Services','Personnel','Financieres'],color:'var(--red)',
+     accounts:[
+       {code:'60',label:'Achats',debit:3500000,credit:0},
+       {code:'61',label:'Services exterieurs',debit:800000,credit:0},
+       {code:'64',label:'Charges de personnel',debit:2400000,credit:0},
+       {code:'67',label:'Charges financieres',debit:180000,credit:0},
+       {code:'68',label:'Dotations aux amortissements',debit:500000,credit:0},
+     ]},
+    {num:7,label:'Comptes de produits',families:['Ventes','Services','Subventions'],color:'var(--green)',
+     accounts:[
+       {code:'70',label:'Ventes de marchandises',debit:0,credit:5000000},
+       {code:'71',label:'Production vendue services',debit:0,credit:2800000},
+       {code:'74',label:'Subventions d\'exploitation',debit:0,credit:300000},
+     ]},
+  ]
+};
+
+/* ---- SAS Nigeria Plan ---- */
+const SAS_NIGERIA_PLAN = {
+  title: 'SAS Nigeria',
+  subtitle: 'Statement of Accounting Standards \u2014 Nigeria (Small Entities)',
+  classes: [
+    {num:1,label:'Assets',families:['Fixed assets','Current assets'],color:'var(--blue)',
+     accounts:[
+       {code:'FA01',label:'Land and buildings',debit:8000000,credit:0},
+       {code:'FA02',label:'Plant and machinery',debit:3000000,credit:0},
+       {code:'CA01',label:'Stock/Inventory',debit:500000,credit:0},
+       {code:'CA02',label:'Trade debtors',debit:2000000,credit:0},
+       {code:'CA03',label:'Bank and cash',debit:3500000,credit:0},
+     ]},
+    {num:2,label:'Liabilities',families:['Long-term','Current'],color:'var(--cyan)',
+     accounts:[
+       {code:'LT01',label:'Bank loans',debit:0,credit:5000000},
+       {code:'CL01',label:'Trade creditors',debit:0,credit:1800000},
+       {code:'CL02',label:'Tax payable',debit:0,credit:600000},
+     ]},
+    {num:3,label:'Capital and Reserves',families:['Capital','Reserves'],color:'var(--gold)',
+     accounts:[
+       {code:'EQ01',label:'Share capital',debit:0,credit:6000000},
+       {code:'EQ02',label:'Profit and loss account',debit:0,credit:3600000},
+     ]},
+    {num:4,label:'Income',families:['Sales','Other income'],color:'var(--green)',
+     accounts:[
+       {code:'IN01',label:'Sales/Turnover',debit:0,credit:15000000},
+       {code:'IN02',label:'Other income',debit:0,credit:300000},
+     ]},
+    {num:5,label:'Expenses',families:['Cost of sales','Operating expenses'],color:'var(--red)',
+     accounts:[
+       {code:'EX01',label:'Cost of goods sold',debit:8000000,credit:0},
+       {code:'EX02',label:'Staff costs',debit:2500000,credit:0},
+       {code:'EX03',label:'Rent and rates',debit:600000,credit:0},
+       {code:'EX04',label:'Depreciation',debit:800000,credit:0},
+       {code:'EX05',label:'Other expenses',debit:1200000,credit:0},
+     ]},
+  ]
+};
+
+/* ---- Plan registry for lookup by system key ---- */
+var PLAN_REGISTRY = {
+  'SYSCOHADA': SYSCOHADA_PLAN,
+  'SYCEBNL': SYCEBNL_PLAN,
+  'IFRS': IFRS_PLAN,
+  'SNCRF': SNCRF_PLAN,
+  'PCM': PCM_PLAN,
+  'SAS-NIGERIA': SAS_NIGERIA_PLAN,
+  'GNAS': IFRS_PLAN,
+  'US-GAAP': IFRS_PLAN,
+};
+
 /* ---- Active plan state ---- */
 var activePlan = 'syscohada';
+var activeCountryCode = 'BF';
+var activeCurrency = 'XOF';
 var comptaClassFilter = 0;
 var comptaSearchTerm = '';
 var comptaJournalFilter = '';
@@ -5412,6 +5676,8 @@ var comptaGLMode = 'complet';
 var newEntryLines = [{account:'',label:'',debit:0,credit:0},{account:'',label:'',debit:0,credit:0}];
 
 function getActivePlanData() {
+  var key = activePlan.toUpperCase();
+  if (PLAN_REGISTRY[key]) return PLAN_REGISTRY[key];
   return activePlan === 'syscohada' ? SYSCOHADA_PLAN : SYCEBNL_PLAN;
 }
 
@@ -5420,19 +5686,23 @@ function getAllAccounts() {
   var accounts = [];
   plan.classes.forEach(function(c) {
     c.accounts.forEach(function(a) {
-      accounts.push({code:a.code, label:a.label, classNum:c.num, classLabel:c.label, debit:a.debit, credit:a.credit, color:c.color});
+      accounts.push({code:a.code, label:a.label, classNum:c.num, classLabel:c.label, debit:a.debit, credit:a.credit, color:c.color || DEFAULT_CLASS_COLORS[(c.num-1) % DEFAULT_CLASS_COLORS.length]});
     });
   });
   return accounts;
 }
 
 function getJournalEntries() {
-  return activePlan === 'syscohada' ? SYSCOHADA_JOURNAL : SYCEBNL_JOURNAL;
+  if (activePlan === 'syscohada') return SYSCOHADA_JOURNAL;
+  if (activePlan === 'sycebnl') return SYCEBNL_JOURNAL;
+  // Other plan types return empty journal (no demo entries)
+  return [];
 }
 
 function fmtXOF(n) {
-  if (n === 0) return '0 XOF';
-  return Number(n).toLocaleString('fr-FR') + ' XOF';
+  var cur = activeCurrency || 'XOF';
+  if (n === 0) return '0 ' + cur;
+  return Number(n).toLocaleString('fr-FR') + ' ' + cur;
 }
 
 function fmtN(n) {
@@ -5479,10 +5749,18 @@ function switchComptaPlan(plan) {
   comptaJournalFilter = '';
   comptaGrandLivreAccount = '';
   comptaGLMode = 'complet';
-  document.getElementById('toggle-syscohada').classList.toggle('active', plan === 'syscohada');
-  document.getElementById('toggle-sycebnl').classList.toggle('active', plan === 'sycebnl');
+  // Update toggle button active states
+  var toggleContainer = document.getElementById('compta-plan-toggle');
+  if (toggleContainer) {
+    toggleContainer.querySelectorAll('.compta-plan-toggle-btn').forEach(function(btn) {
+      var btnPlan = btn.getAttribute('data-plan') || '';
+      btn.classList.toggle('active', btnPlan === plan);
+    });
+  }
   var pd = getActivePlanData();
-  document.getElementById('compta-header-title').innerHTML = 'OHADA-COMPTA &mdash; ' + pd.title;
+  var country = CEDEAO_ACCOUNTING.find(function(c){ return c.code === activeCountryCode; });
+  var titlePrefix = country && !country.ohada ? 'COMPTA' : 'OHADA-COMPTA';
+  document.getElementById('compta-header-title').innerHTML = titlePrefix + ' &mdash; ' + pd.title;
   document.getElementById('compta-header-sub').innerHTML = pd.subtitle + ' &bull; Exercice 2026';
   var activePanel = document.querySelector('.compta-panel.active');
   if (activePanel) {
@@ -5490,6 +5768,66 @@ function switchComptaPlan(plan) {
     switchComptaTab(panelId, document.querySelector('#compta-tabs .compta-tab.active'));
   } else {
     renderComptaPilotage();
+  }
+}
+
+/* ---- Country selection ---- */
+function selectComptaCountry(code) {
+  var country = CEDEAO_ACCOUNTING.find(function(c){ return c.code === code; });
+  if (!country) return;
+  activeCountryCode = code;
+  activeCurrency = country.currency;
+
+  // Update country info display
+  var infoEl = document.getElementById('compta-country-info');
+  if (infoEl) {
+    infoEl.innerHTML = 'R\u00e9f\u00e9rentiel: ' + country.systems.join(' / ') + ' | Monnaie: ' + country.currency + ' | R\u00e9gulateur: ' + country.regulator;
+  }
+
+  // Rebuild toggle buttons based on available systems
+  var toggleContainer = document.getElementById('compta-plan-toggle');
+  if (toggleContainer) {
+    var html = '';
+    country.systems.forEach(function(sys, i) {
+      var planKey = sys.toLowerCase();
+      var label = sys;
+      if (sys === 'SYSCOHADA') label = 'SYSCOHADA r\u00e9vis\u00e9';
+      if (sys === 'SAS-NIGERIA') { planKey = 'sas-nigeria'; label = 'SAS Nigeria'; }
+      if (sys === 'US-GAAP') { planKey = 'us-gaap'; label = 'US-GAAP'; }
+      html += '<button class="compta-plan-toggle-btn' + (i === 0 ? ' active' : '') + '" data-plan="' + planKey + '" onclick="switchComptaPlan(\'' + planKey + '\')">' + label + '</button>';
+    });
+    toggleContainer.innerHTML = html;
+  }
+
+  // Switch to the first available system
+  var firstSystem = country.systems[0].toLowerCase();
+  if (firstSystem === 'sas-nigeria') firstSystem = 'sas-nigeria';
+  if (firstSystem === 'us-gaap') firstSystem = 'us-gaap';
+  activePlan = firstSystem;
+
+  // Update header
+  var pd = getActivePlanData();
+  var titlePrefix = country.ohada ? 'OHADA-COMPTA' : 'COMPTA';
+  document.getElementById('compta-header-title').innerHTML = titlePrefix + ' &mdash; ' + pd.title;
+  document.getElementById('compta-header-sub').innerHTML = pd.subtitle + ' &bull; ' + country.name + ' &bull; Exercice 2026';
+
+  // Reset filters
+  comptaClassFilter = 0;
+  comptaSearchTerm = '';
+  comptaJournalFilter = '';
+  comptaGrandLivreAccount = '';
+  comptaGLMode = 'complet';
+
+  // Re-render active tab if panels are visible
+  var emptyState = document.getElementById('compta-empty-state');
+  if (emptyState && emptyState.style.display === 'none') {
+    var activePanel = document.querySelector('.compta-panel.active');
+    if (activePanel) {
+      var panelId = activePanel.id.replace('compta-panel-', '');
+      switchComptaTab(panelId, document.querySelector('#compta-tabs .compta-tab.active'));
+    } else {
+      renderComptaPilotage();
+    }
   }
 }
 
