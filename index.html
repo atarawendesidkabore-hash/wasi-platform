@@ -201,8 +201,8 @@ input, select, textarea { font-family: inherit; outline: none; }
 .ticker-bar {
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
-  overflow: hidden;
-  height: auto;
+
+  height: 66px;
   position: relative;
 }
 .ticker-track {
@@ -453,7 +453,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   height: 4px;
   background: var(--bg-primary);
   border-radius: 2px;
-  overflow: hidden;
+
 }
 .comp-bar-fill { height: 100%; border-radius: 2px; transition: width .5s; }
 .coup-list { display: flex; flex-direction: column; gap: 6px; }
@@ -964,7 +964,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   z-index: 900;
   background: var(--bg-primary);
   flex-direction: column;
-  overflow: hidden;
+
 }
 .mobile-panel.show { display: flex; }
 
@@ -1080,7 +1080,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   height: 4px;
   background: var(--bg-primary);
   border-radius: 2px;
-  overflow: hidden;
+
 }
 .cd-bar-fill { height: 100%; border-radius: 2px; }
 
@@ -1155,7 +1155,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   /* Topbar — compact mobile layout */
   .topbar {
     padding: 0 10px;
-    height: auto;
+    height: 66px;
     min-height: 48px;
     flex-wrap: wrap;
     gap: 4px;
@@ -1191,7 +1191,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   /* Intelligence screen — single column, chat only */
   #screen-intel.active {
     grid-template-columns: 1fr;
-    height: auto;
+    height: 66px;
     min-height: calc(100vh - 130px);
   }
   .intel-left, .intel-right { display: none; }
