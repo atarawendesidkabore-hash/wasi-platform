@@ -1371,9 +1371,11 @@ input, select, textarea { font-family: inherit; outline: none; }
       </div>
       <div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>
       <div class="chat-suggestions">
+        <button class="chat-sugg" onclick="sendSugg(this)">Qu'est-ce que le WASI Stock Market ?</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Analyse du corridor Abidjan-Lagos</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Opportunites BRVM 2026</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Comment coter ma PME sur WASI ?</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Impact du franc CFA</button>
       </div>
       <div class="chat-input-bar">
@@ -2809,6 +2811,398 @@ ${WASI_ETFS.map(e => {
 4. Le WASI-CRYPTO est volatile — convient aux investisseurs experimentes
 5. Frais d'entree : 0.5% | Frais de gestion : 0.40-0.85% selon le fonds
 6. Minimum de souscription : 50 000 XOF (~76 EUR)`;
+  }
+
+  // WASI Stock Market
+  if (msg.includes('stock market') || msg.includes('bourse priv') || msg.includes('ipo') || msg.includes('cotation') || msg.includes('coter') || msg.includes('listing') || msg.includes('pme') || msg.includes('wasi market') || msg.includes('smn') || msg.includes('compartiment') || msg.includes('emetteur') || msg.includes('lever des fonds') || msg.includes('levee de fonds') || msg.includes('private market') || msg.includes('fixing') || msg.includes('venture') || msg.includes('growth') || msg.includes('premier')) {
+
+    if (msg.includes('compartiment') || msg.includes('critere') || msg.includes('eligib') || msg.includes('condition') || msg.includes('requis') || msg.includes('comment') || msg.includes('rejoindre') || msg.includes('inscrire') || msg.includes('listing')) {
+      return `━━━ WASI STOCK MARKET — COMPARTIMENTS & CRITÈRES D'ÉLIGIBILITÉ ━━━
+
+🏛️ Le WASI Stock Market est un Systeme Multilateral de Negociation (SMN) reglemente, concu comme le marche d'acces pour les PME d'Afrique de l'Ouest qui ne peuvent pas encore acceder a la BRVM.
+
+📊 STRUCTURE EN TROIS COMPARTIMENTS :
+
+┌────────────────┬──────────────────────────────────────────────────────────┐
+│ WASI VENTURE   │ Start-up / Early stage avec produit valide             │
+├────────────────┼──────────────────────────────────────────────────────────┤
+│ CA minimum     │ 100M FCFA                                              │
+│ Capital social │ 10M FCFA libere                                        │
+│ Exercices      │ 1 exercice audite SYSCOHADA                            │
+│ Resultat net   │ Non obligatoire (positif recommande)                   │
+│ Flottant min.  │ 10% du capital                                        │
+│ Score WASI     │ C ou superieur                                        │
+│ Levee minimum  │ 25M FCFA                                              │
+│ Commissaire    │ Externe independant                                    │
+└────────────────┴──────────────────────────────────────────────────────────┘
+
+┌────────────────┬──────────────────────────────────────────────────────────┐
+│ WASI GROWTH    │ PME en croissance, rentabilite demontree               │
+├────────────────┼──────────────────────────────────────────────────────────┤
+│ CA minimum     │ 500M FCFA                                              │
+│ Capital social │ 50M FCFA libere                                        │
+│ Exercices      │ 2 exercices certifies + commissaire aux comptes        │
+│ Resultat net   │ Positif 1 des 2 derniers exercices                     │
+│ Flottant min.  │ 15% du capital                                        │
+│ Score WASI     │ B ou superieur                                        │
+│ Levee minimum  │ 100M FCFA                                             │
+│ Commissaire    │ Agree ONECCA ou equivalent                             │
+└────────────────┴──────────────────────────────────────────────────────────┘
+
+┌────────────────┬──────────────────────────────────────────────────────────┐
+│ WASI PREMIER   │ ETI prete pour BRVM — vitrine pre-IPO                  │
+├────────────────┼──────────────────────────────────────────────────────────┤
+│ CA minimum     │ 2 Mds FCFA                                             │
+│ Capital social │ 150M FCFA libere                                       │
+│ Exercices      │ 3 exercices IFRS ou SYSCOHADA + notation WASI A/B      │
+│ Resultat net   │ Positif 2 des 3 derniers exercices                     │
+│ Flottant min.  │ 20% du capital                                        │
+│ Score WASI     │ A ou B                                                 │
+│ Levee minimum  │ 500M FCFA                                             │
+│ Commissaire    │ Agree CREPMF ou Big 4 Africa                          │
+└────────────────┴──────────────────────────────────────────────────────────┘
+
+📋 CYCLE D'UNE ÉMISSION (6 mois vs 24 mois BRVM) :
+1. CANDIDATURE — Soumission etats financiers via Private Market Studio
+2. ANALYSE WASI — Scoring IA + validation analyste (48h-5 jours)
+3. COMPARTIMENT — Placement Venture / Growth / Premier
+4. STRUCTURATION — Prix d'emission (DCF + Multiples), dilution max
+5. BOOK BUILDING — Intentions d'achat investisseurs (15 jours)
+6. ADMISSION — Vote Comite de Cotation (30 jours)
+7. COTATION — Publication officielle, ouverture carnet d'ordres
+8. SUIVI — Publication trimestrielle obligatoire, score WASI continu
+
+💡 Programme Emetteur Pionnier : les 10 premiers emetteurs beneficient de frais d'admission gratuits.`;
+    }
+
+    if (msg.includes('seance') || msg.includes('trading') || msg.includes('ordre') || msg.includes('carnet') || msg.includes('fixing') || msg.includes('transaction') || msg.includes('comment ca marche') || msg.includes('fonctionn')) {
+      return `━━━ WASI STOCK MARKET — FONCTIONNEMENT DES SÉANCES ━━━
+
+⏰ SÉANCES DE COTATION :
+• Frequence : HEBDOMADAIRE — chaque mercredi, 10h00 a 14h00 WAT
+• Mode : FIXING — confrontation des ordres a prix unique
+  (adapte a la liquidite d'un marche emergent, pas de cotation continue)
+
+📊 PARAMÈTRES DE MARCHÉ :
+┌────────────────────────┬─────────────────────────────────────────┐
+│ Devise de cotation     │ XOF (UEMOA) · NGN (Nigeria) · GHS (GH) │
+│ Lot minimum            │ 1 000 actions — accessible des 5 000 XOF│
+│ Variation max/jour     │ +/- 7.5% (circuit breaker automatique)  │
+│ Reglement-livraison    │ T+3 (3 jours ouvrables)                 │
+│ Commission transaction │ 0.5% par cote (1% total achat+vente)    │
+│ Accessibilite          │ WASI Terminal DEX + AfriTrade Bank App   │
+└────────────────────────┴─────────────────────────────────────────┘
+
+🔧 INFRASTRUCTURE TECHNOLOGIQUE :
+• Moteur de cotation : algorithme de fixing a cours unique (Python)
+• Carnet d'ordres : PostgreSQL temps reel + WebSocket
+• Depositaire Central : Blockchain permissioned (Hyperledger Fabric)
+• Scoring emetteur : Claude API (Anthropic) + pipeline WASI Index
+• Compensation : Module back-office + partenariat DC/BR BRVM
+• Reporting : Production automatique etats CREPMF (XBRL)
+
+🛡️ INTÉGRITÉ DU MARCHÉ :
+• Toute manipulation de cours (spoofing, front-running) = radiation immediate
+• Les ordres sont confidentiels — visibles uniquement du moteur de fixing
+• Audit de securite externe semestriel
+• Backup systeme complet toutes les heures (T+1h)
+
+📱 COMMENT INVESTIR :
+1. Ouvrir un compte AfriTrade Bank (KYC Niveau 1 minimum)
+2. Consulter les titres disponibles sur le WASI Terminal DEX
+3. Passer un ordre d'achat avant le mercredi 10h00 WAT
+4. Le prix de fixing est calcule et publie a 14h00
+5. Reglement-livraison en T+3 — actions creditees automatiquement`;
+    }
+
+    if (msg.includes('risque') || msg.includes('protection') || msg.includes('garantie') || msg.includes('securite') || msg.includes('regulation') || msg.includes('reglementaire') || msg.includes('crepmf')) {
+      return `━━━ WASI STOCK MARKET — CADRE RÉGLEMENTAIRE & PROTECTION ━━━
+
+🏛️ STATUT JURIDIQUE :
+• Type : Systeme Multilateral de Negociation (SMN)
+  Equivalent africain d'un AIM (UK) ou SMN europeen (MiFID II)
+• Entite gestionnaire : WASI Markets SA (filiale WASI Ecosystem SAS, OHADA)
+• Regulateur principal : CREPMF (Conseil Regional UEMOA)
+• Regulateur secondaire : SEC Nigeria (compartiment NGN) + SEC Ghana (GHS)
+• Droit applicable : Acte Uniforme OHADA + Reglement General CREPMF
+• Depositaire partenaire : DC/BR de la BRVM
+• Litiges : CCJA (Cour OHADA) a Abidjan
+
+🛡️ PROTECTION DES INVESTISSEURS :
+
+1. FONDS DE GARANTIE WASI : 500M FCFA (~850K USD)
+   Reserve constituee des le premier exercice pour couvrir les defaillances
+
+2. PUBLICATION OBLIGATOIRE :
+   Etats financiers trimestriels dans les 45 jours — suspension automatique en cas de retard
+
+3. PROSPECTUS NORMALISÉ :
+   Document standard 20-40 pages, valide par le Comite WASI avant toute cotation
+
+4. DROIT DE SORTIE :
+   Seances hebdomadaires garantissant une liquidite minimale
+   Obligation de rachat par l'emetteur si aucun acheteur pendant 4 semaines
+
+5. DROIT AUX DIVIDENDES :
+   Politique de dividende obligatoire dans le prospectus
+   Versement direct via AfriTrade Bank sur le compte investisseur
+
+6. PROTECTION ANTI-DILUTION :
+   Toute augmentation de capital = droit preferentiel de souscription obligatoire
+
+7. RECOURS :
+   Saisine Comite de Surveillance WASI → escalade CREPMF si non resolu
+
+8. CONFLITS D'INTÉRÊTS :
+   Analystes WASI ayant score un emetteur : interdiction de detenir des positions 6 mois avant/apres
+
+⚠️ MATRICE DES RISQUES :
+🔴 Critique : Defaillance emetteur → Fonds de Garantie + caution bancaire
+🔴 Critique : Refus agrement CREPMF → Mode pre-agrement (matching prive)
+🟡 Modere : Faible liquidite → Programme Market Maker (spread max 3%)
+🟡 Modere : Instabilite Sahel → Emetteurs Sahel limites au compartiment Venture
+🟠 Eleve : Risque techno → Blockchain + audit securite semestriel`;
+    }
+
+    if (msg.includes('investir') || msg.includes('investisseur') || msg.includes('qui peut') || msg.includes('profil') || msg.includes('ticket') || msg.includes('diaspora') || msg.includes('retail')) {
+      return `━━━ WASI STOCK MARKET — PROFILS D'INVESTISSEURS ━━━
+
+💰 QUI PEUT INVESTIR SUR LE WASI STOCK MARKET ?
+
+📱 INVESTISSEUR RETAIL (AfriTrade Bank)
+• Ticket moyen : 50 000 — 2M FCFA (~76 — 3 000 EUR)
+• Acces : Application mobile AfriTrade Bank
+• Motivation : Diversification, rendement superieur a l'epargne classique (3.5%)
+• Profil : Entrepreneur, cadre, classe moyenne urbaine UEMOA
+• Minimum : 5 000 FCFA (1 lot de 1 000 actions)
+
+🌍 DIASPORA AFRICAINE (Europe, USA)
+• Ticket moyen : 500 — 10 000 USD
+• Acces : WASI Terminal web + API
+• Motivation : Investir au pays, impact economique, rendement
+• Marche cle : France (500K+ diaspora ouest-africaine), USA, Canada, Belgique
+
+🏢 FAMILY OFFICES RÉGIONAUX
+• Ticket moyen : 50M — 500M FCFA
+• Acces : API institutionnelle + service dedie
+• Motivation : Rendement, diversification, impact local
+• Exemples : Familles d'affaires Abidjan, Lagos, Dakar, Ouagadougou
+
+📊 FONDS D'INVESTISSEMENT AFRICAINS
+• Ticket moyen : 100M — 2 Mds FCFA
+• Acces : API + acces Comite de Cotation
+• Motivation : Deal flow PME qualifiees, co-investissement
+• Exemples : Africinvest, Investisseurs & Partenaires, Partech Africa
+
+🏦 INSTITUTIONS DE DÉVELOPPEMENT (IFC, AFD, BOAD)
+• Mode : Deal by deal, partenariat institutionnel
+• Motivation : Impact, structuration de marches, ESG
+• Role cle : co-investisseur anchor dans les premieres emissions
+
+🏭 CORPORATES (Supply chain investing)
+• Ticket : 20M — 200M FCFA
+• Motivation : Securiser la chaine d'approvisionnement
+• Exemple : Un distributeur CI investissant dans ses fournisseurs PME
+
+📊 PROJECTIONS INVESTISSEURS :
+• 2027 (lancement) : 1 200 investisseurs actifs
+• 2028 : 5 500 investisseurs actifs
+• 2029 : 18 000 investisseurs actifs
+• 2030 : 45 000 investisseurs actifs
+
+💡 DROITS DES INVESTISSEURS :
+✅ Information trimestrielle automatique
+✅ Liquidite hebdomadaire (seances mercredi)
+✅ Protection anti-dilution
+✅ Dividendes via AfriTrade Bank
+✅ Recours via Comite de Surveillance WASI / CREPMF`;
+    }
+
+    if (msg.includes('secteur') || msg.includes('pipeline') || msg.includes('quel type') || msg.includes('emetteur') || msg.includes('entreprise') || msg.includes('candidat')) {
+      return `━━━ WASI STOCK MARKET — SECTEURS PRIORITAIRES & PIPELINE ━━━
+
+🎯 CIBLE : PME de 500M a 10 Mds FCFA de CA — le "ventre mou" du financement africain
+Sur 450 000 PME formelles en CEDEAO, moins de 0.02% ont leve des fonds via un marche organise.
+Gap de financement annuel : 42 milliards USD (source : BAD 2024).
+
+📊 SECTEURS CIBLÉS & PIPELINE ESTIMÉ :
+
+🌾 AGRO-INDUSTRIE & TRANSFORMATION
+   Pipeline : 80-120 PME qualifiables
+   Signal WASI : COCOBOD, production cacaoyere, donnees portuaires
+   Marches : Ghana, Cote d'Ivoire, Senegal
+   Exemples : transformation cajou, hevea, mangue sechee, beurre de karite
+
+🏗️ BTP & MATÉRIAUX DE CONSTRUCTION
+   Pipeline : 60-80 PME qualifiables
+   Signal WASI : Marches publics DGCMEF, Autoroute Ouaga-Bobo (200 Mds FCFA)
+   Marches : Burkina Faso, Cote d'Ivoire, Mali
+   Exemples : cimenteries locales, promotion immobiliere, BTP routier
+
+🚚 TRANSPORT & LOGISTIQUE
+   Pipeline : 50-70 PME qualifiables
+   Signal WASI : NPA Lagos, Port Abidjan, trafic container TEU
+   Marches : Nigeria, Cote d'Ivoire, Ghana
+   Exemples : transit maritime, logistique dernier km, transport frigorifique
+
+💊 SANTÉ & PHARMACIE
+   Pipeline : 40-60 PME qualifiables
+   Signal WASI : Marches publics sante
+   Marches : Region entiere
+   Exemples : pharmacies en chaine, distribution medicale, cliniques privees
+
+💻 TECHNOLOGIES & FINTECH
+   Pipeline : 30-50 start-ups qualifiables
+   Signal WASI : Secteur IT marches publics, croissance organique
+   Marches : Nigeria, Cote d'Ivoire, Ghana, Senegal
+   Exemples : paiement mobile, agritech, edtech, logistique SaaS
+
+☀️ ÉNERGIE (SOLAIRE, OFF-GRID)
+   Pipeline : 25-40 PME qualifiables
+   Signal WASI : Mines/Energie marches publics
+   Marches : Burkina Faso, Senegal, Mali
+   Exemples : mini-grids solaires, installations photovoltaiques B2B
+
+🏦 MICROFINANCE & IMF
+   Pipeline : 20-30 IMF qualifiables
+   Signal WASI : Donnees BCEAO, credit secteur
+   Marches : Zone UEMOA
+   Exemples : IMF regionales, SFD (systemes financiers decentralises)
+
+🏠 IMMOBILIER & PROMOTION
+   Pipeline : 15-25 promoteurs qualifiables
+   Signal WASI : SCPI/OPCI OHADA, marches publics BTP
+   Marches : Ouagadougou, Abidjan, Dakar
+
+📊 SCORING WASI ÉMETTEUR (6 dimensions) :
+• Solidite financiere (30%) : endettement, liquidite, marge nette
+• Dynamique sectorielle WASI (20%) : correlation WASI Index du pays
+• Qualite de gouvernance (20%) : actionnariat, CA, politique dividende
+• Potentiel de croissance (15%) : TCAC CA 3 ans, marche adressable
+• Transparence comptable (10%) : normes SYSCOHADA, delais publication
+• Exposition geopolitique (5%) : ponderation risque-pays WASI`;
+    }
+
+    if (msg.includes('revenu') || msg.includes('business model') || msg.includes('modele') || msg.includes('projection') || msg.includes('arr') || msg.includes('combien') || msg.includes('tarif') || msg.includes('frais') || msg.includes('prix') || msg.includes('cout')) {
+      return `━━━ WASI STOCK MARKET — MODÈLE DE REVENUS & PROJECTIONS ━━━
+
+💰 FLUX DE REVENUS :
+
+┌────────────────────────┬───────────────────────────────┬──────────────┐
+│ Source                 │ Description                   │ Tarif        │
+├────────────────────────┼───────────────────────────────┼──────────────┤
+│ Frais d'admission      │ Commission unique a la cotation│ 2-5M FCFA   │
+│ Frais annuels maintien │ Redevance emetteur annuelle   │ 500K-2M/an  │
+│ Commission transaction │ Sur chaque trade (achat+vente)│ 0.5%/cote   │
+│ Success fee IPO        │ Sur montant leve              │ 1.5-2.5%    │
+│ Abo donnees marches    │ Flux pour institutions        │ 300K-2M/mois│
+│ Frais listing second.  │ Migration vers BRVM/NGX       │ 5-15M FCFA  │
+│ Service emetteur       │ Accomp. trimestriel, IR       │ 200-800K/qtr│
+│ Formation/certif.      │ Analystes et dirigeants PME   │ 150-500K/pers│
+└────────────────────────┴───────────────────────────────┴──────────────┘
+
+📊 PROJECTIONS FINANCIÈRES :
+
+                    2027        2028        2029        2030
+                 (lancement)
+┌──────────────┬──────────┬──────────┬──────────┬──────────┐
+│ Emetteurs    │     8    │    25    │    60    │   130    │
+│ Volume (MXOF)│   2 400  │  12 000  │  45 000  │ 120 000  │
+│ Investisseurs│   1 200  │   5 500  │  18 000  │  45 000  │
+│ ARR (kUSD)   │    320   │   1 100  │   3 200  │   8 500  │
+└──────────────┴──────────┴──────────┴──────────┴──────────┘
+
+📈 IMPACT SUR L'ÉCOSYSTÈME WASI (ARR 2030) :
+┌──────────────────────────┬────────────┬──────────┐
+│ Module                   │ ARR (kUSD) │    %     │
+├──────────────────────────┼────────────┼──────────┤
+│ AfriTrade Bank           │   16 000   │  34.4%   │
+│ WASI Stock Market        │    8 500   │  18.3%   │
+│ WASI Terminal DEX        │    7 800   │  16.8%   │
+│ Multi-Market Investments │    7 200   │  15.5%   │
+│ Private Market Studio    │    7 000   │  15.0%   │
+├──────────────────────────┼────────────┼──────────┤
+│ TOTAL ECOSYSTEME         │   46 500   │  100%    │
+└──────────────────────────┴────────────┴──────────┘
+
+💡 Le WASI Stock Market representera 18.3% de l'ARR global d'ici 2030.
+
+🏗️ FINANCEMENT NÉCESSAIRE : 2.35M USD
+• Capital reglementaire : 500K USD
+• Fonds de garantie : 850K USD
+• Dev matching engine : 350K USD
+• Equipe : 280K USD
+• Legal/agrement : 120K USD
+• Marketing : 150K USD
+• Infrastructure : 100K USD
+
+🎯 Option recommandee : Partenariat co-fondateur avec la BRVM — credibilite maximale + agrement accelere.`;
+    }
+
+    // General WASI Stock Market overview
+    return `━━━ WASI STOCK MARKET — LA BOURSE PRIVÉE DE L'AFRIQUE DE L'OUEST ━━━
+
+🏛️ CONCEPT :
+Le WASI Stock Market est un marche boursier prive reglemente (SMN — Systeme Multilateral de Negociation), entierement integre a l'ecosysteme WASI, destine aux PME et ETI d'Afrique de l'Ouest.
+
+Ce n'est PAS une bourse concurrente de la BRVM.
+C'est le MARCHÉ D'ACCÈS — le tremplin reglemente qui prepare les PME a une cotation sur les bourses nationales existantes, tout en leur permettant de lever des capitaux des aujourd'hui.
+
+📊 LE PROBLÈME RÉSOLU :
+┌──────────────────┬──────────────────┬─────────────────────────────┐
+│ Segment          │ CA               │ Solution existante          │
+├──────────────────┼──────────────────┼─────────────────────────────┤
+│ Microentreprise  │ < 50M FCFA       │ Microfinance, tontines      │
+│ PME emerging     │ 50-500M FCFA     │ Credit bancaire (taux >12%) │
+│ ⚡ PME GROWTH    │ 500M-10 Mds FCFA │ ❌ AUCUNE SOLUTION          │
+│ Grande entreprise│ > 10 Mds FCFA    │ BRVM, NGX, GSE              │
+└──────────────────┴──────────────────┴─────────────────────────────┘
+
+Gap de financement : 42 milliards USD/an (BAD 2024)
+PME cibles : 450 000 PME formelles en CEDEAO
+Moins de 0.02% ont leve des fonds via un marche organise.
+
+🏗️ STRUCTURE — 3 COMPARTIMENTS :
+• WASI Venture : Start-ups (CA >100M, capital >10M FCFA)
+• WASI Growth : PME en croissance (CA >500M, capital >50M FCFA)
+• WASI Premier : ETI pre-IPO (CA >2 Mds, capital >150M FCFA)
+
+⏰ SÉANCES :
+• Hebdomadaire — mercredi 10h-14h WAT
+• Fixing a cours unique
+• XOF / NGN / GHS
+• Lot minimum : 1 000 actions (des 5 000 FCFA)
+• Variation max : +/- 7.5%
+
+📈 PROJECTIONS 2030 :
+• 130 emetteurs cotes
+• 45 000 investisseurs actifs
+• 280M USD de capital leve pour les PME
+• 45 000 emplois crees/preserves
+• 8.5M USD ARR pour WASI
+
+🔑 AVANTAGES STRUCTURELS UNIQUES :
+1. WASI Index — due diligence sectorielle automatisee (48h vs 3 mois)
+2. AfriTrade Bank — carnet d'investisseurs pre-integre
+3. Private Market Studio — pipeline d'emetteurs qualifies
+4. 20 ans de donnees SYSCOHADA/OHADA — benchmark PME unique
+
+📅 CALENDRIER :
+• T2 2026 : Creation WASI Markets SA
+• T3 2026 : Depot dossier agrement CREPMF
+• T1 2027 : Beta prive (5 emetteurs pilotes)
+• T3 2027 : Lancement public
+• 2028-2030 : Expansion Nigeria, Ghana, graduation BRVM
+
+👤 Fondateur : Tarawendesida Thomas KABORE, FMVA — Ouagadougou, Burkina Faso
+
+Posez-moi des questions specifiques :
+• "Compartiments et criteres" — details d'eligibilite
+• "Comment investir sur le WASI Stock Market" — profils investisseurs
+• "Seances et trading" — fonctionnement operationnel
+• "Secteurs et pipeline" — entreprises ciblees
+• "Modele de revenus" — projections financieres
+• "Reglementation" — cadre juridique et protection`;
   }
 
   // Trade finance / banking
