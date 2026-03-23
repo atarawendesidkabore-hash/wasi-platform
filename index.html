@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#C8922A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WASI">
+<link rel="manifest" href="manifest.json">
 <title>AfriTrade | WASI Unified Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2323,10 +2328,31 @@ function validateGate() {
     setTimeout(() => input.classList.remove('error'), 500);
     return;
   }
-  token = 'demo_token_' + Date.now();
-  document.getElementById('access-gate').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  initApp();
+  // Try real API login first, fallback to demo token
+  (async () => {
+    try {
+      const res = await fetch(API + '/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username: key, password: key})
+      });
+      if (res.ok) {
+        const data = await res.json();
+        token = data.access_token || ('demo_token_' + Date.now());
+        if (data.user) {
+          document.getElementById('user-name').textContent = data.user.name || 'Operateur';
+          document.getElementById('user-tier').textContent = data.user.tier || 'DEMO';
+        }
+      } else {
+        token = 'demo_token_' + Date.now();
+      }
+    } catch(e) {
+      token = 'demo_token_' + Date.now();
+    }
+    document.getElementById('access-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  })();
 }
 
 document.addEventListener('keydown', function(e) {
@@ -4837,6 +4863,11 @@ function submitPME() {
   var country = document.getElementById('pme-country').value;
   if (!country) { showNotif('Veuillez s\u00e9lectionner un pays.', 'error'); return; }
   showNotif('Candidature de "' + name + '" soumise avec succ\u00e8s. Analyse WASI sous 48h.', 'success');
+}
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
 </script>
