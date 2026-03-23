@@ -202,7 +202,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
   overflow: hidden;
-  height: 32px;
+  height: auto;
   position: relative;
 }
 .ticker-track {
@@ -1179,7 +1179,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   .topbar-right { display: none; }
 
   /* Ticker */
-  .ticker-bar { height: 28px; }
+  .ticker-bar { height: auto !important; }
   .ticker-track { font-size: 0.7rem; gap: 24px; }
 
   /* Notification */
@@ -1713,7 +1713,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   </div>
 
   <!-- Ticker bar -->
-  <div class="ticker-bar" style="height:auto;"><div style="overflow:hidden;height:32px;">
+  <div class="ticker-bar" ><div style="overflow:hidden;height:32px;">
     <div class="ticker-track" id="ticker-track"></div></div><div style="overflow:hidden;height:32px;border-top:1px solid var(--border);"><div class="ticker-track" id="ticker-track-africa" style="animation-direction:reverse;animation-duration:50s;"></div></div>
   </div>
 
