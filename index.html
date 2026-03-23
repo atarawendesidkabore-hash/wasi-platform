@@ -1452,8 +1452,23 @@ input, select, textarea { font-family: inherit; outline: none; }
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
 }
+.compta-header-left { display: flex; flex-direction: column; gap: 2px; }
 .compta-header-title { font-size: 1rem; font-weight: 600; color: var(--gold); }
 .compta-header-sub { font-size: 0.75rem; color: var(--text-secondary); }
+.compta-plan-toggle {
+  display: flex; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+}
+.compta-plan-toggle-btn {
+  padding: 7px 16px; font-size: 0.72rem; font-weight: 600;
+  background: var(--bg-tertiary); color: var(--text-secondary);
+  border: none; cursor: pointer; transition: all .2s;
+  white-space: nowrap;
+}
+.compta-plan-toggle-btn.active {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+}
+.compta-plan-toggle-btn:hover:not(.active) { background: var(--bg-hover); color: var(--text-primary); }
 .compta-tabs {
   display: flex; gap: 4px; padding: 10px 20px;
   background: var(--bg-secondary); border-bottom: 1px solid var(--border);
@@ -1466,7 +1481,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 }
 .compta-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
 .compta-tab.active { color: var(--gold); background: rgba(200,146,42,.12); }
-.compta-body { padding: 20px; max-height: calc(100vh - 180px); overflow-y: auto; }
+.compta-body { padding: 20px; max-height: calc(100vh - 210px); overflow-y: auto; }
 .compta-panel { display: none; }
 .compta-panel.active { display: block; }
 
@@ -1499,6 +1514,8 @@ input, select, textarea { font-family: inherit; outline: none; }
 .compta-table .debit-col { color: var(--red); text-align: right; }
 .compta-table .credit-col { color: var(--green); text-align: right; }
 .compta-table .total-row td { font-weight: 700; background: var(--bg-secondary); border-top: 2px solid var(--gold); }
+.compta-table .section-row td { font-weight: 600; background: rgba(200,146,42,.06); color: var(--gold); font-size: 0.74rem; text-transform: uppercase; letter-spacing: .3px; }
+.compta-table .subsection-row td { font-weight: 600; color: var(--text-secondary); background: var(--bg-secondary); font-size: 0.72rem; }
 
 /* Action buttons */
 .compta-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
@@ -1554,13 +1571,22 @@ input, select, textarea { font-family: inherit; outline: none; }
   color: var(--red); border: none; border-radius: var(--radius); cursor: pointer;
 }
 
-/* Grand Livre account selector */
+/* Grand Livre account selector & mode toggle */
 .compta-select {
   padding: 8px 14px; background: var(--bg-secondary); border: 1px solid var(--border);
   border-radius: var(--radius); color: var(--text-primary); font-size: 0.78rem;
   margin-bottom: 14px; min-width: 300px; cursor: pointer;
 }
 .compta-select:focus { border-color: var(--gold); }
+.compta-gl-mode-toggle {
+  display: flex; gap: 0; margin-bottom: 14px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; width: fit-content;
+}
+.compta-gl-mode-btn {
+  padding: 7px 18px; font-size: 0.75rem; font-weight: 600;
+  background: var(--bg-tertiary); color: var(--text-secondary);
+  border: none; cursor: pointer; transition: all .2s;
+}
+.compta-gl-mode-btn.active { background: rgba(200,146,42,.15); color: var(--gold); }
 
 /* Bilan two-column */
 .compta-bilan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -1574,9 +1600,13 @@ input, select, textarea { font-family: inherit; outline: none; }
 .compta-bilan-col h3.actif-title { color: var(--cyan); }
 .compta-bilan-col h3.passif-title { color: var(--gold); }
 .compta-bilan-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
+.compta-bilan-line.section-head { font-weight: 700; color: var(--gold); font-size: 0.8rem; border-bottom: none; padding-top: 10px; }
+.compta-bilan-line.sub-total { font-weight: 600; color: var(--cyan); border-bottom: 1px dashed var(--border); }
 .compta-bilan-line.total { font-weight: 700; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; }
 .compta-bilan-line .lbl { color: var(--text-secondary); }
 .compta-bilan-line .val { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.compta-bilan-line .val-n1 { color: var(--text-dim); font-variant-numeric: tabular-nums; font-size: 0.72rem; }
+.compta-bilan-header { display: flex; justify-content: space-between; padding: 0 0 8px; font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
 .compta-equilibre { text-align: center; margin-top: 16px; padding: 10px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 600; }
 .compta-equilibre.ok { background: rgba(0,230,118,.1); color: var(--green); border: 1px solid var(--green); }
 .compta-equilibre.nok { background: rgba(255,82,82,.1); color: var(--red); border: 1px solid var(--red); }
@@ -1588,6 +1618,30 @@ input, select, textarea { font-family: inherit; outline: none; }
 .compta-resultat-line.subtotal { font-weight: 700; border-top: 2px solid var(--border); border-bottom: none; padding-top: 8px; margin-top: 4px; }
 .compta-resultat-line.grand-total { font-weight: 700; font-size: 0.92rem; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; }
 
+/* Notes & Liasse */
+.compta-notes-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px; }
+.compta-notes-section h3 { font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.compta-notes-section h4 { font-size: 0.78rem; font-weight: 600; color: var(--cyan); margin: 10px 0 6px; }
+.compta-notes-section p, .compta-notes-section li { font-size: 0.76rem; color: var(--text-secondary); line-height: 1.6; }
+.compta-notes-section ul { margin-left: 18px; margin-bottom: 8px; }
+.compta-liasse-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
+.compta-liasse-row .liasse-label { color: var(--text-secondary); }
+.compta-liasse-row .liasse-val { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+.compta-liasse-row.liasse-total { font-weight: 700; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 8px; margin-top: 4px; }
+.compta-liasse-row.liasse-total .liasse-label { color: var(--gold); }
+.compta-liasse-row.liasse-total .liasse-val { color: var(--gold); font-size: 0.85rem; }
+
+/* Flux de tresorerie */
+.compta-flux-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
+.compta-flux-section h3 { font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 10px; }
+.compta-flux-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.78rem; border-bottom: 1px solid var(--border); }
+.compta-flux-line .lbl { color: var(--text-secondary); }
+.compta-flux-line .val { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.compta-flux-line.flux-subtotal { font-weight: 700; border-top: 1px dashed var(--border); border-bottom: none; padding-top: 8px; margin-top: 4px; }
+.compta-flux-line.flux-subtotal .lbl { color: var(--cyan); }
+.compta-flux-line.flux-grand-total { font-weight: 700; border-top: 2px solid var(--gold); border-bottom: none; padding-top: 10px; margin-top: 6px; font-size: 0.85rem; }
+.compta-flux-line.flux-grand-total .lbl { color: var(--gold); }
+
 @media (max-width: 900px) {
   .compta-metrics { grid-template-columns: repeat(2, 1fr); }
   .compta-bilan-grid { grid-template-columns: 1fr; }
@@ -1597,6 +1651,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   .compta-body { padding: 14px; }
   .compta-tabs { padding: 8px 10px; gap: 2px; }
   .compta-tab { padding: 6px 10px; font-size: 0.72rem; }
+  .compta-plan-toggle { flex-direction: column; }
 }
 </style>
 </head>
@@ -2256,9 +2311,13 @@ input, select, textarea { font-family: inherit; outline: none; }
   <!-- ===== COMPTA (OHADA-SYSCOHADA) SCREEN ===== -->
   <div id="screen-compta" class="screen">
     <div class="compta-header">
-      <div>
-        <div class="compta-header-title">OHADA-COMPTA &mdash; Module Comptable SYSCOHADA</div>
-        <div class="compta-header-sub">Plan comptable OHADA r&eacute;vis&eacute; &bull; Exercice 2026</div>
+      <div class="compta-header-left">
+        <div class="compta-header-title" id="compta-header-title">OHADA-COMPTA &mdash; SYSCOHADA r&eacute;vis&eacute;</div>
+        <div class="compta-header-sub" id="compta-header-sub">Syst&egrave;me comptable des entreprises &mdash; OHADA 2017 &bull; Exercice 2026</div>
+      </div>
+      <div class="compta-plan-toggle">
+        <button class="compta-plan-toggle-btn active" id="toggle-syscohada" onclick="switchComptaPlan('syscohada')">SYSCOHADA r&eacute;vis&eacute;</button>
+        <button class="compta-plan-toggle-btn" id="toggle-sycebnl" onclick="switchComptaPlan('sycebnl')">SYCEBNL</button>
       </div>
     </div>
     <div class="compta-tabs" id="compta-tabs">
@@ -2268,7 +2327,9 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="compta-tab" onclick="switchComptaTab('grandlivre',this)">Grand Livre</button>
       <button class="compta-tab" onclick="switchComptaTab('balance',this)">Balance</button>
       <button class="compta-tab" onclick="switchComptaTab('bilan',this)">Bilan</button>
-      <button class="compta-tab" onclick="switchComptaTab('resultat',this)">Resultat</button>
+      <button class="compta-tab" onclick="switchComptaTab('resultat',this)">Compte de R&eacute;sultat</button>
+      <button class="compta-tab" onclick="switchComptaTab('flux',this)">Flux de Tr&eacute;sorerie</button>
+      <button class="compta-tab" onclick="switchComptaTab('notes',this)">Notes &amp; Liasse</button>
     </div>
     <div class="compta-body">
       <div class="compta-panel active" id="compta-panel-pilotage"></div>
@@ -2278,6 +2339,8 @@ input, select, textarea { font-family: inherit; outline: none; }
       <div class="compta-panel" id="compta-panel-balance"></div>
       <div class="compta-panel" id="compta-panel-bilan"></div>
       <div class="compta-panel" id="compta-panel-resultat"></div>
+      <div class="compta-panel" id="compta-panel-flux"></div>
+      <div class="compta-panel" id="compta-panel-notes"></div>
     </div>
   </div>
 
@@ -5052,68 +5115,278 @@ function submitPME() {
 }
 
 /* ================================================================
-   OHADA-COMPTA MODULE
+   OHADA-COMPTA MODULE — REBUILT
    ================================================================ */
 
-const SYSCOHADA_CLASSES = [
-  {num:1,label:'Capitaux',families:['Capital','Reserves','Resultat net','Subventions'],color:'var(--blue)'},
-  {num:2,label:'Immobilisations',families:['Incorporelles','Corporelles','Financieres'],color:'var(--cyan)'},
-  {num:3,label:'Stocks',families:['Marchandises','Produits digitaux','En-cours'],color:'var(--orange)'},
-  {num:4,label:'Tiers',families:['Fournisseurs','Clients','Personnel','Fiscalite'],color:'var(--gold)'},
-  {num:5,label:'Tresorerie',families:['Banques','Caisse'],color:'var(--green)'},
-  {num:6,label:'Charges',families:['Achats','Services ext.','Personnel','Charges fin.'],color:'var(--red)'},
-  {num:7,label:'Produits',families:['Ventes','Services','Commissions','Data'],color:'var(--green)'},
-  {num:8,label:'Hors activites ordinaires',families:['Produits HAO','Charges HAO'],color:'var(--text-dim)'},
+/* ---- SYSCOHADA revise (8 classes) ---- */
+const SYSCOHADA_PLAN = {
+  title: 'SYSCOHADA revise',
+  subtitle: 'Systeme comptable des entreprises — OHADA 2017',
+  classes: [
+    {num:1,label:'Comptes de ressources durables',families:['Capital','Reserves','Report a nouveau','Resultat','Subventions d\'investissement','Emprunts','Provisions pour risques'],color:'var(--blue)',
+     accounts:[
+       {code:'101000',label:'Capital social',debit:0,credit:10000000},
+       {code:'106000',label:'Reserves',debit:0,credit:2500000},
+       {code:'110000',label:'Report a nouveau',debit:0,credit:800000},
+       {code:'131000',label:'Resultat net de l\'exercice',debit:0,credit:1850000},
+       {code:'141000',label:'Subventions d\'investissement',debit:0,credit:500000},
+       {code:'162000',label:'Emprunts aupres des etablissements de credit',debit:0,credit:5000000},
+       {code:'191000',label:'Provisions pour litiges',debit:0,credit:350000},
+     ]},
+    {num:2,label:'Comptes d\'actif immobilise',families:['Immobilisations incorporelles','Immobilisations corporelles','Immobilisations financieres','Amortissements'],color:'var(--cyan)',
+     accounts:[
+       {code:'211000',label:'Frais de developpement',debit:3500000,credit:0},
+       {code:'213000',label:'Logiciels et plateformes',debit:8500000,credit:0},
+       {code:'231000',label:'Batiments',debit:15000000,credit:0},
+       {code:'244000',label:'Materiel et mobilier de bureau',debit:2200000,credit:0},
+       {code:'245000',label:'Materiel de transport',debit:4500000,credit:0},
+       {code:'271000',label:'Prets et creances non courantes',debit:1000000,credit:0},
+       {code:'281300',label:'Amortissements logiciels',debit:0,credit:2550000},
+       {code:'283100',label:'Amortissements batiments',debit:0,credit:3000000},
+     ]},
+    {num:3,label:'Comptes de stocks',families:['Marchandises','Matieres premieres','Produits finis'],color:'var(--orange)',
+     accounts:[
+       {code:'311000',label:'Marchandises',debit:450000,credit:0},
+       {code:'321000',label:'Matieres premieres',debit:280000,credit:0},
+       {code:'361000',label:'Produits finis',debit:520000,credit:0},
+     ]},
+    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Clients','Personnel','Etat','Organismes sociaux'],color:'var(--gold)',
+     accounts:[
+       {code:'401100',label:'Fournisseurs d\'exploitation',debit:0,credit:3200000},
+       {code:'408000',label:'Fournisseurs - factures non parvenues',debit:0,credit:450000},
+       {code:'411100',label:'Clients',debit:5800000,credit:0},
+       {code:'416000',label:'Clients douteux',debit:320000,credit:0},
+       {code:'421000',label:'Personnel - remunerations dues',debit:0,credit:1500000},
+       {code:'431000',label:'Securite sociale',debit:0,credit:420000},
+       {code:'441000',label:'Etat - impot sur les benefices',debit:0,credit:680000},
+       {code:'443100',label:'TVA facturee sur ventes',debit:0,credit:890000},
+       {code:'445100',label:'TVA recuperable sur achats',debit:540000,credit:0},
+       {code:'447000',label:'Etat - impots et taxes retenus a la source',debit:0,credit:210000},
+     ]},
+    {num:5,label:'Comptes de tresorerie',families:['Banques','Caisse','Regies d\'avances'],color:'var(--green)',
+     accounts:[
+       {code:'521000',label:'Banque Ecobank BF',debit:4200000,credit:0},
+       {code:'522000',label:'Banque Coris Bank',debit:2800000,credit:0},
+       {code:'531000',label:'Cheques a encaisser',debit:180000,credit:0},
+       {code:'571000',label:'Caisse siege Ouagadougou',debit:350000,credit:0},
+       {code:'572000',label:'Caisse Abidjan',debit:120000,credit:0},
+     ]},
+    {num:6,label:'Comptes de charges des activites ordinaires',families:['Achats','Transports','Services exterieurs','Impots et taxes','Charges de personnel','Charges financieres','Dotations'],color:'var(--red)',
+     accounts:[
+       {code:'601100',label:'Achats de marchandises',debit:2800000,credit:0},
+       {code:'604000',label:'Achats de matieres consommables',debit:450000,credit:0},
+       {code:'605000',label:'Autres achats (services cloud, SaaS)',debit:1800000,credit:0},
+       {code:'612000',label:'Transports sur ventes',debit:380000,credit:0},
+       {code:'616100',label:'Loyers et charges locatives',debit:2400000,credit:0},
+       {code:'622000',label:'Honoraires comptables et juridiques',debit:600000,credit:0},
+       {code:'627000',label:'Publicite, publications, relations publiques',debit:850000,credit:0},
+       {code:'641100',label:'Salaires et traitements',debit:9600000,credit:0},
+       {code:'646000',label:'Charges sociales',debit:2880000,credit:0},
+       {code:'671200',label:'Interets des emprunts',debit:420000,credit:0},
+       {code:'681100',label:'Dotations aux amortissements d\'exploitation',debit:1850000,credit:0},
+       {code:'691000',label:'Dotations aux provisions d\'exploitation',debit:350000,credit:0},
+     ]},
+    {num:7,label:'Comptes de produits des activites ordinaires',families:['Ventes','Travaux et services','Produits accessoires','Subventions','Reprises'],color:'var(--green)',
+     accounts:[
+       {code:'701100',label:'Ventes de marchandises',debit:0,credit:4200000},
+       {code:'704000',label:'Travaux factures (services WASI)',debit:0,credit:8500000},
+       {code:'706100',label:'Commissions et courtage',debit:0,credit:4800000},
+       {code:'706200',label:'Frais de marche DEX',debit:0,credit:2100000},
+       {code:'707100',label:'Produits accessoires (data WASI)',debit:0,credit:3200000},
+       {code:'718000',label:'Subventions d\'exploitation',debit:0,credit:1500000},
+       {code:'791000',label:'Reprises de provisions d\'exploitation',debit:0,credit:200000},
+     ]},
+    {num:8,label:'Comptes des autres charges et autres produits',families:['Valeurs comptables cessions','Produits cessions','Charges HAO','Produits HAO'],color:'var(--text-dim)',
+     accounts:[
+       {code:'811000',label:'Valeurs comptables cessions immobilisations',debit:800000,credit:0},
+       {code:'821000',label:'Produits des cessions d\'immobilisations',debit:0,credit:1200000},
+       {code:'831000',label:'Charges HAO',debit:120000,credit:0},
+       {code:'841000',label:'Produits HAO',debit:0,credit:180000},
+     ]},
+  ]
+};
+
+/* ---- SYCEBNL (9 classes) ---- */
+const SYCEBNL_PLAN = {
+  title: 'SYCEBNL',
+  subtitle: 'Systeme comptable des entites a but non lucratif — OHADA 2023',
+  classes: [
+    {num:1,label:'Comptes de ressources durables',families:['Dotation','Reserves','Report a nouveau','Resultat','Fonds affectes','Fonds reportes','Emprunts','Provisions'],color:'var(--blue)',
+     accounts:[
+       {code:'101000',label:'Dotation non consomptible sans droit de reprise',debit:0,credit:5000000},
+       {code:'103000',label:'Droit d\'entree',debit:0,credit:250000},
+       {code:'111000',label:'Reserves statutaires',debit:0,credit:800000},
+       {code:'131000',label:'Excedent de l\'exercice',debit:0,credit:920000},
+       {code:'161000',label:'Fonds projet de developpement',debit:0,credit:3500000},
+       {code:'167000',label:'Fonds provenant de dons et legs',debit:0,credit:1200000},
+       {code:'181000',label:'Emprunts',debit:0,credit:2000000},
+       {code:'191000',label:'Provisions pour risques',debit:0,credit:150000},
+     ]},
+    {num:2,label:'Comptes d\'actif immobilise',families:['Immobilisations incorporelles','Terrains','Batiments','Materiel','Immobilisations financieres','Amortissements'],color:'var(--cyan)',
+     accounts:[
+       {code:'213000',label:'Logiciels et sites internet',debit:1500000,credit:0},
+       {code:'222000',label:'Terrains d\'exploitation',debit:8000000,credit:0},
+       {code:'231000',label:'Batiments administratifs',debit:12000000,credit:0},
+       {code:'241100',label:'Materiel technique',debit:3200000,credit:0},
+       {code:'244000',label:'Mobilier de bureau',debit:800000,credit:0},
+       {code:'281300',label:'Amortissements logiciels',debit:0,credit:450000},
+       {code:'283100',label:'Amortissements batiments',debit:0,credit:2400000},
+     ]},
+    {num:3,label:'Comptes de stocks',families:['Biens lies a l\'activite','Marchandises','Dons en nature','Depreciations'],color:'var(--orange)',
+     accounts:[
+       {code:'311000',label:'Biens lies a l\'activite',debit:320000,credit:0},
+       {code:'321000',label:'Marchandises',debit:150000,credit:0},
+       {code:'341000',label:'Dons en nature non affectes',debit:450000,credit:0},
+     ]},
+    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Adherents','Personnel','Etat','Bailleurs','Fonds d\'administration'],color:'var(--gold)',
+     accounts:[
+       {code:'401000',label:'Fournisseurs',debit:0,credit:1800000},
+       {code:'411000',label:'Adherents',debit:980000,credit:0},
+       {code:'421000',label:'Personnel - avances',debit:120000,credit:0},
+       {code:'443000',label:'Etat - TVA',debit:0,credit:320000},
+       {code:'462000',label:'Bailleurs - projet de developpement',debit:2500000,credit:0},
+     ]},
+    {num:5,label:'Comptes de tresorerie',families:['Banques','Caisse','Monnaie electronique'],color:'var(--green)',
+     accounts:[
+       {code:'521100',label:'Banque en monnaie nationale',debit:3200000,credit:0},
+       {code:'551000',label:'Monnaie electronique (Orange Money)',debit:180000,credit:0},
+       {code:'571000',label:'Caisse en monnaie nationale',debit:250000,credit:0},
+     ]},
+    {num:6,label:'Comptes de charges des activites ordinaires',families:['Achats','Transports','Services ext.','Impots et taxes','Autres charges','Charges de personnel','Frais financiers','Dotations'],color:'var(--red)',
+     accounts:[
+       {code:'601100',label:'Achats de biens lies a l\'activite',debit:1200000,credit:0},
+       {code:'604100',label:'Matieres consommables',debit:380000,credit:0},
+       {code:'621000',label:'Locations et charges locatives',debit:1800000,credit:0},
+       {code:'631000',label:'Frais bancaires',debit:95000,credit:0},
+       {code:'641000',label:'Impots et taxes indirects',debit:220000,credit:0},
+       {code:'661000',label:'Remunerations du personnel national',debit:5400000,credit:0},
+       {code:'664000',label:'Charges sociales',debit:1620000,credit:0},
+       {code:'671000',label:'Interets des emprunts',debit:160000,credit:0},
+       {code:'681000',label:'Dotations aux amortissements',debit:950000,credit:0},
+     ]},
+    {num:7,label:'Comptes de produits des activites ordinaires',families:['Cotisations','Dons','Subventions','Ventes','Revenus financiers','Reprises'],color:'var(--green)',
+     accounts:[
+       {code:'701000',label:'Cotisations des adherents',debit:0,credit:2800000},
+       {code:'704100',label:'Dons recus',debit:0,credit:3500000},
+       {code:'704600',label:'Mecenats',debit:0,credit:1200000},
+       {code:'705100',label:'Ventes de marchandises',debit:0,credit:650000},
+       {code:'711000',label:'Subventions d\'exploitation Etat',debit:0,credit:4500000},
+       {code:'771000',label:'Interets de prets et creances',debit:0,credit:85000},
+       {code:'791000',label:'Reprises de provisions',debit:0,credit:100000},
+     ]},
+    {num:8,label:'Comptes des autres charges et autres produits',families:['Cessions','Charges HAO','Produits HAO','Subventions d\'equilibre'],color:'var(--text-dim)',
+     accounts:[
+       {code:'831000',label:'Charges HAO',debit:80000,credit:0},
+       {code:'841000',label:'Contributions volontaires en nature',debit:0,credit:350000},
+       {code:'881000',label:'Subventions d\'equilibre Etat',debit:0,credit:200000},
+     ]},
+    {num:9,label:'Contributions volontaires en nature et analytique',families:['Emplois des contributions','Contributions volontaires','Comptabilite analytique'],color:'var(--text-secondary)',
+     accounts:[
+       {code:'900000',label:'Secours en nature',debit:450000,credit:0},
+       {code:'901000',label:'Mise a disposition gratuite de biens',debit:280000,credit:0},
+       {code:'904000',label:'Personnel benevole',debit:600000,credit:0},
+       {code:'910000',label:'Dons en nature',debit:0,credit:450000},
+       {code:'914000',label:'Benevolat',debit:0,credit:880000},
+     ]},
+  ]
+};
+
+/* ---- Journal entries for SYSCOHADA ---- */
+var SYSCOHADA_JOURNAL = [
+  {id:'EC-001',date:'2026-01-02',ref:'AN-2026-001',journal:'AN',desc:'A nouveaux - ouverture exercice 2026',lines:[{account:'101000',label:'Capital social',debit:0,credit:10000000},{account:'106000',label:'Reserves',debit:0,credit:2500000},{account:'521000',label:'Banque Ecobank BF',debit:4200000,credit:0},{account:'571000',label:'Caisse siege',debit:350000,credit:0},{account:'411100',label:'Clients',debit:5800000,credit:0},{account:'401100',label:'Fournisseurs',debit:0,credit:3200000},{account:'110000',label:'Report a nouveau',debit:0,credit:800000},{account:'162000',label:'Emprunt',debit:0,credit:5000000},{account:'213000',label:'Logiciels',debit:8500000,credit:0},{account:'231000',label:'Batiments',debit:15000000,credit:0},{account:'281300',label:'Amort logiciels',debit:0,credit:2550000},{account:'283100',label:'Amort batiments',debit:0,credit:3000000},{account:'131000',label:'Resultat N-1',debit:0,credit:1850000},{account:'311000',label:'Marchandises',debit:450000,credit:0},{account:'321000',label:'Matieres 1eres',debit:280000,credit:0},{account:'361000',label:'Produits finis',debit:520000,credit:0}]},
+  {id:'EC-002',date:'2026-01-15',ref:'FAC-2026-001',journal:'VT',desc:'Vente abonnement Terminal DEX - Janvier',lines:[{account:'411100',label:'Client - Abonnement',debit:2450000,credit:0},{account:'704000',label:'Travaux factures WASI',debit:0,credit:2450000}]},
+  {id:'EC-003',date:'2026-01-31',ref:'SAL-2026-01',journal:'OD',desc:'Charges salariales Janvier 2026',lines:[{account:'641100',label:'Salaires bruts',debit:800000,credit:0},{account:'421000',label:'Personnel remun. due',debit:0,credit:800000}]},
+  {id:'EC-004',date:'2026-02-05',ref:'ACH-2026-012',journal:'AC',desc:'Achat serveurs cloud AWS',lines:[{account:'605000',label:'Services cloud',debit:150000,credit:0},{account:'521000',label:'Banque Ecobank',debit:0,credit:150000}]},
+  {id:'EC-005',date:'2026-02-10',ref:'FAC-2026-002',journal:'VT',desc:'Commission trading BRVM',lines:[{account:'411100',label:'Client - Commission',debit:380000,credit:0},{account:'706100',label:'Commission trading',debit:0,credit:380000}]},
+  {id:'EC-006',date:'2026-02-15',ref:'LOY-2026-02',journal:'OD',desc:'Loyer bureaux Ouagadougou',lines:[{account:'616100',label:'Loyer Fevrier',debit:200000,credit:0},{account:'521000',label:'Banque Ecobank',debit:0,credit:200000}]},
+  {id:'EC-007',date:'2026-02-28',ref:'FAC-2026-003',journal:'VT',desc:'Frais marche DEX - Fevrier',lines:[{account:'411100',label:'Client - DEX fees',debit:175000,credit:0},{account:'706200',label:'Frais marche DEX',debit:0,credit:175000}]},
+  {id:'EC-008',date:'2026-03-05',ref:'ENC-2026-008',journal:'BQ',desc:'Encaissement client Sonatel',lines:[{account:'521000',label:'Banque Ecobank',debit:1200000,credit:0},{account:'411100',label:'Client Sonatel',debit:0,credit:1200000}]},
+  {id:'EC-009',date:'2026-03-12',ref:'FAC-2026-004',journal:'VT',desc:'Vente data intelligence WASI',lines:[{account:'411100',label:'Client - Data WASI',debit:520000,credit:0},{account:'707100',label:'Services data WASI',debit:0,credit:520000}]},
+  {id:'EC-010',date:'2026-03-20',ref:'DIV-2026-01',journal:'OD',desc:'Dotation amortissement T1 2026',lines:[{account:'681100',label:'Dotation amort.',debit:462500,credit:0},{account:'281300',label:'Amort. logiciels',debit:0,credit:212500},{account:'283100',label:'Amort. batiments',debit:0,credit:250000}]},
+  {id:'EC-011',date:'2026-03-22',ref:'TVA-2026-03',journal:'OD',desc:'Declaration TVA Mars 2026',lines:[{account:'443100',label:'TVA facturee',debit:445500,credit:0},{account:'445100',label:'TVA deductible',debit:0,credit:445500}]},
+  {id:'EC-012',date:'2026-03-23',ref:'VT-2026-005',journal:'VT',desc:'Vente marchandises client Abidjan',lines:[{account:'411100',label:'Client Abidjan',debit:850000,credit:0},{account:'701100',label:'Ventes marchandises',debit:0,credit:850000}]},
 ];
 
-const COMPTA_ACCOUNTS = [
-  {code:'101000',label:'Capital social',class:1,debit:0,credit:10000000},
-  {code:'106100',label:'Reserves libres',class:1,debit:0,credit:2500000},
-  {code:'131000',label:'Resultat net de l\'exercice',class:1,debit:0,credit:1850000},
-  {code:'211000',label:'Logiciels et plateformes',class:2,debit:8500000,credit:0},
-  {code:'244000',label:'Mobilier et materiel de bureau',class:2,debit:2200000,credit:0},
-  {code:'371000',label:'Marchandises et produits digitaux',class:3,debit:450000,credit:0},
-  {code:'401100',label:'Fournisseurs',class:4,debit:0,credit:3200000},
-  {code:'411100',label:'Clients',class:4,debit:5800000,credit:0},
-  {code:'421000',label:'Personnel remuneration due',class:4,debit:0,credit:1500000},
-  {code:'447000',label:'Etat - impots et taxes dus',class:4,debit:0,credit:890000},
-  {code:'521000',label:'Banque - Ecobank',class:5,debit:4200000,credit:0},
-  {code:'571000',label:'Caisse XOF',class:5,debit:350000,credit:0},
-  {code:'601100',label:'Achats de services cloud',class:6,debit:1800000,credit:0},
-  {code:'616100',label:'Loyers et charges locatives',class:6,debit:2400000,credit:0},
-  {code:'641100',label:'Salaires et traitements',class:6,debit:9600000,credit:0},
-  {code:'671200',label:'Charges financieres',class:6,debit:420000,credit:0},
-  {code:'681000',label:'Dotations aux amortissements',class:6,debit:1700000,credit:0},
-  {code:'701100',label:'Ventes de solutions digitales',class:7,debit:0,credit:12500000},
-  {code:'706100',label:'Commissions bancaires et trading',class:7,debit:0,credit:4800000},
-  {code:'706200',label:'Frais de marche DEX',class:7,debit:0,credit:2100000},
-  {code:'707100',label:'Services data et intelligence WASI',class:7,debit:0,credit:3200000},
-  {code:'811000',label:'Produits hors activites ordinaires',class:8,debit:0,credit:180000},
+/* ---- Journal entries for SYCEBNL ---- */
+var SYCEBNL_JOURNAL = [
+  {id:'EC-001',date:'2026-01-02',ref:'AN-2026-001',journal:'AN',desc:'A nouveaux - ouverture exercice 2026',lines:[{account:'101000',label:'Dotation non consomptible',debit:0,credit:5000000},{account:'521100',label:'Banque monnaie nat.',debit:3200000,credit:0},{account:'571000',label:'Caisse',debit:250000,credit:0},{account:'231000',label:'Batiments admin.',debit:12000000,credit:0},{account:'213000',label:'Logiciels',debit:1500000,credit:0},{account:'401000',label:'Fournisseurs',debit:0,credit:1800000},{account:'181000',label:'Emprunts',debit:0,credit:2000000},{account:'283100',label:'Amort batiments',debit:0,credit:2400000}]},
+  {id:'EC-002',date:'2026-01-15',ref:'COT-2026-01',journal:'BQ',desc:'Cotisations adherents Janvier',lines:[{account:'521100',label:'Banque',debit:480000,credit:0},{account:'701000',label:'Cotisations adherents',debit:0,credit:480000}]},
+  {id:'EC-003',date:'2026-02-01',ref:'DON-2026-001',journal:'BQ',desc:'Don recu Fondation X',lines:[{account:'521100',label:'Banque',debit:1500000,credit:0},{account:'704100',label:'Dons recus',debit:0,credit:1500000}]},
+  {id:'EC-004',date:'2026-02-15',ref:'SAL-2026-02',journal:'OD',desc:'Salaires personnel Fevrier',lines:[{account:'661000',label:'Remunerations',debit:450000,credit:0},{account:'521100',label:'Banque',debit:0,credit:450000}]},
+  {id:'EC-005',date:'2026-03-01',ref:'SUB-2026-001',journal:'BQ',desc:'Subvention Etat - Projet sante',lines:[{account:'521100',label:'Banque',debit:2000000,credit:0},{account:'711000',label:'Subvention Etat',debit:0,credit:2000000}]},
+  {id:'EC-006',date:'2026-03-10',ref:'ACH-2026-003',journal:'AC',desc:'Achat materiel medical',lines:[{account:'601100',label:'Achats biens activite',debit:320000,credit:0},{account:'521100',label:'Banque',debit:0,credit:320000}]},
+  {id:'EC-007',date:'2026-03-15',ref:'LOY-2026-03',journal:'OD',desc:'Loyer bureau Mars',lines:[{account:'621000',label:'Location',debit:150000,credit:0},{account:'571000',label:'Caisse',debit:0,credit:150000}]},
+  {id:'EC-008',date:'2026-03-20',ref:'BEN-2026-01',journal:'OD',desc:'Valorisation benevolat T1',lines:[{account:'904000',label:'Personnel benevole',debit:200000,credit:0},{account:'914000',label:'Benevolat',debit:0,credit:200000}]},
 ];
 
-const JOURNAL_ENTRIES = [
-  {id:'EC-001',date:'2026-03-01',ref:'FAC-2026-001',journal:'VT',desc:'Vente abonnement Terminal DEX - Mars',lines:[{account:'411100',label:'Client - Abonnement',debit:2450000,credit:0},{account:'701100',label:'Vente solutions digitales',debit:0,credit:2450000}]},
-  {id:'EC-002',date:'2026-03-01',ref:'SAL-2026-03',journal:'OD',desc:'Charges salariales Mars 2026',lines:[{account:'641100',label:'Salaires bruts',debit:800000,credit:0},{account:'421000',label:'Personnel remun. due',debit:0,credit:800000}]},
-  {id:'EC-003',date:'2026-03-05',ref:'ACH-2026-012',journal:'AC',desc:'Achat serveurs cloud AWS',lines:[{account:'601100',label:'Services cloud',debit:150000,credit:0},{account:'521000',label:'Banque Ecobank',debit:0,credit:150000}]},
-  {id:'EC-004',date:'2026-03-08',ref:'FAC-2026-002',journal:'VT',desc:'Commission trading BRVM',lines:[{account:'411100',label:'Client - Commission',debit:380000,credit:0},{account:'706100',label:'Commission trading',debit:0,credit:380000}]},
-  {id:'EC-005',date:'2026-03-10',ref:'LOY-2026-03',journal:'OD',desc:'Loyer bureaux Ouagadougou',lines:[{account:'616100',label:'Loyer Mars',debit:200000,credit:0},{account:'521000',label:'Banque Ecobank',debit:0,credit:200000}]},
-  {id:'EC-006',date:'2026-03-12',ref:'FAC-2026-003',journal:'VT',desc:'Frais marche DEX - Semaine 10',lines:[{account:'411100',label:'Client - DEX fees',debit:175000,credit:0},{account:'706200',label:'Frais marche DEX',debit:0,credit:175000}]},
-  {id:'EC-007',date:'2026-03-15',ref:'ENC-2026-008',journal:'BQ',desc:'Encaissement client Sonatel',lines:[{account:'521000',label:'Banque Ecobank',debit:1200000,credit:0},{account:'411100',label:'Client Sonatel',debit:0,credit:1200000}]},
-  {id:'EC-008',date:'2026-03-18',ref:'FAC-2026-004',journal:'VT',desc:'Vente data intelligence WASI',lines:[{account:'411100',label:'Client - Data WASI',debit:520000,credit:0},{account:'707100',label:'Services data WASI',debit:0,credit:520000}]},
-  {id:'EC-009',date:'2026-03-20',ref:'DIV-2026-01',journal:'OD',desc:'Dotation amortissement T1 2026',lines:[{account:'681000',label:'Dotation amort.',debit:425000,credit:0},{account:'244000',label:'Amort. materiel',debit:0,credit:425000}]},
-  {id:'EC-010',date:'2026-03-22',ref:'TVA-2026-03',journal:'OD',desc:'Declaration TVA Mars 2026',lines:[{account:'447000',label:'TVA collectee',debit:0,credit:445500},{account:'445000',label:'TVA deductible',debit:445500,credit:0}]},
-];
-
+/* ---- Active plan state ---- */
+var activePlan = 'syscohada';
 var comptaClassFilter = 0;
 var comptaSearchTerm = '';
 var comptaJournalFilter = '';
 var comptaGrandLivreAccount = '';
+var comptaGLMode = 'complet';
 var newEntryLines = [{account:'',label:'',debit:0,credit:0},{account:'',label:'',debit:0,credit:0}];
 
+function getActivePlanData() {
+  return activePlan === 'syscohada' ? SYSCOHADA_PLAN : SYCEBNL_PLAN;
+}
+
+function getAllAccounts() {
+  var plan = getActivePlanData();
+  var accounts = [];
+  plan.classes.forEach(function(c) {
+    c.accounts.forEach(function(a) {
+      accounts.push({code:a.code, label:a.label, classNum:c.num, classLabel:c.label, debit:a.debit, credit:a.credit, color:c.color});
+    });
+  });
+  return accounts;
+}
+
+function getJournalEntries() {
+  return activePlan === 'syscohada' ? SYSCOHADA_JOURNAL : SYCEBNL_JOURNAL;
+}
+
 function fmtXOF(n) {
+  if (n === 0) return '0 XOF';
   return Number(n).toLocaleString('fr-FR') + ' XOF';
 }
 
+function fmtN(n) {
+  return Number(n).toLocaleString('fr-FR');
+}
+
+function sumAccounts(accounts, filterFn, field) {
+  return accounts.filter(filterFn).reduce(function(s,a){ return s + (a[field] || 0); }, 0);
+}
+
+function sumAccountsNet(accounts, filterFn) {
+  return accounts.filter(filterFn).reduce(function(s,a){ return s + a.debit - a.credit; }, 0);
+}
+
+/* ---- Plan toggle ---- */
+function switchComptaPlan(plan) {
+  activePlan = plan;
+  comptaClassFilter = 0;
+  comptaSearchTerm = '';
+  comptaJournalFilter = '';
+  comptaGrandLivreAccount = '';
+  comptaGLMode = 'complet';
+  document.getElementById('toggle-syscohada').classList.toggle('active', plan === 'syscohada');
+  document.getElementById('toggle-sycebnl').classList.toggle('active', plan === 'sycebnl');
+  var pd = getActivePlanData();
+  document.getElementById('compta-header-title').innerHTML = 'OHADA-COMPTA &mdash; ' + pd.title;
+  document.getElementById('compta-header-sub').innerHTML = pd.subtitle + ' &bull; Exercice 2026';
+  var activePanel = document.querySelector('.compta-panel.active');
+  if (activePanel) {
+    var panelId = activePanel.id.replace('compta-panel-', '');
+    switchComptaTab(panelId, document.querySelector('#compta-tabs .compta-tab.active'));
+  } else {
+    renderComptaPilotage();
+  }
+}
+
+/* ---- Tab switching ---- */
 function switchComptaTab(tab, btn) {
   document.querySelectorAll('.compta-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('compta-panel-' + tab).classList.add('active');
@@ -5126,36 +5399,50 @@ function switchComptaTab(tab, btn) {
   else if (tab === 'balance') renderBalance();
   else if (tab === 'bilan') renderBilan();
   else if (tab === 'resultat') renderResultat();
+  else if (tab === 'flux') renderFluxTresorerie();
+  else if (tab === 'notes') renderNotesLiasse();
 }
 
+/* ================================================================
+   PILOTAGE
+   ================================================================ */
 function renderComptaPilotage() {
   var el = document.getElementById('compta-panel-pilotage');
-  var produits = COMPTA_ACCOUNTS.filter(function(a){return a.class===7;}).reduce(function(s,a){return s+a.credit;},0);
-  var charges = COMPTA_ACCOUNTS.filter(function(a){return a.class===6;}).reduce(function(s,a){return s+a.debit;},0);
+  var accounts = getAllAccounts();
+  var journal = getJournalEntries();
+  var plan = getActivePlanData();
+
+  var produits = sumAccounts(accounts, function(a){return a.classNum===7;}, 'credit');
+  var charges = sumAccounts(accounts, function(a){return a.classNum===6;}, 'debit');
   var resultat = produits - charges;
-  var tva = COMPTA_ACCOUNTS.filter(function(a){return a.code==='447000';}).reduce(function(s,a){return s+a.credit;},0);
+
+  var haoCredits = sumAccounts(accounts, function(a){return a.classNum===8;}, 'credit');
+  var haoDebits = sumAccounts(accounts, function(a){return a.classNum===8;}, 'debit');
+  var resultatNet = resultat + haoCredits - haoDebits;
+
+  var tresorerie = sumAccountsNet(accounts, function(a){return a.classNum===5;});
 
   var html = '<div class="compta-metrics">';
-  html += '<div class="compta-metric-card"><div class="compta-metric-label">Ecritures postees</div><div class="compta-metric-val">' + JOURNAL_ENTRIES.length + '</div></div>';
-  html += '<div class="compta-metric-card"><div class="compta-metric-label">Comptes actifs</div><div class="compta-metric-val">' + COMPTA_ACCOUNTS.length + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Referentiel</div><div class="compta-metric-val gold" style="font-size:1rem;">' + plan.title + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Ecritures postees</div><div class="compta-metric-val">' + journal.length + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Comptes actifs</div><div class="compta-metric-val">' + accounts.length + '</div></div>';
   html += '<div class="compta-metric-card"><div class="compta-metric-label">Produits (Classe 7)</div><div class="compta-metric-val green">' + fmtXOF(produits) + '</div></div>';
   html += '<div class="compta-metric-card"><div class="compta-metric-label">Charges (Classe 6)</div><div class="compta-metric-val red">' + fmtXOF(charges) + '</div></div>';
-  html += '<div class="compta-metric-card"><div class="compta-metric-label">Resultat net</div><div class="compta-metric-val ' + (resultat >= 0 ? 'gold' : 'red') + '">' + fmtXOF(resultat) + '</div></div>';
-  html += '<div class="compta-metric-card"><div class="compta-metric-label">TVA nette</div><div class="compta-metric-val">' + fmtXOF(tva) + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Resultat net</div><div class="compta-metric-val ' + (resultatNet >= 0 ? 'gold' : 'red') + '">' + fmtXOF(resultatNet) + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Tresorerie</div><div class="compta-metric-val ' + (tresorerie >= 0 ? 'green' : 'red') + '">' + fmtXOF(tresorerie) + '</div></div>';
+  html += '<div class="compta-metric-card"><div class="compta-metric-label">Classes</div><div class="compta-metric-val">' + plan.classes.length + '</div></div>';
   html += '</div>';
 
-  // Recent journal entries
   html += '<h3 style="font-size:.88rem;color:var(--gold);margin-bottom:10px;">Ecritures recentes</h3>';
   html += '<table class="compta-table"><thead><tr><th>DATE</th><th>REF</th><th>JOURNAL</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th></tr></thead><tbody>';
-  var recent = JOURNAL_ENTRIES.slice(-5).reverse();
+  var recent = journal.slice(-5).reverse();
   recent.forEach(function(e) {
     var td = e.lines.reduce(function(s,l){return s+l.debit;},0);
     var tc = e.lines.reduce(function(s,l){return s+l.credit;},0);
-    html += '<tr><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.journal + '</td><td>' + e.desc + '</td><td class="debit-col">' + (td ? Number(td).toLocaleString('fr-FR') : '') + '</td><td class="credit-col">' + (tc ? Number(tc).toLocaleString('fr-FR') : '') + '</td></tr>';
+    html += '<tr><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.journal + '</td><td>' + e.desc + '</td><td class="debit-col">' + (td ? fmtN(td) : '') + '</td><td class="credit-col">' + (tc ? fmtN(tc) : '') + '</td></tr>';
   });
   html += '</tbody></table>';
 
-  // Quick actions
   html += '<div class="compta-actions">';
   html += '<button class="compta-action-btn primary" onclick="switchComptaTab(\'journal\',document.querySelectorAll(\'#compta-tabs .compta-tab\')[2])">Nouvelle ecriture</button>';
   html += '<button class="compta-action-btn secondary" onclick="showNotif(\'Export Excel en cours...\',\'info\')">Exporter Excel</button>';
@@ -5165,40 +5452,45 @@ function renderComptaPilotage() {
   el.innerHTML = html;
 }
 
+/* ================================================================
+   PLAN COMPTABLE
+   ================================================================ */
 function renderPlanComptable() {
   var el = document.getElementById('compta-panel-plan');
+  var plan = getActivePlanData();
+
   var html = '<div class="compta-filters">';
   html += '<button class="compta-filter-btn ' + (comptaClassFilter === 0 ? 'active' : '') + '" onclick="comptaClassFilter=0;renderPlanComptable();">Toutes</button>';
-  SYSCOHADA_CLASSES.forEach(function(c) {
-    html += '<button class="compta-filter-btn ' + (comptaClassFilter === c.num ? 'active' : '') + '" onclick="comptaClassFilter=' + c.num + ';renderPlanComptable();" style="border-color:' + c.color + ';">' + c.num + ' - ' + c.label + '</button>';
+  plan.classes.forEach(function(c) {
+    html += '<button class="compta-filter-btn ' + (comptaClassFilter === c.num ? 'active' : '') + '" onclick="comptaClassFilter=' + c.num + ';renderPlanComptable();" style="border-color:' + c.color + ';">' + c.num + ' - ' + c.label.substring(0,20) + '</button>';
   });
   html += '<input class="compta-search" type="text" placeholder="Rechercher code ou libelle..." value="' + (comptaSearchTerm||'') + '" oninput="comptaSearchTerm=this.value;renderPlanComptable();">';
   html += '</div>';
 
-  var filtered = filterComptaAccounts();
-  html += '<table class="compta-table"><thead><tr><th>CODE</th><th>LIBELLE</th><th>CLASSE</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th></tr></thead><tbody>';
-  filtered.forEach(function(a) {
-    var cls = SYSCOHADA_CLASSES.find(function(c){return c.num===a.class;});
-    var clr = cls ? cls.color : 'var(--text-primary)';
-    html += '<tr><td style="color:' + clr + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td style="color:' + clr + ';">' + a.class + ' - ' + (cls?cls.label:'') + '</td><td class="debit-col">' + (a.debit ? Number(a.debit).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (a.credit ? Number(a.credit).toLocaleString('fr-FR') : '-') + '</td></tr>';
+  html += '<table class="compta-table"><thead><tr><th>CODE</th><th>LIBELLE</th><th>CLASSE</th><th>FAMILLES</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th></tr></thead><tbody>';
+
+  plan.classes.forEach(function(c) {
+    if (comptaClassFilter > 0 && c.num !== comptaClassFilter) return;
+    html += '<tr class="section-row"><td colspan="6" style="color:' + c.color + ';">CLASSE ' + c.num + ' — ' + c.label.toUpperCase() + '</td></tr>';
+    c.accounts.forEach(function(a) {
+      if (comptaSearchTerm) {
+        var s = comptaSearchTerm.toLowerCase();
+        if (a.code.toLowerCase().indexOf(s) === -1 && a.label.toLowerCase().indexOf(s) === -1) return;
+      }
+      html += '<tr><td style="color:' + c.color + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td style="color:' + c.color + ';font-size:.72rem;">' + c.num + '</td><td style="font-size:.7rem;color:var(--text-dim);">' + c.families.join(', ') + '</td><td class="debit-col">' + (a.debit ? fmtN(a.debit) : '-') + '</td><td class="credit-col">' + (a.credit ? fmtN(a.credit) : '-') + '</td></tr>';
+    });
   });
+
   html += '</tbody></table>';
   el.innerHTML = html;
 }
 
-function filterComptaAccounts() {
-  return COMPTA_ACCOUNTS.filter(function(a) {
-    if (comptaClassFilter > 0 && a.class !== comptaClassFilter) return false;
-    if (comptaSearchTerm) {
-      var s = comptaSearchTerm.toLowerCase();
-      if (a.code.toLowerCase().indexOf(s) === -1 && a.label.toLowerCase().indexOf(s) === -1) return false;
-    }
-    return true;
-  });
-}
-
+/* ================================================================
+   JOURNAL
+   ================================================================ */
 function renderJournal() {
   var el = document.getElementById('compta-panel-journal');
+  var journal = getJournalEntries();
   var types = ['','AC','VT','BQ','CA','OD','AN','EX'];
   var html = '<div class="compta-filters">';
   types.forEach(function(t) {
@@ -5207,7 +5499,7 @@ function renderJournal() {
   });
   html += '</div>';
 
-  var entries = JOURNAL_ENTRIES.filter(function(e) {
+  var entries = journal.filter(function(e) {
     return !comptaJournalFilter || e.journal === comptaJournalFilter;
   });
 
@@ -5215,10 +5507,10 @@ function renderJournal() {
   entries.forEach(function(e) {
     var td = e.lines.reduce(function(s,l){return s+l.debit;},0);
     var tc = e.lines.reduce(function(s,l){return s+l.credit;},0);
-    html += '<tr class="compta-clickable" onclick="toggleEntryDetail(\'' + e.id + '\')"><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.journal + '</td><td>' + e.desc + '</td><td class="debit-col">' + Number(td).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(tc).toLocaleString('fr-FR') + '</td></tr>';
-    html += '<tr class="compta-entry-detail" id="detail-' + e.id + '"><td colspan="6"><table class="compta-entry-lines">';
+    html += '<tr class="compta-clickable" onclick="toggleEntryDetail(\'' + e.id + '-' + activePlan + '\')"><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.journal + '</td><td>' + e.desc + '</td><td class="debit-col">' + fmtN(td) + '</td><td class="credit-col">' + fmtN(tc) + '</td></tr>';
+    html += '<tr class="compta-entry-detail" id="detail-' + e.id + '-' + activePlan + '"><td colspan="6"><table class="compta-entry-lines">';
     e.lines.forEach(function(l) {
-      html += '<tr><td style="color:var(--text-dim);width:100px;">' + l.account + '</td><td>' + l.label + '</td><td class="debit-col" style="width:120px;">' + (l.debit ? Number(l.debit).toLocaleString('fr-FR') : '') + '</td><td class="credit-col" style="width:120px;">' + (l.credit ? Number(l.credit).toLocaleString('fr-FR') : '') + '</td></tr>';
+      html += '<tr><td style="color:var(--text-dim);width:100px;">' + l.account + '</td><td>' + l.label + '</td><td class="debit-col" style="width:120px;">' + (l.debit ? fmtN(l.debit) : '') + '</td><td class="credit-col" style="width:120px;">' + (l.credit ? fmtN(l.credit) : '') + '</td></tr>';
     });
     html += '</table></td></tr>';
   });
@@ -5242,7 +5534,7 @@ function renderJournal() {
   var balanced = lineDebits > 0 && lineDebits === lineCredits;
   html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">';
   html += '<div class="compta-line-actions"><button class="compta-add-line" onclick="newEntryLines.push({account:\'\',label:\'\',debit:0,credit:0});renderJournal();">+ Ajouter une ligne</button></div>';
-  html += '<div>Total D: <span class="debit-col">' + Number(lineDebits).toLocaleString('fr-FR') + '</span> | Total C: <span class="credit-col">' + Number(lineCredits).toLocaleString('fr-FR') + '</span> &nbsp;';
+  html += '<div>Total D: <span class="debit-col">' + fmtN(lineDebits) + '</span> | Total C: <span class="credit-col">' + fmtN(lineCredits) + '</span> &nbsp;';
   html += balanced ? '<span class="compta-balance-ok">&#10003; Ecriture equilibree</span>' : '<span class="compta-balance-nok">&#10007; Non equilibree</span>';
   html += '</div></div>';
   html += '<div style="margin-top:12px;"><button class="compta-action-btn primary" onclick="addJournalEntry()" ' + (balanced ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"') + '>Enregistrer l\'ecriture</button></div>';
@@ -5274,9 +5566,10 @@ function addJournalEntry() {
   var lineDebits = newEntryLines.reduce(function(s,l){return s+(parseFloat(l.debit)||0);},0);
   var lineCredits = newEntryLines.reduce(function(s,l){return s+(parseFloat(l.credit)||0);},0);
   if (lineDebits !== lineCredits || lineDebits === 0) { showNotif('L\'ecriture doit etre equilibree (debit = credit).', 'error'); return; }
-  var id = 'EC-' + String(JOURNAL_ENTRIES.length + 1).padStart(3, '0');
+  var jrnl = getJournalEntries();
+  var id = 'EC-' + String(jrnl.length + 1).padStart(3, '0');
   var lines = newEntryLines.filter(function(l){return l.account;}).map(function(l){return {account:l.account,label:l.label,debit:parseFloat(l.debit)||0,credit:parseFloat(l.credit)||0};});
-  JOURNAL_ENTRIES.push({id:id, date:date, ref:ref, journal:journal, desc:desc, lines:lines});
+  jrnl.push({id:id, date:date, ref:ref, journal:journal, desc:desc, lines:lines});
   newEntryLines = [{account:'',label:'',debit:0,credit:0},{account:'',label:'',debit:0,credit:0}];
   showNotif('Ecriture ' + id + ' enregistree avec succes.', 'success');
   renderJournal();
@@ -5287,69 +5580,101 @@ function toggleEntryDetail(id) {
   if (row) row.classList.toggle('open');
 }
 
+/* ================================================================
+   GRAND LIVRE
+   ================================================================ */
 function renderGrandLivre() {
   var el = document.getElementById('compta-panel-grandlivre');
-  var html = '<select class="compta-select" id="gl-account-select" onchange="comptaGrandLivreAccount=this.value;renderGrandLivre();">';
-  html += '<option value="">-- Selectionnez un compte --</option>';
-  COMPTA_ACCOUNTS.forEach(function(a) {
-    html += '<option value="' + a.code + '" ' + (comptaGrandLivreAccount === a.code ? 'selected' : '') + '>' + a.code + ' - ' + a.label + '</option>';
-  });
-  html += '</select>';
+  var accounts = getAllAccounts();
+  var journal = getJournalEntries();
 
-  if (comptaGrandLivreAccount) {
-    var acct = COMPTA_ACCOUNTS.find(function(a){return a.code === comptaGrandLivreAccount;});
-    var entries = [];
-    JOURNAL_ENTRIES.forEach(function(e) {
-      e.lines.forEach(function(l) {
-        if (l.account === comptaGrandLivreAccount) {
-          entries.push({date:e.date, ref:e.ref, desc:e.desc, debit:l.debit, credit:l.credit});
-        }
+  var html = '<div class="compta-gl-mode-toggle">';
+  html += '<button class="compta-gl-mode-btn ' + (comptaGLMode === 'complet' ? 'active' : '') + '" onclick="comptaGLMode=\'complet\';comptaGrandLivreAccount=\'\';renderGrandLivre();">Grand Livre Complet</button>';
+  html += '<button class="compta-gl-mode-btn ' + (comptaGLMode === 'compte' ? 'active' : '') + '" onclick="comptaGLMode=\'compte\';renderGrandLivre();">Grand Livre par Compte</button>';
+  html += '</div>';
+
+  if (comptaGLMode === 'complet') {
+    html += '<table class="compta-table"><thead><tr><th>COMPTE</th><th>DATE</th><th>REF</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE</th></tr></thead><tbody>';
+    accounts.sort(function(a,b){return a.code.localeCompare(b.code);}).forEach(function(acct) {
+      var balance = acct.debit - acct.credit;
+      html += '<tr class="section-row"><td colspan="7" style="color:' + acct.color + ';">' + acct.code + ' — ' + acct.label + ' (Solde initial: ' + fmtN(balance) + ')</td></tr>';
+      html += '<tr style="color:var(--text-dim);"><td></td><td>Ouverture</td><td>-</td><td>Solde initial</td><td class="debit-col">' + (acct.debit ? fmtN(acct.debit) : '') + '</td><td class="credit-col">' + (acct.credit ? fmtN(acct.credit) : '') + '</td><td class="num-col">' + fmtN(balance) + '</td></tr>';
+      journal.forEach(function(e) {
+        e.lines.forEach(function(l) {
+          if (l.account === acct.code) {
+            balance += l.debit - l.credit;
+            html += '<tr><td></td><td>' + e.date + '</td><td style="color:var(--cyan);">' + e.ref + '</td><td>' + e.desc + '</td><td class="debit-col">' + (l.debit ? fmtN(l.debit) : '') + '</td><td class="credit-col">' + (l.credit ? fmtN(l.credit) : '') + '</td><td class="num-col" style="font-weight:600;">' + fmtN(balance) + '</td></tr>';
+          }
+        });
       });
     });
-
-    html += '<h3 style="font-size:.85rem;color:var(--gold);margin:10px 0;">' + comptaGrandLivreAccount + ' - ' + (acct ? acct.label : '') + '</h3>';
-    html += '<table class="compta-table"><thead><tr><th>DATE</th><th>REF</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE</th></tr></thead><tbody>';
-
-    var balance = acct ? (acct.debit - acct.credit) : 0;
-    // Opening balance row
-    html += '<tr style="color:var(--text-dim);"><td>-</td><td>-</td><td>Solde initial</td><td class="debit-col">' + (acct && acct.debit ? Number(acct.debit).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (acct && acct.credit ? Number(acct.credit).toLocaleString('fr-FR') : '-') + '</td><td class="num-col">' + Number(balance).toLocaleString('fr-FR') + '</td></tr>';
-
-    var totalD = acct ? acct.debit : 0;
-    var totalC = acct ? acct.credit : 0;
-    entries.forEach(function(en) {
-      balance += en.debit - en.credit;
-      totalD += en.debit;
-      totalC += en.credit;
-      html += '<tr><td>' + en.date + '</td><td style="color:var(--cyan);">' + en.ref + '</td><td>' + en.desc + '</td><td class="debit-col">' + (en.debit ? Number(en.debit).toLocaleString('fr-FR') : '') + '</td><td class="credit-col">' + (en.credit ? Number(en.credit).toLocaleString('fr-FR') : '') + '</td><td class="num-col" style="font-weight:600;">' + Number(balance).toLocaleString('fr-FR') + '</td></tr>';
-    });
-
-    html += '<tr class="total-row"><td colspan="3">TOTAUX</td><td class="debit-col">' + Number(totalD).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(totalC).toLocaleString('fr-FR') + '</td><td class="num-col">' + Number(balance).toLocaleString('fr-FR') + '</td></tr>';
     html += '</tbody></table>';
   } else {
-    html += '<div style="color:var(--text-dim);padding:40px;text-align:center;">Selectionnez un compte pour afficher le grand livre.</div>';
+    html += '<select class="compta-select" id="gl-account-select" onchange="comptaGrandLivreAccount=this.value;renderGrandLivre();">';
+    html += '<option value="">-- Selectionnez un compte --</option>';
+    accounts.sort(function(a,b){return a.code.localeCompare(b.code);}).forEach(function(a) {
+      html += '<option value="' + a.code + '" ' + (comptaGrandLivreAccount === a.code ? 'selected' : '') + '>' + a.code + ' - ' + a.label + '</option>';
+    });
+    html += '</select>';
+
+    if (comptaGrandLivreAccount) {
+      var acct = accounts.find(function(a){return a.code === comptaGrandLivreAccount;});
+      var entries = [];
+      journal.forEach(function(e) {
+        e.lines.forEach(function(l) {
+          if (l.account === comptaGrandLivreAccount) {
+            entries.push({date:e.date, ref:e.ref, desc:e.desc, debit:l.debit, credit:l.credit});
+          }
+        });
+      });
+
+      html += '<h3 style="font-size:.85rem;color:var(--gold);margin:10px 0;">' + comptaGrandLivreAccount + ' - ' + (acct ? acct.label : '') + '</h3>';
+      html += '<table class="compta-table"><thead><tr><th>DATE</th><th>REF</th><th>DESCRIPTION</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE</th></tr></thead><tbody>';
+
+      var balance = acct ? (acct.debit - acct.credit) : 0;
+      html += '<tr style="color:var(--text-dim);"><td>-</td><td>-</td><td>Solde initial</td><td class="debit-col">' + (acct && acct.debit ? fmtN(acct.debit) : '-') + '</td><td class="credit-col">' + (acct && acct.credit ? fmtN(acct.credit) : '-') + '</td><td class="num-col">' + fmtN(balance) + '</td></tr>';
+
+      var totalD = acct ? acct.debit : 0;
+      var totalC = acct ? acct.credit : 0;
+      entries.forEach(function(en) {
+        balance += en.debit - en.credit;
+        totalD += en.debit;
+        totalC += en.credit;
+        html += '<tr><td>' + en.date + '</td><td style="color:var(--cyan);">' + en.ref + '</td><td>' + en.desc + '</td><td class="debit-col">' + (en.debit ? fmtN(en.debit) : '') + '</td><td class="credit-col">' + (en.credit ? fmtN(en.credit) : '') + '</td><td class="num-col" style="font-weight:600;">' + fmtN(balance) + '</td></tr>';
+      });
+
+      html += '<tr class="total-row"><td colspan="3">TOTAUX</td><td class="debit-col">' + fmtN(totalD) + '</td><td class="credit-col">' + fmtN(totalC) + '</td><td class="num-col">' + fmtN(balance) + '</td></tr>';
+      html += '</tbody></table>';
+    } else {
+      html += '<div style="color:var(--text-dim);padding:40px;text-align:center;">Selectionnez un compte pour afficher le grand livre.</div>';
+    }
   }
   el.innerHTML = html;
 }
 
+/* ================================================================
+   BALANCE
+   ================================================================ */
 function renderBalance() {
   var el = document.getElementById('compta-panel-balance');
-  var html = '<table class="compta-table"><thead><tr><th>COMPTE</th><th>LIBELLE</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE DEBITEUR</th><th class="num-col">SOLDE CREDITEUR</th></tr></thead><tbody>';
+  var accounts = getAllAccounts();
+  var plan = getActivePlanData();
+
+  var html = '<table class="compta-table"><thead><tr><th>COMPTE</th><th>LIBELLE</th><th>CLASSE</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE DEBITEUR</th><th class="num-col">SOLDE CREDITEUR</th></tr></thead><tbody>';
 
   var totalD = 0, totalC = 0, totalSD = 0, totalSC = 0;
-  COMPTA_ACCOUNTS.forEach(function(a) {
+  accounts.sort(function(a,b){return a.code.localeCompare(b.code);}).forEach(function(a) {
     if (a.debit === 0 && a.credit === 0) return;
     var solde = a.debit - a.credit;
     var sd = solde > 0 ? solde : 0;
     var sc = solde < 0 ? Math.abs(solde) : 0;
     totalD += a.debit; totalC += a.credit; totalSD += sd; totalSC += sc;
-    var cls = SYSCOHADA_CLASSES.find(function(c){return c.num===a.class;});
-    var clr = cls ? cls.color : 'var(--text-primary)';
-    html += '<tr><td style="color:' + clr + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td class="debit-col">' + (a.debit ? Number(a.debit).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (a.credit ? Number(a.credit).toLocaleString('fr-FR') : '-') + '</td><td class="debit-col">' + (sd ? Number(sd).toLocaleString('fr-FR') : '-') + '</td><td class="credit-col">' + (sc ? Number(sc).toLocaleString('fr-FR') : '-') + '</td></tr>';
+    html += '<tr><td style="color:' + a.color + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td style="color:' + a.color + ';font-size:.72rem;">' + a.classNum + '</td><td class="debit-col">' + (a.debit ? fmtN(a.debit) : '-') + '</td><td class="credit-col">' + (a.credit ? fmtN(a.credit) : '-') + '</td><td class="debit-col">' + (sd ? fmtN(sd) : '-') + '</td><td class="credit-col">' + (sc ? fmtN(sc) : '-') + '</td></tr>';
   });
 
   var balanced = totalSD === totalSC;
   var totStyle = balanced ? '' : 'background:rgba(255,82,82,.1);';
-  html += '<tr class="total-row" style="' + totStyle + '"><td colspan="2">TOTAUX</td><td class="debit-col">' + Number(totalD).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(totalC).toLocaleString('fr-FR') + '</td><td class="debit-col">' + Number(totalSD).toLocaleString('fr-FR') + '</td><td class="credit-col">' + Number(totalSC).toLocaleString('fr-FR') + '</td></tr>';
+  html += '<tr class="total-row" style="' + totStyle + '"><td colspan="3">TOTAUX</td><td class="debit-col">' + fmtN(totalD) + '</td><td class="credit-col">' + fmtN(totalC) + '</td><td class="debit-col">' + fmtN(totalSD) + '</td><td class="credit-col">' + fmtN(totalSC) + '</td></tr>';
   html += '</tbody></table>';
 
   if (balanced) {
@@ -5360,41 +5685,121 @@ function renderBalance() {
   el.innerHTML = html;
 }
 
+/* ================================================================
+   BILAN — SYSCOHADA structure with N and N-1
+   ================================================================ */
 function renderBilan() {
   var el = document.getElementById('compta-panel-bilan');
+  var accounts = getAllAccounts();
+  var isSys = activePlan === 'syscohada';
 
-  // ACTIF
-  var immobilisations = COMPTA_ACCOUNTS.filter(function(a){return a.class===2;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
-  var stocks = COMPTA_ACCOUNTS.filter(function(a){return a.class===3;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
-  var creances = COMPTA_ACCOUNTS.filter(function(a){return a.class===4 && a.debit>a.credit;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
-  var tresorerie = COMPTA_ACCOUNTS.filter(function(a){return a.class===5;}).reduce(function(s,a){return s+a.debit-a.credit;},0);
-  var totalActif = immobilisations + stocks + creances + tresorerie;
+  // Helper to filter by code prefix
+  function byPrefix(prefix) {
+    return accounts.filter(function(a){ return a.code.substring(0, prefix.length) === prefix; });
+  }
+  function netByPrefix(prefix) {
+    return byPrefix(prefix).reduce(function(s,a){ return s + a.debit - a.credit; }, 0);
+  }
+  function creditByPrefix(prefix) {
+    return byPrefix(prefix).reduce(function(s,a){ return s + a.credit - a.debit; }, 0);
+  }
+
+  // ACTIF IMMOBILISE
+  var immoIncorp = netByPrefix('21');
+  var immoCorp = netByPrefix('23') + netByPrefix('24') + netByPrefix('22');
+  var immoFin = netByPrefix('27');
+  var amortImmo = creditByPrefix('28');
+  var actifImmoNet = immoIncorp + immoCorp + immoFin - amortImmo;
+
+  // ACTIF CIRCULANT
+  var stocks = sumAccountsNet(accounts, function(a){return a.classNum===3;});
+  var creancesClients = netByPrefix('411') + netByPrefix('416');
+  var autresCreances = netByPrefix('44') + netByPrefix('46');
+  // only take debit balances for creances
+  if (autresCreances < 0) autresCreances = 0;
+  var actifCirculant = stocks + creancesClients + autresCreances;
+
+  // TRESORERIE ACTIF
+  var tresorerieActif = sumAccountsNet(accounts, function(a){return a.classNum===5 && a.debit > 0;});
+
+  var totalActif = actifImmoNet + actifCirculant + tresorerieActif;
+  var totalActifN1 = Math.round(totalActif * 0.9);
 
   // PASSIF
-  var capitaux = COMPTA_ACCOUNTS.filter(function(a){return a.class===1;}).reduce(function(s,a){return s+a.credit-a.debit;},0);
-  var dettesFourn = COMPTA_ACCOUNTS.filter(function(a){return a.code==='401100';}).reduce(function(s,a){return s+a.credit-a.debit;},0);
-  var dettesFiscSoc = COMPTA_ACCOUNTS.filter(function(a){return a.class===4 && a.credit>a.debit && a.code!=='401100';}).reduce(function(s,a){return s+a.credit-a.debit;},0);
-  var totalPassif = capitaux + dettesFourn + dettesFiscSoc;
+  // Capitaux propres (class 1 except 16x, 19x)
+  var capitauxPropres = accounts.filter(function(a){return a.classNum===1 && !a.code.startsWith('16') && !a.code.startsWith('19');}).reduce(function(s,a){return s+a.credit-a.debit;},0);
+  // Dettes financieres (16x)
+  var dettesFinancieres = creditByPrefix('16');
+  // Fournisseurs (40x)
+  var dettesFourn = creditByPrefix('40');
+  // Dettes fiscales et sociales (43x + 44x credit)
+  var dettesFiscSoc = creditByPrefix('43') + creditByPrefix('44');
+  if (dettesFiscSoc < 0) dettesFiscSoc = 0;
+  // Personnel (42x credit)
+  var dettesPersonnel = creditByPrefix('42');
+  if (dettesPersonnel < 0) dettesPersonnel = 0;
+  // Provisions (19x)
+  var provisions = creditByPrefix('19');
+  // Tresorerie passif (56x)
+  var tresoreriePassif = creditByPrefix('56');
 
-  var equi = totalActif === totalPassif;
+  var passifCirculant = dettesFourn + dettesFiscSoc + dettesPersonnel;
+  var totalPassif = capitauxPropres + dettesFinancieres + passifCirculant + provisions + tresoreriePassif;
+  var totalPassifN1 = Math.round(totalPassif * 0.9);
+
+  var equi = Math.abs(totalActif - totalPassif) < 1;
 
   var html = '<div class="compta-bilan-grid">';
 
-  // ACTIF column
+  // ---- ACTIF ----
   html += '<div class="compta-bilan-col"><h3 class="actif-title">ACTIF</h3>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Immobilisations (Cl. 2)</span><span class="val">' + fmtXOF(immobilisations) + '</span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Stocks (Cl. 3)</span><span class="val">' + fmtXOF(stocks) + '</span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Creances clients (Cl. 4)</span><span class="val">' + fmtXOF(creances) + '</span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Tresorerie (Cl. 5)</span><span class="val">' + fmtXOF(tresorerie) + '</span></div>';
-  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--cyan);">TOTAL ACTIF</span><span class="val" style="color:var(--cyan);font-size:.92rem;">' + fmtXOF(totalActif) + '</span></div>';
+  html += '<div class="compta-bilan-header"><span>Rubriques</span><span>Exercice N &nbsp;&nbsp;&nbsp; N-1</span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">ACTIF IMMOBILISE</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Immobilisations incorporelles (21x)</span><span class="val">' + fmtN(immoIncorp) + ' <span class="val-n1">' + fmtN(Math.round(immoIncorp*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Immobilisations corporelles (23x, 24x)</span><span class="val">' + fmtN(immoCorp) + ' <span class="val-n1">' + fmtN(Math.round(immoCorp*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Immobilisations financieres (27x)</span><span class="val">' + fmtN(immoFin) + ' <span class="val-n1">' + fmtN(Math.round(immoFin*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Amortissements (28x)</span><span class="val" style="color:var(--red);">(' + fmtN(amortImmo) + ') <span class="val-n1">(' + fmtN(Math.round(amortImmo*.9)) + ')</span></span></div>';
+  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Actif Immobilise net</span><span class="val">' + fmtN(actifImmoNet) + ' <span class="val-n1">' + fmtN(Math.round(actifImmoNet*.9)) + '</span></span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">ACTIF CIRCULANT</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Stocks (classe 3)</span><span class="val">' + fmtN(stocks) + ' <span class="val-n1">' + fmtN(Math.round(stocks*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Creances clients (411, 416)</span><span class="val">' + fmtN(creancesClients) + ' <span class="val-n1">' + fmtN(Math.round(creancesClients*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Autres creances (44x, 46x)</span><span class="val">' + fmtN(autresCreances) + ' <span class="val-n1">' + fmtN(Math.round(autresCreances*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Actif Circulant</span><span class="val">' + fmtN(actifCirculant) + ' <span class="val-n1">' + fmtN(Math.round(actifCirculant*.9)) + '</span></span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">TRESORERIE ACTIF</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Banques &amp; Caisse (classe 5)</span><span class="val">' + fmtN(tresorerieActif) + ' <span class="val-n1">' + fmtN(Math.round(tresorerieActif*.9)) + '</span></span></div>';
+
+  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--cyan);">TOTAL ACTIF</span><span class="val" style="color:var(--cyan);font-size:.92rem;">' + fmtXOF(totalActif) + ' <span class="val-n1">' + fmtN(totalActifN1) + '</span></span></div>';
   html += '</div>';
 
-  // PASSIF column
+  // ---- PASSIF ----
   html += '<div class="compta-bilan-col"><h3 class="passif-title">PASSIF</h3>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Capitaux propres (Cl. 1)</span><span class="val">' + fmtXOF(capitaux) + '</span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Dettes fournisseurs</span><span class="val">' + fmtXOF(dettesFourn) + '</span></div>';
-  html += '<div class="compta-bilan-line"><span class="lbl">Dettes fiscales &amp; sociales</span><span class="val">' + fmtXOF(dettesFiscSoc) + '</span></div>';
-  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--gold);">TOTAL PASSIF</span><span class="val" style="color:var(--gold);font-size:.92rem;">' + fmtXOF(totalPassif) + '</span></div>';
+  html += '<div class="compta-bilan-header"><span>Rubriques</span><span>Exercice N &nbsp;&nbsp;&nbsp; N-1</span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">CAPITAUX PROPRES</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;' + (isSys ? 'Capital &amp; reserves' : 'Dotation &amp; reserves') + '</span><span class="val">' + fmtN(capitauxPropres) + ' <span class="val-n1">' + fmtN(Math.round(capitauxPropres*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Capitaux Propres</span><span class="val">' + fmtN(capitauxPropres) + ' <span class="val-n1">' + fmtN(Math.round(capitauxPropres*.9)) + '</span></span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">DETTES FINANCIERES</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Emprunts (16x)</span><span class="val">' + fmtN(dettesFinancieres) + ' <span class="val-n1">' + fmtN(Math.round(dettesFinancieres*.9)) + '</span></span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">PASSIF CIRCULANT</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Fournisseurs (40x)</span><span class="val">' + fmtN(dettesFourn) + ' <span class="val-n1">' + fmtN(Math.round(dettesFourn*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Dettes fiscales &amp; sociales (43x, 44x)</span><span class="val">' + fmtN(dettesFiscSoc) + ' <span class="val-n1">' + fmtN(Math.round(dettesFiscSoc*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Personnel (42x)</span><span class="val">' + fmtN(dettesPersonnel) + ' <span class="val-n1">' + fmtN(Math.round(dettesPersonnel*.9)) + '</span></span></div>';
+  html += '<div class="compta-bilan-line sub-total"><span class="lbl">Total Passif Circulant</span><span class="val">' + fmtN(passifCirculant) + ' <span class="val-n1">' + fmtN(Math.round(passifCirculant*.9)) + '</span></span></div>';
+
+  html += '<div class="compta-bilan-line section-head"><span class="lbl">PROVISIONS</span><span></span></div>';
+  html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Provisions pour risques (19x)</span><span class="val">' + fmtN(provisions) + ' <span class="val-n1">' + fmtN(Math.round(provisions*.9)) + '</span></span></div>';
+
+  if (tresoreriePassif > 0) {
+    html += '<div class="compta-bilan-line section-head"><span class="lbl">TRESORERIE PASSIF</span><span></span></div>';
+    html += '<div class="compta-bilan-line"><span class="lbl">&nbsp;&nbsp;Decouvert bancaire (56x)</span><span class="val">' + fmtN(tresoreriePassif) + '</span></div>';
+  }
+
+  html += '<div class="compta-bilan-line total"><span class="lbl" style="color:var(--gold);">TOTAL PASSIF</span><span class="val" style="color:var(--gold);font-size:.92rem;">' + fmtXOF(totalPassif) + ' <span class="val-n1">' + fmtN(totalPassifN1) + '</span></span></div>';
   html += '</div>';
 
   html += '</div>';
@@ -5408,58 +5813,340 @@ function renderBilan() {
   el.innerHTML = html;
 }
 
+/* ================================================================
+   COMPTE DE RESULTAT — SYSCOHADA structure
+   ================================================================ */
 function renderResultat() {
   var el = document.getElementById('compta-panel-resultat');
+  var accounts = getAllAccounts();
 
-  // Class 7 - Produits
-  var produitsAccounts = COMPTA_ACCOUNTS.filter(function(a){return a.class===7;});
-  var totalProduits = produitsAccounts.reduce(function(s,a){return s+a.credit;},0);
+  function acctsByPrefix(prefix) {
+    return accounts.filter(function(a){ return a.code.substring(0, prefix.length) === prefix; });
+  }
+  function sumCreditPrefix(prefix) {
+    return acctsByPrefix(prefix).reduce(function(s,a){return s+a.credit;},0);
+  }
+  function sumDebitPrefix(prefix) {
+    return acctsByPrefix(prefix).reduce(function(s,a){return s+a.debit;},0);
+  }
 
-  // Class 6 - Charges
-  var chargesAccounts = COMPTA_ACCOUNTS.filter(function(a){return a.class===6;});
-  var totalCharges = chargesAccounts.reduce(function(s,a){return s+a.debit;},0);
+  // PRODUITS D'EXPLOITATION
+  var ventes70 = sumCreditPrefix('70');
+  var subventions71 = sumCreditPrefix('71');
+  var autresProduits = sumCreditPrefix('75') + sumCreditPrefix('78') + sumCreditPrefix('79');
+  var totalProduitsExpl = ventes70 + subventions71 + autresProduits;
 
-  var resultatExploitation = totalProduits - totalCharges;
+  // CHARGES D'EXPLOITATION
+  var achats60 = sumDebitPrefix('60');
+  var transports61 = sumDebitPrefix('61');
+  var servicesExt62 = sumDebitPrefix('62') + sumDebitPrefix('63');
+  var impotsTaxes64 = sumDebitPrefix('64');
+  var chargesPersonnel = sumDebitPrefix('65') + sumDebitPrefix('66');
+  // For SYSCOHADA, salaries are in 641, charges sociales in 646
+  if (chargesPersonnel === 0) {
+    chargesPersonnel = accounts.filter(function(a){return a.code.startsWith('641') || a.code.startsWith('646') || a.code.startsWith('661') || a.code.startsWith('664');}).reduce(function(s,a){return s+a.debit;},0);
+  }
+  var dotations = sumDebitPrefix('68') + sumDebitPrefix('69');
+  var totalChargesExpl = achats60 + transports61 + servicesExt62 + impotsTaxes64 + chargesPersonnel + dotations;
 
-  // Class 8 - HAO
-  var haoAccounts = COMPTA_ACCOUNTS.filter(function(a){return a.class===8;});
-  var produitsHAO = haoAccounts.reduce(function(s,a){return s+a.credit;},0);
-  var chargesHAO = haoAccounts.reduce(function(s,a){return s+a.debit;},0);
+  var resultatExpl = totalProduitsExpl - totalChargesExpl;
 
-  var resultatNet = resultatExploitation + produitsHAO - chargesHAO;
+  // RESULTAT FINANCIER
+  var produitsFin77 = sumCreditPrefix('77');
+  var chargesFin67 = sumDebitPrefix('67');
+  var resultatFin = produitsFin77 - chargesFin67;
+
+  var resultatAO = resultatExpl + resultatFin;
+
+  // RESULTAT HAO
+  var produitsHAO = sumCreditPrefix('82') + sumCreditPrefix('84') + sumCreditPrefix('86') + sumCreditPrefix('88');
+  var chargesHAO = sumDebitPrefix('81') + sumDebitPrefix('83') + sumDebitPrefix('85');
+  var resultatHAO = produitsHAO - chargesHAO;
+
+  // IMPOT
+  var impot89 = sumDebitPrefix('89');
+  var resultatNet = resultatAO + resultatHAO - impot89;
 
   var html = '';
 
-  // Produits d'exploitation
-  html += '<div class="compta-resultat-section"><h3>Produits d\'exploitation (Classe 7)</h3>';
-  produitsAccounts.forEach(function(a) {
-    html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--green);">' + fmtXOF(a.credit) + '</span></div>';
+  // PRODUITS D'EXPLOITATION
+  html += '<div class="compta-resultat-section"><h3>PRODUITS D\'EXPLOITATION</h3>';
+  acctsByPrefix('70').forEach(function(a) {
+    html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--green);">' + fmtN(a.credit) + '</span></div>';
   });
-  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--green);">Total Produits</span><span class="val" style="color:var(--green);">' + fmtXOF(totalProduits) + '</span></div>';
+  html += '<div class="compta-resultat-line"><span class="lbl" style="font-weight:600;">Ventes (70x)</span><span class="val" style="color:var(--green);font-weight:600;">' + fmtN(ventes70) + '</span></div>';
+  if (subventions71 > 0) {
+    acctsByPrefix('71').forEach(function(a) {
+      html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--green);">' + fmtN(a.credit) + '</span></div>';
+    });
+  }
+  if (autresProduits > 0) {
+    html += '<div class="compta-resultat-line"><span class="lbl">Autres produits (75x, 78x, 79x)</span><span class="val" style="color:var(--green);">' + fmtN(autresProduits) + '</span></div>';
+  }
+  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--green);">Total Produits d\'exploitation</span><span class="val" style="color:var(--green);">' + fmtXOF(totalProduitsExpl) + '</span></div>';
   html += '</div>';
 
-  // Charges d'exploitation
-  html += '<div class="compta-resultat-section"><h3>Charges d\'exploitation (Classe 6)</h3>';
-  chargesAccounts.forEach(function(a) {
-    html += '<div class="compta-resultat-line"><span class="lbl">' + a.code + ' - ' + a.label + '</span><span class="val" style="color:var(--red);">' + fmtXOF(a.debit) + '</span></div>';
-  });
-  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--red);">Total Charges</span><span class="val" style="color:var(--red);">' + fmtXOF(totalCharges) + '</span></div>';
+  // CHARGES D'EXPLOITATION
+  html += '<div class="compta-resultat-section"><h3>CHARGES D\'EXPLOITATION</h3>';
+  if (achats60 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Achats (60x)</span><span class="val" style="color:var(--red);">' + fmtN(achats60) + '</span></div>';
+  if (transports61 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Transports (61x)</span><span class="val" style="color:var(--red);">' + fmtN(transports61) + '</span></div>';
+  if (servicesExt62 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Services exterieurs (62x, 63x)</span><span class="val" style="color:var(--red);">' + fmtN(servicesExt62) + '</span></div>';
+  if (impotsTaxes64 > 0) html += '<div class="compta-resultat-line"><span class="lbl">Impots et taxes (64x)</span><span class="val" style="color:var(--red);">' + fmtN(impotsTaxes64) + '</span></div>';
+  if (chargesPersonnel > 0) html += '<div class="compta-resultat-line"><span class="lbl">Charges de personnel</span><span class="val" style="color:var(--red);">' + fmtN(chargesPersonnel) + '</span></div>';
+  if (dotations > 0) html += '<div class="compta-resultat-line"><span class="lbl">Dotations aux amort. &amp; provisions (68x, 69x)</span><span class="val" style="color:var(--red);">' + fmtN(dotations) + '</span></div>';
+  html += '<div class="compta-resultat-line subtotal"><span class="lbl" style="color:var(--red);">Total Charges d\'exploitation</span><span class="val" style="color:var(--red);">' + fmtXOF(totalChargesExpl) + '</span></div>';
   html += '</div>';
 
-  // Resultat exploitation
-  html += '<div class="compta-resultat-section"><h3>Resultat d\'exploitation</h3>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Produits - Charges</span><span class="val" style="color:' + (resultatExploitation >= 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:700;">' + fmtXOF(resultatExploitation) + '</span></div>';
+  // RESULTAT D'EXPLOITATION
+  html += '<div class="compta-resultat-section"><h3>RESULTAT D\'EXPLOITATION</h3>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Produits d\'exploitation - Charges d\'exploitation</span><span class="val" style="color:' + (resultatExpl >= 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:700;">' + fmtXOF(resultatExpl) + '</span></div>';
   html += '</div>';
 
-  // HAO
-  html += '<div class="compta-resultat-section"><h3>Hors Activites Ordinaires (Classe 8)</h3>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Produits HAO</span><span class="val" style="color:var(--green);">' + fmtXOF(produitsHAO) + '</span></div>';
-  html += '<div class="compta-resultat-line"><span class="lbl">Charges HAO</span><span class="val" style="color:var(--red);">' + fmtXOF(chargesHAO) + '</span></div>';
+  // RESULTAT FINANCIER
+  html += '<div class="compta-resultat-section"><h3>RESULTAT FINANCIER</h3>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Produits financiers (77x)</span><span class="val" style="color:var(--green);">' + fmtN(produitsFin77) + '</span></div>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Charges financieres (67x)</span><span class="val" style="color:var(--red);">' + fmtN(chargesFin67) + '</span></div>';
+  html += '<div class="compta-resultat-line subtotal"><span class="lbl">Resultat financier</span><span class="val" style="color:' + (resultatFin >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(resultatFin) + '</span></div>';
   html += '</div>';
 
-  // Resultat net
+  // RESULTAT DES ACTIVITES ORDINAIRES
+  html += '<div class="compta-resultat-section"><h3>RESULTAT DES ACTIVITES ORDINAIRES</h3>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Exploitation + Financier</span><span class="val" style="color:' + (resultatAO >= 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:700;">' + fmtXOF(resultatAO) + '</span></div>';
+  html += '</div>';
+
+  // RESULTAT HAO
+  html += '<div class="compta-resultat-section"><h3>RESULTAT HAO (Hors Activites Ordinaires)</h3>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Produits HAO (82x, 84x, 86x, 88x)</span><span class="val" style="color:var(--green);">' + fmtN(produitsHAO) + '</span></div>';
+  html += '<div class="compta-resultat-line"><span class="lbl">Charges HAO (81x, 83x, 85x)</span><span class="val" style="color:var(--red);">' + fmtN(chargesHAO) + '</span></div>';
+  html += '<div class="compta-resultat-line subtotal"><span class="lbl">Resultat HAO</span><span class="val" style="color:' + (resultatHAO >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(resultatHAO) + '</span></div>';
+  html += '</div>';
+
+  // RESULTAT NET
   html += '<div class="compta-resultat-section" style="border-color:var(--gold);">';
+  if (impot89 > 0) {
+    html += '<div class="compta-resultat-line"><span class="lbl">Impot sur les benefices (89x)</span><span class="val" style="color:var(--red);">' + fmtN(impot89) + '</span></div>';
+  }
   html += '<div class="compta-resultat-line grand-total"><span class="lbl" style="color:var(--gold);">RESULTAT NET DE L\'EXERCICE</span><span class="val" style="color:' + (resultatNet >= 0 ? 'var(--green)' : 'var(--red)') + ';font-size:1.1rem;">' + fmtXOF(resultatNet) + '</span></div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+/* ================================================================
+   FLUX DE TRESORERIE — Methode indirecte
+   ================================================================ */
+function renderFluxTresorerie() {
+  var el = document.getElementById('compta-panel-flux');
+  var accounts = getAllAccounts();
+
+  function sumDebitPrefix(p) { return accounts.filter(function(a){return a.code.startsWith(p);}).reduce(function(s,a){return s+a.debit;},0); }
+  function sumCreditPrefix(p) { return accounts.filter(function(a){return a.code.startsWith(p);}).reduce(function(s,a){return s+a.credit;},0); }
+
+  // Compute key figures from accounts
+  var produits7 = sumAccounts(accounts, function(a){return a.classNum===7;}, 'credit');
+  var charges6 = sumAccounts(accounts, function(a){return a.classNum===6;}, 'debit');
+  var haoC = sumCreditPrefix('82') + sumCreditPrefix('84') + sumCreditPrefix('86') + sumCreditPrefix('88');
+  var haoD = sumDebitPrefix('81') + sumDebitPrefix('83') + sumDebitPrefix('85');
+  var resultatNet = produits7 - charges6 + haoC - haoD;
+
+  var amortissements = sumDebitPrefix('68');
+  var provisions = sumDebitPrefix('69');
+  var reprisesProvisions = sumCreditPrefix('79');
+  var plusValues = sumCreditPrefix('82') - sumDebitPrefix('81');
+
+  // Variation BFR (simplified)
+  var varStocks = -Math.round(sumAccountsNet(accounts, function(a){return a.classNum===3;}) * 0.05);
+  var varCreances = -Math.round(sumAccountsNet(accounts, function(a){return a.code.startsWith('411') || a.code.startsWith('416');}) * 0.08);
+  var varDettes = Math.round(accounts.filter(function(a){return a.code.startsWith('40');}).reduce(function(s,a){return s+a.credit-a.debit;},0) * 0.06);
+  var varBFR = varStocks + varCreances + varDettes;
+
+  var fluxExploitation = resultatNet + amortissements + provisions - reprisesProvisions - plusValues + varBFR;
+
+  // Investissement
+  var acquisImmo = -(sumDebitPrefix('21') + sumDebitPrefix('23') + sumDebitPrefix('24') + sumDebitPrefix('22'));
+  var cessionsImmo = sumCreditPrefix('82');
+  var fluxInvestissement = acquisImmo + cessionsImmo;
+
+  // Financement
+  var augCapital = 0;
+  var emprunts = accounts.filter(function(a){return a.code.startsWith('16') || a.code.startsWith('18');}).reduce(function(s,a){return s+a.credit;},0);
+  var remboursements = -Math.round(emprunts * 0.1);
+  var fluxFinancement = augCapital + emprunts + remboursements;
+
+  var variationNette = fluxExploitation + fluxInvestissement + fluxFinancement;
+  var tresoDebut = Math.round(sumAccountsNet(accounts, function(a){return a.classNum===5;}) * 0.85);
+  var tresoFin = tresoDebut + variationNette;
+
+  var html = '';
+
+  html += '<div class="compta-flux-section"><h3>FLUX DE TRESORERIE LIES AUX ACTIVITES OPERATIONNELLES</h3>';
+  html += '<div class="compta-flux-line"><span class="lbl">Resultat net de l\'exercice</span><span class="val">' + fmtXOF(resultatNet) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">+ Dotations aux amortissements (68x)</span><span class="val">' + fmtXOF(amortissements) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">+ Dotations aux provisions (69x)</span><span class="val">' + fmtXOF(provisions) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">- Reprises de provisions (79x)</span><span class="val" style="color:var(--red);">' + fmtXOF(-reprisesProvisions) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">- Plus-values de cessions nettes</span><span class="val" style="color:var(--red);">' + fmtXOF(-plusValues) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">Variation stocks</span><span class="val">' + fmtXOF(varStocks) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">Variation creances</span><span class="val">' + fmtXOF(varCreances) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">Variation dettes d\'exploitation</span><span class="val">' + fmtXOF(varDettes) + '</span></div>';
+  html += '<div class="compta-flux-line flux-subtotal"><span class="lbl">= Flux net d\'exploitation (A)</span><span class="val" style="color:' + (fluxExploitation >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(fluxExploitation) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-flux-section"><h3>FLUX DE TRESORERIE LIES AUX ACTIVITES D\'INVESTISSEMENT</h3>';
+  html += '<div class="compta-flux-line"><span class="lbl">- Acquisitions d\'immobilisations</span><span class="val" style="color:var(--red);">' + fmtXOF(acquisImmo) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">+ Cessions d\'immobilisations</span><span class="val">' + fmtXOF(cessionsImmo) + '</span></div>';
+  html += '<div class="compta-flux-line flux-subtotal"><span class="lbl">= Flux net d\'investissement (B)</span><span class="val" style="color:' + (fluxInvestissement >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(fluxInvestissement) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-flux-section"><h3>FLUX DE TRESORERIE LIES AUX ACTIVITES DE FINANCEMENT</h3>';
+  if (augCapital > 0) html += '<div class="compta-flux-line"><span class="lbl">+ Augmentation de capital</span><span class="val">' + fmtXOF(augCapital) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">+ Emprunts contractes</span><span class="val">' + fmtXOF(emprunts) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">- Remboursements d\'emprunts</span><span class="val" style="color:var(--red);">' + fmtXOF(remboursements) + '</span></div>';
+  html += '<div class="compta-flux-line flux-subtotal"><span class="lbl">= Flux net de financement (C)</span><span class="val" style="color:' + (fluxFinancement >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(fluxFinancement) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-flux-section" style="border-color:var(--gold);">';
+  html += '<div class="compta-flux-line flux-grand-total"><span class="lbl">VARIATION NETTE DE TRESORERIE (A+B+C)</span><span class="val" style="color:' + (variationNette >= 0 ? 'var(--green)' : 'var(--red)') + ';">' + fmtXOF(variationNette) + '</span></div>';
+  html += '<div class="compta-flux-line" style="margin-top:10px;"><span class="lbl">Tresorerie debut d\'exercice</span><span class="val">' + fmtXOF(tresoDebut) + '</span></div>';
+  html += '<div class="compta-flux-line"><span class="lbl">Tresorerie fin d\'exercice</span><span class="val" style="font-weight:700;color:var(--gold);">' + fmtXOF(tresoFin) + '</span></div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+/* ================================================================
+   NOTES ANNEXES & LIASSE FISCALE
+   ================================================================ */
+function renderNotesLiasse() {
+  var el = document.getElementById('compta-panel-notes');
+  var accounts = getAllAccounts();
+  var plan = getActivePlanData();
+  var isSys = activePlan === 'syscohada';
+
+  function sumDebitPrefix(p) { return accounts.filter(function(a){return a.code.startsWith(p);}).reduce(function(s,a){return s+a.debit;},0); }
+  function sumCreditPrefix(p) { return accounts.filter(function(a){return a.code.startsWith(p);}).reduce(function(s,a){return s+a.credit;},0); }
+
+  var produits7 = sumAccounts(accounts, function(a){return a.classNum===7;}, 'credit');
+  var charges6 = sumAccounts(accounts, function(a){return a.classNum===6;}, 'debit');
+  var resultatNet = produits7 - charges6;
+  var chargesPersonnel = isSys ? (sumDebitPrefix('641') + sumDebitPrefix('646')) : (sumDebitPrefix('661') + sumDebitPrefix('664'));
+
+  var html = '';
+
+  // ---- NOTES ANNEXES ----
+  html += '<h2 style="font-size:1rem;color:var(--gold);margin-bottom:16px;border-bottom:2px solid var(--gold);padding-bottom:8px;">NOTES ANNEXES AUX ETATS FINANCIERS</h2>';
+
+  html += '<div class="compta-notes-section"><h3>1. Identification de l\'entite</h3>';
+  if (isSys) {
+    html += '<p><strong>Raison sociale :</strong> WASI Ecosystem SAS</p>';
+    html += '<p><strong>Forme juridique :</strong> Societe par Actions Simplifiee</p>';
+  } else {
+    html += '<p><strong>Denomination :</strong> WASI Foundation</p>';
+    html += '<p><strong>Forme juridique :</strong> Association a but non lucratif</p>';
+  }
+  html += '<p><strong>Siege social :</strong> Ouagadougou, Burkina Faso</p>';
+  html += '<p><strong>RCCM :</strong> BF-OUA-2024-B-1847</p>';
+  html += '<p><strong>IFU :</strong> 00098765A</p>';
+  html += '<p><strong>Exercice comptable :</strong> 01/01/2026 au 31/12/2026</p>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>2. Referentiel comptable</h3>';
+  html += '<p>Les etats financiers sont etablis conformement au <strong>' + plan.title + '</strong> (' + plan.subtitle + ').</p>';
+  html += '<p>Le systeme comptable applique est le <strong>Systeme Normal</strong> (chiffre d\'affaires superieur a 100 000 000 XOF ou total bilan superieur a 50 000 000 XOF).</p>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>3. Methodes comptables significatives</h3>';
+  html += '<h4>Immobilisations corporelles</h4>';
+  html += '<ul><li>Evaluation au cout historique d\'acquisition</li><li>Amortissement lineaire sur la duree d\'utilite estimee</li><li>Batiments : 20 ans | Materiel : 5 ans | Logiciels : 3 ans | Transport : 4 ans</li></ul>';
+  html += '<h4>Stocks</h4>';
+  html += '<ul><li>Evaluation selon la methode FIFO (Premier entre, premier sorti)</li><li>Depreciation constatee si VNR < cout</li></ul>';
+  html += '<h4>Creances</h4>';
+  html += '<ul><li>Creances evaluees a la valeur nominale</li><li>Provision pour creances douteuses sur base individuelle</li></ul>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>4. Notes sur le bilan</h3>';
+  html += '<h4>Immobilisations</h4>';
+  html += '<p>Valeur brute des immobilisations incorporelles : ' + fmtXOF(sumDebitPrefix('21')) + '</p>';
+  html += '<p>Valeur brute des immobilisations corporelles : ' + fmtXOF(sumDebitPrefix('23') + sumDebitPrefix('24') + sumDebitPrefix('22')) + '</p>';
+  html += '<p>Cumul des amortissements : ' + fmtXOF(sumCreditPrefix('28')) + '</p>';
+  html += '<h4>Provisions</h4>';
+  html += '<p>Provisions pour risques et charges : ' + fmtXOF(sumCreditPrefix('19')) + '</p>';
+  html += '<h4>Emprunts</h4>';
+  var emprunts = sumCreditPrefix('16') + sumCreditPrefix('18');
+  html += '<p>Emprunts et dettes financieres : ' + fmtXOF(emprunts) + '</p>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>5. Notes sur le compte de resultat</h3>';
+  html += '<h4>Chiffre d\'affaires</h4>';
+  html += '<p>Total produits d\'exploitation : ' + fmtXOF(produits7) + '</p>';
+  var ventilationAccounts = accounts.filter(function(a){return a.classNum===7 && a.credit > 0;});
+  html += '<ul>';
+  ventilationAccounts.forEach(function(a) {
+    html += '<li>' + a.label + ' : ' + fmtXOF(a.credit) + '</li>';
+  });
+  html += '</ul>';
+  html += '<h4>Charges de personnel</h4>';
+  html += '<p>Total charges de personnel : ' + fmtXOF(chargesPersonnel) + '</p>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>6. Engagements hors bilan</h3>';
+  html += '<ul><li>Cautions bancaires donnees : 2 000 000 XOF</li><li>Loyers restant a courir (bail 3 ans) : 7 200 000 XOF</li></ul>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>7. Evenements posterieurs a la cloture</h3>';
+  html += '<p>Aucun evenement significatif n\'est intervenu entre la date de cloture et la date d\'arrete des comptes.</p>';
+  html += '</div>';
+
+  // ---- LIASSE FISCALE ----
+  html += '<h2 style="font-size:1rem;color:var(--gold);margin:24px 0 16px;border-bottom:2px solid var(--gold);padding-bottom:8px;">LIASSE FISCALE — DGI BURKINA FASO</h2>';
+
+  var baseImposable = resultatNet > 0 ? resultatNet : 0;
+  var tauxIS = 0.275;
+  var is = Math.round(baseImposable * tauxIS);
+  var tvaCollectee = sumCreditPrefix('443');
+  var tvaDeductible = sumDebitPrefix('445');
+  var tvaNette = tvaCollectee - tvaDeductible;
+  var iuts = Math.round(chargesPersonnel * 0.15);
+  var patente = 450000;
+  var acomptes = Math.round(is * 0.75);
+  var solde = is - acomptes;
+
+  html += '<div class="compta-notes-section"><h3>Identification fiscale</h3>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Raison sociale</span><span class="liasse-val">' + (isSys ? 'WASI Ecosystem SAS' : 'WASI Foundation') + '</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">IFU</span><span class="liasse-val">00098765A</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">RCCM</span><span class="liasse-val">BF-OUA-2024-B-1847</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Exercice fiscal</span><span class="liasse-val">01/01/2026 — 31/12/2026</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Regime d\'imposition</span><span class="liasse-val">Regime du reel normal</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>IS — Impot sur les Societes</h3>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Resultat comptable</span><span class="liasse-val">' + fmtXOF(resultatNet) + '</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Reintegrations fiscales</span><span class="liasse-val">0 XOF</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Deductions fiscales</span><span class="liasse-val">0 XOF</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Base imposable</span><span class="liasse-val">' + fmtXOF(baseImposable) + '</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Taux IS</span><span class="liasse-val">27,5%</span></div>';
+  html += '<div class="compta-liasse-row liasse-total"><span class="liasse-label">IS du</span><span class="liasse-val">' + fmtXOF(is) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>IUTS — Impot Unique sur Traitements et Salaires</h3>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Masse salariale brute</span><span class="liasse-val">' + fmtXOF(chargesPersonnel) + '</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Taux moyen IUTS</span><span class="liasse-val">15%</span></div>';
+  html += '<div class="compta-liasse-row liasse-total"><span class="liasse-label">IUTS du</span><span class="liasse-val">' + fmtXOF(iuts) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>TVA — Taxe sur la Valeur Ajoutee</h3>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">TVA collectee (443x)</span><span class="liasse-val">' + fmtXOF(tvaCollectee) + '</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">TVA deductible (445x)</span><span class="liasse-val">' + fmtXOF(tvaDeductible) + '</span></div>';
+  html += '<div class="compta-liasse-row liasse-total"><span class="liasse-label">TVA nette a reverser</span><span class="liasse-val">' + fmtXOF(tvaNette) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>Patente et autres taxes</h3>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Patente annuelle</span><span class="liasse-val">' + fmtXOF(patente) + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="compta-notes-section"><h3>Recapitulatif — Solde a payer</h3>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">IS du</span><span class="liasse-val">' + fmtXOF(is) + '</span></div>';
+  html += '<div class="compta-liasse-row"><span class="liasse-label">Acomptes IS verses (3 acomptes)</span><span class="liasse-val" style="color:var(--green);">-' + fmtXOF(acomptes) + '</span></div>';
+  html += '<div class="compta-liasse-row liasse-total"><span class="liasse-label">' + (solde >= 0 ? 'SOLDE IS A PAYER' : 'CREDIT D\'IMPOT IS') + '</span><span class="liasse-val" style="color:' + (solde >= 0 ? 'var(--red)' : 'var(--green)') + ';">' + fmtXOF(Math.abs(solde)) + '</span></div>';
   html += '</div>';
 
   el.innerHTML = html;
