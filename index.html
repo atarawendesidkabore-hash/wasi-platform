@@ -3661,6 +3661,10 @@ const BANK_TRANSACTIONS=[
 ];
 
 /* ========== UTILITY ========== */
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 function fmt(n) {
   if (n == null) return '--';
   return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -3700,7 +3704,7 @@ function validateGate() {
     return;
   }
   // Show app immediately, try API login in background
-  token = 'demo_token_' + Date.now();
+  token = 'demo_' + crypto.randomUUID();
   document.getElementById('access-gate').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   initApp();
@@ -3712,7 +3716,7 @@ function validateGate() {
     fetch(API + '/auth/login', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username: key, password: key}),
+      body: JSON.stringify({username: 'demo', password: key}),
       signal: controller.signal
     }).then(res => res.ok ? res.json() : null).then(data => {
       if (data && data.access_token) {
@@ -3931,7 +3935,7 @@ function renderCountries() {
   const filtered = getFilteredCountries();
   el.innerHTML = filtered.map(c => {
     const sc = scoreClass(c.score);
-    return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="selectCountry('${c.code}')">
+    return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="selectCountry('${esc(c.code)}')">
       <span class="flag">${c.flag}</span>
       <span class="cname">${c.name}</span>
       <span class="cscore ${sc}">${c.score}</span>
@@ -4053,7 +4057,7 @@ function renderDesktopCountryDetail(code) {
       ${d.exports.map(e => `<span style="padding:3px 8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;font-size:.7rem;color:var(--text-secondary);">📦 ${e}</span>`).join('')}
     </div>
 
-    <button onclick="document.getElementById('chat-input').value='Analyse complete de ${c.name} : opportunites, risques, corridors et previsions';sendChat();" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${c.name}</button>
+    <button onclick="document.getElementById('chat-input').value='Analyse complete de ${esc(c.name)} : opportunites, risques, corridors et previsions';sendChat();" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${esc(c.name)}</button>
     <button onclick="clearCountryFocus()" style="width:100%;padding:8px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--radius);font-size:.78rem;cursor:pointer;">← Vue composite</button>
   `;
 
@@ -4111,7 +4115,7 @@ function renderMobileCountryList() {
 
     html += regionCountries.map(c => {
       const sc = scoreClass(c.score);
-      return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="showMobileCountryDetail('${c.code}')" style="padding:12px;">
+      return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="showMobileCountryDetail('${esc(c.code)}')" style="padding:12px;">
         <span class="flag" style="font-size:1.6rem;">${c.flag}</span>
         <span style="flex:1;">
           <span class="cname" style="display:block;font-size:.9rem;font-weight:500;">${c.name}</span>
@@ -4206,7 +4210,7 @@ function showMobileCountryDetail(code) {
     </div>
 
     <div class="cd-actions">
-      <button class="cd-action-btn primary" onclick="askAboutCountry('${c.name}')">💬 Interroger l'IA</button>
+      <button class="cd-action-btn primary" onclick="askAboutCountry('${esc(c.name)}')">💬 Interroger l'IA</button>
       <button class="cd-action-btn secondary" onclick="closeMobileCountries()">← Retour</button>
     </div>
   `;
