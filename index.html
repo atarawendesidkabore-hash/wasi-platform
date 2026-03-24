@@ -7832,7 +7832,18 @@ function renderNotesLiasse() {
 var adminToken = null;
 var adminUser = null;
 var adminData = { health: null, audit: null, users: [], alerts: [] };
-var ADMIN_API = 'https://wasi-backend-api.onrender.com';
+// Express banking API — try local first, fall back to Render
+var ADMIN_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8010'
+  : 'https://wasi-web-api.onrender.com';
+
+// Auto-detect: probe local Express server
+(async function() {
+  try {
+    var res = await fetch('http://localhost:8010/api/health', { signal: AbortSignal.timeout(2000) });
+    if (res.ok) ADMIN_API = 'http://localhost:8010';
+  } catch(e) {}
+})();
 
 async function adminReq(path, opts) {
   var headers = { 'Content-Type': 'application/json' };
@@ -7863,7 +7874,7 @@ async function adminLogin() {
     document.getElementById('admin-who').textContent = 'Connecte: ' + adminUser.username + ' (' + adminUser.role + ')';
     adminRefresh();
   } catch(e) {
-    document.getElementById('admin-login-err').textContent = e.message;
+    document.getElementById('admin-login-err').textContent = e.message + ' (API: ' + ADMIN_API + ')';
   }
 }
 
