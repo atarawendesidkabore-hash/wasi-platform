@@ -7832,25 +7832,29 @@ function renderNotesLiasse() {
 var adminToken = null;
 var adminUser = null;
 var adminData = { health: null, audit: null, users: [], alerts: [] };
-// Express banking API — auto-detect local or Render
-var ADMIN_API = 'https://wasi-web-api.onrender.com';
+// Use the same Python FastAPI backend that's already live
+var ADMIN_API = API; // 'https://wasi-backend-api.onrender.com'
+// Also try local Express server for admin-specific endpoints
+var BANKING_API = null;
 (async function() {
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    ADMIN_API = 'http://localhost:8010';
-    return;
-  }
   try {
     var res = await fetch('http://localhost:8010/api/health', { signal: AbortSignal.timeout(1500) });
-    if (res.ok) ADMIN_API = 'http://localhost:8010';
+    if (res.ok) BANKING_API = 'http://localhost:8010';
   } catch(e) {}
 })();
 
 async function adminReq(path, opts) {
   var headers = { 'Content-Type': 'application/json' };
   if (adminToken) headers['Authorization'] = 'Bearer ' + adminToken;
-  var res = await fetch(ADMIN_API + path, Object.assign({ headers: headers }, opts || {}));
+  // Try local Express first (has admin endpoints), fall back to Python API
+  var base = BANKING_API || ADMIN_API;
+  var res = await fetch(base + path, Object.assign({ headers: headers }, opts || {}));
+  if (!res.ok && BANKING_API && base === BANKING_API) {
+    // Fallback to Python API
+    res = await fetch(ADMIN_API + path, Object.assign({ headers: headers }, opts || {}));
+  }
   var data = await res.json().catch(function() { return null; });
-  if (!res.ok) throw new Error((data && data.error) || 'HTTP ' + res.status);
+  if (!res.ok) throw new Error((data && (data.error || data.detail)) || 'HTTP ' + res.status);
   return data && data.data ? data.data : data;
 }
 
@@ -7859,22 +7863,27 @@ async function adminLogin() {
   var pass = document.getElementById('admin-pass').value;
   document.getElementById('admin-login-err').textContent = '';
   try {
-    var res = await fetch(ADMIN_API + '/api/v1/banking/auth/login', {
+    // Try Python FastAPI backend (form-urlencoded)
+    var res = await fetch(ADMIN_API + '/api/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: user, password: pass })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'username=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(pass)
     });
     var data = await res.json();
-    if (!res.ok || !data.data || !data.data.accessToken) throw new Error(data.error || 'Login echoue');
-    if (data.data.user.role !== 'MANAGER') throw new Error('Acces reserve aux managers');
-    adminToken = data.data.accessToken;
-    adminUser = data.data.user;
+    if (!res.ok || !data.access_token) throw new Error(data.detail || 'Login echoue');
+    adminToken = data.access_token;
+    // Fetch user profile
+    var meRes = await fetch(ADMIN_API + '/api/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + adminToken }
+    });
+    var me = meRes.ok ? await meRes.json() : { username: user, role: 'USER' };
+    adminUser = me;
     document.getElementById('admin-login-form').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'block';
-    document.getElementById('admin-who').textContent = 'Connecte: ' + adminUser.username + ' (' + adminUser.role + ')';
+    document.getElementById('admin-who').textContent = 'Connecte: ' + (adminUser.username || user) + ' (' + (adminUser.tier || 'free') + ')';
     adminRefresh();
   } catch(e) {
-    document.getElementById('admin-login-err').textContent = e.message + ' (API: ' + ADMIN_API + ')';
+    document.getElementById('admin-login-err').textContent = e.message;
   }
 }
 
@@ -7896,18 +7905,36 @@ function adminTab(tab, btn) {
 }
 
 async function adminRefresh() {
-  try {
-    var results = await Promise.allSettled([
-      adminReq('/api/v1/platform/health'),
-      adminReq('/api/v1/admin/audit/summary'),
-      adminReq('/api/v1/admin/users?limit=100'),
-      adminReq('/api/v1/admin/alerts?limit=50')
-    ]);
-    if (results[0].status === 'fulfilled') adminData.health = results[0].value;
-    if (results[1].status === 'fulfilled') adminData.audit = results[1].value;
-    if (results[2].status === 'fulfilled') adminData.users = results[2].value.users || [];
-    if (results[3].status === 'fulfilled') adminData.alerts = results[3].value.alerts || [];
-  } catch(e) {}
+  // Fetch from whichever backend is available
+  var fetches = [];
+  // Try Python API health
+  fetches.push(fetch(ADMIN_API + '/api/health', {
+    headers: adminToken ? { 'Authorization': 'Bearer ' + adminToken } : {}
+  }).then(function(r) { return r.json(); }).catch(function() { return null; }));
+  // Try Express admin endpoints if available
+  if (BANKING_API) {
+    fetches.push(adminReq('/api/v1/admin/audit/summary').catch(function() { return null; }));
+    fetches.push(adminReq('/api/v1/admin/users?limit=100').catch(function() { return null; }));
+    fetches.push(adminReq('/api/v1/admin/alerts?limit=50').catch(function() { return null; }));
+  } else {
+    fetches.push(Promise.resolve(null));
+    fetches.push(Promise.resolve(null));
+    fetches.push(Promise.resolve(null));
+  }
+  var results = await Promise.all(fetches);
+  if (results[0]) {
+    adminData.health = {
+      status: results[0].status === 'healthy' || results[0].status === 'ok' ? 'healthy' : results[0].status,
+      database: results[0].database || 'unknown',
+      version: results[0].version || '--',
+      uptime: results[0].uptime || null,
+      counts: results[0].counts || { users: '--', accounts: '--', transactions: '--' },
+      unacknowledgedAlerts: results[0].unacknowledgedAlerts || 0,
+    };
+  }
+  if (results[1]) adminData.audit = results[1];
+  if (results[2]) adminData.users = results[2].users || results[2] || [];
+  if (results[3]) adminData.alerts = results[3].alerts || results[3] || [];
   renderAdminOverview();
   renderAdminUsers();
   renderAdminAudit();
@@ -7928,6 +7955,9 @@ function renderAdminOverview() {
   html += '<div class="admin-stat"><div class="admin-stat-label">Transactions</div><div class="admin-stat-val" style="color:var(--green);">' + (c.transactions || 0) + '</div></div>';
   html += '<div class="admin-stat"><div class="admin-stat-label">Alertes</div><div class="admin-stat-val" style="color:' + ((h.unacknowledgedAlerts || 0) > 0 ? 'var(--red)' : 'var(--green)') + ';">' + (h.unacknowledgedAlerts || 0) + '</div></div>';
   html += '</div>';
+  if (!BANKING_API) {
+    html += '<div class="admin-card" style="color:var(--text-dim);font-size:.82rem;">ℹ Serveur Express local non detecte. Demarrez <code>node server/index.mjs</code> pour les fonctions avancees (audit, utilisateurs, alertes).<br>Le backend Python est connecte.</div>';
+  }
   if (a.last24h !== undefined) {
     html += '<div class="admin-card"><h3 style="color:var(--gold);margin:0 0 10px;font-size:.9rem;">Audit — 24 dernieres heures</h3>';
     html += '<div style="display:flex;gap:20px;font-size:.82rem;"><span style="color:var(--text-dim);">Total: </span>' + a.totalEntries;
