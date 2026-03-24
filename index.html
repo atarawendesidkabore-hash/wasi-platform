@@ -7832,15 +7832,15 @@ function renderNotesLiasse() {
 var adminToken = null;
 var adminUser = null;
 var adminData = { health: null, audit: null, users: [], alerts: [] };
-// Express banking API — try local first, fall back to Render
-var ADMIN_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:8010'
-  : 'https://wasi-web-api.onrender.com';
-
-// Auto-detect: probe local Express server
+// Express banking API — auto-detect local or Render
+var ADMIN_API = 'https://wasi-web-api.onrender.com';
 (async function() {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    ADMIN_API = 'http://localhost:8010';
+    return;
+  }
   try {
-    var res = await fetch('http://localhost:8010/api/health', { signal: AbortSignal.timeout(2000) });
+    var res = await fetch('http://localhost:8010/api/health', { signal: AbortSignal.timeout(1500) });
     if (res.ok) ADMIN_API = 'http://localhost:8010';
   } catch(e) {}
 })();
