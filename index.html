@@ -2610,7 +2610,78 @@ input, select, textarea { font-family: inherit; outline: none; }
     </div>
   </div>
 
-  <!-- ===== COMPTA (OHADA-SYSCOHADA) SCREEN ===== -->
+
+        <!-- UMOA/BCEAO Compliance -->
+        <div class="bank-screen" id="bs-bumoa">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Conformite UMOA / BCEAO</h2>
+          <div class="bank-grid-2">
+            <div class="bcard">
+              <div class="bcard-title">Normes Prudentielles</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div class="tf-row"><span class="lab">Solvabilite (FP/Risques)</span><span class="val" style="color:var(--bank-green);font-weight:700;">&ge; 8%</span></div>
+                <div class="tf-row"><span class="lab">Couverture MLT</span><span class="val" style="color:var(--bank-green);">&ge; 75%</span></div>
+                <div class="tf-row"><span class="lab">Division risques (1 sign.)</span><span class="val">&le; 75% FP</span></div>
+                <div class="tf-row"><span class="lab">Concentration (&gt;25% FP)</span><span class="val">&le; 8x FP</span></div>
+                <div class="tf-row"><span class="lab">Liquidite</span><span class="val" style="color:var(--bank-green);">&ge; 75%</span></div>
+                <div class="tf-row"><span class="lab">Portefeuille (accords class.)</span><span class="val">&ge; 60%</span></div>
+                <div class="tf-row"><span class="lab">Credits dirigeants</span><span class="val">&le; 20% FP</span></div>
+              </div>
+            </div>
+            <div class="bcard">
+              <div class="bcard-title">Taux &amp; Seuils Reglementaires</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div class="tf-row"><span class="lab">Usure - Banques</span><span class="val" style="font-weight:700;color:var(--bank-red);">18% / an</span></div>
+                <div class="tf-row"><span class="lab">Usure - SFD</span><span class="val" style="font-weight:700;color:var(--bank-red);">27% / an</span></div>
+                <div class="tf-row"><span class="lab">Capital min. banque</span><span class="val">10 Mds FCFA</span></div>
+                <div class="tf-row"><span class="lab">Reserve speciale</span><span class="val">15% ben. nets</span></div>
+                <div class="tf-row"><span class="lab">Reserve obligatoire</span><span class="val">Mensuelle</span></div>
+                <div class="tf-row"><span class="lab">Cloture comptes</span><span class="val">31 Dec</span></div>
+                <div class="tf-row"><span class="lab">Transmission CB</span><span class="val">Avant 30 Juin</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="bank-grid">
+            <div class="bcard">
+              <div class="bcard-title">Autorites de Tutelle</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div style="padding:12px;background:#f5f3ef;border-radius:8px;"><div style="font-size:.75rem;font-weight:700;color:var(--bank-accent);text-transform:uppercase;">BCEAO</div><div style="font-size:.8rem;color:var(--bank-text2);margin-top:4px;">Politique monetaire, PCB, reserves obligatoires, centralisation risques</div></div>
+                <div style="padding:12px;background:#f5f3ef;border-radius:8px;"><div style="font-size:.75rem;font-weight:700;color:var(--bank-accent);text-transform:uppercase;">Commission Bancaire</div><div style="font-size:.8rem;color:var(--bank-text2);margin-top:4px;">Controle sur pieces/place, agrement unique, sanctions disciplinaires</div></div>
+                <div style="padding:12px;background:#f5f3ef;border-radius:8px;"><div style="font-size:.75rem;font-weight:700;color:var(--bank-accent);text-transform:uppercase;">CREPMF</div><div style="font-size:.8rem;color:var(--bank-text2);margin-top:4px;">Marche financier regional, BRVM, visa appel public a l&apos;epargne</div></div>
+                <div style="padding:12px;background:#f5f3ef;border-radius:8px;"><div style="font-size:.75rem;font-weight:700;color:var(--bank-accent);text-transform:uppercase;">OHADA</div><div style="font-size:.8rem;color:var(--bank-text2);margin-top:4px;">Droit des affaires, societes commerciales, suretes, SYSCOHADA</div></div>
+              </div>
+            </div>
+            <div class="bcard">
+              <div class="bcard-title">Obligations de Reporting</div>
+              <div style="font-size:.85rem;display:flex;flex-direction:column;gap:6px;">
+                <div>&#10004; Situations comptables periodiques (PCB)</div>
+                <div>&#10004; Comptes annuels certifies commissaire aux comptes</div>
+                <div>&#10004; Ratios prudentiels trimestriels</div>
+                <div>&#10004; Rapport controle interne annuel</div>
+                <div>&#10004; Centralisation risques BCEAO</div>
+                <div>&#10004; Incidents paiement (FCC, FCCI, FIBOL)</div>
+                <div>&#10004; Reserves obligatoires mensuelles</div>
+                <div>&#10004; Liste dirigeants a jour (CB + registre commerce)</div>
+              </div>
+            </div>
+            <div class="bcard">
+              <div class="bcard-title">SFD / Microfinance (Loi PARMEC)</div>
+              <div style="font-size:.85rem;display:flex;flex-direction:column;gap:6px;">
+                <div>&#9679; Agrement Ministre des Finances obligatoire</div>
+                <div>&#9679; Exercice social : 1er Oct - 30 Sept</div>
+                <div>&#9679; Rapport consolide annuel BCEAO + CB</div>
+                <div>&#9679; Organe financier = statut banque/EF</div>
+                <div>&#9679; Exoneration fiscale epargne + credit</div>
+                <div>&#9679; Convention-cadre structures non mutualistes (5 ans)</div>
+                <div>&#9679; Taux usure SFD : 27% / an maximum</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding:12px;background:#f5f3ef;border-radius:8px;text-align:center;font-size:.72rem;color:var(--bank-text2);">
+            Source : Guide du Banquier de l&apos;UMOA &mdash; Commission Bancaire &bull; Loi-cadre reglementation bancaire &bull; Convention BCEAO 24/04/1990 &bull; Loi PARMEC
+          </div>
+        </div>
+
+    <!-- ===== COMPTA (OHADA-SYSCOHADA) SCREEN ===== -->
   <div id="screen-compta" class="screen">
     <div class="compta-header">
       <div class="compta-header-left">
