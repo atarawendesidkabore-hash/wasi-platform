@@ -2497,12 +2497,12 @@ input, select, textarea { font-family: inherit; outline: none; }
         <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
       </div>
       <div class="sm-header-stats">
-        <span>8</span> PME + <span>17</span> bourses &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
+        <span>8</span> PME + <span>29</span> bourses &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
       </div>
     </div>
     <div class="sm-tabs" id="sm-tabs">
       <button class="sm-tab active" onclick="switchSMTab('marche',this)">March&eacute;</button>
-      <button class="sm-tab" onclick="switchSMTab('bourses',this)">Bourses Africaines (17)</button>
+      <button class="sm-tab" onclick="switchSMTab('bourses',this)">Bourses Africaines (29)</button>
       <button class="sm-tab" onclick="switchSMTab('emetteurs',this)">&Eacute;metteurs</button>
       <button class="sm-tab" onclick="switchSMTab('portfolio',this)">Mon Portefeuille SM</button>
       <button class="sm-tab" onclick="switchSMTab('soumettre',this)">Soumettre une PME</button>
@@ -2531,7 +2531,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <!-- ÉMETTEURS tab -->
       <div class="sm-panel" id="sm-panel-bourses">
         <div style="margin-bottom:16px;">
-          <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">17 Bourses Africaines</div>
+          <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">29 Bourses Africaines</div>
           <div style="font-size:.78rem;color:var(--text-secondary);margin-top:4px;">Vue continentale de tous les marches boursiers africains disponibles sur WASI</div>
         </div>
         <div id="sm-exchanges-grid" style="display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));"></div>
@@ -6285,6 +6285,17 @@ const AFRICAN_EXCHANGES = [
   {id:'bvmt',name:'BVMT',full:'Bourse de Tunis',city:'Tunis',country:'Tunisie',ccy:'TND',idx:'TUNINDEX: 9,450',cap:'~$10 Mds',n:78,arr:'BVMT_STOCKS'},
   {id:'bvmac',name:'BVMAC',full:'BVMAC (CEMAC)',city:'Douala',country:'CEMAC',ccy:'XAF',idx:'BVMAC: 210',cap:'N/A',n:5,arr:'BVMAC_STOCKS'},
   {id:'nsx',name:'NSX',full:'Namibian SE',city:'Windhoek',country:'Namibie',ccy:'NAD',idx:'NSX: 1,580',cap:'~$9.5 Mds',n:40,arr:'NSX_STOCKS'},
+  {id:'ase',name:'SGBV',full:'Bourse d\'Alger',city:'Alger',country:'Algerie',ccy:'DZD',idx:'N/A',cap:'~$350 M',n:5,arr:'ASE_STOCKS'},
+  {id:'msei',name:'MSE',full:'Malawi Stock Exchange',city:'Blantyre',country:'Malawi',ccy:'MWK',idx:'MASI: 42,500',cap:'~$1.2 Mds',n:16,arr:'MSEI_STOCKS'},
+  {id:'bvm',name:'BVM',full:'Bolsa de Valores Mozambique',city:'Maputo',country:'Mozambique',ccy:'MZN',idx:'BVM: 4,200',cap:'~$890 M',n:12,arr:'BVM_STOCKS'},
+  {id:'ese',name:'ESX',full:'Ethiopian Securities Exchange',city:'Addis-Abeba',country:'Ethiopie',ccy:'ETB',idx:'ESX (2025)',cap:'En dev.',n:0,arr:'ESE_STOCKS'},
+  {id:'kse',name:'KSE',full:'Khartoum Stock Exchange',city:'Khartoum',country:'Soudan',ccy:'SDG',idx:'KSE: 15,200',cap:'~$1.8 Mds',n:60,arr:'KSE_STOCKS'},
+  {id:'lsm',name:'LSM',full:'Libyan Stock Market',city:'Tripoli',country:'Libye',ccy:'LYD',idx:'LSM: 75',cap:'~$3 Mds',n:7,arr:'LSM_STOCKS'},
+  {id:'sse',name:'MERJ',full:'MERJ Exchange (Seychelles)',city:'Victoria',country:'Seychelles',ccy:'SCR',idx:'SSE: 520',cap:'~$150 M',n:8,arr:'SSE_STOCKS'},
+  {id:'swse',name:'SSX',full:'Eswatini Stock Exchange',city:'Mbabane',country:'Eswatini',ccy:'SZL',idx:'N/A',cap:'~$80 M',n:6,arr:'SWSE_STOCKS'},
+  {id:'csx',name:'CSX',full:'Cape Verde Stock Exchange',city:'Praia',country:'Cap-Vert',ccy:'CVE',idx:'N/A',cap:'~$25 M',n:4,arr:'CSX_STOCKS'},
+  {id:'spdse',name:'SPDSE',full:'South Sudan (projet)',city:'Juba',country:'Soudan du Sud',ccy:'SSP',idx:'N/A',cap:'En dev.',n:0,arr:'SPDSE_STOCKS'},
+  {id:'comse',name:'COMSE',full:'Comoros Exchange (projet)',city:'Moroni',country:'Comores',ccy:'KMF',idx:'N/A',cap:'En dev.',n:0,arr:'COMSE_STOCKS'},
 ];
 function renderSMExchanges() {
   var g = document.getElementById('sm-exchanges-grid');
