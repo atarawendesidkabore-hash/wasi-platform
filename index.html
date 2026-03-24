@@ -2225,7 +2225,10 @@ input, select, textarea { font-family: inherit; outline: none; }
           <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion Orange Money en cours...', 'info')">Orange Money</button>
         </div>
       </div>
-      <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button style="padding:10px 20px;background:var(--gold);color:#fff;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;" onclick="document.querySelector(&quot;.bank-main&quot;).style.display=&quot;&quot;;showBankScreen(&quot;bumoa&quot;)">Conformite UMOA / BCEAO</button><button style="padding:10px 20px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:0.85rem;cursor:pointer;" onclick="document.querySelector(&quot;.bank-main&quot;).style.display=&quot;&quot;;showBankScreen(&quot;bdash&quot;)">Acces Demo Banking</button></div><div style="margin-top:10px;font-size:0.72rem;color:var(--text-dim);">Licence BCEAO (EME) en cours d'obtention &bull; Zone UEMOA &bull; 17 pays OHADA</div>
+      <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a href="javascript:void(0)" style="display:inline-block;padding:12px 24px;background:#C8922A;color:#fff;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;" id="btn-umoa-access">Conformite UMOA / BCEAO</a>
+        <a href="javascript:void(0)" style="display:inline-block;padding:12px 24px;background:#1A2A44;color:#8A9BB5;border:1px solid #2A3650;border-radius:8px;font-size:0.88rem;text-decoration:none;" id="btn-bank-demo">Acces Demo Banking</a>
+      </div><div style="margin-top:10px;font-size:0.72rem;color:var(--text-dim);">Licence BCEAO (EME) en cours d'obtention &bull; Zone UEMOA &bull; 17 pays OHADA</div>
     </div>
     <div class="bank-main" style="display:none;">
         <!-- Dashboard -->
@@ -3663,6 +3666,19 @@ function initApp() {
   renderTicker();
   renderCountries();
   renderComposite();
+
+// UMOA Banking buttons
+document.getElementById('btn-umoa-access').addEventListener('click', function() {
+  document.querySelector('.bank-main').style.display = '';
+  document.querySelectorAll('.bank-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bs-bumoa').classList.add('active');
+});
+document.getElementById('btn-bank-demo').addEventListener('click', function() {
+  document.querySelector('.bank-main').style.display = '';
+  document.querySelectorAll('.bank-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bs-bdash').classList.add('active');
+  if (typeof renderBankDashboard === 'function') renderBankDashboard();
+});
   renderBRVM();
   renderNGX();
   renderGSE();
