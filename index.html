@@ -210,7 +210,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   display: flex;
   gap: 28px;
   white-space: nowrap;
-  animation: tickerScroll 45s linear infinite;
+  animation: tickerScroll 180s linear infinite;
   padding: 6px 0;
   font-size: 0.78rem;
 }
@@ -3994,86 +3994,65 @@ function switchDexTab(tab, btn) {
 
 /* ========== TICKER ========== */
 function renderTicker() {
-  let html = '';
-  BRVM_STOCKS.forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)}</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  // All 28 exchanges — every stock, no truncation
+  var ALL_EXCHANGES = [
+    {arr:BRVM_STOCKS,  ccy:'XOF', lbl:'BRVM'},
+    {arr:NGX_STOCKS,   ccy:'NGN', lbl:'NGX'},
+    {arr:GSE_STOCKS,   ccy:'GHS', lbl:'GSE'},
+    {arr:JSE_STOCKS,   ccy:'ZAR', lbl:'JSE'},
+    {arr:EGX_STOCKS,   ccy:'EGP', lbl:'EGX'},
+    {arr:CSE_STOCKS,   ccy:'MAD', lbl:'CSE'},
+    {arr:NSE_STOCKS,   ccy:'KES', lbl:'NSE'},
+    {arr:DSE_STOCKS,   ccy:'TZS', lbl:'DSE'},
+    {arr:USE_STOCKS,   ccy:'UGX', lbl:'USE'},
+    {arr:RSE_STOCKS,   ccy:'RWF', lbl:'RSE'},
+    {arr:BSE_STOCKS,   ccy:'BWP', lbl:'BSE'},
+    {arr:LUSE_STOCKS,  ccy:'ZMW', lbl:'LuSE'},
+    {arr:ZSE_STOCKS,   ccy:'ZWG', lbl:'ZSE'},
+    {arr:SEM_STOCKS,   ccy:'MUR', lbl:'SEM'},
+    {arr:BVMT_STOCKS,  ccy:'TND', lbl:'BVMT'},
+    {arr:BVMAC_STOCKS, ccy:'XAF', lbl:'BVMAC'},
+    {arr:NSX_STOCKS,   ccy:'NAD', lbl:'NSX'},
+    {arr:ASE_STOCKS,   ccy:'DZD', lbl:'SGBV'},
+    {arr:MSEI_STOCKS,  ccy:'MWK', lbl:'MSE'},
+    {arr:BVM_STOCKS,   ccy:'MZN', lbl:'BVM'},
+    {arr:ESE_STOCKS,   ccy:'ETB', lbl:'ESX'},
+    {arr:KSE_STOCKS,   ccy:'SDG', lbl:'KSE'},
+    {arr:LSM_STOCKS,   ccy:'LYD', lbl:'LSM'},
+    {arr:SSE_STOCKS,   ccy:'SCR', lbl:'MERJ'},
+    {arr:SWSE_STOCKS,  ccy:'SZL', lbl:'SSX'},
+    {arr:CSX_STOCKS,   ccy:'CVE', lbl:'CSX'},
+    {arr:SPDSE_STOCKS, ccy:'SSP', lbl:'SPDSE'},
+    {arr:COMSE_STOCKS, ccy:'KMF', lbl:'COMSE'},
+  ];
+  var html = '';
+  ALL_EXCHANGES.forEach(function(ex) {
+    if (!ex.arr || ex.arr.length === 0) return;
+    html += '<span class="ticker-item" style="margin:0 6px;"><span style="color:var(--cyan);font-size:.62rem;font-weight:700;border:1px solid var(--cyan);padding:1px 4px;border-radius:3px;">'+ex.lbl+'</span></span>';
+    ex.arr.forEach(function(s) {
+      var cls = chgClass(s.change);
+      var price = s.price < 100 ? s.price.toFixed(2) : fmt(s.price);
+      html += '<span class="ticker-item"><span class="sym">'+s.ticker+'</span><span class="val">'+price+' '+ex.ccy+'</span><span class="chg '+cls+'">'+chgSign(s.change)+'</span></span>';
+    });
   });
-  NGX_STOCKS.slice(0,6).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} NGN</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  // FX rates
+  html += '<span class="ticker-item" style="margin:0 6px;"><span style="color:var(--gold);font-size:.62rem;font-weight:700;border:1px solid var(--gold-dim);padding:1px 4px;border-radius:3px;">FX</span></span>';
+  FX_RATES.forEach(function(f) {
+    var cls = f.change.includes('+') ? 'up' : f.change.includes('-') ? 'dn' : 'flat';
+    html += '<span class="ticker-item"><span class="sym">'+f.pair+'</span><span class="val">'+f.buy+'</span><span class="chg '+cls+'">'+f.change+'</span></span>';
   });
-  GSE_STOCKS.slice(0,4).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price.toFixed(2)} GHS</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
+  // Crypto
+  html += '<span class="ticker-item" style="margin:0 6px;"><span style="color:var(--orange);font-size:.62rem;font-weight:700;border:1px solid var(--orange);padding:1px 4px;border-radius:3px;">CRYPTO</span></span>';
+  CRYPTO_PRICES.forEach(function(c) {
+    var cls = chgClass(c.change);
+    html += '<span class="ticker-item"><span class="sym">'+c.token+'</span><span class="val">$'+fmt(c.usd)+'</span><span class="chg '+cls+'">'+chgSign(c.change)+'</span></span>';
   });
-  JSE_STOCKS.slice(0,4).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} ZAR</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  EGX_STOCKS.slice(0,3).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} EGP</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  CSE_STOCKS.slice(0,3).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} MAD</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  NSE_STOCKS.slice(0,3).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} KES</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  DSE_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} TZS</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  USE_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} UGX</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  RSE_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} RWF</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  BSE_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} BWP</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  LUSE_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} ZMW</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  ZSE_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} ZWG</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  SEM_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} MUR</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  BVMT_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} TND</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  BVMAC_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${fmt(s.price)} XAF</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  NSX_STOCKS.slice(0,2).forEach(s => {
-    const cls = chgClass(s.change);
-    html += `<span class="ticker-item"><span class="sym">${s.ticker}</span><span class="val">${s.price < 100 ? s.price.toFixed(2) : fmt(s.price)} NAD</span><span class="chg ${cls}">${chgSign(s.change)}</span></span>`;
-  });
-  FX_RATES.forEach(f => {
-    const cls = f.change.includes('+') ? 'up' : f.change.includes('-') ? 'dn' : 'flat';
-    html += `<span class="ticker-item"><span class="sym">${f.pair}</span><span class="val">${f.buy}</span><span class="chg ${cls}">${f.change}</span></span>`;
-  });
-  CRYPTO_PRICES.forEach(c => {
-    const cls = chgClass(c.change);
-    html += `<span class="ticker-item"><span class="sym">${c.token}</span><span class="val">$${fmt(c.usd)}</span><span class="chg ${cls}">${chgSign(c.change)}</span></span>`;
-  });
-  // duplicate for seamless scroll
-  document.getElementById('ticker-track').innerHTML = html + html;
-// Africa-only ticker row  let af = '';  const afExchanges = [    {arr:JSE_STOCKS,ccy:'ZAR',n:4,lbl:'JSE'},{arr:EGX_STOCKS,ccy:'EGP',n:3,lbl:'EGX'},{arr:CSE_STOCKS,ccy:'MAD',n:3,lbl:'CSE'},    {arr:NSE_STOCKS,ccy:'KES',n:3,lbl:'NSE'},{arr:DSE_STOCKS,ccy:'TZS',n:2,lbl:'DSE'},{arr:USE_STOCKS,ccy:'UGX',n:2,lbl:'USE'},    {arr:RSE_STOCKS,ccy:'RWF',n:2,lbl:'RSE'},{arr:BSE_STOCKS,ccy:'BWP',n:2,lbl:'BSE'},{arr:LUSE_STOCKS,ccy:'ZMW',n:2,lbl:'LuSE'},    {arr:ZSE_STOCKS,ccy:'ZWG',n:2,lbl:'ZSE'},{arr:SEM_STOCKS,ccy:'MUR',n:2,lbl:'SEM'},{arr:BVMT_STOCKS,ccy:'TND',n:2,lbl:'BVMT'},    {arr:BVMAC_STOCKS,ccy:'XAF',n:2,lbl:'BVMAC'},{arr:NSX_STOCKS,ccy:'NAD',n:2,lbl:'NSX'}  ];  afExchanges.forEach(function(ex) {    af += '<span class="ticker-item" style="margin-right:4px;"><span style="color:var(--cyan);font-size:.65rem;font-weight:700;">'+ex.lbl+'</span></span>';    ex.arr.slice(0,ex.n).forEach(function(s) {      var cls = chgClass(s.change);      af += '<span class="ticker-item"><span class="sym">'+s.ticker+'</span><span class="val">'+(s.price<100?s.price.toFixed(2):fmt(s.price))+' '+ex.ccy+'</span><span class="chg '+cls+'">'+chgSign(s.change)+'</span></span>';    });  });  document.getElementById('ticker-track-africa').innerHTML = af + af;
+  // Seamless loop: duplicate content
+  var track = document.getElementById('ticker-track');
+  if (track) track.innerHTML = html + html;
+  // Row 2: same content, reversed direction (already set via CSS animation-direction:reverse)
+  var track2 = document.getElementById('ticker-track-africa');
+  if (track2) track2.innerHTML = html + html;
 }
 
 /* ========== COUNTRIES ========== */
