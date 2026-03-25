@@ -1714,9 +1714,9 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div class="gate-box">
     <div class="gate-logo">W A S I</div>
     <div class="gate-sub">Whole African Strategic Intelligence</div>
-    <input type="text" id="gate-key" class="gate-input" placeholder="Clef d'acces WASI-XXXX-XX##" spellcheck="false" autocomplete="off">
-    <button class="gate-btn" onclick="validateGate()">ENTRER</button>
-    <div class="gate-hint">Demo: WASI-DEMO-DM01</div>
+    <input type="text" id="gate-key" class="gate-input" placeholder="Clef d'acces WASI-XXXX-XX##" data-i18n-ph="gate_placeholder" spellcheck="false" autocomplete="off">
+    <button class="gate-btn" onclick="validateGate()" data-i18n="gate_btn">ENTRER</button>
+    <div class="gate-hint" data-i18n="gate_hint">Demo: WASI-DEMO-DM01</div>
   </div>
 </div>
 
@@ -1733,15 +1733,16 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div class="topbar">
     <div class="topbar-brand">WASI</div>
     <div class="topbar-nav" id="main-nav">
-      <button class="active" onclick="showScreen('intel',this)">Intelligence</button>
+      <button class="active" onclick="showScreen('intel',this)" data-i18n="nav_intel">Intelligence</button>
       <button onclick="showScreen('dex',this)">DEX</button>
-      <button onclick="showScreen('bank',this)">Banking</button>
-      <button onclick="showScreen('stock',this)">Stock Market</button>
-      <button onclick="showScreen('compta',this)">Comptabilite</button>
-      <button onclick="showScreen('admin',this)" style="color:var(--gold);">Admin</button>
+      <button onclick="showScreen('bank',this)" data-i18n="nav_bank">Banking</button>
+      <button onclick="showScreen('stock',this)" data-i18n="nav_stock">Stock Market</button>
+      <button onclick="showScreen('compta',this)" data-i18n="nav_compta">Comptabilite</button>
+      <button onclick="showScreen('admin',this)" style="color:var(--gold);" data-i18n="nav_admin">Admin</button>
     </div>
     <div class="topbar-right">
-      <span class="topbar-user">Bienvenue, <strong id="user-name">Opérateur</strong></span>
+      <button id="lang-toggle-btn" onclick="toggleLang()" title="Switch language / Changer de langue" style="background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:3px 9px;border-radius:var(--radius);font-size:.7rem;font-family:var(--font-mono);cursor:pointer;letter-spacing:1px;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'">EN</button>
+      <span class="topbar-user" id="topbar-welcome-span">Bienvenue, <strong id="user-name">Opérateur</strong></span>
       <span class="topbar-tier" id="user-tier">DEMO</span>
     </div>
   </div>
@@ -1755,9 +1756,9 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div id="screen-intel" class="screen active">
     <!-- Left: Countries -->
     <div class="intel-left">
-      <div class="intel-left-title">54 PAYS &middot; AFRIQUE &middot; EN LIGNE</div>
+      <div class="intel-left-title" data-i18n="intel_left_title">54 PAYS &middot; AFRIQUE &middot; EN LIGNE</div>
       <div id="region-filter" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
-        <button class="region-btn active" onclick="filterRegion('TOUS',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:rgba(200,146,42,.15);color:var(--gold);cursor:pointer;">TOUS</button>
+        <button class="region-btn active" onclick="filterRegion('TOUS',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:rgba(200,146,42,.15);color:var(--gold);cursor:pointer;" data-i18n="filter_all">TOUS</button>
         <button class="region-btn" onclick="filterRegion('CEDEAO',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">CEDEAO</button>
         <button class="region-btn" onclick="filterRegion('CEMAC',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">CEMAC</button>
         <button class="region-btn" onclick="filterRegion('EAC',this)" style="padding:4px 8px;font-size:.68rem;font-family:var(--font-mono);border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;">EAC</button>
@@ -1770,34 +1771,34 @@ input, select, textarea { font-family: inherit; outline: none; }
     <div class="intel-center">
       <div class="chat-header">
         <div class="chat-header-title">WASI Intelligence</div>
-        <div class="chat-header-focus" id="chat-focus">Focus: AFRIQUE</div>
-        <button class="mobile-country-btn" onclick="openMobileCountries()">🌍 Pays</button>
+        <div class="chat-header-focus" id="chat-focus" data-i18n="chat_focus">Focus: AFRIQUE</div>
+        <button class="mobile-country-btn" onclick="openMobileCountries()" data-i18n="mobile_countries">🌍 Pays</button>
       </div>
       <div class="chat-messages" id="chat-messages">
-        <div class="chat-msg bot">Bienvenue dans WASI Intelligence. Posez vos questions sur le continent africain : indices de stabilite, risques politiques, opportunites economiques, corridors commerciaux.</div>
+        <div class="chat-msg bot" id="chat-welcome-msg" data-i18n="chat_welcome">Bienvenue dans WASI Intelligence. Posez vos questions sur le continent africain : indices de stabilite, risques politiques, opportunites economiques, corridors commerciaux.</div>
       </div>
       <div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>
       <div class="chat-suggestions">
-        <button class="chat-sugg" onclick="sendSugg(this)">Presentez WASI Ecosystem</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">WASI Terminal DEX et sources de donnees</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Qu'est-ce que le WASI Stock Market ?</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Analyse du corridor Abidjan-Lagos</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Opportunites BRVM + NGX + GSE 2026</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Comment coter ma PME sur WASI ?</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Projections financieres WASI 2030</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_1">Presentez WASI Ecosystem</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_2">WASI Terminal DEX et sources de donnees</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_3">Qu'est-ce que le WASI Stock Market ?</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_4">Analyse du corridor Abidjan-Lagos</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_5">Opportunites BRVM + NGX + GSE 2026</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_6">Comment coter ma PME sur WASI ?</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_7">Projections financieres WASI 2030</button>
+        <button class="chat-sugg" onclick="sendSugg(this)" data-i18n="chat_sugg_8">Risque politique au Sahel</button>
       </div>
       <div class="chat-input-bar">
-        <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." onkeydown="if(event.key==='Enter')sendChat()">
-        <button class="chat-send" onclick="sendChat()">Envoyer</button>
+        <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." data-i18n-ph="chat_placeholder" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()" data-i18n="chat_send">Envoyer</button>
       </div>
     </div>
     <!-- Right: Composite + Country Detail -->
     <div class="intel-right">
       <!-- Default: composite overview -->
       <div id="right-composite">
-        <div class="comp-title">Indice Composite WASI</div>
-        <div class="comp-score-big"><div class="val" id="comp-score-val">--</div><div class="label">Score moyen AFRIQUE</div></div>
+        <div class="comp-title" data-i18n="comp_title">Indice Composite WASI</div>
+        <div class="comp-score-big"><div class="val" id="comp-score-val">--</div><div class="label" data-i18n="comp_label">Score moyen AFRIQUE</div></div>
         <div id="comp-top5" class="comp-section"></div>
         <div id="comp-coups" class="comp-section"></div>
         <div id="comp-components" class="comp-section"></div>
@@ -1834,9 +1835,9 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="dex-tab" onclick="switchDexTab('commodites',this)" style="color:var(--orange);">&#127807; Commodit&eacute;s</button>
       <button class="dex-tab" onclick="switchDexTab('obligataire',this)" style="color:var(--cyan);">&#128200; Obligataire</button>
       <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
-      <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
-      <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
-      <button class="dex-tab" onclick="switchDexTab('port',this)">Portefeuille</button>
+      <button class="dex-tab" onclick="switchDexTab('crypto',this)" data-i18n="dex_crypto">Crypto Swap</button>
+      <button class="dex-tab" onclick="switchDexTab('fx',this)" data-i18n="dex_fx">Change (FX)</button>
+      <button class="dex-tab" onclick="switchDexTab('port',this)" data-i18n="dex_port">Portefeuille</button>
     </div>
     <div class="dex-body">
       <div class="dex-main">
@@ -1844,7 +1845,7 @@ input, select, textarea { font-family: inherit; outline: none; }
         <div class="dex-panel active" id="panel-brvm">
           <table class="data-table" id="brvm-table">
             <thead>
-              <tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (XOF)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr>
+              <tr><th data-i18n="th_name">Titre</th><th>Ticker</th><th data-i18n="th_sector">Secteur</th><th data-i18n="th_price_xof">Prix (XOF)</th><th>Var %</th><th>Volume</th><th>PER</th><th data-i18n="th_signal">Signal</th></tr>
             </thead>
             <tbody id="brvm-body"></tbody>
           </table>
@@ -2253,35 +2254,35 @@ input, select, textarea { font-family: inherit; outline: none; }
           <button class="order-side-btn" id="btn-sell" onclick="setOrderSide('sell')">VENTE</button>
         </div>
         <div class="form-group">
-          <label class="form-label">Titre</label>
+          <label class="form-label" data-i18n="ord_label_ticker">Titre</label>
           <select class="form-select" id="ord-ticker" onchange="calcOrder()">
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Type d'ordre</label>
+          <label class="form-label" data-i18n="ord_label_type">Type d'ordre</label>
           <select class="form-select" id="ord-type">
-            <option value="market">Marche</option>
-            <option value="limit">Limite</option>
+            <option value="market" data-i18n="ord_market">Marche</option>
+            <option value="limit" data-i18n="ord_limit">Limite</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Quantite</label>
+          <label class="form-label" data-i18n="ord_label_qty">Quantite</label>
           <input type="number" class="form-input" id="ord-qty" value="10" min="1" oninput="calcOrder()">
         </div>
         <div class="form-group">
-          <label class="form-label">Prix limite (XOF)</label>
+          <label class="form-label" data-i18n="ord_label_price">Prix limite (XOF)</label>
           <input type="number" class="form-input" id="ord-price" value="16500" oninput="calcOrder()">
         </div>
         <div class="order-summary" id="ord-summary">
-          <div class="order-summary-row"><span class="lab">Montant brut</span><span class="val" id="ord-gross">--</span></div>
-          <div class="order-summary-row"><span class="lab">Commission (0.5%)</span><span class="val" id="ord-fee">--</span></div>
-          <div class="order-summary-row"><span class="lab">Total</span><span class="val" id="ord-total">--</span></div>
+          <div class="order-summary-row"><span class="lab" data-i18n="ord_gross">Montant brut</span><span class="val" id="ord-gross">--</span></div>
+          <div class="order-summary-row"><span class="lab" data-i18n="ord_commission">Commission (0.5%)</span><span class="val" id="ord-fee">--</span></div>
+          <div class="order-summary-row"><span class="lab" data-i18n="ord_total">Total</span><span class="val" id="ord-total">--</span></div>
         </div>
-        <button class="order-exec-btn buy" id="ord-exec-btn" onclick="execOrder()">ACHETER</button>
+        <button class="order-exec-btn buy" id="ord-exec-btn" onclick="execOrder()" data-i18n="ord_buy_btn">ACHETER</button>
 
         <!-- Order book -->
         <div class="orderbook">
-          <div class="orderbook-title">Carnet d'ordres — SNTS</div>
+          <div class="orderbook-title" id="orderbook-title-el" data-i18n="orderbook_title_snts">Carnet d'ordres — SNTS</div>
           <div id="orderbook-content"></div>
         </div>
       </div>
@@ -2294,18 +2295,18 @@ input, select, textarea { font-family: inherit; outline: none; }
       <div style="font-size:4rem;margin-bottom:20px;">🏦</div>
       <div style="font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:10px;">AfriTrade Bank</div>
       <div style="font-size:0.92rem;color:var(--text-secondary);max-width:500px;margin-bottom:30px;line-height:1.7;">
-        La néobanque de l'investisseur africain.<br>
-        Comptes multidevises, transferts intra-AFRIQUE, micro-crédit PME.
+        <span data-i18n="bank_tagline">La néobanque de l'investisseur africain.</span><br>
+        <span data-i18n="bank_tagline2">Comptes multidevises, transferts intra-AFRIQUE, micro-crédit PME.</span>
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px;max-width:500px;width:100%;">
-        <div style="font-size:0.85rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Connectez vos documents financiers</div>
+        <div style="font-size:0.85rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;" data-i18n="bank_connect">Connectez vos documents financiers</div>
         <div style="border:2px dashed var(--border-light);border-radius:var(--radius-lg);padding:40px 20px;margin-bottom:16px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="document.getElementById('bank-file-input').click()">
           <div style="font-size:2rem;margin-bottom:8px;">📄</div>
-          <div style="font-size:0.88rem;color:var(--text-secondary);">Deposez vos releves bancaires ici</div>
-          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:6px;">CSV, Excel (.xlsx), PDF, OFX, MT940</div>
+          <div style="font-size:0.88rem;color:var(--text-secondary);" data-i18n="bank_drop">Deposez vos releves bancaires ici</div>
+          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:6px;" data-i18n="bank_formats">CSV, Excel (.xlsx), PDF, OFX, MT940</div>
           <input type="file" id="bank-file-input" style="display:none;" accept=".csv,.xlsx,.xls,.pdf,.ofx" onchange="showNotif('Fichier recu : ' + this.files[0].name + '. Traitement en cours...', 'success')">
         </div>
-        <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:16px;">Ou connectez-vous via API bancaire</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:16px;" data-i18n="bank_api"data-i18n="bank_api">Ou connectez-vous via API bancaire</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion Ecobank en cours...', 'info')">Ecobank</button>
           <button style="padding:12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:0.82rem;cursor:pointer;" onclick="showNotif('Connexion Coris Bank en cours...', 'info')">Coris Bank</button>
@@ -2314,22 +2315,22 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
       </div>
       <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <a href="javascript:void(0)" style="display:inline-block;padding:12px 24px;background:#C8922A;color:#fff;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;" id="btn-umoa-access">Conformité UMOA / BCEAO</a>
-        <a href="javascript:void(0)" style="display:inline-block;padding:12px 24px;background:#1A2A44;color:#8A9BB5;border:1px solid #2A3650;border-radius:8px;font-size:0.88rem;text-decoration:none;" id="btn-bank-demo">Acces Demo Banking</a>
+        <a href="javascript:void(0)" style="display:inline-block;padding:12px 24px;background:#C8922A;color:#fff;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;" id="btn-umoa-access" data-i18n="bank_compliance">Conformité UMOA / BCEAO</a>
+        <a href="javascript:void(0)" style="display:inline-block;padding:12px 24px;background:#1A2A44;color:#8A9BB5;border:1px solid #2A3650;border-radius:8px;font-size:0.88rem;text-decoration:none;" id="btn-bank-demo" data-i18n="bank_demo">Acces Demo Banking</a>
       </div><div style="margin-top:10px;font-size:0.72rem;color:var(--text-dim);">Licence BCEAO (EME) en cours d'obtention &bull; Zone UEMOA &bull; 17 pays OHADA</div>
     </div>
     <div class="bank-main" style="display:none;">
         <!-- Dashboard -->
         <div class="bank-screen active" id="bs-bdash">
-          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Tableau de bord</h2>
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);" data-i18n="bk_dash_title">Tableau de bord</h2>
           <div class="bank-grid" id="bank-cards"></div>
           <div class="bank-grid-2">
             <div class="bcard">
-              <div class="bcard-title">Transactions recentes</div>
+              <div class="bcard-title" data-i18n="bk_recent_tx">Transactions recentes</div>
               <div class="btx-list" id="bank-recent-tx"></div>
             </div>
             <div class="bcard">
-              <div class="bcard-title">Actions rapides</div>
+              <div class="bcard-title" data-i18n="bk_quick_actions">Actions rapides</div>
               <div style="display:flex;flex-direction:column;gap:10px;">
                 <button class="bform-btn" style="width:100%;" onclick="showBankScreen('btransfer',navBankBtn('Virements'))">Nouveau virement</button>
                 <button class="bform-btn" style="width:100%;background:var(--bank-green);" onclick="showBankScreen('bmobile',navBankBtn('Mobile Money'))">Dépôt Mobile Money</button>
@@ -2340,12 +2341,12 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
         <!-- Transfer -->
         <div class="bank-screen" id="bs-btransfer">
-          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Virements</h2>
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);" data-i18n="bk_transfers_title">Virements</h2>
           <div class="bank-grid-2">
             <div class="bcard">
-              <div class="bcard-title">Nouveau virement</div>
+              <div class="bcard-title" data-i18n="bk_new_transfer">Nouveau virement</div>
               <div class="bform-group">
-                <label class="bform-label">Type de virement</label>
+                <label class="bform-label" data-i18n="bk_transfer_type">Type de virement</label>
                 <select class="bform-select" id="btf-type" onchange="calcBTransfer()">
                   <option value="0.001,500">Virement interne (0.1%, min 500 XOF)</option>
                   <option value="0.005,1500">Virement UEMOA (0.5%, min 1 500 XOF)</option>
@@ -2354,7 +2355,7 @@ input, select, textarea { font-family: inherit; outline: none; }
                 </select>
               </div>
               <div class="bform-group">
-                <label class="bform-label">Beneficiaire</label>
+                <label class="bform-label" data-i18n="bk_benef">Beneficiaire</label>
                 <input type="text" class="bform-input" id="btf-benef" placeholder="Nom ou IBAN">
               </div>
               <div class="bform-group">
@@ -2362,7 +2363,7 @@ input, select, textarea { font-family: inherit; outline: none; }
                 <input type="number" class="bform-input" id="btf-amount" placeholder="0" oninput="calcBTransfer()">
               </div>
               <div class="bform-group">
-                <label class="bform-label">Motif</label>
+                <label class="bform-label" data-i18n="bk_motif">Motif</label>
                 <input type="text" class="bform-input" id="btf-motif" placeholder="Objet du virement">
               </div>
               <div class="tf-summary" id="btf-summary">
@@ -2373,7 +2374,7 @@ input, select, textarea { font-family: inherit; outline: none; }
               <button class="bform-btn" onclick="execTransfer()">Confirmer le virement</button>
             </div>
             <div class="bcard">
-              <div class="bcard-title">Virements programmes</div>
+              <div class="bcard-title" data-i18n="bk_scheduled">Virements programmes</div>
               <div class="btx-list">
                 <div class="btx-item">
                   <div class="btx-icon out">&#x27A1;</div>
@@ -2391,7 +2392,7 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
         <!-- Mobile Money -->
         <div class="bank-screen" id="bs-bmobile">
-          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Mobile Money</h2>
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);" data-i18n="bk_mm_title">Mobile Money</h2>
           <div class="bank-grid">
             <div class="bcard" style="text-align:center;">
               <div style="font-size:2rem;margin-bottom:8px;">&#x1F4F1;</div>
@@ -2413,11 +2414,11 @@ input, select, textarea { font-family: inherit; outline: none; }
             </div>
           </div>
           <div class="bcard">
-            <div class="bcard-title">Operation Mobile Money</div>
+            <div class="bcard-title" data-i18n="bk_mm_operation">Operation Mobile Money</div>
             <div class="bank-grid-2">
               <div>
                 <div class="bform-group">
-                  <label class="bform-label">Opérateur</label>
+                  <label class="bform-label" data-i18n="bk_mm_operator">Opérateur</label>
                   <select class="bform-select" id="mm-operator">
                     <option>Orange Money</option>
                     <option>MTN MoMo</option>
@@ -2426,14 +2427,14 @@ input, select, textarea { font-family: inherit; outline: none; }
                   </select>
                 </div>
                 <div class="bform-group">
-                  <label class="bform-label">Operation</label>
+                  <label class="bform-label" data-i18n="bk_mm_op_label">Operation</label>
                   <select class="bform-select" id="mm-op">
                     <option value="deposit">Dépôt vers compte WASI</option>
                     <option value="withdraw">Retrait vers mobile</option>
                   </select>
                 </div>
                 <div class="bform-group">
-                  <label class="bform-label">Numero de telephone</label>
+                  <label class="bform-label" data-i18n="bk_mm_phone">Numero de telephone</label>
                   <input type="tel" class="bform-input" id="mm-phone" placeholder="+225 07 XX XX XX">
                 </div>
                 <div class="bform-group">
@@ -2454,10 +2455,10 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
         <!-- Credit -->
         <div class="bank-screen" id="bs-bcredit">
-          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Crédit & Scoring</h2>
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);" data-i18n="bk_credit_title">Crédit & Scoring</h2>
           <div class="bank-grid-2">
             <div class="bcard">
-              <div class="bcard-title">Votre score de credit WASI</div>
+              <div class="bcard-title" data-i18n="bk_credit_score">Votre score de credit WASI</div>
               <div class="credit-gauge">
                 <svg viewBox="0 0 120 120">
                   <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E1DB" stroke-width="10"/>
@@ -2475,13 +2476,13 @@ input, select, textarea { font-family: inherit; outline: none; }
               </div>
             </div>
             <div class="bcard">
-              <div class="bcard-title">Simulateur de credit</div>
+              <div class="bcard-title" data-i18n="bk_credit_sim">Simulateur de credit</div>
               <div class="bform-group">
-                <label class="bform-label">Montant souhaite (XOF)</label>
+                <label class="bform-label" data-i18n="bk_credit_amount">Montant souhaite (XOF)</label>
                 <input type="number" class="bform-input" id="cred-amount" value="5000000" oninput="calcCredit()">
               </div>
               <div class="bform-group">
-                <label class="bform-label">Duree (mois)</label>
+                <label class="bform-label" data-i18n="bk_credit_duration">Duree (mois)</label>
                 <select class="bform-select" id="cred-months" onchange="calcCredit()">
                   <option value="6">6 mois</option>
                   <option value="12" selected>12 mois</option>
@@ -2491,7 +2492,7 @@ input, select, textarea { font-family: inherit; outline: none; }
                 </select>
               </div>
               <div class="bform-group">
-                <label class="bform-label">Taux annuel</label>
+                <label class="bform-label" data-i18n="bk_credit_rate">Taux annuel</label>
                 <input type="text" class="bform-input" value="8.5%" readonly style="background:#F0EDE6;">
               </div>
               <div class="tf-summary" id="cred-summary">
@@ -2506,7 +2507,7 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
         <!-- History -->
         <div class="bank-screen" id="bs-bhistory">
-          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Historique complet</h2>
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);" data-i18n="bk_history_title">Historique complet</h2>
           <div class="bcard">
             <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
               <select class="bform-select" style="width:auto;" id="hist-filter" onchange="renderHistory()">
@@ -2521,7 +2522,7 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
         <!-- Settings -->
         <div class="bank-screen" id="bs-bsettings">
-          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);">Parametres</h2>
+          <h2 style="font-size:1.3rem;margin-bottom:20px;color:var(--bank-text);" data-i18n="bk_settings_title">Parametres</h2>
           <div class="bcard">
             <div class="settings-group">
               <h3>Securite</h3>
@@ -2581,7 +2582,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div id="screen-stock" class="screen">
     <div class="sm-header">
       <div>
-        <div class="sm-header-title">WASI STOCK MARKET &mdash; Bourse Priv&eacute;e de l'Afrique</div>
+        <div class="sm-header-title" data-i18n="sm_title">WASI STOCK MARKET &mdash; Bourse Priv&eacute;e de l'Afrique</div>
         <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
       </div>
       <div class="sm-header-stats">
@@ -2589,11 +2590,11 @@ input, select, textarea { font-family: inherit; outline: none; }
       </div>
     </div>
     <div class="sm-tabs" id="sm-tabs">
-      <button class="sm-tab active" onclick="switchSMTab('marche',this)">March&eacute;</button>
+      <button class="sm-tab active" onclick="switchSMTab('marche',this)" data-i18n="sm_tab_marche">March&eacute;</button>
       <button class="sm-tab" onclick="switchSMTab('bourses',this)">Bourses Africaines (29)</button>
-      <button class="sm-tab" onclick="switchSMTab('emetteurs',this)">&Eacute;metteurs</button>
-      <button class="sm-tab" onclick="switchSMTab('portfolio',this)">Mon Portefeuille SM</button>
-      <button class="sm-tab" onclick="switchSMTab('soumettre',this)">Soumettre une PME</button>
+      <button class="sm-tab" onclick="switchSMTab('emetteurs',this)" data-i18n="sm_tab_emetteurs">&Eacute;metteurs</button>
+      <button class="sm-tab" onclick="switchSMTab('portfolio',this)" data-i18n="sm_tab_portfolio">Mon Portefeuille SM</button>
+      <button class="sm-tab" onclick="switchSMTab('soumettre',this)" data-i18n="sm_tab_soumettre">Soumettre une PME</button>
     </div>
     <div class="sm-body">
       <!-- MARCHÉ tab -->
@@ -2776,8 +2777,8 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div id="screen-compta" class="screen">
     <div class="compta-header">
       <div class="compta-header-left">
-        <div class="compta-header-title" id="compta-header-title">OHADA-COMPTA</div>
-        <div class="compta-header-sub" id="compta-header-sub">Module comptable SYSCOHADA r&eacute;vis&eacute; / SYCEBNL &bull; 54 pays africains</div>
+        <div class="compta-header-title" id="compta-header-title" data-i18n="compta_title">OHADA-COMPTA</div>
+        <div class="compta-header-sub" id="compta-header-sub" data-i18n="compta_sub">Module comptable SYSCOHADA r&eacute;vis&eacute; / SYCEBNL &bull; 54 pays africains</div>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <select class="form-select" id="compta-country-select" onchange="selectComptaCountry(this.value)" style="width:auto;min-width:200px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border);padding:8px 12px;border-radius:var(--radius);">
@@ -2925,15 +2926,15 @@ input, select, textarea { font-family: inherit; outline: none; }
     <!-- Systèmes comptables 54 pays — toujours visible -->
     <div id="compta-systemes-pays" style="padding:20px;max-height:calc(100vh - 200px);overflow-y:auto;border-top:1px solid var(--border);"></div>
     <div class="compta-tabs" id="compta-tabs" style="display:none;">
-      <button class="compta-tab active" onclick="switchComptaTab('pilotage',this)">Pilotage</button>
-      <button class="compta-tab" onclick="switchComptaTab('plan',this)">Plan Comptable</button>
-      <button class="compta-tab" onclick="switchComptaTab('journal',this)">Journal</button>
-      <button class="compta-tab" onclick="switchComptaTab('grandlivre',this)">Grand Livre</button>
-      <button class="compta-tab" onclick="switchComptaTab('balance',this)">Balance</button>
-      <button class="compta-tab" onclick="switchComptaTab('bilan',this)">Bilan</button>
-      <button class="compta-tab" onclick="switchComptaTab('resultat',this)">Compte de R&eacute;sultat</button>
-      <button class="compta-tab" onclick="switchComptaTab('flux',this)">Flux de Tr&eacute;sorerie</button>
-      <button class="compta-tab" onclick="switchComptaTab('notes',this)">Notes &amp; Liasse</button>
+      <button class="compta-tab active" onclick="switchComptaTab('pilotage',this)" data-i18n="ct_pilotage">Pilotage</button>
+      <button class="compta-tab" onclick="switchComptaTab('plan',this)" data-i18n="ct_plan">Plan Comptable</button>
+      <button class="compta-tab" onclick="switchComptaTab('journal',this)" data-i18n="ct_journal">Journal</button>
+      <button class="compta-tab" onclick="switchComptaTab('grandlivre',this)" data-i18n="ct_grandlivre">Grand Livre</button>
+      <button class="compta-tab" onclick="switchComptaTab('balance',this)" data-i18n="ct_balance">Balance</button>
+      <button class="compta-tab" onclick="switchComptaTab('bilan',this)" data-i18n="ct_bilan">Bilan</button>
+      <button class="compta-tab" onclick="switchComptaTab('resultat',this)" data-i18n="ct_resultat">Compte de R&eacute;sultat</button>
+      <button class="compta-tab" onclick="switchComptaTab('flux',this)" data-i18n="ct_flux">Flux de Tr&eacute;sorerie</button>
+      <button class="compta-tab" onclick="switchComptaTab('notes',this)" data-i18n="ct_notes">Notes &amp; Liasse</button>
     </div>
     <div class="compta-body" style="display:none;">
       <div class="compta-panel active" id="compta-panel-pilotage"></div>
@@ -2953,9 +2954,9 @@ input, select, textarea { font-family: inherit; outline: none; }
     <div id="admin-content">
       <div class="admin-login" id="admin-login-form">
         <h2>Admin Console</h2>
-        <p>Connexion manager requise</p>
+        <p data-i18n="admin_login_req">Connexion manager requise</p>
         <input type="text" id="admin-user" placeholder="Username">
-        <input type="password" id="admin-pass" placeholder="Mot de passe">
+        <input type="password" id="admin-pass" placeholder="Mot de passe" data-i18n-ph="admin_pass_ph">
         <div class="admin-err" id="admin-login-err"></div>
         <button onclick="adminLogin()">Se connecter</button>
       </div>
@@ -2972,10 +2973,10 @@ input, select, textarea { font-family: inherit; outline: none; }
           </div>
         </div>
         <div class="admin-tabs" id="admin-tabs">
-          <button class="admin-tab active" onclick="adminTab('overview',this)">Vue generale</button>
-          <button class="admin-tab" onclick="adminTab('users',this)">Utilisateurs</button>
-          <button class="admin-tab" onclick="adminTab('audit',this)">Audit</button>
-          <button class="admin-tab" onclick="adminTab('alerts',this)">Alertes</button>
+          <button class="admin-tab active" onclick="adminTab('overview',this)" data-i18n="admin_overview">Vue generale</button>
+          <button class="admin-tab" onclick="adminTab('users',this)" data-i18n="admin_users">Utilisateurs</button>
+          <button class="admin-tab" onclick="adminTab('audit',this)" data-i18n="admin_audit">Audit</button>
+          <button class="admin-tab" onclick="adminTab('alerts',this)" data-i18n="admin_alerts">Alertes</button>
         </div>
         <div id="admin-tab-overview"></div>
         <div id="admin-tab-users" style="display:none;"></div>
@@ -2990,8 +2991,8 @@ input, select, textarea { font-family: inherit; outline: none; }
 <!-- ========== MOBILE COUNTRY PANEL ========== -->
 <div class="mobile-panel" id="mobile-country-panel">
   <div class="mobile-panel-header">
-    <button class="back-btn" onclick="closeMobileCountries()">← Retour</button>
-    <div class="title" id="mobile-panel-title">Pays Africains</div>
+    <button class="back-btn" onclick="closeMobileCountries()" data-i18n="mobile_back">← Retour</button>
+    <div class="title" id="mobile-panel-title" data-i18n="mobile_panel_title">Pays Africains</div>
   </div>
   <div class="mobile-panel-body" id="mobile-panel-body">
     <!-- Country list or detail rendered here by JS -->
@@ -3001,7 +3002,7 @@ input, select, textarea { font-family: inherit; outline: none; }
 <!-- ========== BASKET MODAL ========== -->
 <div class="basket-modal" id="basket-modal">
   <div class="basket-box">
-    <h2>Creer un panier personnalise</h2>
+    <h2 data-i18n="basket_title">Creer un panier personnalise</h2>
     <div class="bform-group">
       <label class="form-label" style="color:var(--text-secondary);">Nom du panier</label>
       <input type="text" class="form-input" id="basket-name" placeholder="Mon Panier WASI">
@@ -3009,8 +3010,8 @@ input, select, textarea { font-family: inherit; outline: none; }
     <div style="color:var(--text-secondary);font-size:.78rem;margin-bottom:8px;">Selectionnez les ETF :</div>
     <div class="basket-checks" id="basket-checks"></div>
     <div class="basket-actions">
-      <button class="basket-cancel" onclick="closeBasketCreator()">Annuler</button>
-      <button class="basket-create" onclick="createBasket()">Creer le panier</button>
+      <button class="basket-cancel" onclick="closeBasketCreator()" data-i18n="basket_cancel">Annuler</button>
+      <button class="basket-create" onclick="createBasket()" data-i18n="basket_create">Creer le panier</button>
     </div>
   </div>
 </div>
@@ -8617,6 +8618,439 @@ document.addEventListener('keydown', function(e) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+
+
+/* ================================================================
+   WASI i18n — FR / EN Language System
+   ================================================================ */
+
+var currentLang = localStorage.getItem('wasi-lang') || 'fr';
+
+var TRANSLATIONS = {
+  fr: {
+    // Gate
+    gate_placeholder: "Clef d'acces WASI-XXXX-XX##",
+    gate_btn: "ENTRER",
+    gate_hint: "Demo: WASI-DEMO-DM01",
+    // Topbar
+    nav_intel: "Intelligence",
+    nav_bank: "Banking",
+    nav_stock: "Stock Market",
+    nav_compta: "Comptabilite",
+    nav_admin: "Admin",
+    topbar_welcome: "Bienvenue,",
+    // Intel
+    intel_left_title: "54 PAYS \u00B7 AFRIQUE \u00B7 EN LIGNE",
+    filter_all: "TOUS",
+    chat_focus: "Focus: AFRIQUE",
+    mobile_countries: "\uD83C\uDF0D Pays",
+    chat_welcome: "Bienvenue dans WASI Intelligence. Posez vos questions sur le continent africain : indices de stabilite, risques politiques, opportunites economiques, corridors commerciaux.",
+    chat_sugg_1: "Presentez WASI Ecosystem",
+    chat_sugg_2: "WASI Terminal DEX et sources de donnees",
+    chat_sugg_3: "Qu'est-ce que le WASI Stock Market ?",
+    chat_sugg_4: "Analyse du corridor Abidjan-Lagos",
+    chat_sugg_5: "Opportunites BRVM + NGX + GSE 2026",
+    chat_sugg_6: "Comment coter ma PME sur WASI ?",
+    chat_sugg_7: "Projections financieres WASI 2030",
+    chat_sugg_8: "Risque politique au Sahel",
+    chat_placeholder: "Posez une question...",
+    chat_send: "Envoyer",
+    comp_title: "Indice Composite WASI",
+    comp_label: "Score moyen AFRIQUE",
+    // DEX
+    dex_crypto: "Crypto Swap",
+    dex_fx: "Change (FX)",
+    dex_port: "Portefeuille",
+    th_name: "Titre",
+    th_sector: "Secteur",
+    th_price_xof: "Prix (XOF)",
+    th_signal: "Signal",
+    ord_label_ticker: "Titre",
+    ord_label_type: "Type d'ordre",
+    ord_market: "Marche",
+    ord_limit: "Limite",
+    ord_label_qty: "Quantite",
+    ord_label_price: "Prix limite (XOF)",
+    ord_gross: "Montant brut",
+    ord_commission: "Commission (0.5%)",
+    ord_total: "Total",
+    ord_buy_btn: "ACHETER",
+    orderbook_title_snts: "Carnet d'ordres \u2014 SNTS",
+    // Banking landing
+    bank_tagline: "La n\u00E9obanque de l'investisseur africain.",
+    bank_tagline2: "Comptes multidevises, transferts intra-AFRIQUE, micro-cr\u00E9dit PME.",
+    bank_connect: "Connectez vos documents financiers",
+    bank_drop: "Deposez vos releves bancaires ici",
+    bank_formats: "CSV, Excel (.xlsx), PDF, OFX, MT940",
+    bank_api: "Ou connectez-vous via API bancaire",
+    bank_compliance: "Conformit\u00E9 UMOA / BCEAO",
+    bank_demo: "Acces Demo Banking",
+    bank_license: "Licence BCEAO (EME) en cours d'obtention \u2022 Zone UEMOA \u2022 17 pays OHADA",
+    // Banking forms
+    bk_dash_title: "Tableau de bord",
+    bk_recent_tx: "Transactions recentes",
+    bk_quick_actions: "Actions rapides",
+    bk_new_transfer: "Nouveau virement",
+    bk_mm_deposit: "D\u00E9p\u00F4t Mobile Money",
+    bk_transfers_title: "Virements",
+    bk_transfer_type: "Type de virement",
+    bk_benef: "Beneficiaire",
+    bk_amount: "Montant (XOF)",
+    bk_motif: "Motif",
+    bk_confirm_transfer: "Confirmer le virement",
+    bk_scheduled: "Virements programmes",
+    bk_mm_title: "Mobile Money",
+    bk_mm_operation: "Operation Mobile Money",
+    bk_mm_operator: "Op\u00E9rateur",
+    bk_mm_op_label: "Operation",
+    bk_mm_phone: "Numero de telephone",
+    bk_mm_validate: "Valider l'operation",
+    bk_mm_dep_retrait: "D\u00E9p\u00F4t / Retrait",
+    bk_credit_title: "Cr\u00E9dit & Scoring",
+    bk_credit_score: "Votre score de credit WASI",
+    bk_credit_sim: "Simulateur de credit",
+    bk_credit_amount: "Montant souhaite (XOF)",
+    bk_credit_duration: "Duree (mois)",
+    bk_credit_rate: "Taux annuel",
+    bk_history_title: "Historique complet",
+    bk_settings_title: "Parametres",
+    // Stock Market
+    sm_title: "WASI STOCK MARKET \u2014 Bourse Priv\u00E9e de l'Afrique",
+    sm_tab_marche: "March\u00E9",
+    sm_tab_emetteurs: "\u00C9metteurs",
+    sm_tab_portfolio: "Mon Portefeuille SM",
+    sm_tab_soumettre: "Soumettre une PME",
+    // Compta
+    compta_title: "OHADA-COMPTA",
+    compta_sub: "Module comptable SYSCOHADA r\u00E9vis\u00E9 / SYCEBNL \u2022 54 pays africains",
+    compta_no_data: "Aucun exercice comptable charge",
+    compta_demo_btn: "Charger les donnees demo WASI Ecosystem SAS",
+    ct_pilotage: "Pilotage",
+    ct_plan: "Plan Comptable",
+    ct_journal: "Journal",
+    ct_grandlivre: "Grand Livre",
+    ct_balance: "Balance",
+    ct_bilan: "Bilan",
+    ct_resultat: "Compte de R\u00E9sultat",
+    ct_flux: "Flux de Tr\u00E9sorerie",
+    ct_notes: "Notes & Liasse",
+    // Admin
+    admin_login_req: "Connexion manager requise",
+    admin_pass_ph: "Mot de passe",
+    admin_overview: "Vue generale",
+    admin_users: "Utilisateurs",
+    admin_audit: "Audit",
+    admin_alerts: "Alertes",
+    admin_refresh: "Rafraichir",
+    admin_logout: "Deconnexion",
+    // Mobile panel & basket
+    mobile_back: "\u2190 Retour",
+    mobile_panel_title: "Pays Africains",
+    basket_title: "Creer un panier personnalise",
+    basket_cancel: "Annuler",
+    basket_create: "Creer le panier",
+  },
+  en: {
+    // Gate
+    gate_placeholder: "Access Key WASI-XXXX-XX##",
+    gate_btn: "ENTER",
+    gate_hint: "Demo: WASI-DEMO-DM01",
+    // Topbar
+    nav_intel: "Intelligence",
+    nav_bank: "Banking",
+    nav_stock: "Stock Market",
+    nav_compta: "Accounting",
+    nav_admin: "Admin",
+    topbar_welcome: "Welcome,",
+    // Intel
+    intel_left_title: "54 COUNTRIES \u00B7 AFRICA \u00B7 ONLINE",
+    filter_all: "ALL",
+    chat_focus: "Focus: AFRICA",
+    mobile_countries: "\uD83C\uDF0D Countries",
+    chat_welcome: "Welcome to WASI Intelligence. Ask your questions about the African continent: stability indices, political risks, economic opportunities, trade corridors.",
+    chat_sugg_1: "Introduce the WASI Ecosystem",
+    chat_sugg_2: "WASI Terminal DEX and data sources",
+    chat_sugg_3: "What is the WASI Stock Market?",
+    chat_sugg_4: "Analysis of the Abidjan-Lagos corridor",
+    chat_sugg_5: "Opportunities BRVM + NGX + GSE 2026",
+    chat_sugg_6: "How to list my SME on WASI?",
+    chat_sugg_7: "WASI 2030 financial projections",
+    chat_sugg_8: "Political risk in the Sahel",
+    chat_placeholder: "Ask a question...",
+    chat_send: "Send",
+    comp_title: "WASI Composite Index",
+    comp_label: "Average Score AFRICA",
+    // DEX
+    dex_crypto: "Crypto Swap",
+    dex_fx: "FX Exchange",
+    dex_port: "Portfolio",
+    th_name: "Name",
+    th_sector: "Sector",
+    th_price_xof: "Price (XOF)",
+    th_signal: "Signal",
+    ord_label_ticker: "Security",
+    ord_label_type: "Order Type",
+    ord_market: "Market",
+    ord_limit: "Limit",
+    ord_label_qty: "Quantity",
+    ord_label_price: "Limit Price (XOF)",
+    ord_gross: "Gross Amount",
+    ord_commission: "Commission (0.5%)",
+    ord_total: "Total",
+    ord_buy_btn: "BUY",
+    orderbook_title_snts: "Order Book \u2014 SNTS",
+    // Banking landing
+    bank_tagline: "The neo-bank for African investors.",
+    bank_tagline2: "Multi-currency accounts, intra-AFRICA transfers, SME micro-credit.",
+    bank_connect: "Connect your financial documents",
+    bank_drop: "Drop your bank statements here",
+    bank_formats: "CSV, Excel (.xlsx), PDF, OFX, MT940",
+    bank_api: "Or connect via bank API",
+    bank_compliance: "UMOA / BCEAO Compliance",
+    bank_demo: "Banking Demo Access",
+    bank_license: "BCEAO (EME) licence pending \u2022 UEMOA Zone \u2022 17 OHADA countries",
+    // Banking forms
+    bk_dash_title: "Dashboard",
+    bk_recent_tx: "Recent Transactions",
+    bk_quick_actions: "Quick Actions",
+    bk_new_transfer: "New Transfer",
+    bk_mm_deposit: "Mobile Money Deposit",
+    bk_transfers_title: "Transfers",
+    bk_transfer_type: "Transfer Type",
+    bk_benef: "Beneficiary",
+    bk_amount: "Amount (XOF)",
+    bk_motif: "Reference",
+    bk_confirm_transfer: "Confirm Transfer",
+    bk_scheduled: "Scheduled Transfers",
+    bk_mm_title: "Mobile Money",
+    bk_mm_operation: "Mobile Money Operation",
+    bk_mm_operator: "Operator",
+    bk_mm_op_label: "Operation",
+    bk_mm_phone: "Phone Number",
+    bk_mm_validate: "Validate Operation",
+    bk_mm_dep_retrait: "Deposit / Withdraw",
+    bk_credit_title: "Credit & Scoring",
+    bk_credit_score: "Your WASI Credit Score",
+    bk_credit_sim: "Credit Simulator",
+    bk_credit_amount: "Desired Amount (XOF)",
+    bk_credit_duration: "Duration (months)",
+    bk_credit_rate: "Annual Rate",
+    bk_history_title: "Transaction History",
+    bk_settings_title: "Settings",
+    // Stock Market
+    sm_title: "WASI STOCK MARKET \u2014 Private African Exchange",
+    sm_tab_marche: "Market",
+    sm_tab_emetteurs: "Issuers",
+    sm_tab_portfolio: "My SM Portfolio",
+    sm_tab_soumettre: "Submit an SME",
+    // Compta
+    compta_title: "OHADA-ACCOUNTING",
+    compta_sub: "SYSCOHADA revised / SYCEBNL accounting module \u2022 54 African countries",
+    compta_no_data: "No accounting file loaded",
+    compta_demo_btn: "Load WASI Ecosystem SAS demo data",
+    ct_pilotage: "Dashboard",
+    ct_plan: "Chart of Accounts",
+    ct_journal: "Journal",
+    ct_grandlivre: "General Ledger",
+    ct_balance: "Trial Balance",
+    ct_bilan: "Balance Sheet",
+    ct_resultat: "Income Statement",
+    ct_flux: "Cash Flow",
+    ct_notes: "Notes & Tax Return",
+    // Admin
+    admin_login_req: "Manager login required",
+    admin_pass_ph: "Password",
+    admin_overview: "Overview",
+    admin_users: "Users",
+    admin_audit: "Audit",
+    admin_alerts: "Alerts",
+    admin_refresh: "Refresh",
+    admin_logout: "Logout",
+    // Mobile panel & basket
+    mobile_back: "\u2190 Back",
+    mobile_panel_title: "African Countries",
+    basket_title: "Create a custom basket",
+    basket_cancel: "Cancel",
+    basket_create: "Create basket",
+  }
+};
+
+function toggleLang() {
+  setLang(currentLang === 'fr' ? 'en' : 'fr');
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('wasi-lang', lang);
+  applyLang();
+}
+
+function applyLang() {
+  var T = TRANSLATIONS[currentLang];
+  var isEn = currentLang === 'en';
+
+  // Toggle button label
+  var btn = document.getElementById('lang-toggle-btn');
+  if (btn) btn.textContent = isEn ? 'FR' : 'EN';
+
+  // data-i18n elements (textContent)
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (T[key] !== undefined) el.textContent = T[key];
+  });
+
+  // data-i18n-ph elements (placeholder)
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-ph');
+    if (T[key] !== undefined) el.placeholder = T[key];
+  });
+
+  // Topbar welcome prefix — preserve the <strong> child
+  var topbarUser = document.querySelector('.topbar-user');
+  if (topbarUser) {
+    var strong = topbarUser.querySelector('strong');
+    topbarUser.childNodes[0].textContent = T.topbar_welcome + ' ';
+  }
+
+  // "Simuler un credit" quick action button (not easily i18n'd via attr)
+  var quickCredit = document.querySelector('#bs-bdash .bform-btn[onclick*="bcredit"]');
+  if (quickCredit) quickCredit.textContent = isEn ? 'Simulate a Loan' : 'Simuler un credit';
+
+  // Montant label in transfer (shared with credit — disambiguate)
+  document.querySelectorAll('#bs-btransfer .bform-label').forEach(function(el) {
+    if (el.textContent.trim() === 'Montant (XOF)' || el.textContent.trim() === 'Amount (XOF)') {
+      el.textContent = T.bk_amount;
+    }
+  });
+
+  // Dépôt / Retrait buttons in mobile money
+  document.querySelectorAll('.bform-btn[onclick*="doMobileMoney"]').forEach(function(el) {
+    el.textContent = T.bk_mm_dep_retrait;
+  });
+
+  // Admin Rafraichir / Refresh
+  var adminRefreshBtn = document.querySelector('.admin-btn-gold[onclick="adminRefresh()"]');
+  if (adminRefreshBtn) adminRefreshBtn.textContent = T.admin_refresh;
+  var adminLogoutBtn = document.querySelector('.admin-btn[onclick="adminLogout()"]');
+  if (adminLogoutBtn) adminLogoutBtn.textContent = T.admin_logout;
+
+  // "Se connecter" button in admin (not via data-i18n to avoid conflict with navBankBtn)
+  var adminConnectBtn = document.querySelector('#admin-login-form button[onclick="adminLogin()"]');
+  if (adminConnectBtn) adminConnectBtn.textContent = isEn ? 'Log in' : 'Se connecter';
+
+  // "Confirmer le virement" button
+  var confirmBtn = document.querySelector('#bs-btransfer .bform-btn[onclick="execTransfer()"]');
+  if (confirmBtn) confirmBtn.textContent = T.bk_confirm_transfer;
+
+  // "Valider l'operation" button
+  var mmValidateBtn = document.querySelector('#bs-bmobile .bform-btn[onclick="execMobileMoney()"]');
+  if (mmValidateBtn) mmValidateBtn.textContent = T.bk_mm_validate;
+
+  // "Soumettre la demande" credit button
+  var creditSubmitBtn = document.querySelector('#bs-bcredit .bform-btn[onclick*="credit"]');
+  if (creditSubmitBtn) creditSubmitBtn.textContent = isEn ? 'Submit Request' : 'Soumettre la demande';
+
+  // Basket name placeholder
+  var basketNameInput = document.getElementById('basket-name');
+  if (basketNameInput) basketNameInput.placeholder = isEn ? 'My WASI Basket' : 'Mon Panier WASI';
+  var basketNameLabel = document.querySelector('.basket-box .form-label');
+  if (basketNameLabel) basketNameLabel.textContent = isEn ? 'Basket name' : 'Nom du panier';
+  var basketSelectText = document.querySelector('.basket-box [style*="color:var(--text-secondary)"]');
+  if (basketSelectText) basketSelectText.textContent = isEn ? 'Select ETFs:' : 'Selectionnez les ETF :';
+
+  // Compta empty state help text
+  var comptaEmpty = document.getElementById('compta-empty-state');
+  if (comptaEmpty) {
+    var helpDiv = comptaEmpty.querySelector('div[style*="color:var(--text-secondary)"]');
+    if (helpDiv) helpDiv.innerHTML = isEn
+      ? 'Select a country to view the applicable accounting standard.<br>Import your financial statements to activate the accounting module.<br>Accepted formats: Excel Tax Return (DGI), Trial Balance CSV, General Ledger PDF, FEC file.'
+      : 'Selectionnez un pays pour voir le referentiel applicable.<br>Importez vos etats financiers pour activer le module comptable.<br>Formats acceptes : Liasse fiscale Excel (DGI), Balance generale CSV, Grand livre PDF, fichier FEC.';
+    var demoHint = comptaEmpty.querySelector('div[style*="color:var(--text-dim)"][style*="margin-bottom"]');
+    if (demoHint) demoHint.textContent = isEn ? 'Or load the demo data' : 'Ou chargez les donnees de demonstration';
+    var stdLabel = comptaEmpty.querySelector('div[style*="text-transform:uppercase"]');
+    if (stdLabel) stdLabel.textContent = isEn ? 'Supported standards' : 'Referentiels supportes';
+  }
+
+  // Stock Market fixing session labels
+  var fixingCard = document.querySelector('.sm-fixing-card');
+  if (fixingCard) {
+    var labs = fixingCard.querySelectorAll('.sm-fixing-stat .lab');
+    if (labs[0]) labs[0].textContent = isEn ? 'Date' : 'Date';
+    if (labs[1]) labs[1].textContent = isEn ? 'Hours' : 'Horaires';
+    if (labs[2]) labs[2].textContent = isEn ? 'Orders Executed' : 'Ordres ex\u00E9cut\u00E9s';
+    if (labs[3]) labs[3].textContent = isEn ? 'Shares Traded' : 'Actions \u00E9chang\u00E9es';
+    if (labs[4]) labs[4].textContent = isEn ? 'Total Value' : 'Valeur totale';
+    var fixingTitle = fixingCard.querySelector('h3');
+    if (fixingTitle) fixingTitle.textContent = isEn ? 'Latest Fixing Session' : 'Derni\u00E8re s\u00E9ance de fixing';
+  }
+
+  // SM exchanges section header
+  var smBourses = document.getElementById('sm-panel-bourses');
+  if (smBourses) {
+    var boursesTitle = smBourses.querySelector('div[style*="font-size:1.1rem"]');
+    if (boursesTitle) boursesTitle.textContent = isEn ? '29 African Exchanges' : '29 Bourses Africaines';
+    var boursesDesc = smBourses.querySelector('div[style*="color:var(--text-secondary)"]');
+    if (boursesDesc) boursesDesc.textContent = isEn
+      ? 'Continental view of all African stock markets available on WASI'
+      : 'Vue continentale de tous les marches boursiers africains disponibles sur WASI';
+  }
+
+  // SM form labels
+  var smForm = document.querySelector('.sm-form-card');
+  if (smForm) {
+    var smFormTitle = smForm.querySelector('h3');
+    if (smFormTitle) smFormTitle.textContent = isEn ? 'Issuer Application \u2014 WASI Stock Market' : 'Candidature \u00C9metteur \u2014 WASI Stock Market';
+    var smLabels = smForm.querySelectorAll('.form-label');
+    var smLabelMap = {
+      "Nom de l'entreprise": "Company Name",
+      "Company Name": "Company Name",
+      "Pays": "Country",
+      "Country": "Country",
+      "Secteur d'activit\u00E9": "Business Sector",
+      "Business Sector": "Business Sector",
+      "Chiffre d'affaires dernier exercice (XOF)": "Last Year Revenue (XOF)",
+      "Last Year Revenue (XOF)": "Last Year Revenue (XOF)",
+      "Capital social (XOF)": "Share Capital (XOF)",
+      "Share Capital (XOF)": "Share Capital (XOF)",
+      "Nombre d'exercices audit\u00E9es": "Audited Years",
+      "Audited Years": "Audited Years",
+      "Montant de la lev\u00E9e souhait\u00E9e (XOF)": "Target Fundraising (XOF)",
+      "Target Fundraising (XOF)": "Target Fundraising (XOF)",
+      "Description de l'activit\u00E9": "Business Description",
+      "Business Description": "Business Description",
+    };
+    smLabels.forEach(function(el) {
+      var t = el.textContent.trim();
+      if (isEn && smLabelMap[t]) el.textContent = smLabelMap[t];
+      else if (!isEn) {
+        var frMap = {
+          "Company Name": "Nom de l'entreprise",
+          "Country": "Pays",
+          "Business Sector": "Secteur d'activit\u00E9",
+          "Last Year Revenue (XOF)": "Chiffre d'affaires dernier exercice (XOF)",
+          "Share Capital (XOF)": "Capital social (XOF)",
+          "Audited Years": "Nombre d'exercices audit\u00E9es",
+          "Target Fundraising (XOF)": "Montant de la lev\u00E9e souhait\u00E9e (XOF)",
+          "Business Description": "Description de l'activit\u00E9",
+        };
+        if (frMap[t]) el.textContent = frMap[t];
+      }
+    });
+  }
+
+  // notify on switch
+  showNotif(isEn ? 'Language: English' : 'Langue : Fran\u00E7ais', 'success');
+}
+
+// Initialize language on page load
+(function() {
+  var saved = localStorage.getItem('wasi-lang');
+  if (saved && saved !== 'fr') {
+    currentLang = saved;
+    document.addEventListener('DOMContentLoaded', function() { applyLang(); });
+  }
+})();
+
 
 </script>
 </body>
