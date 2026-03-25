@@ -1827,6 +1827,12 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="dex-tab" onclick="switchDexTab('bvmt',this)">BVMT (Tunisie)</button>
       <button class="dex-tab" onclick="switchDexTab('bvmac',this)">BVMAC (CEMAC)</button>
       <button class="dex-tab" onclick="switchDexTab('nsx',this)">NSX (Namibie)</button>
+      <button class="dex-tab" onclick="switchDexTab('bodiva',this)">BODIVA (Angola)</button>
+      <button class="dex-tab" onclick="switchDexTab('slse',this)">SLSE (S. Leone)</button>
+      <button class="dex-tab" onclick="switchDexTab('gax',this)">GAX (Ghana Alt.)</button>
+      <button class="dex-tab" onclick="switchDexTab('fmdq',this)">FMDQ (Nigeria OTC)</button>
+      <button class="dex-tab" onclick="switchDexTab('commodites',this)" style="color:var(--orange);">&#127807; Commodit&eacute;s</button>
+      <button class="dex-tab" onclick="switchDexTab('obligataire',this)" style="color:var(--cyan);">&#128200; Obligataire</button>
       <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
       <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
       <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
@@ -2114,6 +2120,54 @@ input, select, textarea { font-family: inherit; outline: none; }
             <thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (NAD)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead>
             <tbody id="nsx-body"></tbody>
           </table>
+        </div>
+        <!-- BODIVA panel -->
+        <div class="dex-panel" id="panel-bodiva">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:1rem;font-weight:600;color:var(--gold);">BODIVA — Bolsa de D&iacute;vida e Valores de Angola</div>
+            <div style="font-size:.78rem;color:var(--text-secondary);">Luanda, Angola | Devise: AOA | Op&eacute;rationnel depuis 2022</div></div>
+            <div style="text-align:right;font-size:.78rem;"><div style="color:var(--text-dim);">Cap. boursiere</div><div style="color:var(--gold);font-weight:600;">~$2.1 Mds</div></div>
+          </div>
+          <table class="data-table"><thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (AOA)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead><tbody id="bodiva-body"></tbody></table>
+        </div>
+        <!-- SLSE panel -->
+        <div class="dex-panel" id="panel-slse">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:1rem;font-weight:600;color:var(--gold);">Sierra Leone Stock Exchange (SLSE)</div>
+            <div style="font-size:.78rem;color:var(--text-secondary);">Freetown, Sierra Leone | Devise: SLE | SLSE Index: 1,420</div></div>
+            <div style="text-align:right;font-size:.78rem;"><div style="color:var(--text-dim);">Cap. boursiere</div><div style="color:var(--gold);font-weight:600;">~$480 M</div></div>
+          </div>
+          <table class="data-table"><thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (SLE)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead><tbody id="slse-body"></tbody></table>
+        </div>
+        <!-- GAX panel -->
+        <div class="dex-panel" id="panel-gax">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:1rem;font-weight:600;color:var(--gold);">Ghana Alternative Market (GAX)</div>
+            <div style="font-size:.78rem;color:var(--text-secondary);">Accra, Ghana | Devise: GHS | March&eacute; PME | Filiale GSE</div></div>
+            <div style="text-align:right;font-size:.78rem;"><div style="color:var(--text-dim);">Cap. boursiere</div><div style="color:var(--gold);font-weight:600;">~$120 M</div></div>
+          </div>
+          <table class="data-table"><thead><tr><th>Titre</th><th>Ticker</th><th>Secteur</th><th>Prix (GHS)</th><th>Var %</th><th>Volume</th><th>PER</th><th>Signal</th></tr></thead><tbody id="gax-body"></tbody></table>
+        </div>
+        <!-- FMDQ panel -->
+        <div class="dex-panel" id="panel-fmdq">
+          <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:1rem;font-weight:600;color:var(--gold);">FMDQ Securities Exchange — Nigeria OTC</div>
+            <div style="font-size:.78rem;color:var(--text-secondary);">Lagos, Nigeria | NGN | Fixed Income &bull; FX &bull; D&eacute;riv&eacute;s &bull; TCN</div></div>
+            <div style="text-align:right;font-size:.78rem;"><div style="color:var(--text-dim);">Volume journalier</div><div style="color:var(--gold);font-weight:600;">~$2.8 Mds</div></div>
+          </div>
+          <table class="data-table"><thead><tr><th>Instrument</th><th>Ticker</th><th>Categorie</th><th>Prix</th><th>Var %</th><th>Nominal (NGN)</th><th>Rendement</th><th>Signal</th></tr></thead><tbody id="fmdq-body"></tbody></table>
+        </div>
+        <!-- Commodités panel -->
+        <div class="dex-panel" id="panel-commodites">
+          <div style="margin-bottom:14px;"><div style="font-size:1rem;font-weight:600;color:var(--orange);">&#127807; March&eacute;s de Mati&egrave;res Premi&egrave;res — Afrique</div>
+          <div style="font-size:.78rem;color:var(--text-secondary);">ECX &bull; AFEX &bull; EAX &bull; ZAMACE &bull; KACE &bull; DCE</div></div>
+          <div id="commodites-content"></div>
+        </div>
+        <!-- Obligataire panel -->
+        <div class="dex-panel" id="panel-obligataire">
+          <div style="margin-bottom:14px;"><div style="font-size:1rem;font-weight:600;color:var(--cyan);">&#128200; March&eacute;s Obligataires — Afrique</div>
+          <div style="font-size:.78rem;color:var(--text-secondary);">UEMOA &bull; CEMAC &bull; NSE &bull; JSE Fixed Income &bull; EGX Bonds &bull; NGX &bull; Maroc</div></div>
+          <div id="obligataire-content"></div>
         </div>
         <!-- ETF panel -->
         <div class="dex-panel" id="panel-etf">
@@ -3449,6 +3503,116 @@ const COMSE_STOCKS=[
   {name:'MAMWE Utilities',ticker:'MAMW',sector:'Energie',price:5800,change:0.2,volume:1200,per:11.2,signal:'NEUTRE'},
 ];
 
+const BODIVA_STOCKS=[
+  {name:'Banco BIC Angola',ticker:'BIC',sector:'Banque',price:285,change:1.4,volume:8500,per:9.2,signal:'ACHAT'},
+  {name:'Banco Angolano Investimentos',ticker:'BAI',sector:'Banque',price:420,change:0.8,volume:5200,per:8.5,signal:'NEUTRE'},
+  {name:'Sonangol Holding',ticker:'SNGO',sector:'Energie',price:1850,change:2.1,volume:12000,per:12.4,signal:'ACHAT'},
+  {name:'Unitel SA',ticker:'UNIT',sector:'Telecom',price:950,change:1.5,volume:8800,per:11.8,signal:'ACHAT'},
+  {name:'AAA Seguros',ticker:'AAAS',sector:'Assurance',price:320,change:0.5,volume:3200,per:10.1,signal:'NEUTRE'},
+];
+const SLSE_STOCKS=[
+  {name:'Rokel Commercial Bank',ticker:'RCB',sector:'Banque',price:0.85,change:0.6,volume:45000,per:8.4,signal:'NEUTRE'},
+  {name:'Sierra Leone Commercial Bank',ticker:'SLCB',sector:'Banque',price:1.20,change:1.1,volume:32000,per:9.2,signal:'NEUTRE'},
+  {name:'Sierratel',ticker:'STEL',sector:'Telecom',price:0.65,change:-0.3,volume:28000,per:7.8,signal:'NEUTRE'},
+  {name:'National Insurance Company',ticker:'NIC',sector:'Assurance',price:0.45,change:0.4,volume:18000,per:11.0,signal:'NEUTRE'},
+];
+const GAX_STOCKS=[
+  {name:'Wienco Ghana',ticker:'WIENCO',sector:'Agri-inputs',price:0.38,change:1.8,volume:285000,per:14.2,signal:'ACHAT'},
+  {name:'Transaction Solutions',ticker:'TSL',sector:'Fintech',price:0.22,change:2.4,volume:420000,per:18.5,signal:'ACHAT'},
+  {name:'Meridian Health',ticker:'MHG',sector:'Sante',price:0.15,change:0.8,volume:180000,per:12.1,signal:'NEUTRE'},
+  {name:'Koans Capital',ticker:'KOAN',sector:'Finance',price:0.12,change:-0.5,volume:220000,per:15.8,signal:'NEUTRE'},
+  {name:'GN Bank',ticker:'GNBK',sector:'Banque',price:0.28,change:1.2,volume:350000,per:11.4,signal:'NEUTRE'},
+];
+const FMDQ_STOCKS=[
+  {name:'FGN Treasury Bill 91j',ticker:'FGN-TB91',sector:'Bons Tresor',price:97.50,change:0.1,volume:850000000,per:0,signal:'NEUTRE'},
+  {name:'FGN Treasury Bill 182j',ticker:'FGN-TB182',sector:'Bons Tresor',price:95.20,change:0.2,volume:620000000,per:0,signal:'NEUTRE'},
+  {name:'Commercial Paper Dangote',ticker:'DAN-CP',sector:'TCN',price:98.80,change:0.0,volume:250000000,per:0,signal:'NEUTRE'},
+  {name:'FX Swap USD/NGN',ticker:'FXSW-NGN',sector:'Derives',price:1548,change:0.8,volume:180000000,per:0,signal:'NEUTRE'},
+  {name:'Zenith Bank CP 2026',ticker:'ZEN-CP26',sector:'TCN',price:99.10,change:0.0,volume:180000000,per:0,signal:'NEUTRE'},
+];
+const COMMODITIES_DATA=[
+  {exchange:'ECX',country:'Ethiopie',ccy:'ETB',flag:'🇪🇹',items:[
+    {name:'Cafe Arabica Grade A',ticker:'ECX-CAA',price:42.50,change:1.8,vol:'12 400t'},
+    {name:'Cafe Arabica Grade B',ticker:'ECX-CAB',price:38.20,change:0.9,vol:'8 200t'},
+    {name:'Sesame blanc',ticker:'ECX-SES',price:28.00,change:2.1,vol:'5 600t'},
+    {name:'Haricot rouge',ticker:'ECX-HAR',price:18.50,change:-0.5,vol:'3 200t'},
+    {name:'Mais',ticker:'ECX-MAI',price:8.20,change:0.3,vol:'22 000t'},
+  ]},
+  {exchange:'AFEX',country:'Pan-Africain (NG)',ccy:'NGN',flag:'🌍',items:[
+    {name:'Mais jaune',ticker:'AFEX-MAI',price:285,change:1.2,vol:'45 000t'},
+    {name:'Sorgho',ticker:'AFEX-SOR',price:195,change:0.8,vol:'28 000t'},
+    {name:'Soja',ticker:'AFEX-SOJ',price:420,change:2.5,vol:'18 000t'},
+    {name:'Riz local',ticker:'AFEX-RIZ',price:380,change:-0.4,vol:'35 000t'},
+    {name:'Sesame',ticker:'AFEX-SES',price:950,change:3.2,vol:'8 500t'},
+  ]},
+  {exchange:'EAX',country:'Rwanda (E. Afrique)',ccy:'RWF',flag:'🇷🇼',items:[
+    {name:'Cafe lave',ticker:'EAX-CAF',price:1850,change:2.1,vol:'4 200t'},
+    {name:'Mais blanc',ticker:'EAX-MAI',price:280,change:0.5,vol:'12 800t'},
+    {name:'Haricots',ticker:'EAX-HAR',price:420,change:1.4,vol:'6 400t'},
+    {name:'Soja',ticker:'EAX-SOJ',price:380,change:0.8,vol:'5 200t'},
+  ]},
+  {exchange:'ZAMACE',country:'Zambie',ccy:'ZMW',flag:'🇿🇲',items:[
+    {name:'Mais blanc',ticker:'ZAM-MAI',price:2850,change:0.6,vol:'85 000t'},
+    {name:'Soja',ticker:'ZAM-SOJ',price:4200,change:1.8,vol:'42 000t'},
+    {name:'Ble',ticker:'ZAM-BLE',price:3600,change:-0.3,vol:'28 000t'},
+    {name:'Tournesol',ticker:'ZAM-TOU',price:5800,change:2.4,vol:'15 000t'},
+  ]},
+  {exchange:'KACE',country:'Kenya',ccy:'KES',flag:'🇰🇪',items:[
+    {name:'Mais',ticker:'KAC-MAI',price:3200,change:1.1,vol:'95 000t'},
+    {name:'The CTC',ticker:'KAC-THE',price:285,change:2.8,vol:'12 400t'},
+    {name:'Haricots',ticker:'KAC-HAR',price:8500,change:0.5,vol:'8 200t'},
+    {name:'Ble dur',ticker:'KAC-BLE',price:4800,change:-0.2,vol:'18 600t'},
+  ]},
+  {exchange:'DCE',country:'Tanzanie',ccy:'TZS',flag:'🇹🇿',items:[
+    {name:'Cafe Arabica',ticker:'DCE-CAF',price:8500,change:1.6,vol:'6 400t'},
+    {name:'Cajou brut',ticker:'DCE-CAJ',price:4200,change:2.1,vol:'28 000t'},
+    {name:'Sisal',ticker:'DCE-SIS',price:1850,change:0.4,vol:'8 200t'},
+    {name:'Mais',ticker:'DCE-MAI',price:680,change:-0.3,vol:'42 000t'},
+  ]},
+];
+const BOND_MARKETS_DATA=[
+  {exchange:'UEMOA TCN',country:'Zone UEMOA',ccy:'XOF',flag:'🌍',regulator:'BCEAO / CREPMF',items:[
+    {name:'OAT Senegal 2032 6.5%',ticker:'SEN-OAT32',price:98.50,change:0.1,yield:6.72,maturity:'2032'},
+    {name:"OAT Cote d'Ivoire 2030 6.8%",ticker:'CI-OAT30',price:99.20,change:0.0,yield:6.92,maturity:'2030'},
+    {name:'OAT Burkina Faso 2029 7.0%',ticker:'BF-OAT29',price:95.80,change:-0.2,yield:7.58,maturity:'2029'},
+    {name:'OAT Mali 2031 7.2%',ticker:'ML-OAT31',price:94.20,change:-0.1,yield:7.82,maturity:'2031'},
+    {name:'TCN Sonatel 2027',ticker:'SNT-TCN27',price:100.80,change:0.0,yield:5.60,maturity:'2027'},
+  ]},
+  {exchange:'CEMAC Obligataire',country:'Zone CEMAC',ccy:'XAF',flag:'🌍',regulator:'BEAC / COSUMAF',items:[
+    {name:'OAT Cameroun 2033 6.9%',ticker:'CM-OAT33',price:97.50,change:0.1,yield:7.28,maturity:'2033'},
+    {name:'OAT Gabon 2031 7.5%',ticker:'GA-OAT31',price:94.80,change:-0.3,yield:8.12,maturity:'2031'},
+    {name:'OAT Congo 2030 8.0%',ticker:'CG-OAT30',price:91.20,change:-0.5,yield:9.05,maturity:'2030'},
+    {name:'OAT Tchad 2029 8.5%',ticker:'TD-OAT29',price:88.50,change:-0.8,yield:9.98,maturity:'2029'},
+  ]},
+  {exchange:'NGX Fixed Income',country:'Nigeria',ccy:'NGN',flag:'🇳🇬',regulator:'CBN / SEC',items:[
+    {name:'FGN Bond Mar 2036',ticker:'FGN-36',price:98.50,change:0.1,yield:16.85,maturity:'2036'},
+    {name:'FGN Bond Feb 2031',ticker:'FGN-31',price:97.20,change:-0.1,yield:17.42,maturity:'2031'},
+    {name:'Lagos State Bond 2029',ticker:'LAG-29',price:94.80,change:-0.3,yield:18.20,maturity:'2029'},
+    {name:'Zenith Bank Bond 2027',ticker:'ZEN-27',price:99.50,change:0.0,yield:15.80,maturity:'2027'},
+  ]},
+  {exchange:'JSE Fixed Income',country:'Afrique du Sud',ccy:'ZAR',flag:'🇿🇦',regulator:'SARB / JSE',items:[
+    {name:'RSA R2035 8.875%',ticker:'RSA-R35',price:96.80,change:0.3,yield:9.42,maturity:'2035'},
+    {name:'RSA R2040 9.0%',ticker:'RSA-R40',price:94.20,change:-0.2,yield:9.78,maturity:'2040'},
+    {name:'Eskom SOC Bond 2028',ticker:'ESK-28',price:89.50,change:-0.5,yield:11.85,maturity:'2028'},
+    {name:'Transnet Bond 2030',ticker:'TRN-30',price:91.80,change:-0.3,yield:11.20,maturity:'2030'},
+  ]},
+  {exchange:'EGX Bonds',country:'Egypte',ccy:'EGP',flag:'🇪🇬',regulator:'CBE / FRA',items:[
+    {name:'Egypt T-Bond 2032 19.5%',ticker:'EGY-TB32',price:103.20,change:0.2,yield:18.85,maturity:'2032'},
+    {name:'Egypt Eurobond 2028',ticker:'EGY-EU28',price:95.40,change:-0.4,yield:8.92,maturity:'2028'},
+    {name:'CIB Egypt Bond 2027',ticker:'CIB-27',price:99.80,change:0.1,yield:19.20,maturity:'2027'},
+  ]},
+  {exchange:'NSE Fixed Income',country:'Kenya',ccy:'KES',flag:'🇰🇪',regulator:'CBK / NSE',items:[
+    {name:'Kenya Infrastructure Bond 2034',ticker:'KEN-IFR34',price:102.50,change:0.2,yield:13.20,maturity:'2034'},
+    {name:'Kenya Govt Bond 2028',ticker:'KEN-GOV28',price:99.80,change:0.0,yield:13.85,maturity:'2028'},
+    {name:'KCB Bank Bond 2027',ticker:'KCB-BND27',price:101.20,change:0.1,yield:12.40,maturity:'2027'},
+  ]},
+  {exchange:'Maroc BDT',country:'Maroc',ccy:'MAD',flag:'🇲🇦',regulator:'BAM / AMMC',items:[
+    {name:'BDT 10 ans 2034 3.35%',ticker:'MAR-BDT34',price:99.20,change:0.0,yield:3.42,maturity:'2034'},
+    {name:'BDT 5 ans 2030 3.15%',ticker:'MAR-BDT30',price:99.80,change:0.0,yield:3.18,maturity:'2030'},
+    {name:'Attijariwafa Bond 2028',ticker:'ATW-28',price:100.50,change:0.1,yield:3.85,maturity:'2028'},
+  ]},
+];
+
 const WASI_ETFS=[
   {ticker:'WASI-UEMOA',name:'WASI UEMOA Index Fund',strategy:'Indice large UEMOA',nav:4850,change:1.2,aum:'1.8 Mds',fees:'0.45%',score:72},
   {ticker:'WASI-SAHEL',name:'WASI Sahel Resilience',strategy:'Resilience zone Sahel',nav:2100,change:-0.8,aum:'420 M',fees:'0.65%',score:38},
@@ -3953,6 +4117,12 @@ document.getElementById('btn-bank-demo').addEventListener('click', function() {
   renderStockMarket();
   renderSMExchanges();
   renderComptaSystemesPays();
+  renderExchangeTable('bodiva-body', BODIVA_STOCKS, 'AOA');
+  renderExchangeTable('slse-body', SLSE_STOCKS, 'SLE');
+  renderExchangeTable('gax-body', GAX_STOCKS, 'GHS');
+  renderExchangeTable('fmdq-body', FMDQ_STOCKS, 'NGN');
+  renderCommodites();
+  renderObligataire();
   renderSMEmetteurs();
   renderSMPortfolio();
   // Compta & Banking: empty by default, loaded when documents are uploaded
@@ -4024,6 +4194,10 @@ function renderTicker() {
     {arr:CSX_STOCKS,   ccy:'CVE', lbl:'CSX'},
     {arr:SPDSE_STOCKS, ccy:'SSP', lbl:'SPDSE'},
     {arr:COMSE_STOCKS, ccy:'KMF', lbl:'COMSE'},
+    {arr:BODIVA_STOCKS,ccy:'AOA', lbl:'BODIVA'},
+    {arr:SLSE_STOCKS,  ccy:'SLE', lbl:'SLSE'},
+    {arr:GAX_STOCKS,   ccy:'GHS', lbl:'GAX'},
+    {arr:FMDQ_STOCKS,  ccy:'NGN', lbl:'FMDQ'},
   ];
   var html = '';
   ALL_EXCHANGES.forEach(function(ex) {
@@ -4033,6 +4207,23 @@ function renderTicker() {
       var cls = chgClass(s.change);
       var price = s.price < 100 ? s.price.toFixed(2) : fmt(s.price);
       html += '<span class="ticker-item"><span class="sym">'+s.ticker+'</span><span class="val">'+price+' '+ex.ccy+'</span><span class="chg '+cls+'">'+chgSign(s.change)+'</span></span>';
+    });
+  });
+  // Commodités
+  html += '<span class="ticker-item" style="margin:0 6px;"><span style="color:var(--orange);font-size:.62rem;font-weight:700;border:1px solid var(--orange);padding:1px 4px;border-radius:3px;">COMMO</span></span>';
+  COMMODITIES_DATA.forEach(function(ex) {
+    ex.items.forEach(function(it) {
+      var cls = chgClass(it.change);
+      var price = it.price < 100 ? it.price.toFixed(2) : fmt(it.price);
+      html += '<span class="ticker-item"><span class="sym">'+it.ticker+'</span><span class="val">'+price+' '+ex.ccy+'</span><span class="chg '+cls+'">'+chgSign(it.change)+'</span></span>';
+    });
+  });
+  // Obligataire
+  html += '<span class="ticker-item" style="margin:0 6px;"><span style="color:var(--cyan);font-size:.62rem;font-weight:700;border:1px solid var(--cyan);padding:1px 4px;border-radius:3px;">BONDS</span></span>';
+  BOND_MARKETS_DATA.forEach(function(ex) {
+    ex.items.forEach(function(it) {
+      var cls = chgClass(it.change);
+      html += '<span class="ticker-item"><span class="sym">'+it.ticker+'</span><span class="val">'+it.price+' ('+it.yield.toFixed(2)+'%)</span><span class="chg '+cls+'">'+chgSign(it.change)+'</span></span>';
     });
   });
   // FX rates
@@ -6520,6 +6711,9 @@ const AFRICAN_EXCHANGES = [
   {id:'csx',name:'CSX',full:'Cape Verde Stock Exchange',city:'Praia',country:'Cap-Vert',ccy:'CVE',idx:'N/A',cap:'~$25 M',n:4,arr:'CSX_STOCKS'},
   {id:'spdse',name:'SPDSE',full:'South Sudan (projet)',city:'Juba',country:'Soudan du Sud',ccy:'SSP',idx:'N/A',cap:'En dev.',n:3,arr:'SPDSE_STOCKS'},
   {id:'comse',name:'COMSE',full:'Comoros Exchange (projet)',city:'Moroni',country:'Comores',ccy:'KMF',idx:'N/A',cap:'En dev.',n:3,arr:'COMSE_STOCKS'},
+  {id:'bodiva',name:'BODIVA',full:'Bolsa de Divida e Valores de Angola',city:'Luanda',country:'Angola',ccy:'AOA',idx:'BODIVA: 420',cap:'~$2.1 Mds',n:5,arr:'BODIVA_STOCKS'},
+  {id:'slse',name:'SLSE',full:'Sierra Leone Stock Exchange',city:'Freetown',country:'Sierra Leone',ccy:'SLE',idx:'SLSE: 1 420',cap:'~$480 M',n:4,arr:'SLSE_STOCKS'},
+  {id:'gax',name:'GAX',full:'Ghana Alternative Market',city:'Accra',country:'Ghana',ccy:'GHS',idx:'GAX: 850',cap:'~$120 M',n:5,arr:'GAX_STOCKS'},
 ];
 /* ========== COMPTA — SYSTÈMES DES 54 PAYS ========== */
 function renderComptaSystemesPays() {
@@ -6577,10 +6771,67 @@ function renderComptaSystemesPays() {
   el.innerHTML = html;
 }
 
+/* ========== BODIVA / SLSE / GAX / FMDQ ========== */
+function renderExchangeTable(bodyId, stocks, ccy) {
+  var el = document.getElementById(bodyId);
+  if (!el) return;
+  el.innerHTML = stocks.map(function(s) {
+    var cls = chgClass(s.change);
+    var price = s.price < 100 ? s.price.toFixed(2) : fmt(s.price);
+    var sigCol = s.signal==='ACHAT'?'var(--green)':s.signal==='VENTE'?'var(--red)':'var(--text-dim)';
+    return '<tr><td>'+s.name+'</td><td style="color:var(--gold);font-weight:600;">'+s.ticker+'</td><td style="color:var(--text-secondary);">'+s.sector+'</td><td style="font-weight:600;">'+price+' '+ccy+'</td><td class="'+cls+'">'+chgSign(s.change)+'</td><td>'+fmt(s.volume)+'</td><td>'+s.per+'</td><td style="color:'+sigCol+';font-weight:600;">'+s.signal+'</td></tr>';
+  }).join('');
+}
+
+/* ========== COMMODITES ========== */
+function renderCommodites() {
+  var el = document.getElementById('commodites-content');
+  if (!el) return;
+  el.innerHTML = COMMODITIES_DATA.map(function(ex) {
+    var rows = ex.items.map(function(it) {
+      var cls = chgClass(it.change);
+      var price = it.price < 100 ? it.price.toFixed(2) : fmt(it.price);
+      return '<tr><td style="color:var(--gold);font-weight:600;">'+it.ticker+'</td><td>'+it.name+'</td><td style="font-weight:600;">'+price+' '+ex.ccy+'</td><td class="'+cls+'">'+chgSign(it.change)+'</td><td style="color:var(--text-secondary);">'+it.vol+'</td></tr>';
+    }).join('');
+    return '<div style="margin-bottom:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">'
+        +'<span style="font-size:1.1rem;">'+ex.flag+'</span>'
+        +'<div><div style="font-size:.88rem;font-weight:700;color:var(--orange);">'+ex.exchange+'</div>'
+        +'<div style="font-size:.7rem;color:var(--text-dim);">'+ex.country+' &bull; '+ex.ccy+'</div></div>'
+      +'</div>'
+      +'<table class="data-table"><thead><tr><th>Ticker</th><th>Produit</th><th>Prix</th><th>Var %</th><th>Volume</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'</div>';
+  }).join('');
+}
+
+/* ========== OBLIGATAIRE ========== */
+function renderObligataire() {
+  var el = document.getElementById('obligataire-content');
+  if (!el) return;
+  el.innerHTML = BOND_MARKETS_DATA.map(function(ex) {
+    var rows = ex.items.map(function(it) {
+      var cls = chgClass(it.change);
+      var yldCol = it.yield > 12 ? 'var(--red)' : it.yield > 7 ? 'var(--orange)' : 'var(--green)';
+      return '<tr><td style="color:var(--gold);font-weight:600;">'+it.ticker+'</td><td>'+it.name+'</td><td style="font-weight:600;">'+it.price+'</td><td class="'+cls+'">'+chgSign(it.change)+'</td><td style="color:'+yldCol+';font-weight:700;">'+it.yield.toFixed(2)+'%</td><td style="color:var(--text-secondary);">'+it.maturity+'</td></tr>';
+    }).join('');
+    return '<div style="margin-bottom:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+        +'<div style="display:flex;align-items:center;gap:8px;">'
+          +'<span style="font-size:1.1rem;">'+ex.flag+'</span>'
+          +'<div><div style="font-size:.88rem;font-weight:700;color:var(--cyan);">'+ex.exchange+'</div>'
+          +'<div style="font-size:.7rem;color:var(--text-dim);">'+ex.country+' &bull; '+ex.ccy+'</div></div>'
+        +'</div>'
+        +'<div style="font-size:.68rem;color:var(--text-dim);">'+ex.regulator+'</div>'
+      +'</div>'
+      +'<table class="data-table"><thead><tr><th>Ticker</th><th>Obligation</th><th>Prix</th><th>Var %</th><th>Rendement</th><th>Maturite</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'</div>';
+  }).join('');
+}
+
 function renderSMExchanges() {
   var g = document.getElementById('sm-exchanges-grid');
   if (!g) return;
-  var arrs = {BRVM_STOCKS:BRVM_STOCKS,NGX_STOCKS:NGX_STOCKS,GSE_STOCKS:GSE_STOCKS,JSE_STOCKS:JSE_STOCKS,EGX_STOCKS:EGX_STOCKS,CSE_STOCKS:CSE_STOCKS,NSE_STOCKS:NSE_STOCKS,DSE_STOCKS:DSE_STOCKS,USE_STOCKS:USE_STOCKS,RSE_STOCKS:RSE_STOCKS,BSE_STOCKS:BSE_STOCKS,LUSE_STOCKS:LUSE_STOCKS,ZSE_STOCKS:ZSE_STOCKS,SEM_STOCKS:SEM_STOCKS,BVMT_STOCKS:BVMT_STOCKS,BVMAC_STOCKS:BVMAC_STOCKS,NSX_STOCKS:NSX_STOCKS,ASE_STOCKS:ASE_STOCKS,MSEI_STOCKS:MSEI_STOCKS,BVM_STOCKS:BVM_STOCKS,ESE_STOCKS:ESE_STOCKS,KSE_STOCKS:KSE_STOCKS,LSM_STOCKS:LSM_STOCKS,SSE_STOCKS:SSE_STOCKS,SWSE_STOCKS:SWSE_STOCKS,CSX_STOCKS:CSX_STOCKS,SPDSE_STOCKS:SPDSE_STOCKS,COMSE_STOCKS:COMSE_STOCKS};
+  var arrs = {BRVM_STOCKS:BRVM_STOCKS,NGX_STOCKS:NGX_STOCKS,GSE_STOCKS:GSE_STOCKS,JSE_STOCKS:JSE_STOCKS,EGX_STOCKS:EGX_STOCKS,CSE_STOCKS:CSE_STOCKS,NSE_STOCKS:NSE_STOCKS,DSE_STOCKS:DSE_STOCKS,USE_STOCKS:USE_STOCKS,RSE_STOCKS:RSE_STOCKS,BSE_STOCKS:BSE_STOCKS,LUSE_STOCKS:LUSE_STOCKS,ZSE_STOCKS:ZSE_STOCKS,SEM_STOCKS:SEM_STOCKS,BVMT_STOCKS:BVMT_STOCKS,BVMAC_STOCKS:BVMAC_STOCKS,NSX_STOCKS:NSX_STOCKS,ASE_STOCKS:ASE_STOCKS,MSEI_STOCKS:MSEI_STOCKS,BVM_STOCKS:BVM_STOCKS,ESE_STOCKS:ESE_STOCKS,KSE_STOCKS:KSE_STOCKS,LSM_STOCKS:LSM_STOCKS,SSE_STOCKS:SSE_STOCKS,SWSE_STOCKS:SWSE_STOCKS,CSX_STOCKS:CSX_STOCKS,SPDSE_STOCKS:SPDSE_STOCKS,COMSE_STOCKS:COMSE_STOCKS,BODIVA_STOCKS:BODIVA_STOCKS,SLSE_STOCKS:SLSE_STOCKS,GAX_STOCKS:GAX_STOCKS};
   g.innerHTML = AFRICAN_EXCHANGES.map(function(ex) {
     var stocks = arrs[ex.arr] || [];
     var rows = stocks.slice(0,5).map(function(s) {
