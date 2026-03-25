@@ -2727,7 +2727,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <select class="form-select" id="compta-country-select" onchange="selectComptaCountry(this.value)" style="width:auto;min-width:200px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border);padding:8px 12px;border-radius:var(--radius);">
-          <optgroup label="Zone UEMOA (SYSCOHADA)">
+          <optgroup label="UEMOA — SYSCOHADA (XOF)">
             <option value="BF" selected>&#127463;&#127467; Burkina Faso</option>
             <option value="CI">&#127464;&#127470; C&ocirc;te d'Ivoire</option>
             <option value="SN">&#127480;&#127475; S&eacute;n&eacute;gal</option>
@@ -2737,17 +2737,65 @@ input, select, textarea { font-family: inherit; outline: none; }
             <option value="NE">&#127475;&#127466; Niger</option>
             <option value="GW">&#127468;&#127484; Guin&eacute;e-Bissau</option>
           </optgroup>
-          <optgroup label="OHADA (non-UEMOA)">
-            <option value="GN">&#127468;&#127475; Guin&eacute;e</option>
-            <option value="MR">&#127474;&#127479; Mauritanie</option>
+          <optgroup label="CEMAC — SYSCOHADA (XAF)">
+            <option value="CM">&#127464;&#127474; Cameroun</option>
+            <option value="CF">&#127464;&#127467; Centrafrique</option>
+            <option value="CG">&#127464;&#127468; Congo (Brazzaville)</option>
+            <option value="GA">&#127468;&#127462; Gabon</option>
+            <option value="GQ">&#127468;&#127478; Guin&eacute;e &Eacute;quatoriale</option>
+            <option value="TD">&#127481;&#127465; Tchad</option>
           </optgroup>
-          <optgroup label="AFRIQUE (IFRS / Autres)">
+          <optgroup label="OHADA autres">
+            <option value="GN">&#127468;&#127475; Guin&eacute;e (GNF)</option>
+            <option value="CD">&#127464;&#127465; RD Congo (CDF)</option>
+            <option value="DJ">&#127465;&#127471; Djibouti (DJF)</option>
+            <option value="KM">&#127472;&#127474; Comores (KMF)</option>
+            <option value="ST">&#127480;&#127481; S&atilde;o Tom&eacute; (STN)</option>
+            <option value="MR">&#127474;&#127479; Mauritanie (MRU)</option>
+          </optgroup>
+          <optgroup label="Afrique du Nord">
+            <option value="MA">&#127474;&#127462; Maroc (CGNC)</option>
+            <option value="DZ">&#127465;&#127487; Alg&eacute;rie (SCF)</option>
+            <option value="TN">&#127481;&#127475; Tunisie (NC-TN)</option>
+            <option value="LY">&#127473;&#127486; Libye (GAAP-LY)</option>
+            <option value="EG">&#127466;&#127468; &Eacute;gypte (EAS)</option>
+            <option value="SD">&#127480;&#127465; Soudan (IFRS)</option>
+          </optgroup>
+          <optgroup label="Afrique de l'Ouest (non-OHADA)">
             <option value="NG">&#127475;&#127468; Nigeria (IFRS)</option>
             <option value="GH">&#127468;&#127469; Ghana (IFRS)</option>
             <option value="SL">&#127480;&#127473; Sierra Leone (IFRS)</option>
             <option value="LR">&#127473;&#127479; Liberia (IFRS)</option>
             <option value="GM">&#127468;&#127474; Gambie (IFRS)</option>
             <option value="CV">&#127464;&#127483; Cap-Vert (SNCRF)</option>
+          </optgroup>
+          <optgroup label="Afrique de l'Est">
+            <option value="KE">&#127472;&#127466; Kenya (IFRS)</option>
+            <option value="TZ">&#127481;&#127487; Tanzanie (IFRS)</option>
+            <option value="UG">&#127482;&#127468; Ouganda (IFRS)</option>
+            <option value="RW">&#127479;&#127484; Rwanda (IFRS)</option>
+            <option value="BI">&#127463;&#127470; Burundi (IFRS)</option>
+            <option value="ET">&#127466;&#127481; &Eacute;thiopie (IFRS)</option>
+            <option value="SO">&#127480;&#127476; Somalie (IFRS)</option>
+            <option value="ER">&#127466;&#127479; &Eacute;rythr&eacute;e (IFRS)</option>
+            <option value="SS">&#127480;&#127480; Soudan du Sud (IFRS)</option>
+          </optgroup>
+          <optgroup label="Afrique Australe">
+            <option value="ZA">&#127487;&#127462; Afrique du Sud (IFRS)</option>
+            <option value="ZM">&#127487;&#127474; Zambie (IFRS)</option>
+            <option value="ZW">&#127487;&#127484; Zimbabwe (IFRS)</option>
+            <option value="BW">&#127463;&#127484; Botswana (IFRS)</option>
+            <option value="NA">&#127475;&#127462; Namibie (IFRS)</option>
+            <option value="LS">&#127473;&#127480; Lesotho (IFRS)</option>
+            <option value="SZ">&#127480;&#127487; Eswatini (IFRS)</option>
+            <option value="MW">&#127474;&#127484; Malawi (IFRS)</option>
+            <option value="MZ">&#127474;&#127487; Mozambique (IFRS)</option>
+            <option value="AO">&#127462;&#127476; Angola (PGCB)</option>
+            <option value="MG">&#127474;&#127468; Madagascar (IFRS)</option>
+          </optgroup>
+          <optgroup label="&Icirc;les">
+            <option value="MU">&#127474;&#127482; Maurice (IFRS)</option>
+            <option value="SC">&#127480;&#127464; Seychelles (IFRS)</option>
           </optgroup>
         </select>
         <span id="compta-country-info" style="font-size:0.75rem;color:var(--text-dim);">R&eacute;f&eacute;rentiel: SYSCOHADA r&eacute;vis&eacute; | Monnaie: XOF | R&eacute;gulateur: DGI-BF</span>
@@ -2820,6 +2868,8 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
       </div>
     </div>
+    <!-- Systèmes comptables 54 pays — toujours visible -->
+    <div id="compta-systemes-pays" style="padding:20px;max-height:calc(100vh - 200px);overflow-y:auto;border-top:1px solid var(--border);"></div>
     <div class="compta-tabs" id="compta-tabs" style="display:none;">
       <button class="compta-tab active" onclick="switchComptaTab('pilotage',this)">Pilotage</button>
       <button class="compta-tab" onclick="switchComptaTab('plan',this)">Plan Comptable</button>
@@ -3902,6 +3952,7 @@ document.getElementById('btn-bank-demo').addEventListener('click', function() {
   calcCredit();
   renderStockMarket();
   renderSMExchanges();
+  renderComptaSystemesPays();
   renderSMEmetteurs();
   renderSMPortfolio();
   // Compta & Banking: empty by default, loaded when documents are uploaded
@@ -6491,6 +6542,62 @@ const AFRICAN_EXCHANGES = [
   {id:'spdse',name:'SPDSE',full:'South Sudan (projet)',city:'Juba',country:'Soudan du Sud',ccy:'SSP',idx:'N/A',cap:'En dev.',n:3,arr:'SPDSE_STOCKS'},
   {id:'comse',name:'COMSE',full:'Comoros Exchange (projet)',city:'Moroni',country:'Comores',ccy:'KMF',idx:'N/A',cap:'En dev.',n:3,arr:'COMSE_STOCKS'},
 ];
+/* ========== COMPTA — SYSTÈMES DES 54 PAYS ========== */
+function renderComptaSystemesPays() {
+  var el = document.getElementById('compta-systemes-pays');
+  if (!el) return;
+  var sysBadge = function(s) {
+    var col = s.startsWith('SYSCOHADA')||s==='SYCEBNL' ? 'var(--gold)' :
+              s==='IFRS'||s==='IFRS' ? 'var(--cyan)' :
+              s==='King IV'||s==='IPSAS' ? 'var(--green)' :
+              s==='PCM'||s==='SNCRF'||s==='PCN'||s==='PCB'||s==='PGCB'||s==='PCG2005' ? 'var(--orange)' :
+              s.includes('GAAP')||s.includes('SAS')||s.includes('GNAS') ? 'var(--blue)' :
+              s.includes('EAS')||s.includes('CGNC')||s.includes('SCF')||s.includes('NC-TN')||s.includes('MFRS') ? 'var(--text-secondary)' :
+              'var(--text-dim)';
+    return '<span style="display:inline-block;padding:2px 7px;border-radius:10px;font-size:.62rem;font-weight:700;border:1px solid '+col+';color:'+col+';margin:1px 2px 1px 0;">'+s+'</span>';
+  };
+  var groups = [
+    {label:'UEMOA — SYSCOHADA (XOF)',codes:['BF','CI','SN','ML','BJ','TG','NE','GW']},
+    {label:'CEMAC — SYSCOHADA (XAF)',codes:['CM','CF','CG','GA','GQ','TD']},
+    {label:'OHADA autres',codes:['GN','CD','DJ','KM','ST','MR']},
+    {label:'Afrique du Nord',codes:['MA','DZ','TN','LY','EG','SD']},
+    {label:"Afrique de l'Ouest hors OHADA",codes:['NG','GH','SL','LR','GM','CV']},
+    {label:"Afrique de l'Est",codes:['KE','TZ','UG','RW','BI','ET','SO','ER','SS']},
+    {label:'Afrique Australe',codes:['ZA','ZM','ZW','BW','NA','LS','SZ','MW','MZ','AO','MG']},
+    {label:'Iles',codes:['MU','SC']},
+  ];
+  var html = '<div style="margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
+    +'<div style="font-size:.95rem;font-weight:700;color:var(--gold);">Systèmes Comptables — 54 pays africains</div>'
+    +'<span style="font-size:.7rem;color:var(--text-dim);padding:2px 8px;background:rgba(200,146,42,.1);border:1px solid var(--gold-dim);border-radius:8px;">Référentiel</span>'
+    +'</div>';
+  groups.forEach(function(g) {
+    html += '<div style="margin-bottom:18px;">'
+      +'<div style="font-size:.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">'+g.label+'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;">';
+    g.codes.forEach(function(code) {
+      var c = AFRIQUE_ACCOUNTING.find(function(x){return x.code===code;});
+      if (!c) return;
+      var ohadaBadge = c.ohada ? '<span style="font-size:.58rem;padding:1px 5px;background:rgba(200,146,42,.15);color:var(--gold);border-radius:4px;font-weight:700;">OHADA</span>' : '';
+      html += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;display:flex;flex-direction:column;gap:4px;">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;">'
+          +'<div style="display:flex;align-items:center;gap:6px;">'
+            +'<span style="font-size:1.1rem;">'+c.flag+'</span>'
+            +'<span style="font-size:.8rem;font-weight:600;color:var(--text-primary);">'+c.name+'</span>'
+          +'</div>'
+          +'<div style="display:flex;align-items:center;gap:4px;">'
+            +'<span style="font-size:.65rem;color:var(--cyan);font-weight:600;">'+c.currency+'</span>'
+            +ohadaBadge
+          +'</div>'
+        +'</div>'
+        +'<div>'+c.systems.map(sysBadge).join('')+'</div>'
+        +'<div style="font-size:.62rem;color:var(--text-dim);">'+c.regulator+'</div>'
+      +'</div>';
+    });
+    html += '</div></div>';
+  });
+  el.innerHTML = html;
+}
+
 function renderSMExchanges() {
   var g = document.getElementById('sm-exchanges-grid');
   if (!g) return;
@@ -6793,22 +6900,68 @@ var SYCEBNL_JOURNAL = [];
 
 /* ---- AFRIQUE Country → Accounting System mapping ---- */
 const AFRIQUE_ACCOUNTING = [
-  {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-BF',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-CI',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGID-SN',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-ML',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'BJ',flag:'\u{1F1E7}\u{1F1EF}',name:'Benin',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-BJ',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'TG',flag:'\u{1F1F9}\u{1F1EC}',name:'Togo',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'OTR-TG',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'NE',flag:'\u{1F1F3}\u{1F1EA}',name:'Niger',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-NE',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'GW',flag:'\u{1F1EC}\u{1F1FC}',name:'Guinee-Bissau',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-GW',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'GN',flag:'\u{1F1EC}\u{1F1F3}',name:'Guinee',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'GNF',regulator:'DNI-GN',liasse:'Systeme Normal / Systeme Minimal'},
-  {code:'MR',flag:'\u{1F1F2}\u{1F1F7}',name:'Mauritanie',systems:['SYSCOHADA','PCM'],ohada:true,currency:'MRU',regulator:'DGI-MR',liasse:'PCM en transition vers SYSCOHADA'},
-  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',systems:['IFRS','SAS-NIGERIA'],ohada:false,currency:'NGN',regulator:'FIRS / FRCN',liasse:'Companies Income Tax Return'},
-  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',systems:['IFRS','GNAS'],ohada:false,currency:'GHS',regulator:'GRA / ICAG',liasse:'Annual Returns + Financial Statements'},
-  {code:'SL',flag:'\u{1F1F8}\u{1F1F1}',name:'Sierra Leone',systems:['IFRS'],ohada:false,currency:'SLL',regulator:'NRA-SL',liasse:'IFRS Financial Statements'},
-  {code:'LR',flag:'\u{1F1F1}\u{1F1F7}',name:'Liberia',systems:['IFRS','US-GAAP'],ohada:false,currency:'LRD',regulator:'LRA',liasse:'Annual Tax Return + IFRS Statements'},
-  {code:'GM',flag:'\u{1F1EC}\u{1F1F2}',name:'Gambie',systems:['IFRS'],ohada:false,currency:'GMD',regulator:'GRA-GM',liasse:'IFRS Financial Statements'},
-  {code:'CV',flag:'\u{1F1E8}\u{1F1FB}',name:'Cap-Vert',systems:['SNCRF'],ohada:false,currency:'CVE',regulator:'DNRE-CV',liasse:'SNCRF (norme portugaise)'},
+  // ── UEMOA (SYSCOHADA · XOF) ─────────────────────────────────────────
+  {code:'BF',flag:'🇧🇫',name:'Burkina Faso',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-BF',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'CI',flag:'🇨🇮',name:"Cote d'Ivoire",region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-CI',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'SN',flag:'🇸🇳',name:'Senegal',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGID-SN',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'ML',flag:'🇲🇱',name:'Mali',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-ML',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'BJ',flag:'🇧🇯',name:'Benin',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-BJ',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'TG',flag:'🇹🇬',name:'Togo',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'OTR-TG',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'NE',flag:'🇳🇪',name:'Niger',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-NE',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'GW',flag:'🇬🇼',name:'Guinee-Bissau',region:'UEMOA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XOF',regulator:'DGI-GW',liasse:'Systeme Normal / Systeme Minimal'},
+  // ── CEMAC (SYSCOHADA · XAF) ─────────────────────────────────────────
+  {code:'CM',flag:'🇨🇲',name:'Cameroun',region:'CEMAC',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XAF',regulator:'DGI-CM / BEAC',liasse:'SYSCOHADA + Directive CEMAC'},
+  {code:'CF',flag:'🇨🇫',name:'Centrafrique',region:'CEMAC',systems:['SYSCOHADA'],ohada:true,currency:'XAF',regulator:'DGI-CF',liasse:'Systeme Normal'},
+  {code:'CG',flag:'🇨🇬',name:'Congo (Brazzaville)',region:'CEMAC',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XAF',regulator:'DGI-CG',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'GA',flag:'🇬🇦',name:'Gabon',region:'CEMAC',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'XAF',regulator:'DGI-GA',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'GQ',flag:'🇬🇶',name:'Guinee Equatoriale',region:'CEMAC',systems:['SYSCOHADA'],ohada:true,currency:'XAF',regulator:'DGI-GQ',liasse:'Systeme Normal'},
+  {code:'TD',flag:'🇹🇩',name:'Tchad',region:'CEMAC',systems:['SYSCOHADA'],ohada:true,currency:'XAF',regulator:'DGI-TD',liasse:'Systeme Normal'},
+  // ── OHADA autres ────────────────────────────────────────────────────
+  {code:'GN',flag:'🇬🇳',name:'Guinee',region:'OHADA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'GNF',regulator:'DNI-GN',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'CD',flag:'🇨🇩',name:'RD Congo',region:'OHADA',systems:['SYSCOHADA','SYCEBNL'],ohada:true,currency:'CDF',regulator:'DGI-CD',liasse:'Systeme Normal / Systeme Minimal'},
+  {code:'DJ',flag:'🇩🇯',name:'Djibouti',region:'OHADA',systems:['SYSCOHADA'],ohada:true,currency:'DJF',regulator:'DGI-DJ',liasse:'Systeme Normal'},
+  {code:'KM',flag:'🇰🇲',name:'Comores',region:'OHADA',systems:['SYSCOHADA'],ohada:true,currency:'KMF',regulator:'DGI-KM',liasse:'Systeme Normal'},
+  {code:'ST',flag:'🇸🇹',name:'Sao Tome-et-Principe',region:'OHADA',systems:['SYSCOHADA','SNCRF'],ohada:true,currency:'STN',regulator:'DGI-ST',liasse:'SYSCOHADA / SNCRF'},
+  {code:'MR',flag:'🇲🇷',name:'Mauritanie',region:'OHADA',systems:['SYSCOHADA','PCM'],ohada:true,currency:'MRU',regulator:'DGI-MR',liasse:'PCM en transition SYSCOHADA'},
+  // ── Afrique du Nord ─────────────────────────────────────────────────
+  {code:'MA',flag:'🇲🇦',name:'Maroc',region:'NAEX',systems:['CGNC','IFRS'],ohada:false,currency:'MAD',regulator:'DGI-MA / CNC',liasse:'Liasse fiscale DGI Maroc'},
+  {code:'DZ',flag:'🇩🇿',name:'Algerie',region:'NAEX',systems:['SCF'],ohada:false,currency:'DZD',regulator:'DGI-DZ / CNC',liasse:'Bilan fiscal DGI Algerie'},
+  {code:'TN',flag:'🇹🇳',name:'Tunisie',region:'NAEX',systems:['NC-TN','IFRS'],ohada:false,currency:'TND',regulator:'DGF-TN / OECT',liasse:'Liasse fiscale DGF Tunisie'},
+  {code:'LY',flag:'🇱🇾',name:'Libye',region:'NAEX',systems:['GAAP-LY'],ohada:false,currency:'LYD',regulator:'LNPC-LY',liasse:'Etats financiers LNPC'},
+  {code:'EG',flag:'🇪🇬',name:'Egypte',region:'NAEX',systems:['EAS','IFRS'],ohada:false,currency:'EGP',regulator:'ETA / EAS',liasse:'Tax Return + Financial Statements'},
+  {code:'SD',flag:'🇸🇩',name:'Soudan',region:'NAEX',systems:['IFRS','IFAS'],ohada:false,currency:'SDG',regulator:'NRA-SD',liasse:'IFRS / Islamic Finance Standards'},
+  // ── Afrique de l'Ouest hors OHADA ───────────────────────────────────
+  {code:'NG',flag:'🇳🇬',name:'Nigeria',region:'WAEX',systems:['IFRS','SAS-NIGERIA'],ohada:false,currency:'NGN',regulator:'FIRS / FRCN',liasse:'Companies Income Tax Return'},
+  {code:'GH',flag:'🇬🇭',name:'Ghana',region:'WAEX',systems:['IFRS','GNAS'],ohada:false,currency:'GHS',regulator:'GRA / ICAG',liasse:'Annual Returns + Financial Statements'},
+  {code:'SL',flag:'🇸🇱',name:'Sierra Leone',region:'WAEX',systems:['IFRS'],ohada:false,currency:'SLE',regulator:'NRA-SL',liasse:'IFRS Financial Statements'},
+  {code:'LR',flag:'🇱🇷',name:'Liberia',region:'WAEX',systems:['IFRS','US-GAAP'],ohada:false,currency:'LRD',regulator:'LRA',liasse:'Annual Tax Return + IFRS Statements'},
+  {code:'GM',flag:'🇬🇲',name:'Gambie',region:'WAEX',systems:['IFRS'],ohada:false,currency:'GMD',regulator:'GRA-GM',liasse:'IFRS Financial Statements'},
+  {code:'CV',flag:'🇨🇻',name:'Cap-Vert',region:'WAEX',systems:['SNCRF'],ohada:false,currency:'CVE',regulator:'DNRE-CV',liasse:'SNCRF (norme portugaise)'},
+  // ── Afrique de l'Est ────────────────────────────────────────────────
+  {code:'KE',flag:'🇰🇪',name:'Kenya',region:'EAEX',systems:['IFRS'],ohada:false,currency:'KES',regulator:'KRA / ICPAK',liasse:'IFRS Financial Statements'},
+  {code:'TZ',flag:'🇹🇿',name:'Tanzanie',region:'EAEX',systems:['IFRS'],ohada:false,currency:'TZS',regulator:'TRA / NBAA',liasse:'IFRS Financial Statements'},
+  {code:'UG',flag:'🇺🇬',name:'Ouganda',region:'EAEX',systems:['IFRS'],ohada:false,currency:'UGX',regulator:'URA / ICPAU',liasse:'IFRS Financial Statements'},
+  {code:'RW',flag:'🇷🇼',name:'Rwanda',region:'EAEX',systems:['IFRS'],ohada:false,currency:'RWF',regulator:'RRA / ICPAR',liasse:'IFRS Financial Statements'},
+  {code:'BI',flag:'🇧🇮',name:'Burundi',region:'EAEX',systems:['IFRS','PCB'],ohada:false,currency:'BIF',regulator:'OBR-BI',liasse:'PCB / IFRS'},
+  {code:'ET',flag:'🇪🇹',name:'Ethiopie',region:'EAEX',systems:['IFRS','IPSAS'],ohada:false,currency:'ETB',regulator:'ERCA / AABE',liasse:'IFRS / IPSAS secteur public'},
+  {code:'SO',flag:'🇸🇴',name:'Somalie',region:'EAEX',systems:['IFRS'],ohada:false,currency:'SOS',regulator:'SRA-SO',liasse:'IFRS (minimal)'},
+  {code:'ER',flag:'🇪🇷',name:'Erythree',region:'EAEX',systems:['IFRS'],ohada:false,currency:'ERN',regulator:'MoF-ER',liasse:'IFRS'},
+  {code:'SS',flag:'🇸🇸',name:'Soudan du Sud',region:'EAEX',systems:['IFRS'],ohada:false,currency:'SSP',regulator:'NRA-SS',liasse:'IFRS (en developpement)'},
+  // ── Afrique Australe ────────────────────────────────────────────────
+  {code:'ZA',flag:'🇿🇦',name:'Afrique du Sud',region:'SAEX',systems:['IFRS','King IV'],ohada:false,currency:'ZAR',regulator:'SARS / IRBA',liasse:'IFRS + JSE Requirements'},
+  {code:'ZM',flag:'🇿🇲',name:'Zambie',region:'SAEX',systems:['IFRS'],ohada:false,currency:'ZMW',regulator:'ZRA / ZICA',liasse:'IFRS Financial Statements'},
+  {code:'ZW',flag:'🇿🇼',name:'Zimbabwe',region:'SAEX',systems:['IFRS'],ohada:false,currency:'ZWG',regulator:'ZIMRA / PAAB',liasse:'IFRS Financial Statements'},
+  {code:'BW',flag:'🇧🇼',name:'Botswana',region:'SAEX',systems:['IFRS'],ohada:false,currency:'BWP',regulator:'BURS / BAICA',liasse:'IFRS Financial Statements'},
+  {code:'NA',flag:'🇳🇦',name:'Namibie',region:'SAEX',systems:['IFRS'],ohada:false,currency:'NAD',regulator:'NamRA / PAAB',liasse:'IFRS Financial Statements'},
+  {code:'LS',flag:'🇱🇸',name:'Lesotho',region:'SAEX',systems:['IFRS'],ohada:false,currency:'LSL',regulator:'LRA',liasse:'IFRS Financial Statements'},
+  {code:'SZ',flag:'🇸🇿',name:'Eswatini',region:'SAEX',systems:['IFRS'],ohada:false,currency:'SZL',regulator:'SRA',liasse:'IFRS Financial Statements'},
+  {code:'MW',flag:'🇲🇼',name:'Malawi',region:'SAEX',systems:['IFRS'],ohada:false,currency:'MWK',regulator:'MRA / ICAM',liasse:'IFRS Financial Statements'},
+  {code:'MZ',flag:'🇲🇿',name:'Mozambique',region:'SAEX',systems:['IFRS','PCN'],ohada:false,currency:'MZN',regulator:'AT-MZ',liasse:'PCN / IFRS'},
+  {code:'AO',flag:'🇦🇴',name:'Angola',region:'SAEX',systems:['PGCB','IFRS'],ohada:false,currency:'AOA',regulator:'AGT-AO',liasse:'Plano Geral Contabilistico Bancario'},
+  {code:'MG',flag:'🇲🇬',name:'Madagascar',region:'SAEX',systems:['IFRS','PCG2005'],ohada:false,currency:'MGA',regulator:'DGI-MG',liasse:'PCG 2005 / IFRS'},
+  // ── Iles ────────────────────────────────────────────────────────────
+  {code:'MU',flag:'🇲🇺',name:'Maurice',region:'SAEX',systems:['IFRS','MFRS'],ohada:false,currency:'MUR',regulator:'MRA / MIPA',liasse:'IFRS + Companies Act'},
+  {code:'SC',flag:'🇸🇨',name:'Seychelles',region:'SAEX',systems:['IFRS'],ohada:false,currency:'SCR',regulator:'SRC / SFCSA',liasse:'IFRS Financial Statements'},
 ];
 
 /* ---- Default class colors for plans that don't define them ---- */
