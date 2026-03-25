@@ -3627,12 +3627,58 @@ const CRYPTO_PRICES=[
 ];
 
 const FX_RATES=[
-  {pair:'EUR/XOF',buy:655.957,sell:655.957,spread:'0.00',change:'0.00%',bank:'BCEAO (fixe)'},
+  /* ── Références mondiales ── */
+  {pair:'EUR/XOF',buy:655.957,sell:655.957,spread:'0.00',change:'0.00%',bank:'BCEAO (ancre fixe)'},
   {pair:'USD/XOF',buy:602.50,sell:605.80,spread:'3.30',change:'+0.12%',bank:'BCEAO'},
   {pair:'GBP/XOF',buy:764.20,sell:768.40,spread:'4.20',change:'-0.08%',bank:'BCEAO'},
+  {pair:'XOF/CNY',buy:0.012,sell:0.013,spread:'0.001',change:'+0.3%',bank:'PBOC / BCEAO'},
+  /* ── XAF (parité XOF) ── */
+  {pair:'XAF/XOF',buy:1.000,sell:1.000,spread:'0.00',change:'0.00%',bank:'BEAC / BCEAO (parité)'},
+  /* ── Afrique du Nord ── */
+  {pair:'DZD/XOF',buy:4.58,sell:4.62,spread:'0.04',change:'-0.2%',bank:'Banque d\'Algérie'},
+  {pair:'EGP/XOF',buy:12.70,sell:12.90,spread:'0.20',change:'+0.3%',bank:'CBE / BCEAO'},
+  {pair:'LYD/XOF',buy:126.0,sell:129.5,spread:'3.50',change:'-0.5%',bank:'CBL / BCEAO'},
+  {pair:'MAD/XOF',buy:61.0,sell:61.8,spread:'0.80',change:'+0.1%',bank:'BAM / BCEAO'},
+  {pair:'TND/XOF',buy:197.0,sell:199.5,spread:'2.50',change:'+0.2%',bank:'BCT / BCEAO'},
+  {pair:'SDG/XOF',buy:1.05,sell:1.10,spread:'0.05',change:'-2.1%',bank:'CBOS (volatile)'},
+  /* ── Afrique de l'Ouest hors XOF ── */
   {pair:'NGN/XOF',buy:0.38,sell:0.41,spread:'0.03',change:'-1.2%',bank:'CBN / BCEAO'},
   {pair:'GHS/XOF',buy:41.20,sell:43.80,spread:'2.60',change:'+0.5%',bank:'BOG / BCEAO'},
-  {pair:'XOF/CNY',buy:0.012,sell:0.013,spread:'0.001',change:'+0.3%',bank:'PBOC / BCEAO'},
+  {pair:'GMD/XOF',buy:8.42,sell:8.66,spread:'0.24',change:'+0.1%',bank:'CBG / BCEAO'},
+  {pair:'GNF/XOF',buy:0.0712,sell:0.0718,spread:'0.0006',change:'-0.3%',bank:'BCRG / BCEAO'},
+  {pair:'CVE/XOF',buy:5.94,sell:5.98,spread:'0.04',change:'0.00%',bank:'BCV (ancré EUR)'},
+  {pair:'LRD/XOF',buy:3.14,sell:3.20,spread:'0.06',change:'+0.4%',bank:'CBL / BCEAO'},
+  {pair:'MRU/XOF',buy:15.45,sell:15.70,spread:'0.25',change:'-0.1%',bank:'BCM / BCEAO'},
+  {pair:'SLE/XOF',buy:0.0271,sell:0.0276,spread:'0.0005',change:'+0.2%',bank:'BSL / BCEAO'},
+  /* ── Afrique Centrale hors XAF ── */
+  {pair:'CDF/XOF',buy:0.218,sell:0.222,spread:'0.004',change:'-1.5%',bank:'BCC (volatile)'},
+  {pair:'STN/XOF',buy:24.9,sell:25.3,spread:'0.40',change:'0.00%',bank:'BCSTP (ancré EUR)'},
+  /* ── Afrique de l'Est ── */
+  {pair:'KES/XOF',buy:4.73,sell:4.81,spread:'0.08',change:'+0.3%',bank:'CBK / BCEAO'},
+  {pair:'TZS/XOF',buy:0.226,sell:0.230,spread:'0.004',change:'+0.1%',bank:'BoT / BCEAO'},
+  {pair:'UGX/XOF',buy:0.162,sell:0.166,spread:'0.004',change:'+0.2%',bank:'BoU / BCEAO'},
+  {pair:'ETB/XOF',buy:5.10,sell:5.16,spread:'0.06',change:'-0.4%',bank:'NBE / BCEAO'},
+  {pair:'RWF/XOF',buy:0.440,sell:0.446,spread:'0.006',change:'+0.1%',bank:'BNR / BCEAO'},
+  {pair:'BIF/XOF',buy:0.211,sell:0.215,spread:'0.004',change:'-0.2%',bank:'BRB / BCEAO'},
+  {pair:'DJF/XOF',buy:3.43,sell:3.49,spread:'0.06',change:'0.00%',bank:'BCD (ancré USD)'},
+  {pair:'KMF/XOF',buy:1.330,sell:1.337,spread:'0.007',change:'0.00%',bank:'BCC (ancré EUR)'},
+  {pair:'ERN/XOF',buy:40.5,sell:41.5,spread:'1.00',change:'0.00%',bank:'BoE (fixe USD)'},
+  {pair:'SOS/XOF',buy:1.07,sell:1.09,spread:'0.02',change:'-0.8%',bank:'CBS (instable)'},
+  {pair:'SSP/XOF',buy:0.468,sell:0.479,spread:'0.011',change:'-3.2%',bank:'SSRA (volatile)'},
+  /* ── Afrique Australe ── */
+  {pair:'ZAR/XOF',buy:33.5,sell:33.9,spread:'0.40',change:'+0.2%',bank:'SARB / BCEAO'},
+  {pair:'ZMW/XOF',buy:22.2,sell:22.6,spread:'0.40',change:'-0.3%',bank:'BoZ / BCEAO'},
+  {pair:'ZWG/XOF',buy:23.5,sell:24.0,spread:'0.50',change:'-0.6%',bank:'RBZ (or-adossé)'},
+  {pair:'AOA/XOF',buy:0.678,sell:0.688,spread:'0.010',change:'-0.7%',bank:'BNA / BCEAO'},
+  {pair:'BWP/XOF',buy:44.6,sell:45.2,spread:'0.60',change:'+0.1%',bank:'BoB / BCEAO'},
+  {pair:'MZN/XOF',buy:9.52,sell:9.70,spread:'0.18',change:'-0.4%',bank:'BM / BCEAO'},
+  {pair:'MWK/XOF',buy:0.350,sell:0.356,spread:'0.006',change:'-1.1%',bank:'RBM / BCEAO'},
+  {pair:'MGA/XOF',buy:0.135,sell:0.139,spread:'0.004',change:'-0.2%',bank:'BFM / BCEAO'},
+  {pair:'MUR/XOF',buy:13.70,sell:13.95,spread:'0.25',change:'+0.1%',bank:'BoM / BCEAO'},
+  {pair:'SCR/XOF',buy:44.8,sell:45.6,spread:'0.80',change:'+0.3%',bank:'CBS / BCEAO'},
+  {pair:'NAD/XOF',buy:33.5,sell:33.9,spread:'0.40',change:'+0.2%',bank:'BoN (= ZAR)'},
+  {pair:'SZL/XOF',buy:33.5,sell:33.9,spread:'0.40',change:'+0.2%',bank:'CBS (= ZAR)'},
+  {pair:'LSL/XOF',buy:33.5,sell:33.9,spread:'0.40',change:'+0.2%',bank:'CBL (= ZAR)'},
 ];
 
 const XOF_PER_USD=603;
