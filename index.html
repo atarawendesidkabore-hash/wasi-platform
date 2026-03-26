@@ -472,6 +472,27 @@ input, select, textarea { font-family: inherit; outline: none; }
 .coup-item .cname { flex: 1; color: var(--text-primary); }
 .coup-item .cscore { color: var(--red); font-weight: 600; }
 
+
+/* ========== MARKETS SCREEN ========== */
+#screen-markets { padding: 0; }
+#screen-markets.active { display: flex; flex-direction: column; height: calc(100vh - 88px); }
+.markets-top-tabs {
+  display: flex; padding: 0 16px;
+  background: var(--bg-secondary); border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.markets-top-tab {
+  padding: 10px 24px; background: transparent; border: none;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  color: var(--text-secondary); cursor: pointer; font-size: .8rem;
+  font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px;
+  transition: color .2s;
+}
+.markets-top-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.markets-top-tab:hover { color: var(--gold); }
+.markets-panel { display: none; flex: 1; overflow: auto; flex-direction: column; min-height: 0; }
+.markets-panel.active { display: flex; }
+
 /* ========== DEX SCREEN ========== */
 #screen-dex { padding: 0; }
 #screen-dex.active { display: block; }
@@ -1734,9 +1755,8 @@ input, select, textarea { font-family: inherit; outline: none; }
     <div class="topbar-brand">WASI</div>
     <div class="topbar-nav" id="main-nav">
       <button class="active" onclick="showScreen('intel',this)" data-i18n="nav_intel">Intelligence</button>
-      <button onclick="showScreen('dex',this)">DEX</button>
+      <button onclick="showScreen('markets',this)" data-i18n="nav_markets">Marchés</button>
       <button onclick="showScreen('bank',this)" data-i18n="nav_bank">Banking</button>
-      <button onclick="showScreen('stock',this)" data-i18n="nav_stock">Stock Market</button>
       <button onclick="showScreen('compta',this)" data-i18n="nav_compta">Comptabilite</button>
       <button onclick="showScreen('admin',this)" style="color:var(--gold);" data-i18n="nav_admin">Admin</button>
     </div>
@@ -1808,8 +1828,16 @@ input, select, textarea { font-family: inherit; outline: none; }
     </div>
   </div>
 
-  <!-- ===== DEX SCREEN ===== -->
-  <div id="screen-dex" class="screen">
+  <!-- ===== MARKETS SCREEN ===== -->
+  <div id="screen-markets" class="screen">
+    <!-- Markets top-level tabs -->
+    <div class="markets-top-tabs">
+      <button class="markets-top-tab active" onclick="switchMarketsTop('trading',this)" data-i18n="mkt_tab_trading">Trading</button>
+      <button class="markets-top-tab" onclick="switchMarketsTop('wasi',this)" data-i18n="mkt_tab_wasi">WASI Exchange</button>
+    </div>
+    <!-- Panel: Trading (all exchanges + derivatives) -->
+    <div class="markets-panel active" id="mkt-panel-trading">
+
     <div class="dex-tabs" id="dex-tabs">
       <button class="dex-tab active" onclick="switchDexTab('brvm',this)">BRVM (UEMOA)</button>
       <button class="dex-tab" onclick="switchDexTab('ngx',this)">NGX (Nigeria)</button>
@@ -2287,6 +2315,124 @@ input, select, textarea { font-family: inherit; outline: none; }
         </div>
       </div>
     </div>
+    </div>
+    <!-- Panel: WASI Exchange (Private Stock Market) -->
+    <div class="markets-panel" id="mkt-panel-wasi">
+
+    <div class="sm-header">
+      <div>
+        <div class="sm-header-title" data-i18n="sm_title">WASI STOCK MARKET &mdash; Bourse Priv&eacute;e de l'Afrique</div>
+        <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
+      </div>
+      <div class="sm-header-stats">
+        <span>8</span> PME + <span>29</span> bourses &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
+      </div>
+    </div>
+    <div class="sm-tabs" id="sm-tabs">
+      <button class="sm-tab active" onclick="switchSMTab('marche',this)" data-i18n="sm_tab_marche">March&eacute;</button>
+      <button class="sm-tab" onclick="switchSMTab('emetteurs',this)" data-i18n="sm_tab_emetteurs">&Eacute;metteurs</button>
+      <button class="sm-tab" onclick="switchSMTab('portfolio',this)" data-i18n="sm_tab_portfolio">Mon Portefeuille SM</button>
+      <button class="sm-tab" onclick="switchSMTab('soumettre',this)" data-i18n="sm_tab_soumettre">Soumettre une PME</button>
+    </div>
+    <div class="sm-body">
+      <!-- MARCHÉ tab -->
+      <div class="sm-panel active" id="sm-panel-marche">
+        <table class="data-table" id="sm-market-table">
+          <thead>
+            <tr><th>TICKER</th><th>ENTREPRISE</th><th>SECTEUR</th><th>PAYS</th><th>COMPARTIMENT</th><th>COURS (XOF)</th><th>VAR%</th><th>VOLUME</th><th>SCORE</th><th>CAP.</th></tr>
+          </thead>
+          <tbody id="sm-market-body"></tbody>
+        </table>
+        <div class="sm-fixing-card">
+          <h3>Derni&egrave;re s&eacute;ance de fixing</h3>
+          <div class="sm-fixing-grid">
+            <div class="sm-fixing-stat"><div class="val">19 mars 2026</div><div class="lab">Date</div></div>
+            <div class="sm-fixing-stat"><div class="val">10h00-14h00 WAT</div><div class="lab">Horaires</div></div>
+            <div class="sm-fixing-stat"><div class="val">847</div><div class="lab">Ordres ex&eacute;cut&eacute;s</div></div>
+            <div class="sm-fixing-stat"><div class="val">229 700</div><div class="lab">Actions &eacute;chang&eacute;es</div></div>
+            <div class="sm-fixing-stat"><div class="val">892 M XOF</div><div class="lab">Valeur totale</div></div>
+          </div>
+          <div style="margin-top:12px;font-size:.78rem;color:var(--text-secondary);">Prochaine s&eacute;ance : <span style="color:var(--gold);font-weight:600;">Mercredi 26 mars 2026</span></div>
+        </div>
+      </div>
+      <!-- ÉMETTEURS tab -->
+      
+      <div class="sm-panel" id="sm-panel-emetteurs">
+        <div id="sm-emetteurs-content"></div>
+      </div>
+      <!-- MON PORTEFEUILLE SM tab -->
+      <div class="sm-panel" id="sm-panel-portfolio">
+        <div id="sm-portfolio-content"></div>
+      </div>
+      <!-- SOUMETTRE UNE PME tab -->
+      <div class="sm-panel" id="sm-panel-soumettre">
+        <div class="sm-form-card">
+          <h3>Candidature &Eacute;metteur &mdash; WASI Stock Market</h3>
+          <div class="sm-form-grid">
+            <div class="form-group">
+              <label class="form-label">Nom de l'entreprise</label>
+              <input type="text" class="form-input" id="pme-name" placeholder="Ex: AgriPlus SA" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pays</label>
+              <select class="form-select" id="pme-country" onchange="updateSMScore()">
+                <option value="">-- S&eacute;lectionner --</option>
+                <option value="BJ">B&eacute;nin</option><option value="BF">Burkina Faso</option>
+                <option value="CV">Cap-Vert</option><option value="CI">C&ocirc;te d'Ivoire</option>
+                <option value="GM">Gambie</option><option value="GH">Ghana</option>
+                <option value="GN">Guin&eacute;e</option><option value="GW">Guin&eacute;e-Bissau</option>
+                <option value="LR">Lib&eacute;ria</option><option value="ML">Mali</option>
+                <option value="MR">Mauritanie</option><option value="NE">Niger</option>
+                <option value="NG">Nigeria</option><option value="SN">S&eacute;n&eacute;gal</option>
+                <option value="SL">Sierra Leone</option><option value="TG">Togo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secteur d'activit&eacute;</label>
+              <select class="form-select" id="pme-sector" onchange="updateSMScore()">
+                <option value="">-- S&eacute;lectionner --</option>
+                <option>Agro-industrie</option><option>BTP &amp; Mat&eacute;riaux</option>
+                <option>Transport &amp; Logistique</option><option>Sant&eacute; &amp; Pharmacie</option>
+                <option>Tech / Fintech</option><option>&Eacute;nergie</option>
+                <option>Microfinance</option><option>Immobilier</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chiffre d'affaires dernier exercice (XOF)</label>
+              <input type="number" class="form-input" id="pme-ca" placeholder="0" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Capital social (XOF)</label>
+              <input type="number" class="form-input" id="pme-capital" placeholder="0" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre d'exercices audit&eacute;s</label>
+              <select class="form-select" id="pme-exercices" onchange="updateSMScore()">
+                <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Montant de la lev&eacute;e souhait&eacute;e (XOF)</label>
+              <input type="number" class="form-input" id="pme-levee" placeholder="0" oninput="updateSMScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Upload &eacute;tats financiers</label>
+              <input type="file" class="form-input" id="pme-files" accept=".pdf,.xlsx,.xls" style="padding:8px;">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label class="form-label">Description de l'activit&eacute;</label>
+            <textarea class="form-input" id="pme-desc" rows="4" placeholder="D&eacute;crivez votre entreprise, march&eacute;, avantage concurrentiel..." oninput="updateSMScore()"></textarea>
+          </div>
+          <div class="sm-score-card" id="pme-score-card">
+            <h3>Score WASI estim&eacute;</h3>
+            <div class="sm-score-result" id="pme-score-result" style="color:var(--text-dim);">Remplissez les champs ci-dessus</div>
+          </div>
+          <button class="order-exec-btn buy" style="margin-top:16px;" onclick="submitPME()">Soumettre la candidature</button>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
 
   <!-- ===== BANKING SCREEN ===== -->
@@ -2573,130 +2719,6 @@ input, select, textarea { font-family: inherit; outline: none; }
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== STOCK MARKET SCREEN ===== -->
-  <div id="screen-stock" class="screen">
-    <div class="sm-header">
-      <div>
-        <div class="sm-header-title" data-i18n="sm_title">WASI STOCK MARKET &mdash; Bourse Priv&eacute;e de l'Afrique</div>
-        <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
-      </div>
-      <div class="sm-header-stats">
-        <span>8</span> PME + <span>29</span> bourses &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
-      </div>
-    </div>
-    <div class="sm-tabs" id="sm-tabs">
-      <button class="sm-tab active" onclick="switchSMTab('marche',this)" data-i18n="sm_tab_marche">March&eacute;</button>
-      <button class="sm-tab" onclick="switchSMTab('bourses',this)">Bourses Africaines (29)</button>
-      <button class="sm-tab" onclick="switchSMTab('emetteurs',this)" data-i18n="sm_tab_emetteurs">&Eacute;metteurs</button>
-      <button class="sm-tab" onclick="switchSMTab('portfolio',this)" data-i18n="sm_tab_portfolio">Mon Portefeuille SM</button>
-      <button class="sm-tab" onclick="switchSMTab('soumettre',this)" data-i18n="sm_tab_soumettre">Soumettre une PME</button>
-    </div>
-    <div class="sm-body">
-      <!-- MARCHÉ tab -->
-      <div class="sm-panel active" id="sm-panel-marche">
-        <table class="data-table" id="sm-market-table">
-          <thead>
-            <tr><th>TICKER</th><th>ENTREPRISE</th><th>SECTEUR</th><th>PAYS</th><th>COMPARTIMENT</th><th>COURS (XOF)</th><th>VAR%</th><th>VOLUME</th><th>SCORE</th><th>CAP.</th></tr>
-          </thead>
-          <tbody id="sm-market-body"></tbody>
-        </table>
-        <div class="sm-fixing-card">
-          <h3>Derni&egrave;re s&eacute;ance de fixing</h3>
-          <div class="sm-fixing-grid">
-            <div class="sm-fixing-stat"><div class="val">19 mars 2026</div><div class="lab">Date</div></div>
-            <div class="sm-fixing-stat"><div class="val">10h00-14h00 WAT</div><div class="lab">Horaires</div></div>
-            <div class="sm-fixing-stat"><div class="val">847</div><div class="lab">Ordres ex&eacute;cut&eacute;s</div></div>
-            <div class="sm-fixing-stat"><div class="val">229 700</div><div class="lab">Actions &eacute;chang&eacute;es</div></div>
-            <div class="sm-fixing-stat"><div class="val">892 M XOF</div><div class="lab">Valeur totale</div></div>
-          </div>
-          <div style="margin-top:12px;font-size:.78rem;color:var(--text-secondary);">Prochaine s&eacute;ance : <span style="color:var(--gold);font-weight:600;">Mercredi 26 mars 2026</span></div>
-        </div>
-      </div>
-      <!-- ÉMETTEURS tab -->
-      <div class="sm-panel" id="sm-panel-bourses">
-        <div style="margin-bottom:16px;">
-          <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">29 Bourses Africaines</div>
-          <div style="font-size:.78rem;color:var(--text-secondary);margin-top:4px;">Vue continentale de tous les marches boursiers africains disponibles sur WASI</div>
-        </div>
-        <div id="sm-exchanges-grid" style="display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));"></div>
-      </div>
-      <div class="sm-panel" id="sm-panel-emetteurs">
-        <div id="sm-emetteurs-content"></div>
-      </div>
-      <!-- MON PORTEFEUILLE SM tab -->
-      <div class="sm-panel" id="sm-panel-portfolio">
-        <div id="sm-portfolio-content"></div>
-      </div>
-      <!-- SOUMETTRE UNE PME tab -->
-      <div class="sm-panel" id="sm-panel-soumettre">
-        <div class="sm-form-card">
-          <h3>Candidature &Eacute;metteur &mdash; WASI Stock Market</h3>
-          <div class="sm-form-grid">
-            <div class="form-group">
-              <label class="form-label">Nom de l'entreprise</label>
-              <input type="text" class="form-input" id="pme-name" placeholder="Ex: AgriPlus SA" oninput="updateSMScore()">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Pays</label>
-              <select class="form-select" id="pme-country" onchange="updateSMScore()">
-                <option value="">-- S&eacute;lectionner --</option>
-                <option value="BJ">B&eacute;nin</option><option value="BF">Burkina Faso</option>
-                <option value="CV">Cap-Vert</option><option value="CI">C&ocirc;te d'Ivoire</option>
-                <option value="GM">Gambie</option><option value="GH">Ghana</option>
-                <option value="GN">Guin&eacute;e</option><option value="GW">Guin&eacute;e-Bissau</option>
-                <option value="LR">Lib&eacute;ria</option><option value="ML">Mali</option>
-                <option value="MR">Mauritanie</option><option value="NE">Niger</option>
-                <option value="NG">Nigeria</option><option value="SN">S&eacute;n&eacute;gal</option>
-                <option value="SL">Sierra Leone</option><option value="TG">Togo</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Secteur d'activit&eacute;</label>
-              <select class="form-select" id="pme-sector" onchange="updateSMScore()">
-                <option value="">-- S&eacute;lectionner --</option>
-                <option>Agro-industrie</option><option>BTP &amp; Mat&eacute;riaux</option>
-                <option>Transport &amp; Logistique</option><option>Sant&eacute; &amp; Pharmacie</option>
-                <option>Tech / Fintech</option><option>&Eacute;nergie</option>
-                <option>Microfinance</option><option>Immobilier</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Chiffre d'affaires dernier exercice (XOF)</label>
-              <input type="number" class="form-input" id="pme-ca" placeholder="0" oninput="updateSMScore()">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Capital social (XOF)</label>
-              <input type="number" class="form-input" id="pme-capital" placeholder="0" oninput="updateSMScore()">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nombre d'exercices audit&eacute;s</label>
-              <select class="form-select" id="pme-exercices" onchange="updateSMScore()">
-                <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Montant de la lev&eacute;e souhait&eacute;e (XOF)</label>
-              <input type="number" class="form-input" id="pme-levee" placeholder="0" oninput="updateSMScore()">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Upload &eacute;tats financiers</label>
-              <input type="file" class="form-input" id="pme-files" accept=".pdf,.xlsx,.xls" style="padding:8px;">
-            </div>
-          </div>
-          <div class="form-group" style="margin-top:12px;">
-            <label class="form-label">Description de l'activit&eacute;</label>
-            <textarea class="form-input" id="pme-desc" rows="4" placeholder="D&eacute;crivez votre entreprise, march&eacute;, avantage concurrentiel..." oninput="updateSMScore()"></textarea>
-          </div>
-          <div class="sm-score-card" id="pme-score-card">
-            <h3>Score WASI estim&eacute;</h3>
-            <div class="sm-score-result" id="pme-score-result" style="color:var(--text-dim);">Remplissez les champs ci-dessus</div>
-          </div>
-          <button class="order-exec-btn buy" style="margin-top:16px;" onclick="submitPME()">Soumettre la candidature</button>
         </div>
       </div>
     </div>
@@ -4156,8 +4178,17 @@ function navBankBtn(label) {
   return null;
 }
 
+
+/* ========== MARKETS NAVIGATION ========== */
+function switchMarketsTop(panel, btn) {
+  document.querySelectorAll('.markets-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('mkt-panel-' + panel).classList.add('active');
+  document.querySelectorAll('.markets-top-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
 function switchDexTab(tab, btn) {
-  document.querySelectorAll('.dex-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#mkt-panel-trading .dex-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
   document.querySelectorAll('#dex-tabs .dex-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -8635,9 +8666,11 @@ var TRANSLATIONS = {
     // Topbar
     nav_intel: "Intelligence",
     nav_bank: "Banking",
-    nav_stock: "Stock Market",
+    nav_markets: "Marchés",
     nav_compta: "Comptabilite",
     nav_admin: "Admin",
+    mkt_tab_trading: "Trading",
+    mkt_tab_wasi: "WASI Exchange",
     topbar_welcome: "Bienvenue,",
     // Intel
     intel_left_title: "54 PAYS \u00B7 AFRIQUE \u00B7 EN LIGNE",
@@ -8758,9 +8791,11 @@ var TRANSLATIONS = {
     // Topbar
     nav_intel: "Intelligence",
     nav_bank: "Banking",
-    nav_stock: "Stock Market",
+    nav_markets: "Markets",
     nav_compta: "Accounting",
     nav_admin: "Admin",
+    mkt_tab_trading: "Trading",
+    mkt_tab_wasi: "WASI Exchange",
     topbar_welcome: "Welcome,",
     // Intel
     intel_left_title: "54 COUNTRIES \u00B7 AFRICA \u00B7 ONLINE",
