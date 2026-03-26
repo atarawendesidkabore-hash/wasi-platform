@@ -1738,6 +1738,34 @@ input, select, textarea { font-family: inherit; outline: none; }
 .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .admin-header h2 { color: var(--gold); font-size: 1.2rem; margin: 0; }
 .admin-err { color: var(--red); font-size: .8rem; margin-top: 8px; }
+
+/* ========== ADMIN: VALIDATION BUTTONS & BADGES ========== */
+.admin-pending-badge {
+  display: inline-block; background: var(--red); color: #fff;
+  border-radius: 10px; font-size: .62rem; font-weight: 700;
+  padding: 1px 6px; margin-left: 4px; vertical-align: middle;
+}
+.admin-val-btn {
+  padding: 5px 11px; border-radius: var(--radius); font-size: .72rem;
+  font-weight: 700; cursor: pointer; font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.admin-val-btn.validate {
+  background: rgba(0,230,118,.12); color: var(--green);
+  border: 1px solid rgba(0,230,118,.28);
+}
+.admin-val-btn.validate:hover { background: rgba(0,230,118,.22); }
+.admin-val-btn.reject {
+  background: rgba(255,82,82,.12); color: var(--red);
+  border: 1px solid rgba(255,82,82,.28);
+}
+.admin-val-btn.reject:hover { background: rgba(255,82,82,.22); }
+.admin-ops-note {
+  width: 100%; padding: 3px 7px; background: var(--bg-tertiary);
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text-primary); font-size: .7rem; margin-top: 4px;
+  font-family: var(--font-mono);
+}
 </style>
 </head>
 <body>
@@ -3008,37 +3036,54 @@ input, select, textarea { font-family: inherit; outline: none; }
   <!-- ===== ADMIN SCREEN ===== -->
   <div id="screen-admin" class="screen">
     <div id="admin-content">
+
+      <!-- Login -->
       <div class="admin-login" id="admin-login-form">
-        <h2>Admin Console</h2>
-        <p data-i18n="admin_login_req">Connexion manager requise</p>
-        <input type="text" id="admin-user" placeholder="Username">
-        <input type="password" id="admin-pass" placeholder="Mot de passe" data-i18n-ph="admin_pass_ph">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:2.4rem;margin-bottom:10px;">&#x1F510;</div>
+          <h2>Admin Console</h2>
+          <p data-i18n="admin_login_req">Connexion manager requise</p>
+        </div>
+        <input type="text" id="admin-user" placeholder="Username" autocomplete="username">
+        <input type="password" id="admin-pass" placeholder="Mot de passe" data-i18n-ph="admin_pass_ph" autocomplete="current-password">
         <div class="admin-err" id="admin-login-err"></div>
         <button onclick="adminLogin()">Se connecter</button>
       </div>
+
+      <!-- Dashboard -->
       <div id="admin-dashboard" style="display:none;">
         <div class="admin-header">
           <div>
-            <h2>Admin Dashboard</h2>
+            <h2>Console Manager &mdash; Validation des Op&eacute;rations</h2>
             <span style="color:var(--text-dim);font-size:.75rem;" id="admin-who"></span>
           </div>
-          <div style="display:flex;gap:8px;">
-            <button class="admin-btn admin-btn-gold" onclick="adminRefresh()">Rafraichir</button>
-            <button class="admin-btn" onclick="adminExportCsv()">Export CSV</button>
-            <button class="admin-btn" onclick="adminLogout()">Deconnexion</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="admin-btn admin-btn-gold" onclick="adminRefreshOps()">&#8635; Rafra&icirc;chir</button>
+            <button class="admin-btn" onclick="adminExportCsv()">&#8595; Export CSV</button>
+            <button class="admin-btn" onclick="adminLogout()">D&eacute;connexion</button>
           </div>
         </div>
+        <!-- KPI bar -->
+        <div class="admin-stats" id="admin-kpi-bar"></div>
+        <!-- Tabs -->
         <div class="admin-tabs" id="admin-tabs">
-          <button class="admin-tab active" onclick="adminTab('overview',this)" data-i18n="admin_overview">Vue generale</button>
-          <button class="admin-tab" onclick="adminTab('users',this)" data-i18n="admin_users">Utilisateurs</button>
-          <button class="admin-tab" onclick="adminTab('audit',this)" data-i18n="admin_audit">Audit</button>
-          <button class="admin-tab" onclick="adminTab('alerts',this)" data-i18n="admin_alerts">Alertes</button>
+          <button class="admin-tab active" onclick="adminTab('pending',this)">
+            &#x23F3; En attente&nbsp;<span class="admin-pending-badge" id="badge-pending">0</span>
+          </button>
+          <button class="admin-tab" onclick="adminTab('orders',this)">&#x1F4C8; Ordres</button>
+          <button class="admin-tab" onclick="adminTab('transfers',this)">&#x1F4B8; Virements</button>
+          <button class="admin-tab" onclick="adminTab('pme',this)">&#x1F3E2; PME</button>
+          <button class="admin-tab" onclick="adminTab('kyc',this)">&#x1F464; KYC</button>
+          <button class="admin-tab" onclick="adminTab('history',this)">&#x1F4CB; Historique</button>
         </div>
-        <div id="admin-tab-overview"></div>
-        <div id="admin-tab-users" style="display:none;"></div>
-        <div id="admin-tab-audit" style="display:none;"></div>
-        <div id="admin-tab-alerts" style="display:none;"></div>
+        <div id="admin-tab-pending"></div>
+        <div id="admin-tab-orders"   style="display:none;"></div>
+        <div id="admin-tab-transfers" style="display:none;"></div>
+        <div id="admin-tab-pme"      style="display:none;"></div>
+        <div id="admin-tab-kyc"      style="display:none;"></div>
+        <div id="admin-tab-history"  style="display:none;"></div>
       </div>
+
     </div>
   </div>
 
@@ -8396,285 +8441,178 @@ function renderNotesLiasse() {
   el.innerHTML = html;
 }
 
-/* ========== ADMIN DASHBOARD ========== */
+/* ========== ADMIN DASHBOARD — MANAGER CONSOLE ========== */
 var adminToken = null;
-var adminUser = null;
-var adminData = { health: null, audit: null, users: [], alerts: [] };
-// Use the same Python FastAPI backend that's already live
-var ADMIN_API = API; // 'https://wasi-backend-api.onrender.com'
-// Also try local Express server for admin-specific endpoints
-var BANKING_API = null;
-(async function() {
-  try {
-    var res = await fetch('http://localhost:8010/api/health', { signal: AbortSignal.timeout(1500) });
-    if (res.ok) BANKING_API = 'http://localhost:8010';
-  } catch(e) {}
-})();
+var adminUser  = null;
+var ADMIN_CREDS = { u: 'admin', p: 'wasi2026' };
 
-async function adminReq(path, opts) {
-  var headers = { 'Content-Type': 'application/json' };
-  if (adminToken) headers['Authorization'] = 'Bearer ' + adminToken;
-  // Try local Express first (has admin endpoints), fall back to Python API
-  var base = BANKING_API || ADMIN_API;
-  var res = await fetch(base + path, Object.assign({ headers: headers }, opts || {}));
-  if (!res.ok && BANKING_API && base === BANKING_API) {
-    // Fallback to Python API
-    res = await fetch(ADMIN_API + path, Object.assign({ headers: headers }, opts || {}));
-  }
-  var data = await res.json().catch(function() { return null; });
-  if (!res.ok) throw new Error((data && (data.error || data.detail)) || 'HTTP ' + res.status);
-  return data && data.data ? data.data : data;
-}
+/* Demo operations — all statuses start as pending */
+var adminOps = [
+  { id:'ORD-2026-0847', type:'Ordre',    subtype:'Achat',         icon:'&#x1F4C8;', user:'Kofi Diallo',        detail:'BRVM &mdash; SNTS &times; 50 @ 16&nbsp;500 XOF',              amount:'825&nbsp;000 XOF',   date:'26 Mar 09:14', status:'pending', category:'orders'    },
+  { id:'ORD-2026-0848', type:'Ordre',    subtype:'Vente',         icon:'&#x1F4C9;', user:'Aminata Traor\u00e9', detail:'BRVM &mdash; ONTBF &times; 100 @ 4&nbsp;200 XOF',            amount:'420&nbsp;000 XOF',   date:'26 Mar 09:22', status:'pending', category:'orders'    },
+  { id:'ORD-2026-0849', type:'Ordre',    subtype:'Achat',         icon:'&#x1F4C8;', user:'Oumar Diarra',        detail:'NGX &mdash; DANGCEM &times; 200 @ 412 NGN',                   amount:'82&nbsp;400 NGN',    date:'26 Mar 10:05', status:'pending', category:'orders'    },
+  { id:'SWP-2026-0156', type:'Swap',     subtype:'BTC\u2192XOF',  icon:'&#x20BF;',  user:'Mamadou Ba',          detail:'0.012 BTC \u2192 XOF @ 61&nbsp;800&nbsp;000 XOF/BTC',        amount:'741&nbsp;600 XOF',   date:'26 Mar 10:31', status:'pending', category:'orders'    },
+  { id:'VIR-2026-1203', type:'Virement', subtype:'UEMOA',         icon:'&#x1F4B8;', user:'Seydou Coulibaly',    detail:'Vers BOA Mali &mdash; IBAN: ML71 1000 0001 xxxx',              amount:'2&nbsp;500&nbsp;000 XOF', date:'26 Mar 08:47', status:'pending', category:'transfers' },
+  { id:'VIR-2026-1204', type:'Virement', subtype:'Mobile Money',  icon:'&#x1F4F1;', user:'Fatou Sow',           detail:'D\u00e9p\u00f4t Orange Money &mdash; +221 77 xxx xxxx',        amount:'150&nbsp;000 XOF',   date:'26 Mar 09:55', status:'pending', category:'transfers' },
+  { id:'VIR-2026-1205', type:'Virement', subtype:'International', icon:'&#x1F30D;', user:'Grace Okonkwo',       detail:'Virement international \u2192 Kenya KES',                     amount:'3&nbsp;200&nbsp;000 XOF', date:'26 Mar 11:02', status:'pending', category:'transfers' },
+  { id:'PME-2026-0012', type:'PME',      subtype:'Candidature',   icon:'&#x1F3E2;', user:'AgriPlus SA',         detail:'Burkina Faso &bull; Agro-industrie &bull; Score WASI: 72/100', amount:'Lev\u00e9e: 500&nbsp;M XOF',   date:'25 Mar 14:30', status:'pending', category:'pme'       },
+  { id:'PME-2026-0013', type:'PME',      subtype:'Candidature',   icon:'&#x1F3E2;', user:'TechSahel SARL',      detail:"C\u00f4te d'Ivoire &bull; Tech/Fintech &bull; Score WASI: 85/100", amount:'Lev\u00e9e: 1.2&nbsp;Mds XOF', date:'25 Mar 16:45', status:'pending', category:'pme' },
+  { id:'KYC-2026-0421', type:'KYC',      subtype:'Niveau 2',      icon:'&#x1F464;', user:'Ibrahim Ou\u00e9draogo', detail:'Documents: CNI + Justificatif domicile + Photo', amount:'&mdash;', date:'26 Mar 07:30', status:'pending', category:'kyc' },
+  { id:'KYC-2026-0422', type:'KYC',      subtype:'Niveau 1',      icon:'&#x1F464;', user:'Nadia Benali',        detail:'Documents: Passeport + Selfie',                               amount:'&mdash;',            date:'26 Mar 08:12', status:'pending', category:'kyc'       }
+];
+var adminHistory = [];
 
-async function adminLogin() {
-  var user = document.getElementById('admin-user').value.trim();
-  var pass = document.getElementById('admin-pass').value;
+function adminLogin() {
+  var u = document.getElementById('admin-user').value.trim();
+  var p = document.getElementById('admin-pass').value;
   document.getElementById('admin-login-err').textContent = '';
-  try {
-    // Try Python FastAPI backend (form-urlencoded)
-    var res = await fetch(ADMIN_API + '/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'username=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(pass)
-    });
-    var data = await res.json();
-    if (!res.ok || !data.access_token) throw new Error(data.detail || 'Login echoue');
-    adminToken = data.access_token;
-    // Fetch user profile
-    var meRes = await fetch(ADMIN_API + '/api/auth/me', {
-      headers: { 'Authorization': 'Bearer ' + adminToken }
-    });
-    var me = meRes.ok ? await meRes.json() : { username: user, role: 'USER' };
-    adminUser = me;
+  if (u === ADMIN_CREDS.u && p === ADMIN_CREDS.p) {
+    adminToken = 'mgr-' + Date.now();
+    adminUser  = { username: u };
     document.getElementById('admin-login-form').style.display = 'none';
-    document.getElementById('admin-dashboard').style.display = 'block';
-    document.getElementById('admin-who').textContent = 'Connecte: ' + (adminUser.username || user) + ' (' + (adminUser.tier || 'free') + ')';
-    adminRefresh();
-  } catch(e) {
-    document.getElementById('admin-login-err').textContent = e.message;
+    document.getElementById('admin-dashboard').style.display  = 'block';
+    var now = new Date().toLocaleString('fr-FR', { dateStyle:'short', timeStyle:'short' });
+    document.getElementById('admin-who').textContent = 'Manager: ' + u + '  \u00b7  Connect\u00e9 \u00e0 ' + now;
+    adminRefreshOps();
+  } else {
+    document.getElementById('admin-login-err').textContent = 'Identifiants incorrects.';
   }
 }
 
 function adminLogout() {
-  adminToken = null;
-  adminUser = null;
+  adminToken = null; adminUser = null;
   document.getElementById('admin-login-form').style.display = '';
-  document.getElementById('admin-dashboard').style.display = 'none';
+  document.getElementById('admin-dashboard').style.display  = 'none';
   document.getElementById('admin-user').value = '';
   document.getElementById('admin-pass').value = '';
 }
 
 function adminTab(tab, btn) {
-  ['overview','users','audit','alerts'].forEach(function(t) {
-    document.getElementById('admin-tab-' + t).style.display = t === tab ? '' : 'none';
+  ['pending','orders','transfers','pme','kyc','history'].forEach(function(t) {
+    document.getElementById('admin-tab-' + t).style.display = (t === tab) ? '' : 'none';
   });
-  document.querySelectorAll('#admin-tabs .admin-tab').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.admin-tab').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
 }
 
-async function adminRefresh() {
-  // Fetch from whichever backend is available
-  var fetches = [];
-  // Try Python API health
-  fetches.push(fetch(ADMIN_API + '/api/health', {
-    headers: adminToken ? { 'Authorization': 'Bearer ' + adminToken } : {}
-  }).then(function(r) { return r.json(); }).catch(function() { return null; }));
-  // Try Express admin endpoints if available
-  if (BANKING_API) {
-    fetches.push(adminReq('/api/v1/admin/audit/summary').catch(function() { return null; }));
-    fetches.push(adminReq('/api/v1/admin/users?limit=100').catch(function() { return null; }));
-    fetches.push(adminReq('/api/v1/admin/alerts?limit=50').catch(function() { return null; }));
-  } else {
-    fetches.push(Promise.resolve(null));
-    fetches.push(Promise.resolve(null));
-    fetches.push(Promise.resolve(null));
+function adminRefreshOps() {
+  _renderKPIs();
+  _renderTab('pending',   adminOps.filter(function(o) { return o.status === 'pending'; }));
+  _renderTab('orders',    adminOps.filter(function(o) { return o.category === 'orders'; }));
+  _renderTab('transfers', adminOps.filter(function(o) { return o.category === 'transfers'; }));
+  _renderTab('pme',       adminOps.filter(function(o) { return o.category === 'pme'; }));
+  _renderTab('kyc',       adminOps.filter(function(o) { return o.category === 'kyc'; }));
+  _renderTab('history',   adminHistory.slice().reverse());
+  document.getElementById('badge-pending').textContent =
+    adminOps.filter(function(o) { return o.status === 'pending'; }).length;
+}
+
+function _kpi(label, val, cls) {
+  var c = cls === 'ok' ? 'var(--green)' : cls === 'err' ? 'var(--red)' : cls === 'warn' ? 'var(--gold)' : 'var(--text-primary)';
+  return '<div class="admin-stat"><div class="admin-stat-label">' + label +
+         '</div><div class="admin-stat-val" style="color:' + c + ';font-size:1.3rem;">' + val + '</div></div>';
+}
+
+function _renderKPIs() {
+  var pending   = adminOps.filter(function(o) { return o.status === 'pending'; }).length;
+  var validated = adminHistory.filter(function(o) { return o.status === 'validated'; }).length;
+  var rejected  = adminHistory.filter(function(o) { return o.status === 'rejected'; }).length;
+  document.getElementById('admin-kpi-bar').innerHTML =
+    _kpi('En attente',         pending,                  'warn') +
+    _kpi('Valid\u00e9es',      validated,                'ok')   +
+    _kpi('Rejet\u00e9es',      rejected,                 'err')  +
+    _kpi('Total trait\u00e9es', validated + rejected,    '')     +
+    _kpi('Ordres / Swaps',     adminOps.filter(function(o) { return o.category === 'orders'; }).length,    '') +
+    _kpi('Candidatures PME',   adminOps.filter(function(o) { return o.category === 'pme'; }).length, '');
+}
+
+function _renderTab(tabId, ops) {
+  var el = document.getElementById('admin-tab-' + tabId);
+  if (!ops.length) {
+    el.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text-dim);font-size:.85rem;">' +
+      (tabId === 'history' ? 'Aucune op\u00e9ration trait\u00e9e pour l\'instant.' : 'Aucune op\u00e9ration en attente.') +
+      '</div>';
+    return;
   }
-  var results = await Promise.all(fetches);
-  if (results[0]) {
-    adminData.health = {
-      status: results[0].status === 'healthy' || results[0].status === 'ok' ? 'healthy' : results[0].status,
-      database: results[0].database || 'unknown',
-      version: results[0].version || '--',
-      uptime: results[0].uptime || null,
-      counts: results[0].counts || { users: '--', accounts: '--', transactions: '--' },
-      unacknowledgedAlerts: results[0].unacknowledgedAlerts || 0,
-    };
-  }
-  if (results[1]) adminData.audit = results[1];
-  if (results[2]) adminData.users = results[2].users || results[2] || [];
-  if (results[3]) adminData.alerts = results[3].alerts || results[3] || [];
-  renderAdminOverview();
-  renderAdminUsers();
-  renderAdminAudit();
-  renderAdminAlerts();
+  var rows = ops.map(function(op) {
+    var badge = op.status === 'pending'
+      ? '<span class="admin-badge warn">En attente</span>'
+      : op.status === 'validated'
+        ? '<span class="admin-badge ok">Valid\u00e9</span>'
+        : '<span class="admin-badge err">Rejet\u00e9</span>';
+    var actions = op.status === 'pending'
+      ? '<div style="display:flex;flex-direction:column;gap:4px;min-width:130px;">' +
+          '<div style="display:flex;gap:4px;">' +
+            '<button class="admin-val-btn validate" onclick="adminValidate(\'' + op.id + '\')">&#x2713; Valider</button>' +
+            '<button class="admin-val-btn reject"   onclick="adminReject(\''   + op.id + '\')">&#x2715; Rejeter</button>' +
+          '</div>' +
+          '<input type="text" class="admin-ops-note" id="note-' + op.id + '" placeholder="Motif (optionnel)">' +
+        '</div>'
+      : '<span style="color:var(--text-dim);font-size:.72rem;">' + (op.note || '\u2014') + '</span>';
+    return '<tr>' +
+      '<td style="font-family:var(--font-mono);color:var(--gold);font-size:.7rem;">' + op.id + '</td>' +
+      '<td>' + op.icon + ' ' + op.type + '<br><span style="font-size:.68rem;color:var(--text-dim);">' + op.subtype + '</span></td>' +
+      '<td style="font-weight:600;">' + op.user + '</td>' +
+      '<td style="color:var(--text-secondary);font-size:.77rem;max-width:240px;">' + op.detail + '</td>' +
+      '<td style="font-weight:600;color:var(--gold);white-space:nowrap;">' + op.amount + '</td>' +
+      '<td style="color:var(--text-dim);font-size:.7rem;white-space:nowrap;">' + op.date + '</td>' +
+      '<td>' + badge + '</td>' +
+      '<td>' + actions + '</td>' +
+      '</tr>';
+  }).join('');
+  el.innerHTML =
+    '<div style="overflow-x:auto;margin-top:4px;">' +
+    '<table class="admin-table"><thead><tr>' +
+    '<th>R\u00e9f.</th><th>Type</th><th>Utilisateur</th><th>D\u00e9tail</th>' +
+    '<th>Montant</th><th>Date</th><th>Statut</th><th>Actions</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 
-function adminBadge(text, cls) { return '<span class="admin-badge ' + cls + '">' + text + '</span>'; }
-
-function renderAdminOverview() {
-  var h = adminData.health || {};
-  var a = adminData.audit || {};
-  var c = h.counts || {};
-  var html = '<div class="admin-stats">';
-  html += '<div class="admin-stat"><div class="admin-stat-label">Statut</div><div class="admin-stat-val" style="color:' + (h.status === 'healthy' ? 'var(--green)' : 'var(--red)') + ';">' + (h.status === 'healthy' ? 'OK' : 'ERR') + '</div></div>';
-  html += '<div class="admin-stat"><div class="admin-stat-label">Uptime</div><div class="admin-stat-val">' + (h.uptime ? Math.floor(h.uptime / 60) + 'm' : '--') + '</div></div>';
-  html += '<div class="admin-stat"><div class="admin-stat-label">Utilisateurs</div><div class="admin-stat-val" style="color:var(--blue);">' + (c.users || 0) + '</div></div>';
-  html += '<div class="admin-stat"><div class="admin-stat-label">Comptes</div><div class="admin-stat-val" style="color:var(--gold);">' + (c.accounts || 0) + '</div></div>';
-  html += '<div class="admin-stat"><div class="admin-stat-label">Transactions</div><div class="admin-stat-val" style="color:var(--green);">' + (c.transactions || 0) + '</div></div>';
-  html += '<div class="admin-stat"><div class="admin-stat-label">Alertes</div><div class="admin-stat-val" style="color:' + ((h.unacknowledgedAlerts || 0) > 0 ? 'var(--red)' : 'var(--green)') + ';">' + (h.unacknowledgedAlerts || 0) + '</div></div>';
-  html += '</div>';
-  if (!BANKING_API) {
-    html += '<div class="admin-card" style="color:var(--text-dim);font-size:.82rem;">ℹ Serveur Express local non detecte. Demarrez <code>node server/index.mjs</code> pour les fonctions avancees (audit, utilisateurs, alertes).<br>Le backend Python est connecte.</div>';
-  }
-  if (a.last24h !== undefined) {
-    html += '<div class="admin-card"><h3 style="color:var(--gold);margin:0 0 10px;font-size:.9rem;">Audit — 24 dernieres heures</h3>';
-    html += '<div style="display:flex;gap:20px;font-size:.82rem;"><span style="color:var(--text-dim);">Total: </span>' + a.totalEntries;
-    html += '<span style="color:var(--text-dim);margin-left:12px;">24h: </span>' + a.last24h;
-    html += '<span style="color:var(--text-dim);margin-left:12px;">Echecs: </span><span style="color:' + (a.failureCount > 0 ? 'var(--red)' : 'var(--green)') + ';">' + a.failureCount + '</span></div>';
-    if (a.recentFailures && a.recentFailures.length > 0) {
-      html += '<table class="admin-table" style="margin-top:10px;"><thead><tr><th>Action</th><th>Utilisateur</th><th>Date</th></tr></thead><tbody>';
-      a.recentFailures.slice(0, 8).forEach(function(f) {
-        html += '<tr><td>' + (f.action || '') + '</td><td>' + (f.actor_username || f.actor_user_id || '--') + '</td><td style="color:var(--text-dim);">' + (f.created_at_utc || '').slice(0, 19) + '</td></tr>';
-      });
-      html += '</tbody></table>';
-    }
-    html += '</div>';
-  }
-  document.getElementById('admin-tab-overview').innerHTML = html;
+function adminValidate(id) {
+  var op = adminOps.find(function(o) { return o.id === id; });
+  if (!op) return;
+  op.note      = (document.getElementById('note-' + id) || {}).value || 'Approuv\u00e9';
+  op.status    = 'validated';
+  op.treatedAt = new Date().toLocaleString('fr-FR');
+  adminHistory.push(op);
+  adminOps = adminOps.filter(function(o) { return o.id !== id; });
+  showNotif('Op\u00e9ration ' + id + ' valid\u00e9e avec succ\u00e8s.', 'success');
+  adminRefreshOps();
 }
 
-function renderAdminUsers() {
-  var users = adminData.users;
-  var html = '<div class="admin-card"><h3 style="color:var(--gold);margin:0 0 10px;font-size:.9rem;">Utilisateurs (' + users.length + ')</h3>';
-  html += '<table class="admin-table"><thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Statut</th><th>Actions</th></tr></thead><tbody>';
-  users.forEach(function(u) {
-    html += '<tr>';
-    html += '<td>' + u.username + '</td>';
-    html += '<td style="color:var(--text-dim);">' + u.email + '</td>';
-    html += '<td><select class="admin-select" onchange="adminChangeRole(\'' + u.id + '\',this.value)" ' + (u.id === (adminUser && adminUser.id) ? 'disabled' : '') + '>';
-    ['CLIENT','TELLER','MANAGER'].forEach(function(r) {
-      html += '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + r + '</option>';
-    });
-    html += '</select></td>';
-    html += '<td>' + adminBadge(u.is_active ? 'Actif' : 'Inactif', u.is_active ? 'ok' : 'err') + '</td>';
-    html += '<td><button class="admin-btn" onclick="adminToggleUser(\'' + u.id + '\',' + (u.is_active ? 'false' : 'true') + ')">' + (u.is_active ? 'Desactiver' : 'Activer') + '</button></td>';
-    html += '</tr>';
-  });
-  html += '</tbody></table></div>';
-  document.getElementById('admin-tab-users').innerHTML = html;
+function adminReject(id) {
+  var op = adminOps.find(function(o) { return o.id === id; });
+  if (!op) return;
+  op.note      = (document.getElementById('note-' + id) || {}).value || 'Rejet\u00e9';
+  op.status    = 'rejected';
+  op.treatedAt = new Date().toLocaleString('fr-FR');
+  adminHistory.push(op);
+  adminOps = adminOps.filter(function(o) { return o.id !== id; });
+  showNotif('Op\u00e9ration ' + id + ' rejet\u00e9e.', 'error');
+  adminRefreshOps();
 }
 
-function renderAdminAudit() {
-  var html = '<div class="admin-card"><h3 style="color:var(--gold);margin:0 0 10px;font-size:.9rem;">Journal d\'audit</h3>';
-  html += '<div style="display:flex;gap:8px;margin-bottom:10px;">';
-  html += '<input type="text" id="audit-filter-action" placeholder="Action (ex: TRANSFER)" style="padding:6px 10px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:.78rem;width:180px;">';
-  html += '<select id="audit-filter-status" class="admin-select" style="padding:6px;"><option value="">Tous</option><option value="SUCCESS">SUCCESS</option><option value="FAILURE">FAILURE</option></select>';
-  html += '<button class="admin-btn" onclick="adminSearchAudit()">Rechercher</button>';
-  html += '</div>';
-  html += '<div id="audit-results"><div style="color:var(--text-dim);padding:12px;">Cliquez sur Rechercher pour afficher les logs</div></div>';
-  html += '</div>';
-  document.getElementById('admin-tab-audit').innerHTML = html;
+function adminExportCsv() {
+  var all = adminHistory.concat(adminOps);
+  if (!all.length) { showNotif('Aucune donn\u00e9e \u00e0 exporter.', 'info'); return; }
+  var header = 'Ref,Type,Sous-type,Utilisateur,Montant,Date,Statut,Motif\n';
+  var rows = all.map(function(op) {
+    return [op.id, op.type, op.subtype, op.user, '"' + op.amount + '"', op.date, op.status, op.note || ''].join(',');
+  }).join('\n');
+  var blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url;
+  a.download = 'wasi-operations-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
-async function adminSearchAudit() {
-  var action = document.getElementById('audit-filter-action').value.trim().toUpperCase();
-  var status = document.getElementById('audit-filter-status').value;
-  var qs = 'limit=50';
-  if (action) qs += '&action=' + encodeURIComponent(action);
-  if (status) qs += '&status=' + encodeURIComponent(status);
-  try {
-    var data = await adminReq('/api/v1/admin/audit/search?' + qs);
-    var entries = data.entries || [];
-    var html = '<table class="admin-table"><thead><tr><th>Date</th><th>Action</th><th>Utilisateur</th><th>Statut</th><th>Detail</th></tr></thead><tbody>';
-    entries.forEach(function(e) {
-      var detail = '';
-      try { detail = e.detail_json ? JSON.stringify(JSON.parse(e.detail_json)).slice(0, 60) : ''; } catch(x) {}
-      html += '<tr><td style="color:var(--text-dim);white-space:nowrap;">' + (e.created_at_utc || '').slice(0, 19) + '</td>';
-      html += '<td>' + (e.action || '') + '</td>';
-      html += '<td>' + (e.actor_username || '--') + '</td>';
-      html += '<td>' + adminBadge(e.status, e.status === 'SUCCESS' ? 'ok' : 'err') + '</td>';
-      html += '<td style="color:var(--text-dim);max-width:200px;overflow:hidden;text-overflow:ellipsis;">' + detail + '</td></tr>';
-    });
-    html += '</tbody></table>';
-    if (entries.length === 0) html = '<div style="color:var(--text-dim);padding:12px;">Aucun resultat</div>';
-    document.getElementById('audit-results').innerHTML = html;
-  } catch(e) {
-    document.getElementById('audit-results').innerHTML = '<div class="admin-err">' + e.message + '</div>';
-  }
-}
-
-function renderAdminAlerts() {
-  var alerts = adminData.alerts;
-  var html = '<div class="admin-card"><h3 style="color:var(--gold);margin:0 0 10px;font-size:.9rem;">Alertes de securite (' + alerts.length + ')</h3>';
-  if (alerts.length === 0) {
-    html += '<div style="color:var(--text-dim);">Aucune alerte</div>';
-  }
-  alerts.forEach(function(a) {
-    var sev = a.severity === 'CRITICAL' ? 'err' : a.severity === 'WARNING' ? 'warn' : 'muted';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);gap:12px;">';
-    html += '<div style="flex:1;">' + adminBadge(a.severity, sev) + ' <span style="margin-left:6px;font-size:.82rem;">' + (a.message || '') + '</span>';
-    html += '<div style="font-size:.7rem;color:var(--text-dim);margin-top:2px;">' + (a.created_at_utc || '').slice(0, 19) + ' — ' + (a.alert_type || '') + '</div></div>';
-    if (!a.acknowledged) {
-      html += '<button class="admin-btn" onclick="adminAckAlert(\'' + a.id + '\')">Acquitter</button>';
-    } else {
-      html += adminBadge('Acquitte', 'muted');
-    }
-    html += '</div>';
-  });
-  html += '</div>';
-  document.getElementById('admin-tab-alerts').innerHTML = html;
-}
-
-async function adminChangeRole(userId, role) {
-  try {
-    await adminReq('/api/v1/admin/users/' + userId + '/role', { method: 'POST', body: JSON.stringify({ role: role }) });
-    showNotif('Role mis a jour', 'success');
-    adminRefresh();
-  } catch(e) { showNotif(e.message, 'error'); }
-}
-
-async function adminToggleUser(userId, activate) {
-  try {
-    await adminReq('/api/v1/admin/users/' + userId + '/status', { method: 'POST', body: JSON.stringify({ is_active: activate }) });
-    showNotif('Statut mis a jour', 'success');
-    adminRefresh();
-  } catch(e) { showNotif(e.message, 'error'); }
-}
-
-async function adminAckAlert(alertId) {
-  try {
-    await adminReq('/api/v1/admin/alerts/' + alertId + '/acknowledge', { method: 'POST' });
-    adminRefresh();
-  } catch(e) { showNotif(e.message, 'error'); }
-}
-
-async function adminExportCsv() {
-  try {
-    var res = await fetch(ADMIN_API + '/api/v1/banking/transactions/export?format=csv', {
-      headers: adminToken ? { 'Authorization': 'Bearer ' + adminToken } : {}
-    });
-    if (!res.ok) throw new Error('Export echoue: HTTP ' + res.status);
-    var blob = await res.blob();
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'wasi_transactions_' + new Date().toISOString().slice(0, 10) + '.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    showNotif('Export CSV telecharge', 'success');
-  } catch(e) { showNotif(e.message, 'error'); }
-}
-
-// Auto-refresh admin every 30s if visible
-setInterval(function() {
-  if (adminToken && document.getElementById('screen-admin').classList.contains('active')) {
-    adminRefresh();
-  }
-}, 30000);
-
-// Allow Enter key on admin login
+// Enter key on admin login form
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.getElementById('screen-admin').classList.contains('active') && document.getElementById('admin-login-form').style.display !== 'none') {
+  if (e.key === 'Enter'
+    && document.getElementById('screen-admin').classList.contains('active')
+    && document.getElementById('admin-login-form').style.display !== 'none') {
     adminLogin();
   }
 });
