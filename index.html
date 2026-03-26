@@ -9,7 +9,18 @@
 <meta name="apple-mobile-web-app-title" content="WASI">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://wasi-backend-api.onrender.com https://wasi-web-api.onrender.com http://localhost:8010; img-src 'self' data:;">
 <link rel="manifest" href="manifest.json">
-<title>WASI — Whole African Strategic Intelligence</title>
+<title>WASI — West Africa Financial Intelligence Platform</title>
+<meta name="description" content="WASI is a Bloomberg-grade financial intelligence terminal for 16 West African countries. Real-time markets, banking, KYC/BCEAO compliance, and geopolitical risk — in one platform.">
+<meta name="keywords" content="West Africa finance, UEMOA, ECOWAS, BRVM, NGX, African stock exchange, financial intelligence, banking Africa, BCEAO, KYC Africa, investment Africa, WASI">
+<meta property="og:title" content="WASI — West Africa Financial Intelligence Platform">
+<meta property="og:description" content="Bloomberg-grade terminal for 16 West African countries. Markets, banking, KYC compliance, and geopolitical risk in one platform.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://atarawendesidkabore-hash.github.io/wasi-platform/">
+<meta property="og:image" content="https://atarawendesidkabore-hash.github.io/wasi-platform/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WASI — West Africa Financial Intelligence">
+<meta name="twitter:description" content="Bloomberg-grade terminal for 16 West African countries. Markets, banking, KYC, geopolitical risk.">
+<link rel="canonical" href="https://atarawendesidkabore-hash.github.io/wasi-platform/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1198,7 +1209,8 @@ input, select, textarea { font-family: inherit; outline: none; }
     white-space: nowrap;
     flex-shrink: 0;
   }
-  .topbar-right { display: none; }
+  .topbar-right { gap: 6px; }
+  .topbar-user, .topbar-tier { display: none; }
 
   /* Ticker */
   .ticker-bar { height: auto !important; }
@@ -1738,6 +1750,28 @@ input, select, textarea { font-family: inherit; outline: none; }
     <input type="text" id="gate-key" class="gate-input" placeholder="Clef d'acces WASI-XXXX-XX##" data-i18n-ph="gate_placeholder" spellcheck="false" autocomplete="off">
     <button class="gate-btn" onclick="validateGate()" data-i18n="gate_btn">ENTRER</button>
     <div class="gate-hint" data-i18n="gate_hint">Demo: WASI-DEMO-DM01</div>
+    <button onclick="openDemoModal()" style="margin-top:20px;background:none;border:none;color:var(--gold);font-size:0.78rem;cursor:pointer;text-decoration:underline;font-family:var(--font-mono);" data-i18n="gate_request_demo">Demander un acces entreprise →</button>
+  </div>
+</div>
+
+<!-- ========== DEMO REQUEST MODAL ========== -->
+<div id="demo-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(3,11,21,.85);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px 36px;max-width:460px;width:92%;box-shadow:var(--shadow);position:relative;">
+    <button onclick="closeDemoModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text-dim);font-size:1.3rem;cursor:pointer;">&times;</button>
+    <div style="color:var(--gold);font-size:1rem;font-weight:700;letter-spacing:2px;margin-bottom:4px;">WASI</div>
+    <div id="demo-modal-title" style="font-size:1.1rem;font-weight:600;color:var(--text-primary);margin-bottom:6px;" data-i18n="demo_title">Demander un accès entreprise</div>
+    <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:24px;" data-i18n="demo_subtitle">Notre équipe vous contactera sous 24h.</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <input id="demo-name" type="text" placeholder="Nom complet" data-i18n-attr="placeholder" data-i18n="demo_ph_name" style="width:100%;padding:12px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:0.88rem;">
+      <input id="demo-org" type="text" placeholder="Organisation / Banque" data-i18n-attr="placeholder" data-i18n="demo_ph_org" style="width:100%;padding:12px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:0.88rem;">
+      <input id="demo-email" type="email" placeholder="Email professionnel" data-i18n-attr="placeholder" data-i18n="demo_ph_email" style="width:100%;padding:12px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:0.88rem;">
+      <select id="demo-country" style="width:100%;padding:12px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:0.88rem;">
+        <option value="">-- Pays / Country --</option>
+        <option>Burkina Faso</option><option>Côte d'Ivoire</option><option>Sénégal</option><option>Mali</option><option>Niger</option><option>Guinée</option><option>Togo</option><option>Bénin</option><option>Nigeria</option><option>Ghana</option><option>Cameroun</option><option>RDC</option><option>Kenya</option><option>Maroc</option><option>Algérie</option><option>France</option><option>Autre / Other</option>
+      </select>
+      <button onclick="submitDemoRequest()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#000;font-weight:700;font-size:0.95rem;border-radius:var(--radius);cursor:pointer;font-family:var(--font-mono);letter-spacing:1px;" data-i18n="demo_submit">ENVOYER LA DEMANDE</button>
+    </div>
+    <div id="demo-success" style="display:none;text-align:center;padding:20px 0;color:var(--green);font-size:0.9rem;" data-i18n="demo_success">✓ Demande envoyée ! Nous vous contactons sous 24h.</div>
   </div>
 </div>
 
@@ -8782,6 +8816,15 @@ var TRANSLATIONS = {
     basket_title: "Creer un panier personnalise",
     basket_cancel: "Annuler",
     basket_create: "Creer le panier",
+    // Demo modal
+    gate_request_demo: "Demander un acc\u00e8s entreprise \u2192",
+    demo_title: "Demander un acc\u00e8s entreprise",
+    demo_subtitle: "Notre \u00e9quipe vous contactera sous 24h.",
+    demo_ph_name: "Nom complet",
+    demo_ph_org: "Organisation / Banque",
+    demo_ph_email: "Email professionnel",
+    demo_submit: "ENVOYER LA DEMANDE",
+    demo_success: "\u2713 Demande envoy\u00e9e ! Nous vous contactons sous 24h.",
   },
   en: {
     // Gate
@@ -8907,6 +8950,15 @@ var TRANSLATIONS = {
     basket_title: "Create a custom basket",
     basket_cancel: "Cancel",
     basket_create: "Create basket",
+    // Demo modal
+    gate_request_demo: "Request enterprise access \u2192",
+    demo_title: "Request enterprise access",
+    demo_subtitle: "Our team will contact you within 24h.",
+    demo_ph_name: "Full name",
+    demo_ph_org: "Organization / Bank",
+    demo_ph_email: "Professional email",
+    demo_submit: "SEND REQUEST",
+    demo_success: "\u2713 Request sent! We\u2019ll be in touch within 24h.",
   }
 };
 
@@ -9087,6 +9139,33 @@ function applyLang() {
 })();
 
 
+
+// ===== DEMO REQUEST MODAL =====
+function openDemoModal() {
+  var m = document.getElementById('demo-modal');
+  m.style.display = 'flex';
+  document.getElementById('demo-success').style.display = 'none';
+  document.getElementById('demo-name').value = '';
+  document.getElementById('demo-org').value = '';
+  document.getElementById('demo-email').value = '';
+}
+function closeDemoModal() {
+  document.getElementById('demo-modal').style.display = 'none';
+}
+function submitDemoRequest() {
+  var name = document.getElementById('demo-name').value.trim();
+  var org = document.getElementById('demo-org').value.trim();
+  var email = document.getElementById('demo-email').value.trim();
+  var country = document.getElementById('demo-country').value;
+  if (!name || !email) { showNotif('Veuillez remplir votre nom et email / Please fill in name and email', 'error'); return; }
+  var subject = encodeURIComponent('WASI Demo Request — ' + org);
+  var body = encodeURIComponent('Name: ' + name + '\nOrganization: ' + org + '\nEmail: ' + email + '\nCountry: ' + country);
+  window.location.href = 'mailto:tarawendesida.kabore@gmail.com?subject=' + subject + '&body=' + body;
+  document.getElementById('demo-success').style.display = 'block';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeDemoModal();
+});
 </script>
 </body>
 </html>
