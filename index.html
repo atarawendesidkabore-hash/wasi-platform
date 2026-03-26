@@ -3137,9 +3137,9 @@ let notifTimer = null;
 const COUNTRIES=[
   // ══════ WEST AFRICA (CEDEAO) ══════
   {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',score:58,trend:'\u2193',gdp:'$440B',risk:'Modere',coup:false,region:'CEDEAO'},
-  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",score:72,trend:'\u2191',gdp:'$70B',risk:'Faible',coup:false,region:'CEDEAO'},
+  {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",score:72,trend:'\u2191',gdp:'$78B',risk:'Faible',coup:false,region:'CEDEAO'},
   {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',score:65,trend:'\u2192',gdp:'$73B',risk:'Modere',coup:false,region:'CEDEAO'},
-  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',score:70,trend:'\u2191',gdp:'$28B',risk:'Faible',coup:false,region:'CEDEAO'},
+  {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',score:70,trend:'\u2191',gdp:'$32B',risk:'Faible',coup:false,region:'CEDEAO'},
   {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',score:38,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true,region:'CEDEAO'},
   {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',score:35,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true,region:'CEDEAO'},
   {code:'GN',flag:'\u{1F1EC}\u{1F1F3}',name:'Guinee',score:42,trend:'\u2192',gdp:'$16B',risk:'Eleve',coup:true,region:'CEDEAO'},
@@ -3163,13 +3163,13 @@ const COUNTRIES=[
   {code:'GQ',flag:'\u{1F1EC}\u{1F1F6}',name:'Guinee Equatoriale',score:35,trend:'\u2193',gdp:'$12B',risk:'Eleve',coup:false,region:'CEMAC'},
 
   // ══════ EAST AFRICA (EAC + Horn) ══════
-  {code:'KE',flag:'\u{1F1F0}\u{1F1EA}',name:'Kenya',score:68,trend:'\u2191',gdp:'$110B',risk:'Faible',coup:false,region:'EAC'},
-  {code:'TZ',flag:'\u{1F1F9}\u{1F1FF}',name:'Tanzanie',score:62,trend:'\u2191',gdp:'$75B',risk:'Modere',coup:false,region:'EAC'},
+  {code:'KE',flag:'\u{1F1F0}\u{1F1EA}',name:'Kenya',score:68,trend:'\u2191',gdp:'$118B',risk:'Faible',coup:false,region:'EAC'},
+  {code:'TZ',flag:'\u{1F1F9}\u{1F1FF}',name:'Tanzanie',score:62,trend:'\u2191',gdp:'$83B',risk:'Modere',coup:false,region:'EAC'},
   {code:'UG',flag:'\u{1F1FA}\u{1F1EC}',name:'Ouganda',score:48,trend:'\u2192',gdp:'$46B',risk:'Modere',coup:false,region:'EAC'},
   {code:'RW',flag:'\u{1F1F7}\u{1F1FC}',name:'Rwanda',score:78,trend:'\u2191',gdp:'$13B',risk:'Faible',coup:false,region:'EAC'},
   {code:'BI',flag:'\u{1F1E7}\u{1F1EE}',name:'Burundi',score:22,trend:'\u2193',gdp:'$3B',risk:'Eleve',coup:false,region:'EAC'},
   {code:'SS',flag:'\u{1F1F8}\u{1F1F8}',name:'Soudan du Sud',score:12,trend:'\u2193',gdp:'$5B',risk:'Eleve',coup:false,region:'EAC'},
-  {code:'ET',flag:'\u{1F1EA}\u{1F1F9}',name:'Ethiopie',score:42,trend:'\u2193',gdp:'$126B',risk:'Eleve',coup:false,region:'IGAD'},
+  {code:'ET',flag:'\u{1F1EA}\u{1F1F9}',name:'Ethiopie',score:42,trend:'\u2193',gdp:'$157B',risk:'Eleve',coup:false,region:'IGAD'},
   {code:'DJ',flag:'\u{1F1E9}\u{1F1EF}',name:'Djibouti',score:52,trend:'\u2192',gdp:'$4B',risk:'Modere',coup:false,region:'IGAD'},
   {code:'ER',flag:'\u{1F1EA}\u{1F1F7}',name:'Erythree',score:15,trend:'\u2193',gdp:'$2B',risk:'Eleve',coup:false,region:'IGAD'},
   {code:'SO',flag:'\u{1F1F8}\u{1F1F4}',name:'Somalie',score:10,trend:'\u2193',gdp:'$8B',risk:'Eleve',coup:false,region:'IGAD'},
@@ -3183,7 +3183,7 @@ const COUNTRIES=[
   {code:'BW',flag:'\u{1F1E7}\u{1F1FC}',name:'Botswana',score:78,trend:'\u2192',gdp:'$19B',risk:'Faible',coup:false,region:'SADC'},
   {code:'NA',flag:'\u{1F1F3}\u{1F1E6}',name:'Namibie',score:65,trend:'\u2192',gdp:'$13B',risk:'Modere',coup:false,region:'SADC'},
   {code:'MW',flag:'\u{1F1F2}\u{1F1FC}',name:'Malawi',score:35,trend:'\u2193',gdp:'$12B',risk:'Eleve',coup:false,region:'SADC'},
-  {code:'AO',flag:'\u{1F1E6}\u{1F1F4}',name:'Angola',score:42,trend:'\u2192',gdp:'$78B',risk:'Modere',coup:false,region:'SADC'},
+  {code:'AO',flag:'\u{1F1E6}\u{1F1F4}',name:'Angola',score:42,trend:'\u2192',gdp:'$97B',risk:'Modere',coup:false,region:'SADC'},
   {code:'MG',flag:'\u{1F1F2}\u{1F1EC}',name:'Madagascar',score:35,trend:'\u2193',gdp:'$15B',risk:'Eleve',coup:false,region:'SADC'},
   {code:'MU',flag:'\u{1F1F2}\u{1F1FA}',name:'Maurice',score:80,trend:'\u2191',gdp:'$14B',risk:'Faible',coup:false,region:'SADC'},
   {code:'SC',flag:'\u{1F1F8}\u{1F1E8}',name:'Seychelles',score:75,trend:'\u2192',gdp:'$2B',risk:'Faible',coup:false,region:'SADC'},
@@ -4487,9 +4487,9 @@ function renderDesktopCountryDetail(code) {
 
     <div class="comp-section-title">Macro</div>
     <div style="font-size:.78rem;margin-bottom:14px;">
-      <div class="comp-row"><span class="clabel">Croissance</span><span class="cval" style="color:var(--green);">${d.growth}</span></div>
-      <div class="comp-row"><span class="clabel">Inflation</span><span class="cval">${d.inflation}</span></div>
-      <div class="comp-row"><span class="clabel">Dette / PIB</span><span class="cval">${d.dette_pib}</span></div>
+      <div class="comp-row"><span class="clabel">Croissance</span><span class="cval" style="color:${d.growth.startsWith('-') ? 'var(--red)' : 'var(--green)'};">${d.growth}</span></div>
+      <div class="comp-row"><span class="clabel">Inflation</span><span class="cval" style="color:${parseFloat(d.inflation) > 15 ? 'var(--red)' : parseFloat(d.inflation) > 6 ? 'var(--orange)' : 'var(--green)'};">${d.inflation}</span></div>
+      <div class="comp-row"><span class="clabel">Dette / PIB</span><span class="cval" style="color:${parseFloat(d.dette_pib) > 90 ? 'var(--red)' : parseFloat(d.dette_pib) > 60 ? 'var(--orange)' : 'var(--green)'};">${d.dette_pib}</span></div>
     </div>
 
     <div class="comp-section-title">Indice WASI</div>
@@ -4499,6 +4499,16 @@ function renderDesktopCountryDetail(code) {
     ${bar('Juridique', d.indices.juridique)}
     ${bar('Humain', d.indices.humain)}
     ${bar('Integration', d.indices.integration)}
+
+    ${d.micro ? '<div class="comp-section-title" style="margin-top:14px;">Micro\u00e9conomie</div>' +
+      bar('\u00c9lasticit\u00e9-prix', d.micro.elasticite_prix) +
+      bar('Diversif. export', d.micro.concentration_export) +
+      bar('Productivit\u00e9', d.micro.productivite) +
+      bar('Rendements d\'\u00e9chelle', d.micro.rendements_echelle) +
+      bar('Substituabilit\u00e9', d.micro.substituabilite) +
+      bar('Comp\u00e9titivit\u00e9', d.micro.competitivite) +
+      bar('R\u00e9silience', d.micro.resilience) +
+      bar('Adaptabilit\u00e9', d.micro.adaptabilite) : ''}
 
     <div class="comp-section-title" style="margin-top:14px;">Ressources</div>
     <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
@@ -4632,8 +4642,8 @@ function showMobileCountryDetail(code) {
         <div class="cd-stat"><div class="label">Population</div><div class="value">${d.pop}</div></div>
         <div class="cd-stat"><div class="label">Devise</div><div class="value">${d.currency}</div></div>
         <div class="cd-stat"><div class="label">PIB</div><div class="value">${c.gdp}</div></div>
-        <div class="cd-stat"><div class="label">Croissance</div><div class="value" style="color:var(--green);">${d.growth}</div></div>
-        <div class="cd-stat"><div class="label">Inflation</div><div class="value">${d.inflation}</div></div>
+        <div class="cd-stat"><div class="label">Croissance</div><div class="value" style="color:${d.growth.startsWith('-') ? 'var(--red)' : 'var(--green)'};">${d.growth}</div></div>
+        <div class="cd-stat"><div class="label">Inflation</div><div class="value" style="color:${parseFloat(d.inflation) > 15 ? 'var(--red)' : parseFloat(d.inflation) > 6 ? 'var(--orange)' : 'var(--green)'};">${d.inflation}</div></div>
         <div class="cd-stat"><div class="label">Dette/PIB</div><div class="value">${d.dette_pib}</div></div>
         <div class="cd-stat"><div class="label">Risque</div><div class="value" style="color:${riskCol};">${c.risk}</div></div>
       </div>
@@ -4649,6 +4659,18 @@ function showMobileCountryDetail(code) {
       ${bar('Capital humain', d.indices.humain)}
       ${bar('Integration regionale', d.indices.integration)}
     </div>
+
+    ${d.micro ? `<div class="country-detail-card">
+      <div class="cd-section-title">Micro\u00e9conomie</div>
+      ${bar('\u00c9lasticit\u00e9-prix', d.micro.elasticite_prix)}
+      ${bar('Diversif. export', d.micro.concentration_export)}
+      ${bar('Productivit\u00e9', d.micro.productivite)}
+      ${bar('Rendements d\'\u00e9chelle', d.micro.rendements_echelle)}
+      ${bar('Substituabilit\u00e9', d.micro.substituabilite)}
+      ${bar('Comp\u00e9titivit\u00e9', d.micro.competitivite)}
+      ${bar('R\u00e9silience', d.micro.resilience)}
+      ${bar('Adaptabilit\u00e9', d.micro.adaptabilite)}
+    </div>` : ''}
 
     <div class="country-detail-card">
       <div class="cd-section-title">Ressources naturelles</div>
