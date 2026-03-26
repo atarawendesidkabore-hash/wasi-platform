@@ -3018,6 +3018,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button class="compta-tab" onclick="switchComptaTab('bilan',this)" data-i18n="ct_bilan">Bilan</button>
       <button class="compta-tab" onclick="switchComptaTab('resultat',this)" data-i18n="ct_resultat">Compte de R&eacute;sultat</button>
       <button class="compta-tab" onclick="switchComptaTab('flux',this)" data-i18n="ct_flux">Flux de Tr&eacute;sorerie</button>
+      <button class="compta-tab" onclick="switchComptaTab('amort',this)">Amortissements</button>
       <button class="compta-tab" onclick="switchComptaTab('notes',this)" data-i18n="ct_notes">Notes &amp; Liasse</button>
     </div>
     <div class="compta-body" style="display:none;">
@@ -3029,6 +3030,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <div class="compta-panel" id="compta-panel-bilan"></div>
       <div class="compta-panel" id="compta-panel-resultat"></div>
       <div class="compta-panel" id="compta-panel-flux"></div>
+      <div class="compta-panel" id="compta-panel-amort"></div>
       <div class="compta-panel" id="compta-panel-notes"></div>
     </div>
   </div>
@@ -7185,59 +7187,256 @@ function submitPME() {
 
 /* ---- SYSCOHADA revise (8 classes) ---- */
 const SYSCOHADA_PLAN = {
-  title: 'SYSCOHADA revise',
-  subtitle: 'Systeme comptable des entreprises — OHADA 2017',
+  title: 'SYSCOHADA r\u00e9vis\u00e9',
+  subtitle: 'Syst\u00e8me comptable des entreprises \u2014 OHADA 2017',
   classes: [
-    {num:1,label:'Comptes de ressources durables',families:['Capital','Reserves','Report a nouveau','Resultat','Subventions d\'investissement','Emprunts','Provisions pour risques'],color:'var(--blue)',
-          accounts:[]},
-    {num:2,label:'Comptes d\'actif immobilise',families:['Immobilisations incorporelles','Immobilisations corporelles','Immobilisations financieres','Amortissements'],color:'var(--cyan)',
-          accounts:[]},
-    {num:3,label:'Comptes de stocks',families:['Marchandises','Matieres premieres','Produits finis'],color:'var(--orange)',
-          accounts:[]},
-    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Clients','Personnel','Etat','Organismes sociaux'],color:'var(--gold)',
-          accounts:[]},
-    {num:5,label:'Comptes de tresorerie',families:['Banques','Caisse','Regies d\'avances'],color:'var(--green)',
-          accounts:[]},
-    {num:6,label:'Comptes de charges des activites ordinaires',families:['Achats','Transports','Services exterieurs','Impots et taxes','Charges de personnel','Charges financieres','Dotations'],color:'var(--red)',
-          accounts:[]},
-    {num:7,label:'Comptes de produits des activites ordinaires',families:['Ventes','Travaux et services','Produits accessoires','Subventions','Reprises'],color:'var(--green)',
-          accounts:[]},
+    {num:1,label:'Comptes de ressources durables',families:['Capital','R\u00e9serves','Report \u00e0 nouveau','R\u00e9sultat','Subventions d\u2019investissement','Emprunts','Provisions pour risques'],color:'var(--blue)',
+      accounts:[
+        {code:'101',label:'Capital social',debit:0,credit:10000000,n1d:0,n1c:10000000},
+        {code:'103',label:'R\u00e9serves l\u00e9gales',debit:0,credit:1000000,n1d:0,n1c:1000000},
+        {code:'104',label:'R\u00e9serves libres',debit:0,credit:2500000,n1d:0,n1c:2000000},
+        {code:'105',label:'Report \u00e0 nouveau (b\u00e9n\u00e9fice)',debit:0,credit:800000,n1d:0,n1c:500000},
+        {code:'106',label:'R\u00e9sultat de l\u2019exercice',debit:0,credit:1850000,n1d:0,n1c:1400000},
+        {code:'131',label:'Subventions d\u2019investissement',debit:0,credit:500000,n1d:0,n1c:600000},
+        {code:'161',label:'Emprunts aupr\u00e8s des \u00e9tablissements de cr\u00e9dit',debit:0,credit:15000000,n1d:0,n1c:6000000},
+        {code:'191',label:'Provisions pour risques',debit:0,credit:350000,n1d:0,n1c:300000}
+      ]},
+    {num:2,label:'Comptes d\u2019actif immobilis\u00e9',families:['Immobilisations incorporelles','Immobilisations corporelles','Immobilisations financi\u00e8res','Amortissements'],color:'var(--cyan)',
+      accounts:[
+        {code:'202',label:'Frais de d\u00e9veloppement et de prospection',debit:3500000,credit:0,n1d:3500000,n1c:0},
+        {code:'205',label:'Brevets, licences, logiciels et droits similaires',debit:8500000,credit:0,n1d:8500000,n1c:0},
+        {code:'231',label:'B\u00e2timents',debit:15000000,credit:0,n1d:15000000,n1c:0},
+        {code:'245',label:'Mat\u00e9riel, mobilier et actifs biologiques',debit:2200000,credit:0,n1d:2000000,n1c:0},
+        {code:'248',label:'Mat\u00e9riel de transport',debit:4500000,credit:0,n1d:4300000,n1c:0},
+        {code:'281',label:'Amortissements immo. incorporelles',debit:0,credit:2550000,n1d:0,n1c:2100000},
+        {code:'284',label:'Amortissements immo. corporelles',debit:0,credit:3000000,n1d:0,n1c:2700000},
+        {code:'272',label:'Immobilisations financi\u00e8res',debit:1000000,credit:0,n1d:900000,n1c:0}
+      ]},
+    {num:3,label:'Comptes de stocks',families:['Marchandises','Mati\u00e8res premi\u00e8res','Produits finis'],color:'var(--orange)',
+      accounts:[
+        {code:'311',label:'Stocks de marchandises',debit:1250000,credit:0,n1d:1100000,n1c:0}
+      ]},
+    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Clients','Personnel','\u00c9tat','Organismes sociaux'],color:'var(--gold)',
+      accounts:[
+        {code:'401',label:'Fournisseurs d\u2019exploitation',debit:0,credit:8540000,n1d:0,n1c:3200000},
+        {code:'411',label:'Clients',debit:5800000,credit:0,n1d:5200000,n1c:0},
+        {code:'421',label:'Personnel \u2014 R\u00e9mun\u00e9rations dues',debit:0,credit:2200000,n1d:0,n1c:1900000},
+        {code:'431',label:'S\u00e9curit\u00e9 sociale',debit:0,credit:480000,n1d:0,n1c:400000},
+        {code:'441',label:'\u00c9tat \u2014 Imp\u00f4ts et taxes \u00e0 payer',debit:0,credit:1720000,n1d:0,n1c:1500000},
+        {code:'461',label:'D\u00e9biteurs divers',debit:860000,credit:0,n1d:600000,n1c:0}
+      ]},
+    {num:5,label:'Comptes de tr\u00e9sorerie',families:['Banques','Caisse','R\u00e9gies d\u2019avances'],color:'var(--green)',
+      accounts:[
+        {code:'521',label:'Banque Ecobank',debit:6800000,credit:0,n1d:6000000,n1c:0},
+        {code:'522',label:'Banque SGBF',debit:500000,credit:0,n1d:500000,n1c:0},
+        {code:'571',label:'Caisse principal',debit:350000,credit:0,n1d:300000,n1c:0}
+      ]},
+    {num:6,label:'Comptes de charges des activit\u00e9s ordinaires',families:['Achats','Transports','Services ext\u00e9rieurs','Imp\u00f4ts et taxes','Charges de personnel','Charges financi\u00e8res','Dotations'],color:'var(--red)',
+      accounts:[
+        {code:'601',label:'Achats de marchandises',debit:2800000,credit:0,n1d:2500000,n1c:0},
+        {code:'604',label:'Achats de fournitures et approvisionnements',debit:480000,credit:0,n1d:400000,n1c:0},
+        {code:'622',label:'Locations et charges locatives',debit:1200000,credit:0,n1d:1000000,n1c:0},
+        {code:'624',label:'Primes d\u2019assurance',debit:350000,credit:0,n1d:300000,n1c:0},
+        {code:'631',label:'Publicit\u00e9 et publications',debit:480000,credit:0,n1d:400000,n1c:0},
+        {code:'634',label:'Honoraires',debit:850000,credit:0,n1d:720000,n1c:0},
+        {code:'635',label:'Frais postaux et t\u00e9l\u00e9communications',debit:220000,credit:0,n1d:190000,n1c:0},
+        {code:'641',label:'Imp\u00f4ts et taxes sur r\u00e9mun\u00e9rations',debit:220000,credit:0,n1d:190000,n1c:0},
+        {code:'661',label:'R\u00e9mun\u00e9rations du personnel',debit:8800000,credit:0,n1d:7800000,n1c:0},
+        {code:'664',label:'Charges sociales de l\u2019employeur',debit:880000,credit:0,n1d:780000,n1c:0},
+        {code:'671',label:'Int\u00e9r\u00eats des emprunts',debit:420000,credit:0,n1d:380000,n1c:0},
+        {code:'681',label:'Dotations aux amortissements des immob.',debit:2200000,credit:0,n1d:1900000,n1c:0}
+      ]},
+    {num:7,label:'Comptes de produits des activit\u00e9s ordinaires',families:['Ventes','Travaux et services','Produits accessoires','Subventions','Reprises'],color:'var(--green)',
+      accounts:[
+        {code:'701',label:'Ventes de marchandises',debit:0,credit:4200000,n1d:0,n1c:3800000},
+        {code:'706',label:'Services (consulting & advisory)',debit:0,credit:8500000,n1d:0,n1c:7200000},
+        {code:'707',label:'Produits accessoires',debit:0,credit:10100000,n1d:0,n1c:8500000},
+        {code:'731',label:'Subventions d\u2019exploitation',debit:0,credit:1500000,n1d:0,n1c:1200000},
+        {code:'756',label:'Revenus financiers des placements',debit:0,credit:85000,n1d:0,n1c:70000},
+        {code:'791',label:'Reprises provisions et d\u00e9pr\u00e9ciations',debit:0,credit:200000,n1d:0,n1c:150000}
+      ]},
     {num:8,label:'Comptes des autres charges et autres produits',families:['Valeurs comptables cessions','Produits cessions','Charges HAO','Produits HAO'],color:'var(--text-dim)',
-          accounts:[]},
+      accounts:[
+        {code:'811',label:'Valeurs comptables des cessions',debit:800000,credit:0,n1d:0,n1c:0},
+        {code:'821',label:'Produits des cessions d\u2019immobilisations',debit:0,credit:1200000,n1d:0,n1c:0},
+        {code:'831',label:'Charges hors activit\u00e9s ordinaires',debit:120000,credit:0,n1d:80000,n1c:0},
+        {code:'841',label:'Produits hors activit\u00e9s ordinaires',debit:0,credit:180000,n1d:0,n1c:100000}
+      ]}
   ]
 };
 
 /* ---- SYCEBNL (9 classes) ---- */
 const SYCEBNL_PLAN = {
   title: 'SYCEBNL',
-  subtitle: 'Systeme comptable des entites a but non lucratif — OHADA 2023',
+  subtitle: 'Syst\u00e8me comptable des entit\u00e9s \u00e0 but non lucratif \u2014 OHADA 2017',
   classes: [
-    {num:1,label:'Comptes de ressources durables',families:['Dotation','Reserves','Report a nouveau','Resultat','Fonds affectes','Fonds reportes','Emprunts','Provisions'],color:'var(--blue)',
-          accounts:[]},
-    {num:2,label:'Comptes d\'actif immobilise',families:['Immobilisations incorporelles','Terrains','Batiments','Materiel','Immobilisations financieres','Amortissements'],color:'var(--cyan)',
-          accounts:[]},
-    {num:3,label:'Comptes de stocks',families:['Biens lies a l\'activite','Marchandises','Dons en nature','Depreciations'],color:'var(--orange)',
-          accounts:[]},
-    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Adherents','Personnel','Etat','Bailleurs','Fonds d\'administration'],color:'var(--gold)',
-          accounts:[]},
-    {num:5,label:'Comptes de tresorerie',families:['Banques','Caisse','Monnaie electronique'],color:'var(--green)',
-          accounts:[]},
-    {num:6,label:'Comptes de charges des activites ordinaires',families:['Achats','Transports','Services ext.','Impots et taxes','Autres charges','Charges de personnel','Frais financiers','Dotations'],color:'var(--red)',
-          accounts:[]},
-    {num:7,label:'Comptes de produits des activites ordinaires',families:['Cotisations','Dons','Subventions','Ventes','Revenus financiers','Reprises'],color:'var(--green)',
-          accounts:[]},
-    {num:8,label:'Comptes des autres charges et autres produits',families:['Cessions','Charges HAO','Produits HAO','Subventions d\'equilibre'],color:'var(--text-dim)',
-          accounts:[]},
-    {num:9,label:'Contributions volontaires en nature et analytique',families:['Emplois des contributions','Contributions volontaires','Comptabilite analytique'],color:'var(--text-secondary)',
-          accounts:[]},
+    {num:1,label:'Ressources durables',families:['Dotation','R\u00e9serves','Report \u00e0 nouveau','R\u00e9sultat','Fonds affect\u00e9s','Fonds report\u00e9s','Emprunts','Provisions'],color:'var(--blue)',
+      accounts:[
+        {code:'101',label:'Dotation initiale',debit:0,credit:8000000,n1d:0,n1c:8000000},
+        {code:'103',label:'Fonds de r\u00e9serve',debit:0,credit:1500000,n1d:0,n1c:1300000},
+        {code:'104',label:'R\u00e9serves libres',debit:0,credit:500000,n1d:0,n1c:400000},
+        {code:'106',label:'Exc\u00e9dent ou d\u00e9ficit report\u00e9',debit:0,credit:600000,n1d:0,n1c:450000},
+        {code:'107',label:'Fonds affect\u00e9s non utilis\u00e9s',debit:0,credit:2000000,n1d:0,n1c:1750000},
+        {code:'108',label:'Fonds report\u00e9s',debit:0,credit:300000,n1d:0,n1c:250000},
+        {code:'161',label:'Emprunts aupr\u00e8s des \u00e9tablissements de cr\u00e9dit',debit:0,credit:4500000,n1d:0,n1c:3000000},
+        {code:'162',label:'Avances remboursables re\u00e7ues',debit:0,credit:0,n1d:0,n1c:0},
+        {code:'190',label:'Provisions pour risques',debit:0,credit:300000,n1d:0,n1c:250000},
+        {code:'191',label:'Provisions pour charges',debit:0,credit:0,n1d:0,n1c:0}
+      ]},
+    {num:2,label:'Actifs immobilis\u00e9s',families:['Immobilisations incorporelles','Terrains','B\u00e2timents','Mat\u00e9riel','Immobilisations financi\u00e8res','Amortissements'],color:'var(--cyan)',
+      accounts:[
+        {code:'203',label:'Frais de d\u00e9veloppement et prospection',debit:800000,credit:0,n1d:800000,n1c:0},
+        {code:'205',label:'Logiciels et droits similaires',debit:1200000,credit:0,n1d:1200000,n1c:0},
+        {code:'212',label:'B\u00e2timents',debit:10000000,credit:0,n1d:10000000,n1c:0},
+        {code:'215',label:'Mat\u00e9riel et mobilier',debit:2500000,credit:0,n1d:2000000,n1c:0},
+        {code:'216',label:'Mat\u00e9riel de transport',debit:3500000,credit:0,n1d:3500000,n1c:0},
+        {code:'217',label:'Mat\u00e9riel informatique et bureautique',debit:1200000,credit:0,n1d:900000,n1c:0},
+        {code:'280',label:'Amortissements des immo. incorporelles',debit:0,credit:350000,n1d:0,n1c:250000},
+        {code:'281',label:'Amortissements des immo. corporelles',debit:0,credit:2450000,n1d:0,n1c:2100000}
+      ]},
+    {num:3,label:'Stocks',families:['Biens li\u00e9s \u00e0 l\u2019activit\u00e9','Marchandises','Dons en nature','D\u00e9pr\u00e9ciations'],color:'var(--orange)',
+      accounts:[
+        {code:'310',label:'Stocks de fournitures et consommables',debit:350000,credit:0,n1d:300000,n1c:0},
+        {code:'370',label:'Dons en nature (stocks)',debit:200000,credit:0,n1d:150000,n1c:0}
+      ]},
+    {num:4,label:'Comptes de tiers',families:['Fournisseurs','Adh\u00e9rents','Personnel','\u00c9tat','Bailleurs','Fonds d\u2019administration'],color:'var(--gold)',
+      accounts:[
+        {code:'401',label:'Fournisseurs',debit:0,credit:1850000,n1d:0,n1c:1500000},
+        {code:'410',label:'Cotisations \u00e0 recevoir',debit:480000,credit:0,n1d:400000,n1c:0},
+        {code:'421',label:'Personnel \u2014 R\u00e9mun\u00e9rations dues',debit:0,credit:620000,n1d:0,n1c:550000},
+        {code:'431',label:'S\u00e9curit\u00e9 sociale',debit:0,credit:180000,n1d:0,n1c:150000},
+        {code:'441',label:'\u00c9tat \u2014 Imp\u00f4ts et taxes',debit:0,credit:220000,n1d:0,n1c:180000},
+        {code:'447',label:'\u00c9tat \u2014 Subventions \u00e0 recevoir',debit:1200000,credit:0,n1d:900000,n1c:0},
+        {code:'471',label:'Bailleurs \u2014 subventions \u00e0 recevoir',debit:800000,credit:0,n1d:600000,n1c:0},
+        {code:'472',label:'Avances re\u00e7ues des bailleurs',debit:0,credit:650000,n1d:0,n1c:500000}
+      ]},
+    {num:5,label:'Tr\u00e9sorerie',families:['Banques','Caisse','Monnaie \u00e9lectronique'],color:'var(--green)',
+      accounts:[
+        {code:'511',label:'Banque Ecobank',debit:4200000,credit:0,n1d:3800000,n1c:0},
+        {code:'521',label:'Orange Money',debit:350000,credit:0,n1d:250000,n1c:0},
+        {code:'570',label:'Caisse',debit:480000,credit:0,n1d:420000,n1c:0}
+      ]},
+    {num:6,label:'Charges des activit\u00e9s ordinaires',families:['Achats','Transports','Services ext.','Imp\u00f4ts et taxes','Autres charges','Charges de personnel','Frais financiers','Dotations'],color:'var(--red)',
+      accounts:[
+        {code:'601',label:'Achats de fournitures et consommables',debit:750000,credit:0,n1d:620000,n1c:0},
+        {code:'622',label:'Locations et charges locatives',debit:480000,credit:0,n1d:420000,n1c:0},
+        {code:'624',label:'Primes d\u2019assurance',debit:120000,credit:0,n1d:100000,n1c:0},
+        {code:'634',label:'Honoraires',debit:350000,credit:0,n1d:300000,n1c:0},
+        {code:'635',label:'T\u00e9l\u00e9phone et internet',debit:180000,credit:0,n1d:150000,n1c:0},
+        {code:'641',label:'Imp\u00f4ts et taxes sur r\u00e9mun\u00e9rations',debit:220000,credit:0,n1d:190000,n1c:0},
+        {code:'661',label:'R\u00e9mun\u00e9rations du personnel',debit:4800000,credit:0,n1d:4200000,n1c:0},
+        {code:'664',label:'Charges patronales et cotisations sociales',debit:480000,credit:0,n1d:420000,n1c:0},
+        {code:'671',label:'Int\u00e9r\u00eats des emprunts',debit:270000,credit:0,n1d:240000,n1c:0},
+        {code:'681',label:'Dotations aux amortissements des immob.',debit:650000,credit:0,n1d:580000,n1c:0}
+      ]},
+    {num:7,label:'Produits des activit\u00e9s ordinaires',families:['Cotisations','Dons','Subventions','Ventes','Revenus financiers','Reprises'],color:'var(--green)',
+      accounts:[
+        {code:'701',label:'Cotisations des membres',debit:0,credit:800000,n1d:0,n1c:680000},
+        {code:'711',label:'Dons en esp\u00e8ces',debit:0,credit:1500000,n1d:0,n1c:1200000},
+        {code:'721',label:'Subventions de fonctionnement',debit:0,credit:3200000,n1d:0,n1c:2800000},
+        {code:'723',label:'Subventions de projets',debit:0,credit:2400000,n1d:0,n1c:2000000},
+        {code:'732',label:'Prestations de services',debit:0,credit:300000,n1d:0,n1c:250000},
+        {code:'761',label:'Int\u00e9r\u00eats et revenus des placements',debit:0,credit:85000,n1d:0,n1c:70000},
+        {code:'771',label:'Reprises sur provisions et d\u00e9pr\u00e9ciations',debit:0,credit:0,n1d:0,n1c:0}
+      ]},
+    {num:8,label:'Autres charges et autres produits',families:['Cessions','Charges HAO','Produits HAO','Subventions d\u2019\u00e9quilibre'],color:'var(--text-dim)',
+      accounts:[
+        {code:'831',label:'Charges hors activit\u00e9s ordinaires',debit:0,credit:0,n1d:0,n1c:0},
+        {code:'841',label:'Produits des cessions d\u2019immobilisations',debit:0,credit:0,n1d:0,n1c:0},
+        {code:'871',label:'Subventions d\u2019\u00e9quilibre re\u00e7ues',debit:0,credit:0,n1d:0,n1c:0}
+      ]},
+    {num:9,label:'Contributions volontaires en nature et analytique',families:['Emplois des contributions','Contributions volontaires','Comptabilit\u00e9 analytique'],color:'var(--text-secondary)',
+      accounts:[
+        {code:'910',label:'B\u00e9n\u00e9volat valoris\u00e9 (emplois)',debit:1200000,credit:0,n1d:1050000,n1c:0},
+        {code:'911',label:'Mises \u00e0 disposition valoris\u00e9es (emplois)',debit:300000,credit:0,n1d:250000,n1c:0},
+        {code:'920',label:'B\u00e9n\u00e9voles (ressources)',debit:0,credit:1200000,n1d:0,n1c:1050000},
+        {code:'921',label:'Prestations en nature (ressources)',debit:0,credit:300000,n1d:0,n1c:250000}
+      ]}
   ]
 };
 
-/* ---- Journal entries for SYSCOHADA ---- */
-var SYSCOHADA_JOURNAL = [];
+/* ---- Journal entries for SYSCOHADA (WASI Ecosystem SAS — Exercice 2026) ---- */
+var SYSCOHADA_JOURNAL = [
+  {id:'EC-001',date:'2026-01-15',ref:'FAC-CLI-001',journal:'VT',desc:'Facture consulting \u2014 SONABEL',lines:[
+    {account:'411',label:'Clients \u2014 SONABEL',debit:1062000,credit:0},
+    {account:'706',label:'Prestations de services',debit:0,credit:900000},
+    {account:'441',label:'\u00c9tat \u2014 TVA collect\u00e9e (18%)',debit:0,credit:162000}
+  ]},
+  {id:'EC-002',date:'2026-01-31',ref:'PAY-JAN-01',journal:'BQ',desc:'Paiement salaires janvier 2026',lines:[
+    {account:'661',label:'R\u00e9mun\u00e9rations du personnel',debit:880000,credit:0},
+    {account:'421',label:'Personnel \u2014 r\u00e9mun\u00e9rations dues',debit:0,credit:880000}
+  ]},
+  {id:'EC-003',date:'2026-02-05',ref:'VIRT-BQ-003',journal:'BQ',desc:'Virement salaires \u2014 janvier',lines:[
+    {account:'421',label:'Personnel \u2014 r\u00e9mun\u00e9rations dues',debit:880000,credit:0},
+    {account:'521',label:'Banque Ecobank',debit:0,credit:880000}
+  ]},
+  {id:'EC-004',date:'2026-02-10',ref:'ACH-FOUR-004',journal:'AC',desc:'Achat fournitures de bureau',lines:[
+    {account:'604',label:'Fournitures et approvisionnements',debit:95000,credit:0},
+    {account:'401',label:'Fournisseurs',debit:0,credit:95000}
+  ]},
+  {id:'EC-005',date:'2026-02-15',ref:'ENC-CLI-005',journal:'BQ',desc:'Encaissement client \u2014 SONABEL',lines:[
+    {account:'521',label:'Banque Ecobank',debit:500000,credit:0},
+    {account:'411',label:'Clients',debit:0,credit:500000}
+  ]},
+  {id:'EC-006',date:'2026-03-01',ref:'SUB-EXP-006',journal:'BQ',desc:'R\u00e9ception subvention Min. Economie',lines:[
+    {account:'521',label:'Banque Ecobank',debit:200000,credit:0},
+    {account:'731',label:'Subventions d\u2019exploitation',debit:0,credit:200000}
+  ]},
+  {id:'EC-007',date:'2026-03-15',ref:'FAC-FURN-007',journal:'AC',desc:'Facture prestataire informatique',lines:[
+    {account:'634',label:'Honoraires',debit:150000,credit:0},
+    {account:'401',label:'Fournisseurs',debit:0,credit:150000}
+  ]},
+  {id:'EC-008',date:'2026-03-31',ref:'AMORT-Q1-008',journal:'OD',desc:'Dotations aux amortissements Q1 2026',lines:[
+    {account:'681',label:'Dotations aux amortissements',debit:550000,credit:0},
+    {account:'281',label:'Amortissements immo. incorporelles',debit:0,credit:162500},
+    {account:'284',label:'Amortissements immo. corporelles',debit:0,credit:387500}
+  ]}
+];
 
-/* ---- Journal entries for SYCEBNL ---- */
-var SYCEBNL_JOURNAL = [];
+/* ---- Journal entries for SYCEBNL (WASI Foundation — Exercice 2026) ---- */
+var SYCEBNL_JOURNAL = [
+  {id:'EF-001',date:'2026-01-10',ref:'SUBV-UNICEF-001',journal:'BQ',desc:'R\u00e9ception subvention UNICEF \u2014 projet nutrition',lines:[
+    {account:'511',label:'Banque Ecobank',debit:800000,credit:0},
+    {account:'723',label:'Subventions de projets',debit:0,credit:800000}
+  ]},
+  {id:'EF-002',date:'2026-01-31',ref:'SAL-JAN-002',journal:'OD',desc:'Constatation salaires janvier 2026',lines:[
+    {account:'661',label:'R\u00e9mun\u00e9rations du personnel',debit:400000,credit:0},
+    {account:'421',label:'Personnel \u2014 r\u00e9mun\u00e9rations dues',debit:0,credit:400000}
+  ]},
+  {id:'EF-003',date:'2026-02-01',ref:'VIRT-SAL-003',journal:'BQ',desc:'Paiement salaires janvier',lines:[
+    {account:'421',label:'Personnel \u2014 r\u00e9mun\u00e9rations dues',debit:400000,credit:0},
+    {account:'511',label:'Banque Ecobank',debit:0,credit:400000}
+  ]},
+  {id:'EF-004',date:'2026-02-10',ref:'LOY-Q1-004',journal:'BQ',desc:'R\u00e8glement loyer Q1 2026',lines:[
+    {account:'622',label:'Locations et charges locatives',debit:120000,credit:0},
+    {account:'511',label:'Banque Ecobank',debit:0,credit:120000}
+  ]},
+  {id:'EF-005',date:'2026-02-20',ref:'DONS-005',journal:'BQ',desc:'Dons en esp\u00e8ces re\u00e7us',lines:[
+    {account:'511',label:'Banque Ecobank',debit:200000,credit:0},
+    {account:'711',label:'Dons en esp\u00e8ces',debit:0,credit:200000}
+  ]},
+  {id:'EF-006',date:'2026-02-28',ref:'COTIS-006',journal:'BQ',desc:'Cotisations membres \u2014 f\u00e9vrier',lines:[
+    {account:'511',label:'Banque Ecobank',debit:60000,credit:0},
+    {account:'701',label:'Cotisations des membres',debit:0,credit:60000}
+  ]},
+  {id:'EF-007',date:'2026-03-05',ref:'FOUR-007',journal:'AC',desc:'Achat fournitures de bureau',lines:[
+    {account:'601',label:'Achats de fournitures',debit:85000,credit:0},
+    {account:'401',label:'Fournisseurs',debit:0,credit:85000}
+  ]},
+  {id:'EF-008',date:'2026-03-12',ref:'HONOR-008',journal:'AC',desc:'Honoraires consultant formation',lines:[
+    {account:'634',label:'Honoraires',debit:150000,credit:0},
+    {account:'401',label:'Fournisseurs',debit:0,credit:150000}
+  ]},
+  {id:'EF-009',date:'2026-03-15',ref:'SUBV-ETAT-009',journal:'BQ',desc:'Versement subvention \u00c9tat \u2014 acompte',lines:[
+    {account:'511',label:'Banque Ecobank',debit:300000,credit:0},
+    {account:'447',label:'\u00c9tat \u2014 subventions \u00e0 recevoir',debit:0,credit:300000}
+  ]},
+  {id:'EF-010',date:'2026-03-31',ref:'AMORT-Q1-010',journal:'OD',desc:'Dotations amortissements Q1 2026',lines:[
+    {account:'681',label:'Dotations aux amortissements',debit:162500,credit:0},
+    {account:'280',label:'Amortissements immo. incorporelles',debit:0,credit:25000},
+    {account:'281',label:'Amortissements immo. corporelles',debit:0,credit:137500}
+  ]}
+];
 
 /* ---- AFRIQUE Country → Accounting System mapping ---- */
 const AFRIQUE_ACCOUNTING = [
@@ -7464,7 +7663,7 @@ function loadComptaFile(input, type) {
     document.getElementById('compta-empty-state').style.display = 'none';
     document.querySelectorAll('#screen-compta .compta-tabs, #screen-compta .compta-body').forEach(function(el) { el.style.display = ''; });
     renderComptaPilotage();
-    showNotif(labels[type] + ' charge avec succes. ' + COMPTA_ACCOUNTS.length + ' comptes importes.', 'success');
+    showNotif(labels[type] + ' charge avec succes. ' + getAllAccounts().length + ' comptes importés.', 'success');
   }, 1500);
 }
 
@@ -7581,6 +7780,7 @@ function switchComptaTab(tab, btn) {
   else if (tab === 'bilan') renderBilan();
   else if (tab === 'resultat') renderResultat();
   else if (tab === 'flux') renderFluxTresorerie();
+  else if (tab === 'amort') renderAmortissements();
   else if (tab === 'notes') renderNotesLiasse();
 }
 
@@ -7834,36 +8034,157 @@ function renderGrandLivre() {
 }
 
 /* ================================================================
-   BALANCE
+   BALANCE — avec Soldes d'ouverture (N-1) et mouvements
    ================================================================ */
 function renderBalance() {
   var el = document.getElementById('compta-panel-balance');
   var accounts = getAllAccounts();
-  var plan = getActivePlanData();
+  var journal  = getJournalEntries();
 
-  var html = '<table class="compta-table"><thead><tr><th>COMPTE</th><th>LIBELLE</th><th>CLASSE</th><th class="num-col">DEBIT</th><th class="num-col">CREDIT</th><th class="num-col">SOLDE DEBITEUR</th><th class="num-col">SOLDE CREDITEUR</th></tr></thead><tbody>';
+  /* Toolbar: CSV import + template download */
+  var toolbar = '<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">'
+    + '<label style="padding:6px 14px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.78rem;cursor:pointer;">'
+    + '&#8679; Importer CSV/Excel'
+    + '<input type="file" style="display:none;" accept=".csv,.txt" onchange="importBalanceCsv(this)">'
+    + '</label>'
+    + '<button class="compta-action-btn secondary" onclick="downloadBalanceTemplate()" style="font-size:.78rem;padding:6px 14px;">&#8681; Mod\u00e8le CSV</button>'
+    + '<span style="color:var(--text-dim);font-size:.72rem;">Format CSV : Code,Libell\u00e9,SO_D\u00e9bit,SO_Cr\u00e9dit,Mouv_D\u00e9bit,Mouv_Cr\u00e9dit</span>'
+    + '</div>';
 
-  var totalD = 0, totalC = 0, totalSD = 0, totalSC = 0;
-  accounts.sort(function(a,b){return a.code.localeCompare(b.code);}).forEach(function(a) {
-    if (a.debit === 0 && a.credit === 0) return;
-    var solde = a.debit - a.credit;
-    var sd = solde > 0 ? solde : 0;
-    var sc = solde < 0 ? Math.abs(solde) : 0;
-    totalD += a.debit; totalC += a.credit; totalSD += sd; totalSC += sc;
-    html += '<tr><td style="color:' + a.color + ';font-weight:600;">' + a.code + '</td><td>' + a.label + '</td><td style="color:' + a.color + ';font-size:.72rem;">' + a.classNum + '</td><td class="debit-col">' + (a.debit ? fmtN(a.debit) : '-') + '</td><td class="credit-col">' + (a.credit ? fmtN(a.credit) : '-') + '</td><td class="debit-col">' + (sd ? fmtN(sd) : '-') + '</td><td class="credit-col">' + (sc ? fmtN(sc) : '-') + '</td></tr>';
+  /* Compute movements from journal for each account */
+  var mouvD = {}, mouvC = {};
+  journal.forEach(function(e) {
+    e.lines.forEach(function(l) {
+      mouvD[l.account] = (mouvD[l.account] || 0) + (l.debit  || 0);
+      mouvC[l.account] = (mouvC[l.account] || 0) + (l.credit || 0);
+    });
   });
 
-  var balanced = totalSD === totalSC;
+  var html = toolbar;
+  html += '<div style="overflow-x:auto;">';
+  html += '<table class="compta-table">'
+    + '<thead><tr>'
+    + '<th>COMPTE</th><th>LIBELL\u00c9</th><th>CL.</th>'
+    + '<th class="num-col" style="background:rgba(100,120,200,.08);">S.O. D\u00e9bit</th>'
+    + '<th class="num-col" style="background:rgba(100,120,200,.08);">S.O. Cr\u00e9dit</th>'
+    + '<th class="num-col">Mouv. D\u00e9bit</th>'
+    + '<th class="num-col">Mouv. Cr\u00e9dit</th>'
+    + '<th class="num-col" style="background:rgba(200,146,42,.08);">Solde Cl\u00f4t. D</th>'
+    + '<th class="num-col" style="background:rgba(200,146,42,.08);">Solde Cl\u00f4t. C</th>'
+    + '</tr></thead><tbody>';
+
+  var totSOD=0,totSOC=0,totMD=0,totMC=0,totCLD=0,totCLC=0;
+
+  accounts.sort(function(a,b){return a.code.localeCompare(b.code);}).forEach(function(a) {
+    var sod  = a.debit  || 0;   /* solde ouverture débit  */
+    var soc  = a.credit || 0;   /* solde ouverture crédit */
+    var md   = mouvD[a.code] || 0;
+    var mc   = mouvC[a.code] || 0;
+    var cld  = sod + md;        /* clôture débit cumulé   */
+    var clc  = soc + mc;        /* clôture crédit cumulé  */
+    var solde = cld - clc;
+    var sd   = solde > 0 ? solde : 0;
+    var sc   = solde < 0 ? Math.abs(solde) : 0;
+    if (sod===0 && soc===0 && md===0 && mc===0) return;
+    totSOD+=sod; totSOC+=soc; totMD+=md; totMC+=mc; totCLD+=sd; totCLC+=sc;
+    html += '<tr>'
+      + '<td style="color:' + a.color + ';font-weight:600;">' + a.code + '</td>'
+      + '<td>' + a.label + '</td>'
+      + '<td style="color:' + a.color + ';font-size:.7rem;">' + a.classNum + '</td>'
+      + '<td class="debit-col"  style="background:rgba(100,120,200,.04);">' + (sod ? fmtN(sod) : '\u2013') + '</td>'
+      + '<td class="credit-col" style="background:rgba(100,120,200,.04);">' + (soc ? fmtN(soc) : '\u2013') + '</td>'
+      + '<td class="debit-col">'  + (md  ? fmtN(md)  : '\u2013') + '</td>'
+      + '<td class="credit-col">' + (mc  ? fmtN(mc)  : '\u2013') + '</td>'
+      + '<td class="debit-col"  style="background:rgba(200,146,42,.05);font-weight:600;">' + (sd ? fmtN(sd) : '\u2013') + '</td>'
+      + '<td class="credit-col" style="background:rgba(200,146,42,.05);font-weight:600;">' + (sc ? fmtN(sc) : '\u2013') + '</td>'
+      + '</tr>';
+  });
+
+  var balanced = Math.abs(totCLD - totCLC) < 1;
   var totStyle = balanced ? '' : 'background:rgba(255,82,82,.1);';
-  html += '<tr class="total-row" style="' + totStyle + '"><td colspan="3">TOTAUX</td><td class="debit-col">' + fmtN(totalD) + '</td><td class="credit-col">' + fmtN(totalC) + '</td><td class="debit-col">' + fmtN(totalSD) + '</td><td class="credit-col">' + fmtN(totalSC) + '</td></tr>';
-  html += '</tbody></table>';
+  html += '<tr class="total-row" style="' + totStyle + '">'
+    + '<td colspan="3">TOTAUX</td>'
+    + '<td class="debit-col">'  + fmtN(totSOD) + '</td>'
+    + '<td class="credit-col">' + fmtN(totSOC) + '</td>'
+    + '<td class="debit-col">'  + fmtN(totMD)  + '</td>'
+    + '<td class="credit-col">' + fmtN(totMC)  + '</td>'
+    + '<td class="debit-col">'  + fmtN(totCLD) + '</td>'
+    + '<td class="credit-col">' + fmtN(totCLC) + '</td>'
+    + '</tr>';
+  html += '</tbody></table></div>';
 
   if (balanced) {
-    html += '<div class="compta-equilibre ok">&#10003; Balance equilibree - Totaux debits = Totaux credits</div>';
+    html += '<div class="compta-equilibre ok">&#10003; Balance \u00e9quilibr\u00e9e \u2014 Soldes de cl\u00f4ture D\u00e9bit = Cr\u00e9dit = ' + fmtXOF(totCLD) + '</div>';
   } else {
-    html += '<div class="compta-equilibre nok">&#10007; Balance NON equilibree - Ecart : ' + fmtXOF(Math.abs(totalSD - totalSC)) + '</div>';
+    html += '<div class="compta-equilibre nok">&#10007; Balance NON \u00e9quilibr\u00e9e \u2014 \u00c9cart : ' + fmtXOF(Math.abs(totCLD - totCLC)) + '</div>';
   }
   el.innerHTML = html;
+}
+
+/* ---- Import CSV balance ---- */
+function importBalanceCsv(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var lines = e.target.result.split(/\r?\n/).filter(function(l){ return l.trim(); });
+    var imported = 0, errors = 0;
+    var plan = getActivePlanData();
+    lines.forEach(function(line, idx) {
+      if (idx === 0 && line.toLowerCase().indexOf('code') !== -1) return; /* skip header */
+      var cols = line.split(/[,;]/);
+      if (cols.length < 4) { errors++; return; }
+      var code  = cols[0].trim().replace(/"/g,'');
+      var label = cols[1].trim().replace(/"/g,'');
+      var d     = parseFloat(cols[2]) || 0;
+      var c     = parseFloat(cols[3]) || 0;
+      var md    = parseFloat(cols[4]) || 0;
+      var mc    = parseFloat(cols[5]) || 0;
+      /* Find or create account in active plan */
+      var found = false;
+      plan.classes.forEach(function(cl) {
+        cl.accounts.forEach(function(a) {
+          if (a.code === code) {
+            a.debit = d; a.credit = c;
+            if (!a.n1d) a.n1d = d; if (!a.n1c) a.n1c = c;
+            if (md || mc) {
+              getJournalEntries().push({id:'IMP-'+code,date:new Date().toISOString().slice(0,10),ref:'IMPORT',journal:'AN',desc:'Import balance \u2014 ' + label,lines:[{account:code,label:label,debit:md,credit:mc}]});
+            }
+            found = true; imported++;
+          }
+        });
+        if (!found && cl.num === Math.floor(parseInt(code)/100)) {
+          cl.accounts.push({code:code,label:label,debit:d,credit:c,n1d:d,n1c:c});
+          imported++;
+        }
+      });
+    });
+    showNotif('Import CSV : ' + imported + ' compte(s) charg\u00e9(s)' + (errors ? ', ' + errors + ' erreur(s)' : '') + '.', imported > 0 ? 'success' : 'error');
+    document.getElementById('compta-empty-state').style.display = 'none';
+    document.querySelectorAll('#screen-compta .compta-tabs, #screen-compta .compta-body').forEach(function(el) { el.style.display = ''; });
+    renderBalance();
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+/* ---- Download CSV template ---- */
+function downloadBalanceTemplate() {
+  var accounts = getAllAccounts();
+  var csv = 'Code,Libell\u00e9,SO_D\u00e9bit,SO_Cr\u00e9dit,Mouv_D\u00e9bit,Mouv_Cr\u00e9dit\n';
+  if (accounts.length > 0) {
+    accounts.forEach(function(a) {
+      csv += [a.code, '"' + a.label + '"', a.debit||0, a.credit||0, 0, 0].join(',') + '\n';
+    });
+  } else {
+    csv += '101,"Capital social",0,10000000,0,0\n';
+    csv += '411,"Clients",5000000,0,1000000,0\n';
+    csv += '511,"Banque",4000000,0,500000,200000\n';
+  }
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = 'balance-template-' + activePlan + '.csv'; a.click();
+  URL.revokeObjectURL(url);
 }
 
 /* ================================================================
@@ -8120,56 +8441,56 @@ function renderResultat() {
       {ref:'XI',lbl:'R\u00c9SULTAT NET',sign:'',note:'',n:2285000,n1:1500000,grand:true}
     ];
   } else {
-    /* SYCEBNL: same structure with class 9 contributions */
+    /* ----------------------------------------------------------------
+       SYCEBNL — Compte de r\u00e9sultat des associations / ONG
+       Conforme au mod\u00e8le officiel OHADA SYCEBNL (Associations et
+       Ordres professionnels, Fondations et assimil\u00e9s)
+    ---------------------------------------------------------------- */
     data = [
-      {ref:'TA',lbl:'Cotisations des membres',sign:'+',note:'21',n:3200000,n1:2800000},
-      {ref:'RA',lbl:'Achats de marchandises',sign:'-',note:'22',n:-800000,n1:-600000},
-      {ref:'RB',lbl:'Variation de stocks de marchandises',sign:'-/+',note:'6',n:-20000,n1:10000},
-      {ref:'XA',lbl:'MARGE COMMERCIALE (TA \u00e0 RB)',sign:'',note:'',n:2380000,n1:2210000,sub:true},
-      {ref:'TB',lbl:'Ventes de produits fabriqu\u00e9s',sign:'+',note:'21',n:0,n1:0},
-      {ref:'TC',lbl:'Prestations de services',sign:'+',note:'21',n:5500000,n1:4800000},
-      {ref:'TD',lbl:'Produits accessoires',sign:'+',note:'21',n:2800000,n1:2400000},
-      {ref:'XB',lbl:'CHIFFRE D\u2019AFFAIRES (A+B+C+D)',sign:'',note:'',n:11500000,n1:10000000,sub:true},
-      {ref:'TE',lbl:'Production stock\u00e9e',sign:'-/+',note:'6',n:0,n1:0},
-      {ref:'TF',lbl:'Production immobilis\u00e9e',sign:'',note:'21',n:0,n1:0},
-      {ref:'TG',lbl:'Subventions d\u2019exploitation',sign:'',note:'21',n:2500000,n1:2200000},
-      {ref:'TH',lbl:'Autres produits',sign:'+',note:'21',n:150000,n1:100000},
-      {ref:'TI',lbl:'Transferts de charges d\u2019exploitation',sign:'+',note:'12',n:0,n1:0},
-      {ref:'RC',lbl:'Achats mati\u00e8res et fournitures',sign:'-',note:'22',n:-300000,n1:-250000},
-      {ref:'RD',lbl:'Variation stocks mati\u00e8res',sign:'-/+',note:'6',n:-10000,n1:5000},
-      {ref:'RE',lbl:'Autres achats',sign:'-',note:'22',n:-1200000,n1:-1000000},
-      {ref:'RF',lbl:'Variation stocks autres approv.',sign:'-/+',note:'6',n:0,n1:0},
-      {ref:'RG',lbl:'Transports',sign:'-',note:'23',n:-250000,n1:-200000},
-      {ref:'RH',lbl:'Services ext\u00e9rieurs',sign:'-',note:'24',n:-2200000,n1:-1900000},
-      {ref:'RI',lbl:'Imp\u00f4ts et taxes',sign:'-',note:'25',n:-150000,n1:-120000},
-      {ref:'RJ',lbl:'Autres charges',sign:'-',note:'26',n:-600000,n1:-500000},
-      {ref:'XC',lbl:'VALEUR AJOUT\u00c9E',sign:'',note:'',n:9440000,n1:8335000,sub:true},
-      {ref:'RK',lbl:'Charges de personnel',sign:'-',note:'27',n:-7200000,n1:-6400000},
-      {ref:'XD',lbl:'EXC\u00c9DENT BRUT D\u2019EXPLOITATION',sign:'',note:'',n:2240000,n1:1935000,sub:true},
-      {ref:'TJ',lbl:'Reprises amort., provisions',sign:'+',note:'28',n:100000,n1:80000},
-      {ref:'RL',lbl:'Dotations amort., provisions',sign:'-',note:'3C&28',n:-1200000,n1:-1050000},
-      {ref:'XE',lbl:'R\u00c9SULTAT D\u2019EXPLOITATION',sign:'',note:'',n:1140000,n1:965000,sub:true},
-      {ref:'TK',lbl:'Revenus financiers',sign:'+',note:'29',n:50000,n1:40000},
-      {ref:'TL',lbl:'Reprises provisions financi\u00e8res',sign:'+',note:'28',n:0,n1:0},
-      {ref:'TM',lbl:'Transferts de charges financi\u00e8res',sign:'+',note:'12',n:0,n1:0},
-      {ref:'RM',lbl:'Frais financiers',sign:'-',note:'29',n:-180000,n1:-150000},
-      {ref:'RN',lbl:'Dotations provisions financi\u00e8res',sign:'-',note:'3C&28',n:0,n1:0},
-      {ref:'XF',lbl:'R\u00c9SULTAT FINANCIER',sign:'',note:'',n:-130000,n1:-110000,sub:true},
-      {ref:'XG',lbl:'R\u00c9SULTAT DES ACTIVIT\u00c9S ORDINAIRES',sign:'',note:'',n:1010000,n1:855000,sub:true},
-      {ref:'TN',lbl:'Produits des cessions d\u2019immobilisations',sign:'+',note:'3D',n:500000,n1:0},
-      {ref:'TO',lbl:'Autres produits HAO',sign:'+',note:'30',n:80000,n1:50000},
-      {ref:'RO',lbl:'Valeurs comptables des cessions',sign:'-',note:'3D',n:-300000,n1:0},
-      {ref:'RP',lbl:'Autres charges HAO',sign:'-',note:'30',n:-50000,n1:-30000},
-      {ref:'XH',lbl:'R\u00c9SULTAT HAO',sign:'',note:'',n:230000,n1:20000,sub:true},
-      {ref:'RQ',lbl:'Participation des travailleurs',sign:'-',note:'30',n:0,n1:0},
-      {ref:'RS',lbl:'Imp\u00f4ts sur le r\u00e9sultat',sign:'-',note:'37',n:-40000,n1:-25000},
-      {ref:'XI',lbl:'EXC\u00c9DENT/D\u00c9FICIT NET',sign:'',note:'',n:1200000,n1:850000,grand:true},
+      /* ===== PRODUITS DES ACTIVIT\u00c9S ORDINAIRES (PAO) ===== */
+      {ref:'',lbl:'PRODUITS DES ACTIVIT\u00c9S ORDINAIRES (PAO)',sign:'',note:'',n:0,n1:0,hd:true},
+      {ref:'RA',lbl:'Cotisations des membres',sign:'+',note:'Cl.70',n:800000,n1:680000},
+      {ref:'RB',lbl:'Dons et lib\u00e9ralit\u00e9s re\u00e7us',sign:'+',note:'Cl.71',n:1500000,n1:1200000},
+      {ref:'RC',lbl:'Subventions de fonctionnement',sign:'+',note:'Cl.721',n:3200000,n1:2800000},
+      {ref:'RD',lbl:'Subventions d\u2019\u00e9quipement vir\u00e9es au r\u00e9sultat',sign:'+',note:'Cl.722',n:0,n1:0},
+      {ref:'RE',lbl:'Subventions de projets',sign:'+',note:'Cl.723',n:2400000,n1:2000000},
+      {ref:'RF',lbl:'Ventes et prestations de services',sign:'+',note:'Cl.73',n:300000,n1:250000},
+      {ref:'RG',lbl:'Revenus financiers des placements',sign:'+',note:'Cl.76',n:85000,n1:70000},
+      {ref:'RH',lbl:'Autres produits ordinaires',sign:'+',note:'Cl.75',n:0,n1:0},
+      {ref:'RI',lbl:'Reprises sur amortissements et provisions',sign:'+',note:'Cl.77',n:0,n1:0},
+      {ref:'RJ',lbl:'Transferts de charges',sign:'+',note:'Cl.79',n:0,n1:0},
+      {ref:'XP',lbl:'TOTAL DES PRODUITS D\u2019ACTIVIT\u00c9S ORDINAIRES',sign:'',note:'',n:8285000,n1:7000000,sub:true},
+      /* ===== CHARGES DES ACTIVIT\u00c9S ORDINAIRES (CAO) ===== */
+      {ref:'',lbl:'CHARGES DES ACTIVIT\u00c9S ORDINAIRES (CAO)',sign:'',note:'',n:0,n1:0,hd:true},
+      {ref:'EA',lbl:'Achats de fournitures et consommables',sign:'-',note:'Cl.60',n:-750000,n1:-620000},
+      {ref:'EB',lbl:'Variation des stocks',sign:'-/+',note:'Cl.60',n:-50000,n1:-30000},
+      {ref:'EC',lbl:'Services ext\u00e9rieurs (locations, assurances, honoraires, t\u00e9l\u00e9com)',sign:'-',note:'Cl.62/63',n:-1130000,n1:-970000},
+      {ref:'ED',lbl:'Charges de personnel (salaires, cotisations sociales)',sign:'-',note:'Cl.66',n:-5500000,n1:-4830000},
+      {ref:'EE',lbl:'Imp\u00f4ts et taxes',sign:'-',note:'Cl.64',n:-220000,n1:-190000},
+      {ref:'EF',lbl:'Autres charges des activit\u00e9s ordinaires',sign:'-',note:'Cl.65',n:0,n1:0},
+      {ref:'EG',lbl:'Frais financiers et charges assimil\u00e9es',sign:'-',note:'Cl.67',n:-270000,n1:-240000},
+      {ref:'EH',lbl:'Dotations aux amortissements et provisions',sign:'-',note:'Cl.68',n:-650000,n1:-580000},
+      {ref:'XE',lbl:'TOTAL DES CHARGES D\u2019ACTIVIT\u00c9S ORDINAIRES',sign:'',note:'',n:-8570000,n1:-7460000,sub:true},
+      /* ===== RESULTATS ===== */
+      {ref:'XO',lbl:'R\u00c9SULTAT D\u2019ACTIVIT\u00c9S ORDINAIRES (XP + XE)',sign:'',note:'',n:-285000,n1:-460000,sub:true},
       {ref:'',lbl:'',sign:'',note:'',n:0,n1:0,spacer:true},
-      {ref:'9A',lbl:'Contributions volontaires en nature (Classe 9)',sign:'',note:'',n:0,n1:0,hd:true},
-      {ref:'9B',lbl:'B\u00e9n\u00e9volat',sign:'+',note:'',n:2500000,n1:2200000},
-      {ref:'9C',lbl:'Prestations en nature',sign:'+',note:'',n:800000,n1:600000},
-      {ref:'9D',lbl:'Dons en nature',sign:'+',note:'',n:350000,n1:300000},
-      {ref:'9Z',lbl:'TOTAL CONTRIBUTIONS VOLONTAIRES',sign:'',note:'',n:3650000,n1:3100000,sub:true}
+      {ref:'',lbl:'R\u00c9SULTAT HORS ACTIVIT\u00c9S ORDINAIRES (HAO)',sign:'',note:'',n:0,n1:0,hd:true},
+      {ref:'PH',lbl:'Produits des cessions d\u2019immobilisations',sign:'+',note:'Cl.84',n:0,n1:0},
+      {ref:'PJ',lbl:'Autres produits HAO',sign:'+',note:'Cl.84',n:0,n1:0},
+      {ref:'CH',lbl:'Valeurs comptables des cessions',sign:'-',note:'Cl.83',n:0,n1:0},
+      {ref:'CJ',lbl:'Autres charges HAO',sign:'-',note:'Cl.83',n:0,n1:0},
+      {ref:'SE',lbl:'Subventions d\u2019\u00e9quilibre',sign:'+',note:'Cl.87',n:1500000,n1:1310000},
+      {ref:'XH',lbl:'R\u00c9SULTAT HAO + SUBVENTIONS D\u2019\u00c9QUILIBRE',sign:'',note:'',n:1500000,n1:1310000,sub:true},
+      {ref:'',lbl:'',sign:'',note:'',n:0,n1:0,spacer:true},
+      {ref:'XI',lbl:'R\u00c9SULTAT NET (EXC\u00c9DENT + ou D\u00c9FICIT \u2212)',sign:'',note:'',n:1215000,n1:850000,grand:true},
+      {ref:'',lbl:'',sign:'',note:'',n:0,n1:0,spacer:true},
+      /* ===== CLASSE 9 — CONTRIBUTIONS VOLONTAIRES ===== */
+      {ref:'',lbl:'CONTRIBUTIONS VOLONTAIRES EN NATURE (Classe 9)',sign:'',note:'',n:0,n1:0,hd:true},
+      {ref:'9A',lbl:'B\u00e9n\u00e9volat valoris\u00e9 (emplois)',sign:'+',note:'Cl.91',n:1200000,n1:1050000},
+      {ref:'9B',lbl:'Mises \u00e0 disposition valoris\u00e9es (emplois)',sign:'+',note:'Cl.91',n:300000,n1:250000},
+      {ref:'9C',lbl:'B\u00e9n\u00e9voles \u2014 Ressources',sign:'+',note:'Cl.92',n:1200000,n1:1050000},
+      {ref:'9D',lbl:'Prestations en nature \u2014 Ressources',sign:'+',note:'Cl.92',n:300000,n1:250000},
+      {ref:'9Z',lbl:'TOTAL CONTRIBUTIONS VOLONTAIRES (9A+9B=9C+9D)',sign:'',note:'',n:1500000,n1:1300000,sub:true}
     ];
   }
 
@@ -8305,6 +8626,129 @@ function renderFluxTresorerie() {
 /* ================================================================
    NOTES ANNEXES & LIASSE FISCALE
    ================================================================ */
+/* ================================================================
+   TABLEAU DES AMORTISSEMENTS DES IMMOBILISATIONS
+   ================================================================ */
+function renderAmortissements() {
+  var el   = document.getElementById('compta-panel-amort');
+  var isSys = activePlan === 'syscohada';
+
+  /* --- Immobilisations data --- */
+  var immob = isSys ? [
+    {cat:'Incorporelles',code:'202',label:'Frais de d\u00e9veloppement',mise:'01/01/2024',brut:3500000,duree:5, taux:20,cumul_n1:700000},
+    {cat:'Incorporelles',code:'205',label:'Brevets et licences',mise:'01/07/2024',brut:8500000,duree:5, taux:20,cumul_n1:850000},
+    {cat:'Corporelles',  code:'231',label:'B\u00e2timents',          mise:'01/01/2022',brut:15000000,duree:20,taux:5, cumul_n1:2250000},
+    {cat:'Corporelles',  code:'245',label:'Mat\u00e9riel et mobilier',mise:'01/04/2024',brut:2200000,duree:5, taux:20,cumul_n1:330000},
+    {cat:'Corporelles',  code:'248',label:'Mat\u00e9riel de transport',mise:'01/01/2023',brut:4500000,duree:4, taux:25,cumul_n1:2250000}
+  ] : [
+    {cat:'Incorporelles',code:'203',label:'Frais de d\u00e9veloppement et prospection',mise:'01/01/2023',brut:800000,duree:5,  taux:20,cumul_n1:160000},
+    {cat:'Incorporelles',code:'205',label:'Logiciels et droits similaires',          mise:'01/07/2023',brut:1200000,duree:3, taux:33,cumul_n1:200000},
+    {cat:'Corporelles',  code:'212',label:'B\u00e2timents',                           mise:'01/01/2019',brut:10000000,duree:20,taux:5, cumul_n1:1750000},
+    {cat:'Corporelles',  code:'215',label:'Mat\u00e9riel et mobilier',                mise:'01/03/2023',brut:2500000,duree:5, taux:20,cumul_n1:416666},
+    {cat:'Corporelles',  code:'216',label:'Mat\u00e9riel de transport',               mise:'01/01/2023',brut:3500000,duree:4, taux:25,cumul_n1:875000},
+    {cat:'Corporelles',  code:'217',label:'Mat\u00e9riel informatique et bureautique',mise:'01/09/2023',brut:1200000,duree:3, taux:33,cumul_n1:133333}
+  ];
+
+  var html = '<h2 style="font-size:1rem;color:var(--gold);margin-bottom:12px;border-bottom:2px solid var(--gold);padding-bottom:8px;">'
+    + 'TABLEAU DES AMORTISSEMENTS DES IMMOBILISATIONS &mdash; Exercice 2026</h2>';
+
+  html += '<div style="overflow-x:auto;"><table class="syscohada-table"><thead><tr>'
+    + '<th>Cat\u00e9g.</th><th>Code</th><th>Libell\u00e9</th><th>Date mise en service</th>'
+    + '<th class="num-col">Valeur brute (VBO)</th><th>Dur\u00e9e</th><th>Taux</th>'
+    + '<th class="num-col">Cumul amort. N-1</th>'
+    + '<th class="num-col" style="background:rgba(200,146,42,.08);">Dotation N</th>'
+    + '<th class="num-col" style="background:rgba(200,146,42,.08);">Cumul N</th>'
+    + '<th class="num-col">Valeur nette compt.</th>'
+    + '</tr></thead><tbody>';
+
+  var totBrut=0,totCumN1=0,totDot=0,totCumN=0,totVNC=0;
+  var currentCat = '';
+
+  immob.forEach(function(r) {
+    if (r.cat !== currentCat) {
+      currentCat = r.cat;
+      html += '<tr class="section-row"><td colspan="11">' + currentCat.toUpperCase() + '</td></tr>';
+    }
+    var dot  = Math.round(r.brut * r.taux / 100);
+    var cumN = r.cumul_n1 + dot;
+    var vnc  = r.brut - cumN;
+    totBrut+=r.brut; totCumN1+=r.cumul_n1; totDot+=dot; totCumN+=cumN; totVNC+=vnc;
+    html += '<tr>'
+      + '<td style="font-size:.7rem;color:var(--text-dim);">' + r.cat + '</td>'
+      + '<td style="color:var(--cyan);font-weight:600;">' + r.code + '</td>'
+      + '<td>' + r.label + '</td>'
+      + '<td style="color:var(--text-dim);font-size:.78rem;">' + r.mise + '</td>'
+      + '<td class="num-col">' + fmtN(r.brut) + '</td>'
+      + '<td style="text-align:center;">' + r.duree + ' ans</td>'
+      + '<td style="text-align:center;">' + r.taux + '%</td>'
+      + '<td class="num-col">' + fmtN(r.cumul_n1) + '</td>'
+      + '<td class="num-col" style="background:rgba(200,146,42,.06);font-weight:600;color:var(--gold);">' + fmtN(dot) + '</td>'
+      + '<td class="num-col" style="background:rgba(200,146,42,.06);font-weight:600;">' + fmtN(cumN) + '</td>'
+      + '<td class="num-col" style="color:' + (vnc > 0 ? 'var(--green)' : 'var(--red)') + ';font-weight:600;">' + fmtN(vnc) + '</td>'
+      + '</tr>';
+  });
+
+  html += '<tr class="total-row">'
+    + '<td colspan="4">TOTAUX</td>'
+    + '<td class="num-col">' + fmtN(totBrut)  + '</td>'
+    + '<td colspan="2"></td>'
+    + '<td class="num-col">' + fmtN(totCumN1) + '</td>'
+    + '<td class="num-col" style="background:rgba(200,146,42,.08);color:var(--gold);">' + fmtN(totDot)  + '</td>'
+    + '<td class="num-col" style="background:rgba(200,146,42,.08);">' + fmtN(totCumN) + '</td>'
+    + '<td class="num-col">' + fmtN(totVNC)  + '</td>'
+    + '</tr>';
+
+  html += '</tbody></table></div>';
+
+  /* Summary */
+  html += '<div class="compta-notes-section" style="margin-top:16px;">'
+    + '<h3>R\u00e9capitulatif des amortissements</h3>'
+    + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:10px;">'
+    + '<div class="compta-metric-card"><div class="compta-metric-label">Valeur brute totale</div><div class="compta-metric-val gold" style="font-size:1rem;">' + fmtXOF(totBrut) + '</div></div>'
+    + '<div class="compta-metric-card"><div class="compta-metric-label">Cumul amort. N-1</div><div class="compta-metric-val" style="font-size:1rem;color:var(--text-secondary);">' + fmtXOF(totCumN1) + '</div></div>'
+    + '<div class="compta-metric-card"><div class="compta-metric-label">Dotation exercice N</div><div class="compta-metric-val gold" style="font-size:1rem;">' + fmtXOF(totDot) + '</div></div>'
+    + '<div class="compta-metric-card"><div class="compta-metric-label">Cumul amort. N</div><div class="compta-metric-val" style="font-size:1rem;color:var(--red);">' + fmtXOF(totCumN) + '</div></div>'
+    + '<div class="compta-metric-card"><div class="compta-metric-label">Valeur nette comptable</div><div class="compta-metric-val green" style="font-size:1rem;">' + fmtXOF(totVNC) + '</div></div>'
+    + '<div class="compta-metric-card"><div class="compta-metric-label">Taux d\u2019amort. global</div><div class="compta-metric-val" style="font-size:1rem;">' + Math.round(totCumN / totBrut * 100) + ' %</div></div>'
+    + '</div>'
+    + '<div style="margin-top:12px;font-size:.78rem;color:var(--text-dim);">M\u00e9thode lin\u00e9aire &bull; Dur\u00e9es: B\u00e2timents 20 ans | Mat\u00e9riel 5 ans | Transport 4 ans | Informatique 3 ans | Logiciels 3-5 ans</div>'
+    + '</div>';
+
+  /* Export button */
+  html += '<div class="compta-actions">'
+    + '<button class="compta-action-btn secondary" onclick="exportAmortCsv()">&#8595; Exporter CSV</button>'
+    + '</div>';
+
+  el.innerHTML = html;
+}
+
+function exportAmortCsv() {
+  var isSys = activePlan === 'syscohada';
+  var csv = 'Code,Libell\u00e9,Date mise en service,Valeur brute,Dur\u00e9e,Taux,Cumul N-1,Dotation N,Cumul N,VNC\n';
+  var immob = isSys ? [
+    ['202','Frais de d\u00e9veloppement','01/01/2024',3500000,5,20,700000],
+    ['205','Brevets et licences','01/07/2024',8500000,5,20,850000],
+    ['231','B\u00e2timents','01/01/2022',15000000,20,5,2250000],
+    ['245','Mat\u00e9riel et mobilier','01/04/2024',2200000,5,20,330000],
+    ['248','Mat\u00e9riel de transport','01/01/2023',4500000,4,25,2250000]
+  ] : [
+    ['203','Frais de d\u00e9veloppement','01/01/2023',800000,5,20,160000],
+    ['205','Logiciels','01/07/2023',1200000,3,33,200000],
+    ['212','B\u00e2timents','01/01/2019',10000000,20,5,1750000],
+    ['215','Mat\u00e9riel et mobilier','01/03/2023',2500000,5,20,416666],
+    ['216','Mat\u00e9riel de transport','01/01/2023',3500000,4,25,875000],
+    ['217','Mat\u00e9riel informatique','01/09/2023',1200000,3,33,133333]
+  ];
+  immob.forEach(function(r) {
+    var dot = Math.round(r[3] * r[5] / 100);
+    csv += [r[0],'"'+r[1]+'"',r[2],r[3],r[4]+'ans',r[5]+'%',r[6],dot,r[6]+dot,r[3]-r[6]-dot].join(',') + '\n';
+  });
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a'); a.href=url; a.download='amortissements-2026.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
 function renderNotesLiasse() {
   var el = document.getElementById('compta-panel-notes');
   var accounts = getAllAccounts();
