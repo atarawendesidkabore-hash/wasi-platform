@@ -4500,15 +4500,15 @@ function renderDesktopCountryDetail(code) {
     ${bar('Humain', d.indices.humain)}
     ${bar('Integration', d.indices.integration)}
 
-    ${d.micro ? '<div class="comp-section-title" style="margin-top:14px;">Micro\u00e9conomie</div>' +
-      bar('\u00c9lasticit\u00e9-prix', d.micro.elasticite_prix) +
-      bar('Diversif. export', d.micro.concentration_export) +
-      bar('Productivit\u00e9', d.micro.productivite) +
-      bar('Rendements d\'\u00e9chelle', d.micro.rendements_echelle) +
-      bar('Substituabilit\u00e9', d.micro.substituabilite) +
-      bar('Comp\u00e9titivit\u00e9', d.micro.competitivite) +
-      bar('R\u00e9silience', d.micro.resilience) +
-      bar('Adaptabilit\u00e9', d.micro.adaptabilite) : ''}
+    ${d.indices.micro ? '<div class="comp-section-title" style="margin-top:14px;">Micro\u00e9conomie</div>' +
+      bar('\u00c9lasticit\u00e9-prix', d.indices.micro.elasticite_prix) +
+      bar('Diversif. export', d.indices.micro.concentration_export) +
+      bar('Productivit\u00e9', d.indices.micro.productivite) +
+      bar('Rendements d\'\u00e9chelle', d.indices.micro.rendements_echelle) +
+      bar('Substituabilit\u00e9', d.indices.micro.substituabilite) +
+      bar('Comp\u00e9titivit\u00e9', d.indices.micro.competitivite) +
+      bar('R\u00e9silience', d.indices.micro.resilience) +
+      bar('Adaptabilit\u00e9', d.indices.micro.adaptabilite) : ''}
 
     <div class="comp-section-title" style="margin-top:14px;">Ressources</div>
     <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
@@ -4660,16 +4660,16 @@ function showMobileCountryDetail(code) {
       ${bar('Integration regionale', d.indices.integration)}
     </div>
 
-    ${d.micro ? `<div class="country-detail-card">
+    ${d.indices.micro ? `<div class="country-detail-card">
       <div class="cd-section-title">Micro\u00e9conomie</div>
-      ${bar('\u00c9lasticit\u00e9-prix', d.micro.elasticite_prix)}
-      ${bar('Diversif. export', d.micro.concentration_export)}
-      ${bar('Productivit\u00e9', d.micro.productivite)}
-      ${bar('Rendements d\'\u00e9chelle', d.micro.rendements_echelle)}
-      ${bar('Substituabilit\u00e9', d.micro.substituabilite)}
-      ${bar('Comp\u00e9titivit\u00e9', d.micro.competitivite)}
-      ${bar('R\u00e9silience', d.micro.resilience)}
-      ${bar('Adaptabilit\u00e9', d.micro.adaptabilite)}
+      ${bar('\u00c9lasticit\u00e9-prix', d.indices.micro.elasticite_prix)}
+      ${bar('Diversif. export', d.indices.micro.concentration_export)}
+      ${bar('Productivit\u00e9', d.indices.micro.productivite)}
+      ${bar('Rendements d\'\u00e9chelle', d.indices.micro.rendements_echelle)}
+      ${bar('Substituabilit\u00e9', d.indices.micro.substituabilite)}
+      ${bar('Comp\u00e9titivit\u00e9', d.indices.micro.competitivite)}
+      ${bar('R\u00e9silience', d.indices.micro.resilience)}
+      ${bar('Adaptabilit\u00e9', d.indices.micro.adaptabilite)}
     </div>` : ''}
 
     <div class="country-detail-card">
