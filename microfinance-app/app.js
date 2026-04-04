@@ -16,6 +16,16 @@ const AI_EXAMPLES = [
   "Quel dossier de crédit demande un suivi prioritaire aujourd'hui ?",
   "Que dois-je vérifier avant d'accorder un nouveau crédit en Côte d'Ivoire ?"
 ];
+const WASI_MARKET_TICKER = [
+  { symbol: "SAPH", price: "3 800 XOF", change: -1.2 },
+  { symbol: "PALC", price: "4 150 XOF", change: 0.3 },
+  { symbol: "SIFC", price: "4 700 XOF", change: 1.8 },
+  { symbol: "ONTBF", price: "7 100 XOF", change: -0.5 },
+  { symbol: "BOAB", price: "5 900 XOF", change: 0.9 },
+  { symbol: "CBIBF", price: "8 450 XOF", change: 2.4 },
+  { symbol: "TTLC", price: "2 150 XOF", change: -0.3 },
+  { symbol: "SLBC", price: "12 800 XOF", change: 0.7 }
+];
 
 const seedState = {
   metadata: {
@@ -86,6 +96,8 @@ const aiHistory = [];
 let pendingManualLoanApproval = null;
 
 const els = {
+  marketTicker: document.getElementById("wasi-market-ticker-track"),
+  marketTickerSecondary: document.getElementById("wasi-market-ticker-track-secondary"),
   viewTitle: document.getElementById("view-title"),
   viewDescription: document.getElementById("view-description"),
   institutionCard: document.getElementById("institution-card"),
@@ -135,6 +147,7 @@ const els = {
 init();
 
 function init() {
+  renderMarketTicker();
   bindNavigation();
   bindForms();
   bindActions();
@@ -144,6 +157,19 @@ function init() {
   renderAiExamples();
   loadAiSourceDetails();
   startSourceStatusPolling();
+}
+
+function renderMarketTicker() {
+  const html = WASI_MARKET_TICKER.map(
+    (item) =>
+      `<span class="wasi-market-ticker-item"><span class="sym">${item.symbol}</span><span class="val">${item.price}</span><span class="${item.change >= 0 ? "pos" : "neg"}">${item.change >= 0 ? "+" : ""}${item.change.toFixed(1)}%</span></span>`,
+  ).join("");
+  if (els.marketTicker) {
+    els.marketTicker.innerHTML = `${html}${html}`;
+  }
+  if (els.marketTickerSecondary) {
+    els.marketTickerSecondary.innerHTML = `${html}${html}`;
+  }
 }
 
 function loadState() {

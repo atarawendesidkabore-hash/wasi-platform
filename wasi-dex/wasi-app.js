@@ -18,6 +18,16 @@ const TIMELINE = [
   { title: "Ecosystem Hub", copy: "Passerelles entre les apps, modules et flux structurants du groupe WASI." },
   { title: "CIREX Microfinance", copy: "Portefeuille crédit, conformité, relation client et investissement." }
 ];
+const WASI_MARKET_TICKER = [
+  { symbol: "SAPH", price: "3 800 XOF", change: -1.2 },
+  { symbol: "PALC", price: "4 150 XOF", change: 0.3 },
+  { symbol: "SIFC", price: "4 700 XOF", change: 1.8 },
+  { symbol: "ONTBF", price: "7 100 XOF", change: -0.5 },
+  { symbol: "BOAB", price: "5 900 XOF", change: 0.9 },
+  { symbol: "CBIBF", price: "8 450 XOF", change: 2.4 },
+  { symbol: "TTLC", price: "2 150 XOF", change: -0.3 },
+  { symbol: "SLBC", price: "12 800 XOF", change: 0.7 }
+];
 
 const els = {
   installBtn: document.getElementById("install-btn"),
@@ -40,11 +50,27 @@ init();
 
 async function init() {
   bind();
+  renderMarketTicker();
   renderTimeline();
   renderProcess();
   updateNetworkState();
   await loadDexSnapshot();
   await registerServiceWorker();
+}
+
+function renderMarketTicker() {
+  const primary = document.getElementById("wasi-market-ticker-track");
+  const secondary = document.getElementById("wasi-market-ticker-track-secondary");
+  const html = WASI_MARKET_TICKER.map(
+    (item) =>
+      `<span class="wasi-market-ticker-item"><span class="sym">${item.symbol}</span><span class="val">${item.price}</span><span class="${item.change >= 0 ? "pos" : "neg"}">${item.change >= 0 ? "+" : ""}${item.change.toFixed(1)}%</span></span>`,
+  ).join("");
+  if (primary) {
+    primary.innerHTML = `${html}${html}`;
+  }
+  if (secondary) {
+    secondary.innerHTML = `${html}${html}`;
+  }
 }
 
 function bind() {

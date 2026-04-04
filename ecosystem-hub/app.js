@@ -89,6 +89,16 @@ const subfamilies = [
     ]
   }
 ];
+const WASI_MARKET_TICKER = [
+  { symbol: "SAPH", price: "3 800 XOF", change: -1.2 },
+  { symbol: "PALC", price: "4 150 XOF", change: 0.3 },
+  { symbol: "SIFC", price: "4 700 XOF", change: 1.8 },
+  { symbol: "ONTBF", price: "7 100 XOF", change: -0.5 },
+  { symbol: "BOAB", price: "5 900 XOF", change: 0.9 },
+  { symbol: "CBIBF", price: "8 450 XOF", change: 2.4 },
+  { symbol: "TTLC", price: "2 150 XOF", change: -0.3 },
+  { symbol: "SLBC", price: "12 800 XOF", change: 0.7 }
+];
 
 const allCountries = subfamilies.flatMap((sf) => sf.countries);
 const totalCountries = allCountries.length;
@@ -109,6 +119,8 @@ const commodityFrequency = Object.entries(
   }, {})
 ).sort((a, b) => b[1] - a[1]);
 
+renderMarketTicker();
+
 const stats = [
   { label: "Family code", value: "AFEX", note: "Continental umbrella for the export-index family", meta: "Core layer", tone: "accent" },
   { label: "Countries", value: String(totalCountries), note: "54 sovereign African states", meta: "Full coverage", tone: "green" },
@@ -128,6 +140,21 @@ document.getElementById("stats-grid").innerHTML = stats.map((item) => `
     <div class="stat-meta">${item.meta}</div>
   </article>
 `).join("");
+
+function renderMarketTicker() {
+  const primary = document.getElementById("wasi-market-ticker-track");
+  const secondary = document.getElementById("wasi-market-ticker-track-secondary");
+  const html = WASI_MARKET_TICKER.map(
+    (item) =>
+      `<span class="wasi-market-ticker-item"><span class="sym">${item.symbol}</span><span class="val">${item.price}</span><span class="${item.change >= 0 ? "pos" : "neg"}">${item.change >= 0 ? "+" : ""}${item.change.toFixed(1)}%</span></span>`,
+  ).join("");
+  if (primary) {
+    primary.innerHTML = `${html}${html}`;
+  }
+  if (secondary) {
+    secondary.innerHTML = `${html}${html}`;
+  }
+}
 
 document.getElementById("family-pulse").innerHTML = `
   <div class="section-head">

@@ -133,6 +133,62 @@ input {
   z-index: 20;
 }
 
+.wasi-market-ticker {
+  overflow: hidden;
+  padding: 0;
+}
+
+.wasi-market-ticker-lane {
+  overflow: hidden;
+  height: 34px;
+}
+
+.wasi-market-ticker-lane-secondary {
+  border-top: 1px solid rgba(145, 168, 203, 0.1);
+}
+
+.wasi-market-ticker-lane-secondary .wasi-market-ticker-track {
+  animation-direction: reverse;
+  animation-duration: 50s;
+}
+
+.wasi-market-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: max-content;
+  padding: 0 18px;
+  animation: wasiMarketTickerMove 42s linear infinite;
+}
+
+.wasi-market-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted-strong);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.wasi-market-ticker-item .sym {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.wasi-market-ticker-item .pos {
+  color: var(--good);
+}
+
+.wasi-market-ticker-item .neg {
+  color: var(--danger);
+}
+
+@keyframes wasiMarketTickerMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .jump-nav,
 .footer-note {
   border-radius: var(--radius-xl);

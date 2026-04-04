@@ -340,42 +340,59 @@ select {
   font-weight: 700;
 }
 
-.ticker-bar {
+.wasi-market-ticker {
   overflow: hidden;
   border-bottom: 1px solid rgba(143, 169, 196, 0.1);
   background: rgba(8, 18, 31, 0.92);
 }
 
-.ticker-track {
-  display: flex;
-  gap: 28px;
-  min-width: max-content;
-  padding: 12px 22px;
-  animation: tickerMove 28s linear infinite;
+.wasi-market-ticker-lane {
+  overflow: hidden;
+  height: 34px;
 }
 
-.ticker-item {
+.wasi-market-ticker-lane-secondary {
+  border-top: 1px solid rgba(143, 169, 196, 0.1);
+}
+
+.wasi-market-ticker-lane-secondary .wasi-market-ticker-track {
+  animation-direction: reverse;
+  animation-duration: 50s;
+}
+
+.wasi-market-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: max-content;
+  padding: 0 22px;
+  animation: wasiMarketTickerMove 42s linear infinite;
+}
+
+.wasi-market-ticker-item {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 0.78rem;
+  white-space: nowrap;
 }
 
-.ticker-item strong {
-  color: var(--text-primary);
+.wasi-market-ticker-item .sym {
+  color: var(--gold-light);
+  font-weight: 700;
 }
 
-.ticker-item .pos {
+.wasi-market-ticker-item .pos {
   color: var(--green);
 }
 
-.ticker-item .neg {
+.wasi-market-ticker-item .neg {
   color: var(--red);
 }
 
-@keyframes tickerMove {
+@keyframes wasiMarketTickerMove {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }

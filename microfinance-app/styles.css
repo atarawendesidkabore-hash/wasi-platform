@@ -193,6 +193,66 @@ textarea {
   line-height: 1.05;
 }
 
+.wasi-market-ticker {
+  margin: -6px 0 18px;
+  overflow: hidden;
+  border: 1px solid rgba(154, 182, 178, 0.12);
+  border-radius: 18px;
+  background: rgba(7, 17, 23, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.wasi-market-ticker-lane {
+  overflow: hidden;
+  height: 34px;
+}
+
+.wasi-market-ticker-lane-secondary {
+  border-top: 1px solid rgba(154, 182, 178, 0.1);
+}
+
+.wasi-market-ticker-lane-secondary .wasi-market-ticker-track {
+  animation-direction: reverse;
+  animation-duration: 50s;
+}
+
+.wasi-market-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: max-content;
+  padding: 0 18px;
+  animation: wasiMarketTickerMove 42s linear infinite;
+}
+
+.wasi-market-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted-strong);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.wasi-market-ticker-item .sym {
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.wasi-market-ticker-item .pos {
+  color: var(--good);
+}
+
+.wasi-market-ticker-item .neg {
+  color: var(--bad);
+}
+
+@keyframes wasiMarketTickerMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .panel h3,
 .record-card h3 {
   font-size: 1.15rem;

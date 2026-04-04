@@ -7,6 +7,16 @@ const QUESTIONS = [
   "Quel fonds WASI est le plus simple pour commencer ?",
   "Quelle allocation convient à mon profil ?"
 ];
+const WASI_MARKET_TICKER = [
+  { symbol: "SAPH", price: "3 800 XOF", change: -1.2 },
+  { symbol: "PALC", price: "4 150 XOF", change: 0.3 },
+  { symbol: "SIFC", price: "4 700 XOF", change: 1.8 },
+  { symbol: "ONTBF", price: "7 100 XOF", change: -0.5 },
+  { symbol: "BOAB", price: "5 900 XOF", change: 0.9 },
+  { symbol: "CBIBF", price: "8 450 XOF", change: 2.4 },
+  { symbol: "TTLC", price: "2 150 XOF", change: -0.3 },
+  { symbol: "SLBC", price: "12 800 XOF", change: 0.7 }
+];
 const DEMO = {
   clients: [
     { id: "CL-1001", name: "Aminata Koné", sector: "Commerce d'anacarde", region: "Bouaké", phone: "+225 0701010101" },
@@ -46,6 +56,8 @@ const els = {
   toastMessage: document.getElementById("toast-message"),
   toastClose: document.getElementById("toast-close"),
   app: document.getElementById("app"),
+  marketTicker: document.getElementById("wasi-market-ticker-track"),
+  marketTickerSecondary: document.getElementById("wasi-market-ticker-track-secondary"),
   switchCustomerBtn: document.getElementById("switch-customer-btn"),
   heroTier: document.getElementById("hero-tier"),
   heroName: document.getElementById("hero-name"),
@@ -86,9 +98,23 @@ let toastTimer = null;
 init();
 
 function init() {
+  renderMarketTicker();
   bind();
   renderDemoButtons();
   if (customer) activate(customer, false);
+}
+
+function renderMarketTicker() {
+  const html = WASI_MARKET_TICKER.map(
+    (item) =>
+      `<span class="wasi-market-ticker-item"><span class="sym">${item.symbol}</span><span class="val">${item.price}</span><span class="${item.change >= 0 ? "pos" : "neg"}">${item.change >= 0 ? "+" : ""}${item.change.toFixed(1)}%</span></span>`,
+  ).join("");
+  if (els.marketTicker) {
+    els.marketTicker.innerHTML = `${html}${html}`;
+  }
+  if (els.marketTickerSecondary) {
+    els.marketTickerSecondary.innerHTML = `${html}${html}`;
+  }
 }
 
 function bind() {

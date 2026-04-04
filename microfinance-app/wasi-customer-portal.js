@@ -31,6 +31,16 @@ const QUESTIONS = [
   "Quel fonds WASI est le plus simple pour commencer ?",
   "Puis-je acheter l'action privée CIREX avec mon accès actuel ?"
 ];
+const WASI_MARKET_TICKER = [
+  { symbol: "SAPH", price: "3 800 XOF", change: -1.2 },
+  { symbol: "PALC", price: "4 150 XOF", change: 0.3 },
+  { symbol: "SIFC", price: "4 700 XOF", change: 1.8 },
+  { symbol: "ONTBF", price: "7 100 XOF", change: -0.5 },
+  { symbol: "BOAB", price: "5 900 XOF", change: 0.9 },
+  { symbol: "CBIBF", price: "8 450 XOF", change: 2.4 },
+  { symbol: "TTLC", price: "2 150 XOF", change: -0.3 },
+  { symbol: "SLBC", price: "12 800 XOF", change: 0.7 }
+];
 
 const els = {
   gate: document.getElementById("access-gate"),
@@ -44,7 +54,8 @@ const els = {
   notifClose: document.getElementById("notif-close"),
   navButtons: [...document.querySelectorAll("#main-nav button")],
   customerChip: document.getElementById("customer-chip"),
-  ticker: document.getElementById("ticker-track"),
+  marketTicker: document.getElementById("wasi-market-ticker-track"),
+  marketTickerSecondary: document.getElementById("wasi-market-ticker-track-secondary"),
   hero: document.getElementById("hero-strip"),
   clientProfile: document.getElementById("client-profile-card"),
   eligibilityList: document.getElementById("eligibility-list"),
@@ -206,11 +217,16 @@ function renderNav() {
 }
 
 function renderTicker() {
-  const html = ASSETS.slice(0, 6).map((asset, index) => {
-    const move = index % 2 === 0 ? `+${(index + 1.3).toFixed(1)}%` : `-${(index + 0.7).toFixed(1)}%`;
-    return `<div class="ticker-item"><strong>${escape(asset.name)}</strong><span>${money(asset.price)}</span><span class="${move.startsWith("+") ? "pos" : "neg"}">${move}</span></div>`;
-  }).join("");
-  els.ticker.innerHTML = `${html}${html}`;
+  const html = WASI_MARKET_TICKER.map(
+    (item) =>
+      `<span class="wasi-market-ticker-item"><span class="sym">${escape(item.symbol)}</span><span class="val">${escape(item.price)}</span><span class="${item.change >= 0 ? "pos" : "neg"}">${item.change >= 0 ? "+" : ""}${item.change.toFixed(1)}%</span></span>`,
+  ).join("");
+  if (els.marketTicker) {
+    els.marketTicker.innerHTML = `${html}${html}`;
+  }
+  if (els.marketTickerSecondary) {
+    els.marketTickerSecondary.innerHTML = `${html}${html}`;
+  }
 }
 
 function renderHero() {

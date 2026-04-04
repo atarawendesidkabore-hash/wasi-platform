@@ -95,6 +95,66 @@ button {
   backdrop-filter: blur(10px);
 }
 
+.wasi-market-ticker {
+  margin: -8px 0 18px;
+  overflow: hidden;
+  border: 1px solid rgba(143, 169, 196, 0.12);
+  border-radius: 18px;
+  background: rgba(8, 18, 31, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.wasi-market-ticker-lane {
+  overflow: hidden;
+  height: 34px;
+}
+
+.wasi-market-ticker-lane-secondary {
+  border-top: 1px solid rgba(143, 169, 196, 0.1);
+}
+
+.wasi-market-ticker-lane-secondary .wasi-market-ticker-track {
+  animation-direction: reverse;
+  animation-duration: 50s;
+}
+
+.wasi-market-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: max-content;
+  padding: 0 18px;
+  animation: wasiMarketTickerMove 42s linear infinite;
+}
+
+.wasi-market-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.wasi-market-ticker-item .sym {
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.wasi-market-ticker-item .pos {
+  color: var(--green);
+}
+
+.wasi-market-ticker-item .neg {
+  color: #ff6363;
+}
+
+@keyframes wasiMarketTickerMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .brand-lockup {
   display: flex;
   align-items: center;
