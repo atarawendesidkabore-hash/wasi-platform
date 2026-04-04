@@ -188,7 +188,7 @@
     const firstBotMessage = document.querySelector("#chat-messages .chat-msg.bot");
     if (firstBotMessage) {
       firstBotMessage.textContent =
-        "Bienvenue dans WASI Intelligence IA. La plateforme croise maintenant les signaux africains de WASI avec quatre codes francais embarques et des passerelles directes vers WASI DEX et CIREX Microfinance.";
+        "Bienvenue dans WASI Intelligence IA. La plateforme croise maintenant les signaux africains de WASI avec quatre codes francais embarques, des passerelles directes vers WASI DEX et CIREX Microfinance, et une synchronisation visible avec WASI CLI.";
     }
 
     const suggestionTexts = [
@@ -211,7 +211,7 @@
 
   function normalizeAppRoute(route) {
     if (!route) {
-      return "#";
+      return "";
     }
     if (/^https?:\/\//i.test(route)) {
       return route;
@@ -265,6 +265,13 @@
         status: "active",
         summary: "Navigation groupe entre intelligence, marche, microfinance et apps.",
       },
+      {
+        key: "cli",
+        title: "WASI CLI",
+        route: "",
+        status: "synced",
+        summary: "Terminal Bloomberg-style synchronise avec Excel, le web, les 4 codes francais et les connecteurs WASI.",
+      },
     ];
     const sourceApps = Array.isArray(state.source?.apps) ? state.source.apps : [];
     const sourceAppsByKey = new Map(sourceApps.map((app) => [app.key, app]));
@@ -294,8 +301,13 @@
         <div class="wasi-ai-connector-grid">
           ${modules
             .map(
-              (module) => `
-                <a class="wasi-ai-connector-card" href="${escapeHtml(module.route)}">
+              (module) => {
+                const route = module.route ? escapeHtml(module.route) : "";
+                const tag = route ? "a" : "div";
+                const href = route ? ` href="${route}"` : "";
+                const staticClass = route ? "" : " is-static";
+                return `
+                <${tag} class="wasi-ai-connector-card${staticClass}"${href}>
                   <div class="wasi-ai-connector-top">
                     <span class="wasi-ai-connector-name">${escapeHtml(module.title)}</span>
                     <span class="wasi-ai-connector-chip ${escapeHtml(module.status || "active")}">${escapeHtml(
@@ -303,8 +315,9 @@
                     )}</span>
                   </div>
                   <div class="wasi-ai-connector-copy">${escapeHtml(module.summary || "")}</div>
-                </a>
-              `,
+                </${tag}>
+              `;
+              },
             )
             .join("")}
         </div>
@@ -338,6 +351,7 @@
       <div class="wasi-ai-comp-row"><span>Signal moyen IA</span><strong>${averageAdjustment >= 0 ? "+" : ""}${averageAdjustment.toFixed(1)}</strong></div>
       <div class="wasi-ai-comp-row"><span>Pays enrichis</span><strong>${coveredCountries} / ${window.COUNTRIES.length}</strong></div>
       <div class="wasi-ai-comp-row"><span>Codes francais embarques</span><strong>${legalCodesReady} / ${legalCodesCount}</strong></div>
+      <div class="wasi-ai-comp-row"><span>Surfaces synchronisees</span><strong>Excel · Web · CLI</strong></div>
       <div class="wasi-ai-comp-row"><span>État des sources</span><strong>${escapeHtml(formatRefreshAge(state.source))}</strong></div>
       ${buildConnectorGridHtml()}
     `;

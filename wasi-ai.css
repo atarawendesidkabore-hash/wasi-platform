@@ -257,6 +257,15 @@
   transform: translateY(-1px);
 }
 
+.wasi-ai-connector-card.is-static {
+  cursor: default;
+}
+
+.wasi-ai-connector-card.is-static:hover {
+  border-color: var(--border);
+  transform: none;
+}
+
 .wasi-ai-connector-top {
   display: flex;
   justify-content: space-between;
