@@ -188,7 +188,7 @@
     const firstBotMessage = document.querySelector("#chat-messages .chat-msg.bot");
     if (firstBotMessage) {
       firstBotMessage.textContent =
-        "Bienvenue dans WASI Intelligence IA. La plateforme peut maintenant croiser les signaux réglementaires africains de WASI avec quatre bases juridiques embarquees: code de commerce, code civil, code penal et code du travail.";
+        "Bienvenue dans WASI Intelligence IA. La plateforme croise maintenant les signaux africains de WASI avec quatre codes francais embarques et des passerelles directes vers WASI DEX et CIREX Microfinance.";
     }
 
     const suggestionTexts = [
@@ -198,7 +198,7 @@
       "Analyse du corridor Abidjan-Lagos",
       "Article 111-1 du Code penal",
       "Article L1153-1 du Code du travail",
-      "Burkina Faso : ministère, BCEAO et UEMOA",
+      "Connexion WASI DEX et CIREX Microfinance",
       "Comparer Côte d'Ivoire et Ghana sur le cadre microfinance",
     ];
 
@@ -207,6 +207,109 @@
         button.textContent = suggestionTexts[index];
       }
     });
+  }
+
+  function normalizeAppRoute(route) {
+    if (!route) {
+      return "#";
+    }
+    if (/^https?:\/\//i.test(route)) {
+      return route;
+    }
+    if (route === "/") {
+      return "./index.html";
+    }
+    if (route.startsWith("./") || route.startsWith("../")) {
+      return route;
+    }
+    if (route.startsWith("/")) {
+      return `.${route}`;
+    }
+    return `./${route}`;
+  }
+
+  function getConnectorModules() {
+    const fallbackModules = [
+      {
+        key: "core",
+        title: "Noyau WASI",
+        route: "/wasi-core-console.html",
+        status: "active",
+        summary: "Console coeur, audit et cartographie temps reel des modules WASI.",
+      },
+      {
+        key: "dex",
+        title: "WASI DEX",
+        route: "/wasi-dex/wasi-app.html",
+        status: "active",
+        summary: "54 places AFEX, references export et modules de marche relies a l'IA.",
+      },
+      {
+        key: "microfinance",
+        title: "CIREX Microfinance",
+        route: "/microfinance-app/index.html",
+        status: "active",
+        summary: "Credit, conformite terrain et pilotage microfinance relies a WASI.",
+      },
+      {
+        key: "private-market",
+        title: "WASI Private Market",
+        route: "/microfinance-app/wasi-customer-portal.html",
+        status: "active",
+        summary: "Portail client, souscription privee et passerelles investissement.",
+      },
+      {
+        key: "ecosystem",
+        title: "WASI Ecosystem Hub",
+        route: "/ecosystem-hub/index.html",
+        status: "active",
+        summary: "Navigation groupe entre intelligence, marche, microfinance et apps.",
+      },
+    ];
+    const sourceApps = Array.isArray(state.source?.apps) ? state.source.apps : [];
+    const sourceAppsByKey = new Map(sourceApps.map((app) => [app.key, app]));
+
+    return fallbackModules.map((fallback) => {
+      const sourceApp = sourceAppsByKey.get(fallback.key) || {};
+      return {
+        ...fallback,
+        ...sourceApp,
+        route: normalizeAppRoute(sourceApp.route || fallback.route),
+      };
+    });
+  }
+
+  function formatModuleStatus(status) {
+    if (!status) {
+      return "actif";
+    }
+    return String(status).replace(/-/g, " ");
+  }
+
+  function buildConnectorGridHtml() {
+    const modules = getConnectorModules();
+    return `
+      <div class="wasi-ai-connector-section">
+        <div class="wasi-ai-connector-head">Connexions WASI</div>
+        <div class="wasi-ai-connector-grid">
+          ${modules
+            .map(
+              (module) => `
+                <a class="wasi-ai-connector-card" href="${escapeHtml(module.route)}">
+                  <div class="wasi-ai-connector-top">
+                    <span class="wasi-ai-connector-name">${escapeHtml(module.title)}</span>
+                    <span class="wasi-ai-connector-chip ${escapeHtml(module.status || "active")}">${escapeHtml(
+                      formatModuleStatus(module.status),
+                    )}</span>
+                  </div>
+                  <div class="wasi-ai-connector-copy">${escapeHtml(module.summary || "")}</div>
+                </a>
+              `,
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
   }
 
   function buildCompositeCard() {
@@ -226,12 +329,17 @@
     const averageAdjustment =
       window.COUNTRIES.reduce((sum, country) => sum + (country.aiAdjustment || 0), 0) / Math.max(window.COUNTRIES.length, 1);
     const coveredCountries = window.COUNTRIES.filter((country) => state.signals.has(country.code)).length;
+    const legalCodes = Array.isArray(state.source?.legalCodes) ? state.source.legalCodes : [];
+    const legalCodesReady = legalCodes.length ? legalCodes.filter((code) => code?.sourceReady).length : 4;
+    const legalCodesCount = legalCodes.length || 4;
 
     card.innerHTML = `
       <div class="wasi-ai-card-title">WASI AI Layer</div>
       <div class="wasi-ai-comp-row"><span>Signal moyen IA</span><strong>${averageAdjustment >= 0 ? "+" : ""}${averageAdjustment.toFixed(1)}</strong></div>
       <div class="wasi-ai-comp-row"><span>Pays enrichis</span><strong>${coveredCountries} / ${window.COUNTRIES.length}</strong></div>
+      <div class="wasi-ai-comp-row"><span>Codes francais embarques</span><strong>${legalCodesReady} / ${legalCodesCount}</strong></div>
       <div class="wasi-ai-comp-row"><span>État des sources</span><strong>${escapeHtml(formatRefreshAge(state.source))}</strong></div>
+      ${buildConnectorGridHtml()}
     `;
 
     const scoreLabel = host.querySelector(".comp-score-big .label");
