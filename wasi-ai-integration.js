@@ -23,6 +23,16 @@
 
   const AI_BASE_CANDIDATES = getAiBaseCandidates();
 
+  function isHostedShell() {
+    return window.location.protocol === "file:" || /github\.io$/i.test(window.location.hostname);
+  }
+
+  function getOfflineStatusLabel(action = "Connexion") {
+    return isHostedShell()
+      ? `${action} locale requise: demarrez WASI AI sur localhost:3000`
+      : "Serveur WASI AI hors ligne";
+  }
+
   function escapeHtml(value) {
     return String(value || "")
       .replace(/&/g, "&amp;")
@@ -343,8 +353,10 @@
       window.COUNTRIES.reduce((sum, country) => sum + (country.aiAdjustment || 0), 0) / Math.max(window.COUNTRIES.length, 1);
     const coveredCountries = window.COUNTRIES.filter((country) => state.signals.has(country.code)).length;
     const legalCodes = Array.isArray(state.source?.legalCodes) ? state.source.legalCodes : [];
-    const legalCodesReady = legalCodes.length ? legalCodes.filter((code) => code?.sourceReady).length : 4;
+    const legalCodesReady = legalCodes.length ? legalCodes.filter((code) => code?.sourceReady).length : 0;
     const legalCodesCount = legalCodes.length || 4;
+    const localBridgeLabel = state.source?.aiEnabled ? "active" : isHostedShell() ? "localhost:3000 requis" : "hors ligne";
+    const sourceAgeLabel = state.source ? formatRefreshAge(state.source) : "moteur local requis";
 
     card.innerHTML = `
       <div class="wasi-ai-card-title">WASI AI Layer</div>
@@ -352,7 +364,8 @@
       <div class="wasi-ai-comp-row"><span>Pays enrichis</span><strong>${coveredCountries} / ${window.COUNTRIES.length}</strong></div>
       <div class="wasi-ai-comp-row"><span>Codes francais embarques</span><strong>${legalCodesReady} / ${legalCodesCount}</strong></div>
       <div class="wasi-ai-comp-row"><span>Surfaces synchronisees</span><strong>Excel · Web · CLI</strong></div>
-      <div class="wasi-ai-comp-row"><span>État des sources</span><strong>${escapeHtml(formatRefreshAge(state.source))}</strong></div>
+      <div class="wasi-ai-comp-row"><span>Pont local IA</span><strong>${escapeHtml(localBridgeLabel)}</strong></div>
+      <div class="wasi-ai-comp-row"><span>État des sources</span><strong>${escapeHtml(sourceAgeLabel)}</strong></div>
       ${buildConnectorGridHtml()}
     `;
 
@@ -562,7 +575,9 @@
       updateStatus(buildSourceStatusLabel(data), buildSourceStatusTone(data));
       buildCompositeCard();
     } catch (error) {
-      updateStatus("Serveur WASI AI hors ligne", "error");
+      state.source = state.source || { aiEnabled: false, legalCodes: [], apps: [] };
+      updateStatus(getOfflineStatusLabel("Connexion"), "error");
+      buildCompositeCard();
     }
   }
 
@@ -575,7 +590,8 @@
       updateStatus(buildSourceStatusLabel(data), buildSourceStatusTone(data));
       await loadCountrySignals();
     } catch (error) {
-      updateStatus("Échec de l'actualisation IA", "error");
+      updateStatus(getOfflineStatusLabel("Actualisation"), "error");
+      buildCompositeCard();
     }
   }
 
@@ -598,7 +614,8 @@
       applySignalsToCountries();
       updateStatus(buildSourceStatusLabel(state.source), buildSourceStatusTone(state.source));
     } catch (error) {
-      updateStatus("Scores IA indisponibles", "error");
+      updateStatus(getOfflineStatusLabel("Scores"), "error");
+      buildCompositeCard();
     } finally {
       state.loadingSignals = false;
     }
