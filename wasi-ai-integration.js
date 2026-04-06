@@ -13,13 +13,24 @@
 
   // ── API key management ────────────────────────────────────────────────────
   function getApiKey() {
-    const injected = window.ANTHROPIC_API_KEY || "";
-    if (injected) return injected;
-    let stored = "";
-    try { stored = localStorage.getItem("wasi_anthropic_key") || ""; } catch (_) {}
-    if (stored) return stored;
+    // 1. Injected by VBA via window global
+    if (window.ANTHROPIC_API_KEY) return window.ANTHROPIC_API_KEY;
+    // 2. Passed via URL param ?wasi_key= (set by xlsm LocalSiteUri)
+    try {
+      const urlKey = new URLSearchParams(window.location.search).get("wasi_key") || "";
+      if (urlKey) {
+        localStorage.setItem("wasi_anthropic_key", urlKey);
+        return urlKey;
+      }
+    } catch (_) {}
+    // 3. Previously stored in localStorage
+    try {
+      const stored = localStorage.getItem("wasi_anthropic_key") || "";
+      if (stored) return stored;
+    } catch (_) {}
+    // 4. Prompt user once
     const entered = window.prompt(
-      "WASI AI — Clé API Anthropic requise\n\nEntrez votre clé sk-ant-... :\n(Elle sera stockée localement dans ce navigateur)"
+      "WASI AI — Clé API Anthropic requise\n\nEntrez votre clé sk-ant-... :\n(Elle sera stockée localement)"
     ) || "";
     if (entered) {
       try { localStorage.setItem("wasi_anthropic_key", entered); } catch (_) {}
