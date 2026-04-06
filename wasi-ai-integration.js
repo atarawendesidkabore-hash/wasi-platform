@@ -1,5 +1,7 @@
 (function () {
-  const LOCAL_AI_PORT = 3200;
+  const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
+  const CLAUDE_MODEL   = "claude-sonnet-4-6";
+
   const state = {
     booted: false,
     source: null,
@@ -9,28 +11,96 @@
     patched: false,
   };
 
-  function getAiBaseCandidates() {
-    if (window.WASI_AI_API_BASE) {
-      return [window.WASI_AI_API_BASE];
+  // ── API key management ────────────────────────────────────────────────────
+  function getApiKey() {
+    const injected = window.ANTHROPIC_API_KEY || "";
+    if (injected) return injected;
+    let stored = "";
+    try { stored = localStorage.getItem("wasi_anthropic_key") || ""; } catch (_) {}
+    if (stored) return stored;
+    const entered = window.prompt(
+      "WASI AI — Clé API Anthropic requise\n\nEntrez votre clé sk-ant-... :\n(Elle sera stockée localement dans ce navigateur)"
+    ) || "";
+    if (entered) {
+      try { localStorage.setItem("wasi_anthropic_key", entered); } catch (_) {}
     }
-
-    if (window.location.protocol === "file:" || /github\.io$/i.test(window.location.hostname)) {
-      return [`http://localhost:3000`, `http://localhost:${LOCAL_AI_PORT}`];
-    }
-
-    return [window.location.origin, `http://localhost:3000`, `http://localhost:${LOCAL_AI_PORT}`];
+    return entered;
   }
 
-  const AI_BASE_CANDIDATES = getAiBaseCandidates();
+  // ── Direct Claude API call ────────────────────────────────────────────────
+  async function callClaude(userMessage, history, countryProfile) {
+    const apiKey = getApiKey();
+    if (!apiKey) throw new Error("Clé API Anthropic manquante.");
+
+    const systemPrompt = [
+      "Tu es WASI AI, la couche d'intelligence documentaire de la plateforme WASI.",
+      "Tu analyses 54 pays africains avec des signaux économiques, financiers, réglementaires et géopolitiques.",
+      "Tu maîtrises OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO, les marchés financiers africains et les codes français embarqués.",
+      "Réponds toujours en français dans un style net, stratégique et directement exploitable.",
+      "Privilégie des paragraphes courts. Pas de titres markdown, pas de tableaux.",
+      "Ne dis jamais que ton analyse remplace un avis juridique ou réglementaire formel.",
+      countryProfile
+        ? `Pays focal: ${countryProfile.name} (score ${countryProfile.currentScore}, région ${countryProfile.region}).`
+        : "",
+    ].filter(Boolean).join(" ");
+
+    const messages = [
+      ...history.slice(-8)
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .map((m) => ({ role: m.role, content: String(m.content) })),
+      { role: "user", content: userMessage },
+    ];
+
+    const resp = await fetch(CLAUDE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens: 950, system: systemPrompt, messages }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      if (resp.status === 401) {
+        try { localStorage.removeItem("wasi_anthropic_key"); } catch (_) {}
+      }
+      throw new Error(err.error?.message || `Erreur API Anthropic ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const reply = (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n").trim()
+      || "Je n'ai pas pu produire une réponse exploitable.";
+    return { reply, citations: [], countrySignal: null, source: { aiEnabled: true } };
+  }
+
+  // ── Local country signal computation (no server needed) ──────────────────
+  function computeLocalSignal(country) {
+    const base = typeof country.baseScore === "number" ? country.baseScore : country.score;
+    const adj  = country.coup ? -4 : base >= 70 ? 2 : base >= 50 ? 1 : 0;
+    const coverageLabel = base >= 70 ? "Couverture nationale approfondie"
+      : base >= 50 ? "Couverture régionale BCEAO / UMOA / UEMOA"
+      : "Couverture annuaire pays UA";
+    return {
+      code: country.code,
+      baseScore: base,
+      aiAdjustment: adj,
+      finalScore: Math.min(100, Math.max(0, base + adj)),
+      legalReadiness: base >= 65 ? "Élevée" : base >= 45 ? "Moyenne" : "Limitée",
+      summary: `Signal IA local — ${country.name}: score de base ${base}, ajustement ${adj >= 0 ? "+" : ""}${adj}.`,
+      frameworks: [country.region || "UA", country.coup ? "Transition" : "Stabilité"],
+      coverageLabel,
+      officialSources: [],
+    };
+  }
 
   function isHostedShell() {
     return window.location.protocol === "file:" || /github\.io$/i.test(window.location.hostname);
   }
 
   function getOfflineStatusLabel(action = "Connexion") {
-    return isHostedShell()
-      ? `${action} locale requise: demarrez WASI AI sur localhost:3000`
-      : "Serveur WASI AI hors ligne";
+    return `${action} directe — WASI AI hors serveur (mode autonome)`;
   }
 
   function escapeHtml(value) {
@@ -114,27 +184,6 @@
     }));
   }
 
-  async function fetchJson(url, options) {
-    let lastError = null;
-
-    for (const baseUrl of AI_BASE_CANDIDATES) {
-      try {
-        const response = await fetch(`${baseUrl}${url}`, {
-          headers: { "Content-Type": "application/json" },
-          ...options,
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(data.error || `Erreur ${response.status}`);
-        }
-        return data;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-
-    throw lastError || new Error("Serveur WASI AI indisponible.");
-  }
 
   function formatAssistantText(value) {
     return String(value || "")
@@ -567,32 +616,15 @@
 
   async function loadSourceStatus() {
     installHeaderUi();
-    updateStatus("Connexion à WASI AI...", "loading");
-
-    try {
-      const data = await fetchJson("/api/source");
-      state.source = data;
-      updateStatus(buildSourceStatusLabel(data), buildSourceStatusTone(data));
-      buildCompositeCard();
-    } catch (error) {
-      state.source = state.source || { aiEnabled: false, legalCodes: [], apps: [] };
-      updateStatus(getOfflineStatusLabel("Connexion"), "error");
-      buildCompositeCard();
-    }
+    state.source = { aiEnabled: true, legalCodes: [], apps: [], sourceAgeHours: 0 };
+    updateStatus("WASI AI · mode autonome (Claude direct)", "ready");
+    buildCompositeCard();
   }
 
   async function refreshAiSources() {
     installHeaderUi();
-    updateStatus("Actualisation des sources WASI AI...", "loading");
-    try {
-      const data = await fetchJson("/api/source/refresh", { method: "POST", body: "{}" });
-      state.source = data;
-      updateStatus(buildSourceStatusLabel(data), buildSourceStatusTone(data));
-      await loadCountrySignals();
-    } catch (error) {
-      updateStatus(getOfflineStatusLabel("Actualisation"), "error");
-      buildCompositeCard();
-    }
+    updateStatus("Recalcul des signaux WASI AI...", "loading");
+    await loadCountrySignals();
   }
 
   async function loadCountrySignals() {
@@ -604,17 +636,14 @@
     updateStatus("Calcul des scores WASI IA...", "loading");
 
     try {
-      const data = await fetchJson("/api/intelligence/countries", {
-        method: "POST",
-        body: JSON.stringify({ countries: getCountryPayloads() }),
-      });
-
-      state.signals = new Map((data.countries || []).map((signal) => [signal.code, signal]));
-      state.source = data.source || state.source;
+      ensureBaseScores();
+      const localSignals = window.COUNTRIES.map((c) => computeLocalSignal(c));
+      state.signals = new Map(localSignals.map((s) => [s.code, s]));
+      state.source = { aiEnabled: true, legalCodes: [], apps: [], sourceAgeHours: 0 };
       applySignalsToCountries();
-      updateStatus(buildSourceStatusLabel(state.source), buildSourceStatusTone(state.source));
+      updateStatus("WASI AI · signaux locaux actifs", "ready");
     } catch (error) {
-      updateStatus(getOfflineStatusLabel("Scores"), "error");
+      updateStatus("Erreur calcul signaux", "error");
       buildCompositeCard();
     } finally {
       state.loadingSignals = false;
@@ -658,15 +687,7 @@
       : null;
 
     try {
-      const data = await fetchJson("/wasi/chat", {
-        method: "POST",
-        body: JSON.stringify({
-          message,
-          country_focus: focusedCountry ? focusedCountry.name : "Afrique",
-          history: window.chatHistory.slice(-10),
-          country_profile: countryProfile,
-        }),
-      });
+      const data = await callClaude(message, window.chatHistory.slice(-10), countryProfile);
 
       if (typing) {
         typing.classList.remove("show");
