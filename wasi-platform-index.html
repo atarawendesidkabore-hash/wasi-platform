@@ -4388,22 +4388,33 @@ function renderComposite() {
 }
 
 /* ========== CHAT ========== */
+function getWasiApiKey() {
+  try { const u = new URLSearchParams(window.location.search).get('wasi_key'); if (u) { localStorage.setItem('wasi_anthropic_key', u); return u; } } catch(_) {}
+  try { const s = localStorage.getItem('wasi_anthropic_key'); if (s) return s; } catch(_) {}
+  const e = window.prompt('WASI AI — Clé API Anthropic requise\n\nEntrez votre clé sk-ant-... :') || '';
+  if (e) try { localStorage.setItem('wasi_anthropic_key', e); } catch(_) {}
+  return e;
+}
+
 async function sendChat() {
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
   if (!msg) return;
   input.value = '';
   appendChatMsg(msg, 'user');
-  chatHistory.push({role: 'user', content: msg});
 
   const typing = document.getElementById('chat-typing');
   typing.classList.add('show');
   scrollChat();
 
-  const reply = await callWASIChat(msg, currentCountry ? COUNTRIES.find(c => c.code === currentCountry)?.name : 'AFRIQUE');
+  // Snapshot history BEFORE pushing — avoids duplicate user message to API
+  const historySnapshot = chatHistory.slice(-10);
+  const reply = await callWASIChat(msg, currentCountry ? COUNTRIES.find(c => c.code === currentCountry)?.name : 'AFRIQUE', historySnapshot);
 
   typing.classList.remove('show');
   appendChatMsg(reply, 'bot');
+  // Push both turns AFTER the response is received
+  chatHistory.push({role: 'user', content: msg});
   chatHistory.push({role: 'assistant', content: reply});
   scrollChat();
 }
@@ -4426,16 +4437,35 @@ function scrollChat() {
   el.scrollTop = el.scrollHeight;
 }
 
-async function callWASIChat(message, countryFocus) {
+async function callWASIChat(message, countryFocus, history) {
+  const apiKey = getWasiApiKey();
+  if (!apiKey) return generateLocalResponse(message, countryFocus);
   try {
-    const res = await fetch(API + '/wasi/chat', {
+    const systemPrompt = [
+      "Tu es WASI AI, la couche d'intelligence documentaire de la plateforme WASI.",
+      "Tu analyses 54 pays africains avec des signaux économiques, financiers, réglementaires et géopolitiques.",
+      "Tu maîtrises OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO, les marchés financiers africains et les codes français embarqués.",
+      "Réponds toujours en français dans un style net, stratégique et directement exploitable.",
+      "Privilégie des paragraphes courts. Pas de titres markdown, pas de tableaux.",
+      "Ne dis jamais que ton analyse remplace un avis juridique ou réglementaire formel.",
+      countryFocus ? "Pays focal: " + countryFocus + "." : ""
+    ].filter(Boolean).join(" ");
+    const messages = [
+      ...(history || []).filter(function(m) { return m.role === 'user' || m.role === 'assistant'; })
+        .map(function(m) { return {role: m.role, content: String(m.content)}; }),
+      {role: 'user', content: message}
+    ];
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-      body: JSON.stringify({message: message, country_focus: countryFocus, history: chatHistory.slice(-10)})
+      headers: {'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01'},
+      body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 950, system: systemPrompt, messages: messages})
     });
-    if (!res.ok) throw new Error('API error ' + res.status);
+    if (!res.ok) {
+      if (res.status === 401) try { localStorage.removeItem('wasi_anthropic_key'); } catch(_) {}
+      throw new Error('API error ' + res.status);
+    }
     const data = await res.json();
-    return data.reply || data.response || 'Reponse non disponible.';
+    return (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('\n').trim() || 'Réponse indisponible.';
   } catch(e) {
     return generateLocalResponse(message, countryFocus);
   }

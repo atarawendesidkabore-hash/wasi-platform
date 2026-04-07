@@ -425,14 +425,58 @@ function wireAssetButtons(scope) {
   }));
 }
 
-function ask(question) {
+function getWasiApiKey() {
+  try { const u = new URLSearchParams(window.location.search).get("wasi_key"); if (u) { localStorage.setItem("wasi_anthropic_key", u); return u; } } catch(_) {}
+  try { const s = localStorage.getItem("wasi_anthropic_key"); if (s) return s; } catch(_) {}
+  const e = window.prompt("WASI AI — Clé API Anthropic requise\n\nEntrez votre clé sk-ant-... :") || "";
+  if (e) try { localStorage.setItem("wasi_anthropic_key", e); } catch(_) {}
+  return e;
+}
+
+async function ask(question) {
   if (!customer || !question) return;
-  portal.chats[customer.id].push({ role: "user", content: question }, { role: "assistant", content: answer(question) });
+  const q = String(question).trim();
+  if (!q) return;
+  portal.chats[customer.id].push({ role: "user", content: q });
+  savePortal();
+  renderAdvice();
+
+  const apiKey = getWasiApiKey();
+  let reply;
+  if (apiKey) {
+    try {
+      const history = (portal.chats[customer.id] || []).slice(-10);
+      const systemPrompt = [
+        "Tu es l'assistant IA CIREX Microfinance, le portail client WASI.",
+        "Tu aides les agents à conseiller leurs clients sur les titres privés, fonds et placements WASI.",
+        `Client actif : ${customer.name}, profil ${customer.tier}, secteur ${customer.sector}, enveloppe ${money(customer.limit)}.`,
+        "Titres disponibles : " + ASSETS.map(function(a) { return a.name + " (" + a.type + ", min " + money(a.minimumTicket) + ")"; }).join("; ") + ".",
+        "Réponds en français, de façon concise et pratique.",
+      ].join(" ");
+      const messages = history
+        .filter(function(m) { return m.role === "user" || m.role === "assistant"; })
+        .map(function(m) { return { role: m.role, content: String(m.content) }; });
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+        body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 600, system: systemPrompt, messages: messages })
+      });
+      if (!res.ok) { if (res.status === 401) try { localStorage.removeItem("wasi_anthropic_key"); } catch(_) {} throw new Error("API " + res.status); }
+      const data = await res.json();
+      reply = (data.content || []).filter(function(b) { return b.type === "text"; }).map(function(b) { return b.text; }).join("\n").trim() || "Réponse indisponible.";
+    } catch(_) {
+      reply = answerLocal(q);
+    }
+  } else {
+    reply = answerLocal(q);
+  }
+
+  portal.chats[customer.id].push({ role: "assistant", content: reply });
   savePortal();
   renderAdvice();
 }
 
-function answer(question) {
+function answerLocal(question) {
   const msg = normalize(question);
   const cirexStock = assetById("CIREX-PS");
   const topFund = assetById("WASI-INDEX");
