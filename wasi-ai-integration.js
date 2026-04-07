@@ -675,7 +675,6 @@
     if (typeof window.appendChatMsg === "function") {
       window.appendChatMsg(message, "user");
     }
-    window.chatHistory.push({ role: "user", content: message });
 
     if (typing) {
       typing.classList.add("show");
@@ -697,15 +696,20 @@
         }
       : null;
 
+    // Pass history WITHOUT the current message — callClaude appends it itself
+    const historySnapshot = window.chatHistory.slice(-10);
+
     try {
-      const data = await callClaude(message, window.chatHistory.slice(-10), countryProfile);
+      const data = await callClaude(message, historySnapshot, countryProfile);
 
       if (typing) {
         typing.classList.remove("show");
       }
 
-      appendRichBotMessage(data.reply || "Réponse indisponible.", data.citations || [], data.countrySignal || focusedSignal);
-      window.chatHistory.push({ role: "assistant", content: data.reply || "Réponse indisponible." });
+      const reply = data.reply || "Réponse indisponible.";
+      appendRichBotMessage(reply, data.citations || [], data.countrySignal || focusedSignal);
+      window.chatHistory.push({ role: "user", content: message });
+      window.chatHistory.push({ role: "assistant", content: reply });
     } catch (error) {
       if (typing) {
         typing.classList.remove("show");
@@ -716,6 +720,7 @@
           ? window.generateLocalResponse(message, focusedCountry ? focusedCountry.name : "AFRIQUE")
           : "Le serveur WASI AI n'est pas disponible actuellement.";
       appendRichBotMessage(fallback, [], focusedSignal);
+      window.chatHistory.push({ role: "user", content: message });
       window.chatHistory.push({ role: "assistant", content: fallback });
     } finally {
       state.chatBusy = false;
