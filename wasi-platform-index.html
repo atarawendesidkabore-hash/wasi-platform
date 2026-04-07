@@ -2931,9 +2931,9 @@ let notifTimer = null;
 /* ========== DATA ========== */
 const COUNTRIES=[
   // ══════ WEST AFRICA (CEDEAO) ══════
-  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',score:58,trend:'\u2193',gdp:'$440B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'NG',flag:'\u{1F1F3}\u{1F1EC}',name:'Nigeria',score:58,trend:'\u2191',gdp:'$363B',risk:'Modere',coup:false,region:'CEDEAO'},
   {code:'CI',flag:'\u{1F1E8}\u{1F1EE}',name:"Cote d'Ivoire",score:72,trend:'\u2191',gdp:'$70B',risk:'Faible',coup:false,region:'CEDEAO'},
-  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',score:65,trend:'\u2192',gdp:'$73B',risk:'Modere',coup:false,region:'CEDEAO'},
+  {code:'GH',flag:'\u{1F1EC}\u{1F1ED}',name:'Ghana',score:58,trend:'\u2191',gdp:'$73B',risk:'Modere',coup:false,region:'CEDEAO'},
   {code:'SN',flag:'\u{1F1F8}\u{1F1F3}',name:'Senegal',score:70,trend:'\u2191',gdp:'$28B',risk:'Faible',coup:false,region:'CEDEAO'},
   {code:'BF',flag:'\u{1F1E7}\u{1F1EB}',name:'Burkina Faso',score:38,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true,region:'CEDEAO'},
   {code:'ML',flag:'\u{1F1F2}\u{1F1F1}',name:'Mali',score:35,trend:'\u2193',gdp:'$19B',risk:'Eleve',coup:true,region:'CEDEAO'},
@@ -2950,7 +2950,7 @@ const COUNTRIES=[
 
   // ══════ CENTRAL AFRICA (CEMAC + RDC) ══════
   {code:'CM',flag:'\u{1F1E8}\u{1F1F2}',name:'Cameroun',score:52,trend:'\u2192',gdp:'$45B',risk:'Modere',coup:false,region:'CEMAC'},
-  {code:'GA',flag:'\u{1F1EC}\u{1F1E6}',name:'Gabon',score:55,trend:'\u2192',gdp:'$20B',risk:'Modere',coup:true,region:'CEMAC'},
+  {code:'GA',flag:'\u{1F1EC}\u{1F1E6}',name:'Gabon',score:42,trend:'\u2193',gdp:'$20B',risk:'Eleve',coup:true,region:'CEMAC'},
   {code:'CG',flag:'\u{1F1E8}\u{1F1EC}',name:'Congo-Brazzaville',score:40,trend:'\u2193',gdp:'$14B',risk:'Eleve',coup:false,region:'CEMAC'},
   {code:'CD',flag:'\u{1F1E8}\u{1F1E9}',name:'RD Congo',score:30,trend:'\u2193',gdp:'$64B',risk:'Eleve',coup:false,region:'CEMAC'},
   {code:'CF',flag:'\u{1F1E8}\u{1F1EB}',name:'Centrafrique',score:18,trend:'\u2193',gdp:'$3B',risk:'Eleve',coup:false,region:'CEMAC'},
@@ -2964,14 +2964,14 @@ const COUNTRIES=[
   {code:'RW',flag:'\u{1F1F7}\u{1F1FC}',name:'Rwanda',score:78,trend:'\u2191',gdp:'$13B',risk:'Faible',coup:false,region:'EAC'},
   {code:'BI',flag:'\u{1F1E7}\u{1F1EE}',name:'Burundi',score:22,trend:'\u2193',gdp:'$3B',risk:'Eleve',coup:false,region:'EAC'},
   {code:'SS',flag:'\u{1F1F8}\u{1F1F8}',name:'Soudan du Sud',score:12,trend:'\u2193',gdp:'$5B',risk:'Eleve',coup:false,region:'EAC'},
-  {code:'ET',flag:'\u{1F1EA}\u{1F1F9}',name:'Ethiopie',score:42,trend:'\u2193',gdp:'$126B',risk:'Eleve',coup:false,region:'IGAD'},
+  {code:'ET',flag:'\u{1F1EA}\u{1F1F9}',name:'Ethiopie',score:42,trend:'\u2192',gdp:'$155B',risk:'Eleve',coup:false,region:'IGAD'},
   {code:'DJ',flag:'\u{1F1E9}\u{1F1EF}',name:'Djibouti',score:52,trend:'\u2192',gdp:'$4B',risk:'Modere',coup:false,region:'IGAD'},
   {code:'ER',flag:'\u{1F1EA}\u{1F1F7}',name:'Erythree',score:15,trend:'\u2193',gdp:'$2B',risk:'Eleve',coup:false,region:'IGAD'},
   {code:'SO',flag:'\u{1F1F8}\u{1F1F4}',name:'Somalie',score:10,trend:'\u2193',gdp:'$8B',risk:'Eleve',coup:false,region:'IGAD'},
   {code:'SD',flag:'\u{1F1F8}\u{1F1E9}',name:'Soudan',score:12,trend:'\u2193',gdp:'$26B',risk:'Eleve',coup:true,region:'IGAD'},
 
   // ══════ SOUTHERN AFRICA (SADC) ══════
-  {code:'ZA',flag:'\u{1F1FF}\u{1F1E6}',name:'Afrique du Sud',score:72,trend:'\u2192',gdp:'$399B',risk:'Faible',coup:false,region:'SADC'},
+  {code:'ZA',flag:'\u{1F1FF}\u{1F1E6}',name:'Afrique du Sud',score:67,trend:'\u2191',gdp:'$399B',risk:'Modere',coup:false,region:'SADC'},
   {code:'MZ',flag:'\u{1F1F2}\u{1F1FF}',name:'Mozambique',score:38,trend:'\u2193',gdp:'$17B',risk:'Eleve',coup:false,region:'SADC'},
   {code:'ZW',flag:'\u{1F1FF}\u{1F1FC}',name:'Zimbabwe',score:28,trend:'\u2193',gdp:'$21B',risk:'Eleve',coup:false,region:'SADC'},
   {code:'ZM',flag:'\u{1F1FF}\u{1F1F2}',name:'Zambie',score:52,trend:'\u2191',gdp:'$29B',risk:'Modere',coup:false,region:'SADC'},
@@ -2988,8 +2988,8 @@ const COUNTRIES=[
 
   // ══════ NORTH AFRICA (UMA) ══════
   {code:'MA',flag:'\u{1F1F2}\u{1F1E6}',name:'Maroc',score:75,trend:'\u2191',gdp:'$142B',risk:'Faible',coup:false,region:'UMA'},
-  {code:'TN',flag:'\u{1F1F9}\u{1F1F3}',name:'Tunisie',score:55,trend:'\u2193',gdp:'$47B',risk:'Modere',coup:false,region:'UMA'},
-  {code:'EG',flag:'\u{1F1EA}\u{1F1EC}',name:'Egypte',score:58,trend:'\u2192',gdp:'$476B',risk:'Modere',coup:false,region:'UMA'},
+  {code:'TN',flag:'\u{1F1F9}\u{1F1F3}',name:'Tunisie',score:47,trend:'\u2193',gdp:'$47B',risk:'Eleve',coup:false,region:'UMA'},
+  {code:'EG',flag:'\u{1F1EA}\u{1F1EC}',name:'Egypte',score:55,trend:'\u2192',gdp:'$347B',risk:'Modere',coup:false,region:'UMA'},
   {code:'DZ',flag:'\u{1F1E9}\u{1F1FF}',name:'Algerie',score:48,trend:'\u2192',gdp:'$192B',risk:'Modere',coup:false,region:'UMA'},
   {code:'LY',flag:'\u{1F1F1}\u{1F1FE}',name:'Libye',score:18,trend:'\u2193',gdp:'$42B',risk:'Eleve',coup:false,region:'UMA'},
 ];
