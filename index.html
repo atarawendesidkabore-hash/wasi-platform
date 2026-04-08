@@ -7982,8 +7982,20 @@ async function adminLogin() {
   var user = document.getElementById('admin-user').value.trim();
   var pass = document.getElementById('admin-pass').value;
   document.getElementById('admin-login-err').textContent = '';
+
+  // Local demo credentials (backend offline — GitHub Pages mode)
+  var LOCAL_CREDS = { 'wasi-admin': 'WasiCore!2026', 'admin': 'WasiCore!2026' };
+  if (LOCAL_CREDS[user] && LOCAL_CREDS[user] === pass) {
+    adminToken = 'local-demo-token';
+    adminUser = { username: user, role: 'ADMIN', tier: 'DEMO' };
+    document.getElementById('admin-login-form').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    document.getElementById('admin-who').textContent = 'Connecte: ' + user + ' (DEMO — mode local)';
+    adminRefresh();
+    return;
+  }
+
   try {
-    // Try Python FastAPI backend (form-urlencoded)
     var res = await fetch(ADMIN_API + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -7992,7 +8004,6 @@ async function adminLogin() {
     var data = await res.json();
     if (!res.ok || !data.access_token) throw new Error(data.detail || 'Login echoue');
     adminToken = data.access_token;
-    // Fetch user profile
     var meRes = await fetch(ADMIN_API + '/api/auth/me', {
       headers: { 'Authorization': 'Bearer ' + adminToken }
     });
@@ -8003,7 +8014,7 @@ async function adminLogin() {
     document.getElementById('admin-who').textContent = 'Connecte: ' + (adminUser.username || user) + ' (' + (adminUser.tier || 'free') + ')';
     adminRefresh();
   } catch(e) {
-    document.getElementById('admin-login-err').textContent = e.message;
+    document.getElementById('admin-login-err').textContent = 'Identifiants incorrects. Essayez: wasi-admin / WasiCore!2026';
   }
 }
 
