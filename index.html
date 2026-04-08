@@ -1558,12 +1558,15 @@ input, select, textarea { font-family: inherit; outline: none; }
       </div>
       <!-- SECTOR INTELLIGENCE PANEL -->
       <div id="sector-intel-panel" style="display:none;padding:16px;overflow-y:auto;height:calc(100vh - 84px);box-sizing:border-box;">
-        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-weight:700;margin-bottom:14px;">🏭 Intelligence Sectorielle</div>
-        <div style="margin-bottom:14px;">
-          <input type="text" id="sector-search-input" placeholder="Rechercher un secteur ou un mot-clé..." style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-sans);font-size:.8rem;" oninput="filterSectors(this.value)">
+        <div id="sector-panel-header" style="margin-bottom:10px;">
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-weight:700;">🏭 Intelligence Sectorielle</div>
+          <div style="font-size:.65rem;color:var(--text-dim);margin-top:2px;">Sélectionnez un pays pour une analyse personnalisée</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <input type="text" id="sector-search-input" placeholder="Rechercher un secteur ou mot-clé..." style="width:100%;box-sizing:border-box;padding:9px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-sans);font-size:.78rem;" oninput="filterSectors(this.value)">
         </div>
         <div id="sector-list" style="display:flex;flex-direction:column;gap:6px;"></div>
-        <div id="sector-detail" style="display:none;margin-top:16px;"></div>
+        <div id="sector-detail" style="display:none;margin-top:14px;"></div>
       </div>
       <div class="chat-messages" id="chat-messages">
         <div class="chat-msg bot">Bienvenue dans WASI Intelligence. Posez vos questions sur la continent africain : indices de stabilite, risques politiques, opportunites economiques, corridors commerciaux.</div>
@@ -3912,6 +3915,7 @@ function renderDesktopCountryDetail(code) {
       ${d.exports.map(e => `<span style="padding:3px 8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;font-size:.7rem;color:var(--text-secondary);">📦 ${e}</span>`).join('')}
     </div>
 
+    <button onclick="openSectorsForCountry('${c.code}')" style="width:100%;padding:10px;background:rgba(46,204,113,.1);border:1px solid var(--green);color:var(--green);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">🏭 Secteurs d'activité — ${esc(c.name)}</button>
     <button onclick="interrogateCurrentCountry()" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${esc(c.name)}</button>
     <button onclick="clearCountryFocus()" style="width:100%;padding:8px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--radius);font-size:.78rem;cursor:pointer;">← Vue composite</button>
   `;
@@ -4078,6 +4082,29 @@ function askAboutCountry(name) {
   document.getElementById('mobile-country-panel').classList.remove('show');
   document.getElementById('chat-input').value = 'Analyse complete de ' + name + ' : opportunites, risques, et previsions';
   sendChat();
+}
+
+function openSectorsForCountry(code) {
+  // Set focus country if needed
+  if (code) currentCountry = code;
+  // Open sector panel — it will auto-read currentCountry
+  if (!sectorPanelOpen) {
+    sectorPanelOpen = true;
+    var panel = document.getElementById('sector-intel-panel');
+    var chat  = document.getElementById('chat-messages');
+    var chatTyping = document.getElementById('chat-typing');
+    var chatSugg = document.querySelector('.chat-suggestions');
+    var chatInputBar = document.querySelector('.chat-input-bar');
+    if (panel) panel.style.display = 'block';
+    if (chat) chat.style.display = 'none';
+    if (chatTyping) chatTyping.style.display = 'none';
+    if (chatSugg) chatSugg.style.display = 'none';
+    if (chatInputBar) chatInputBar.style.display = 'none';
+  }
+  refreshSectorPanel();
+  // Scroll to chat/sector area
+  var chatEl = document.querySelector('.intel-center');
+  if (chatEl) chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function interrogateCurrentCountry() {
@@ -6113,6 +6140,55 @@ const WASI_SECTORS = [
 
 let sectorPanelOpen = false;
 
+/* ── Score relevance of a sector for a given country ─────────────── */
+function scoreSectorForCountry(sector, countryCode) {
+  var d = (window.COUNTRY_DETAILS || {})[countryCode] || {};
+  var resources = (d.resources || []).map(function(r){ return r.toLowerCase(); });
+  var exports_  = (d.exports   || []).map(function(e){ return e.toLowerCase(); });
+  var combined  = resources.concat(exports_);
+  var score = 0;
+  // Match keywords against country resources/exports
+  sector.keywords.forEach(function(kw) {
+    combined.forEach(function(item) {
+      if (item.includes(kw) || kw.includes(item.split(' ')[0])) score += 3;
+    });
+  });
+  // Bonus if country is in pays_cles
+  if (sector.pays_cles.indexOf(countryCode) !== -1) score += 5;
+  // Zone bonus
+  var zone = (d.zone || '').toLowerCase();
+  if (sector.id === 'finance' && (zone.includes('uemoa') || zone.includes('cemac'))) score += 2;
+  if (sector.id === 'logistics' && (zone.includes('uemoa') || zone.includes('cedeao'))) score += 2;
+  return score;
+}
+
+/* ── Build country-specific sector opportunities ──────────────────── */
+function getCountrySectorOpportunities(sector, countryCode) {
+  var c  = (window.COUNTRIES || []).find(function(x){ return x.code === countryCode; }) || {};
+  var d  = (window.COUNTRY_DETAILS || {})[countryCode] || {};
+  var r  = (window.COUNTRY_RISKS  || {})[countryCode]  || {};
+  var resources = (d.resources || []).join(', ') || 'N/A';
+  var exports_  = (d.exports   || []).join(', ') || 'N/A';
+  var wacc = r.wacc || Math.round(4.5 + (100 - (c.score||50)) * 0.25);
+  var isOHADA = ['uemoa','cemac','ohada'].some(function(z){ return (d.zone||'').toLowerCase().includes(z); });
+  var isCoup  = Boolean(c.coup);
+
+  // Country-specific opportunities built from sector template + country data
+  var opps = sector.opportunites.slice();
+  // Inject country-specific resource opportunity at top
+  if (resources !== 'N/A') {
+    opps.unshift('Valorisation locale des ressources : ' + resources + ' — transformation sur place plutôt qu\'export brut');
+  }
+
+  // Country-specific risks
+  var risks = sector.risques.slice();
+  if (isCoup) risks.unshift('⚠ Régime de transition militaire — risque réglementaire et sécuritaire élevé');
+  if (r.fxRisk === 'Élevé') risks.unshift('Risque de change élevé (' + (d.currency||'devise locale') + ') — couverture FX obligatoire');
+  if (!isOHADA) risks.push('Cadre comptable non-OHADA — due diligence sur les normes locales');
+
+  return { opps: opps, risks: risks, wacc: wacc, isOHADA: isOHADA, resources: resources, exports: exports_ };
+}
+
 function toggleSectorPanel() {
   sectorPanelOpen = !sectorPanelOpen;
   var panel = document.getElementById('sector-intel-panel');
@@ -6127,7 +6203,7 @@ function toggleSectorPanel() {
     if (chatTyping) chatTyping.style.display = 'none';
     if (chatSugg) chatSugg.style.display = 'none';
     if (chatInputBar) chatInputBar.style.display = 'none';
-    renderSectorList(WASI_SECTORS);
+    refreshSectorPanel();
   } else {
     panel.style.display = 'none';
     if (chat) chat.style.display = '';
@@ -6137,16 +6213,55 @@ function toggleSectorPanel() {
   }
 }
 
-function renderSectorList(sectors) {
+function refreshSectorPanel() {
+  var code = window.currentCountry || null;
+  var c = code ? (window.COUNTRIES||[]).find(function(x){ return x.code===code; }) : null;
+  var header = document.getElementById('sector-panel-header');
+  var searchInput = document.getElementById('sector-search-input');
+
+  if (c) {
+    // Country focused — sort sectors by relevance
+    var scored = WASI_SECTORS.map(function(s) {
+      return { sector: s, score: scoreSectorForCountry(s, code) };
+    }).sort(function(a,b){ return b.score - a.score; });
+
+    if (header) {
+      header.innerHTML = '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:700;">🏭 Secteurs — ' + c.flag + ' ' + c.name + '</div>' +
+        '<div style="font-size:.65rem;color:var(--text-dim);margin-top:2px;">Classés par pertinence · Score WASI ' + c.score + '/100</div>';
+    }
+    if (searchInput) searchInput.placeholder = 'Filtrer les secteurs pour ' + c.name + '...';
+    renderSectorList(scored.map(function(x){ return x.sector; }), code);
+  } else {
+    if (header) header.innerHTML = '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:700;">🏭 Intelligence Sectorielle</div>' +
+      '<div style="font-size:.65rem;color:var(--text-dim);margin-top:2px;">Sélectionnez un pays pour une analyse personnalisée</div>';
+    if (searchInput) searchInput.placeholder = 'Rechercher un secteur ou mot-clé...';
+    renderSectorList(WASI_SECTORS, null);
+  }
+  // Reset detail
+  var det = document.getElementById('sector-detail');
+  if (det) det.style.display = 'none';
+}
+
+function renderSectorList(sectors, countryCode) {
   var list = document.getElementById('sector-list');
   if (!list) return;
-  list.innerHTML = sectors.map(function(s) {
-    return '<div onclick="showSectorDetail(\'' + s.id + '\')" style="padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--border)\'">' +
+  list.innerHTML = sectors.map(function(s, i) {
+    var relevScore = countryCode ? scoreSectorForCountry(s, countryCode) : -1;
+    var badge = '';
+    if (countryCode) {
+      if (i === 0 && relevScore > 0)      badge = '<span style="font-size:.6rem;padding:1px 6px;background:var(--green);color:#000;border-radius:8px;font-weight:700;">N°1</span>';
+      else if (i < 3 && relevScore > 0)   badge = '<span style="font-size:.6rem;padding:1px 6px;background:var(--gold-dim);color:var(--gold);border-radius:8px;">Top</span>';
+      else if (relevScore === 0)           badge = '<span style="font-size:.6rem;padding:1px 6px;background:var(--bg-tertiary);color:var(--text-dim);border-radius:8px;">Indirect</span>';
+    }
+    return '<div onclick="showSectorDetail(\'' + s.id + '\',\'' + (countryCode||'') + '\')" style="padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--border)\'">' +
       '<div style="display:flex;align-items:center;gap:8px;">' +
         '<span style="font-size:1.2rem;">' + s.icon + '</span>' +
-        '<div>' +
-          '<div style="font-size:.78rem;font-weight:700;color:var(--text-primary);">' + s.name + '</div>' +
-          '<div style="font-size:.65rem;color:var(--text-dim);margin-top:2px;">TAM: ' + s.tam + ' · Croissance: ' + s.croissance + '</div>' +
+        '<div style="flex:1;">' +
+          '<div style="display:flex;align-items:center;gap:6px;">' +
+            '<span style="font-size:.78rem;font-weight:700;color:var(--text-primary);">' + s.name + '</span>' +
+            badge +
+          '</div>' +
+          '<div style="font-size:.65rem;color:var(--text-dim);margin-top:2px;">TAM: ' + s.tam + ' · ' + s.croissance + '</div>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -6155,23 +6270,67 @@ function renderSectorList(sectors) {
 
 function filterSectors(query) {
   var q = query.toLowerCase();
-  if (!q) { renderSectorList(WASI_SECTORS); document.getElementById('sector-detail').style.display='none'; return; }
+  var code = window.currentCountry || null;
+  var detail = document.getElementById('sector-detail');
+  if (!q) {
+    refreshSectorPanel();
+    if (detail) detail.style.display = 'none';
+    return;
+  }
   var filtered = WASI_SECTORS.filter(function(s) {
-    return s.name.toLowerCase().includes(q) || s.keywords.some(function(k){return k.includes(q);}) || s.desc.toLowerCase().includes(q);
+    return s.name.toLowerCase().includes(q) ||
+      s.keywords.some(function(k){ return k.includes(q); }) ||
+      s.desc.toLowerCase().includes(q);
   });
-  renderSectorList(filtered);
-  if (filtered.length === 1) showSectorDetail(filtered[0].id);
+  renderSectorList(filtered, code);
+  if (filtered.length === 1) showSectorDetail(filtered[0].id, code||'');
 }
 
-function showSectorDetail(id) {
-  var s = WASI_SECTORS.find(function(x){return x.id===id;});
+function showSectorDetail(id, countryCode) {
+  var s = WASI_SECTORS.find(function(x){ return x.id===id; });
   if (!s) return;
-  var pays = s.pays_cles.map(function(code){
-    var c = (window.COUNTRIES||[]).find(function(x){return x.code===code;});
-    return c ? c.flag+' '+c.name+' ('+c.score+')' : code;
-  });
+  var code = countryCode || window.currentCountry || '';
+  var c  = code ? (window.COUNTRIES||[]).find(function(x){ return x.code===code; }) : null;
+  var d  = code ? ((window.COUNTRY_DETAILS||{})[code]||{}) : {};
+  var r  = code ? ((window.COUNTRY_RISKS||{})[code]||{})   : {};
   var detail = document.getElementById('sector-detail');
   if (!detail) return;
+
+  // Country-specific enrichment
+  var ctx = code ? getCountrySectorOpportunities(s, code) : null;
+  var wacc = ctx ? ctx.wacc : s.wacc_range;
+  var opps = ctx ? ctx.opps : s.opportunites;
+  var risks = ctx ? ctx.risks : s.risques;
+  var isTop = code ? (s.pays_cles.indexOf(code) !== -1) : false;
+  var countryScore = c ? c.score : null;
+  var verdict = '';
+  if (c) {
+    var rel = scoreSectorForCountry(s, code);
+    if (rel >= 8)      verdict = '<div style="padding:8px 10px;background:rgba(46,204,113,.12);border:1px solid var(--green);border-radius:var(--radius);font-size:.72rem;color:var(--green);font-weight:700;margin-bottom:10px;">✅ SECTEUR CLÉ pour ' + c.flag + ' ' + c.name + ' — Ressources alignées</div>';
+    else if (rel >= 4) verdict = '<div style="padding:8px 10px;background:rgba(200,146,42,.1);border:1px solid var(--gold-dim);border-radius:var(--radius);font-size:.72rem;color:var(--gold);font-weight:700;margin-bottom:10px;">⚡ SECTEUR PORTEUR pour ' + c.flag + ' ' + c.name + '</div>';
+    else               verdict = '<div style="padding:8px 10px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);font-size:.72rem;color:var(--text-dim);margin-bottom:10px;">🔍 Secteur indirect — opportunité à développer</div>';
+  }
+
+  // Pays clés list with country highlighted
+  var paysHTML = s.pays_cles.map(function(pc) {
+    var pc_c = (window.COUNTRIES||[]).find(function(x){ return x.code===pc; });
+    var isActive = pc === code;
+    return '<span style="padding:2px 8px;background:'+(isActive?'var(--gold)':'var(--bg-tertiary)')+';border:1px solid '+(isActive?'var(--gold)':'var(--border)')+';border-radius:10px;font-size:.65rem;color:'+(isActive?'#000':'var(--text-secondary)')+(isActive?';font-weight:700':'')+';white-space:nowrap;">' +
+      (pc_c ? pc_c.flag+' '+pc_c.name : pc) +
+    '</span>';
+  }).join('');
+
+  // Country macro line
+  var macroLine = '';
+  if (c && d.growth) {
+    macroLine = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">' +
+      '<span style="font-size:.68rem;padding:3px 8px;background:var(--bg-tertiary);border-radius:10px;color:var(--text-secondary);">PIB: '+c.gdp+'</span>' +
+      '<span style="font-size:.68rem;padding:3px 8px;background:var(--bg-tertiary);border-radius:10px;color:var(--green);">Croissance: '+d.growth+'</span>' +
+      '<span style="font-size:.68rem;padding:3px 8px;background:var(--bg-tertiary);border-radius:10px;color:var(--text-secondary);">Inflation: '+(d.inflation||'N/A')+'</span>' +
+      (r.credit?'<span style="font-size:.68rem;padding:3px 8px;background:var(--bg-tertiary);border-radius:10px;color:var(--gold);">Crédit: '+r.credit+'</span>':'') +
+    '</div>';
+  }
+
   detail.style.display = 'block';
   detail.innerHTML =
     '<div style="background:var(--bg-card);border:1px solid var(--gold-dim);border-radius:var(--radius);padding:14px;">' +
@@ -6179,51 +6338,57 @@ function showSectorDetail(id) {
         '<span style="font-size:1.6rem;">' + s.icon + '</span>' +
         '<div>' +
           '<div style="font-size:.85rem;font-weight:700;color:var(--gold);">' + s.name + '</div>' +
-          '<div style="font-size:.65rem;color:var(--text-dim);">WASI Sector Intelligence</div>' +
+          '<div style="font-size:.65rem;color:var(--text-dim);">' + (c ? c.flag+' '+c.name+' · ' : '') + 'WASI Sector Intelligence</div>' +
         '</div>' +
       '</div>' +
+      verdict +
+      macroLine +
       '<div style="font-size:.75rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.6;">' + s.desc + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">' +
         '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">' +
-          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">TAM</div>' +
+          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">TAM Afrique</div>' +
           '<div style="font-size:.75rem;font-weight:700;color:var(--gold);">' + s.tam + '</div>' +
         '</div>' +
         '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">' +
-          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">Croissance</div>' +
+          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">CAGR</div>' +
           '<div style="font-size:.75rem;font-weight:700;color:var(--green);">' + s.croissance + '</div>' +
         '</div>' +
         '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">' +
-          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">WACC</div>' +
-          '<div style="font-size:.75rem;font-weight:700;color:var(--text-primary);">' + s.wacc_range + '</div>' +
+          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">' + (c?'WACC '+c.name:'WACC') + '</div>' +
+          '<div style="font-size:.75rem;font-weight:700;color:var(--text-primary);">' + (typeof wacc==='number'?wacc+'%':wacc) + '</div>' +
         '</div>' +
       '</div>' +
-      '<div style="font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">✅ Opportunités</div>' +
+      (ctx && ctx.resources !== 'N/A' ? '<div style="font-size:.7rem;font-weight:700;color:var(--cyan);text-transform:uppercase;margin-bottom:4px;">⛏ Ressources locales</div><div style="font-size:.72rem;color:var(--text-secondary);margin-bottom:10px;">'+ctx.resources+'</div>' : '') +
+      '<div style="font-size:.7rem;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:6px;">✅ Opportunités' + (c?' — '+c.name:'') + '</div>' +
       '<ul style="margin:0 0 10px 0;padding-left:16px;font-size:.73rem;color:var(--text-secondary);line-height:1.8;">' +
-        s.opportunites.map(function(o){return '<li>' + o + '</li>';}).join('') +
+        opps.slice(0,6).map(function(o){ return '<li>'+o+'</li>'; }).join('') +
       '</ul>' +
-      '<div style="font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:6px;">⚠ Risques</div>' +
+      '<div style="font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:6px;">⚠ Risques' + (c?' — '+c.name:'') + '</div>' +
       '<ul style="margin:0 0 10px 0;padding-left:16px;font-size:.73rem;color:var(--text-secondary);line-height:1.8;">' +
-        s.risques.map(function(r){return '<li>' + r + '</li>';}).join('') +
+        risks.slice(0,5).map(function(r){ return '<li>'+r+'</li>'; }).join('') +
       '</ul>' +
-      '<div style="font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">🌍 Pays Clés</div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:4px;">' +
-        pays.map(function(p){return '<span style="padding:2px 8px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;font-size:.65rem;color:var(--text-secondary);">' + p + '</span>';}).join('') +
-      '</div>' +
-      '<button onclick="askAboutSector(\'' + id + '\')" style="width:100%;margin-top:12px;padding:9px;background:rgba(139,69,19,.15);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.78rem;font-weight:700;cursor:pointer;">💬 Interroger WASI AI sur ce secteur</button>' +
+      '<div style="font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">🌍 Pays Clés Afrique</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">' + paysHTML + '</div>' +
+      '<button onclick="askAboutSector(\'' + id + '\',\'' + code + '\')" style="width:100%;padding:9px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.78rem;font-weight:700;cursor:pointer;">💬 Interroger WASI AI — ' + s.name + (c?' au '+c.name:'') + '</button>' +
     '</div>';
   detail.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function askAboutSector(id) {
-  var s = WASI_SECTORS.find(function(x){return x.id===id;});
+function askAboutSector(id, countryCode) {
+  var s = WASI_SECTORS.find(function(x){ return x.id===id; });
   if (!s) return;
+  var code = countryCode || window.currentCountry || '';
+  var c = code ? (window.COUNTRIES||[]).find(function(x){ return x.code===code; }) : null;
   toggleSectorPanel();
   var input = document.getElementById('chat-input');
   if (input) {
-    input.value = 'Analyse complète du secteur ' + s.name + ' en Afrique : opportunités, risques, pays prioritaires, WACC et recommandations WASI.';
-    if (typeof window.sendChatWithWasiAi === 'function') {
-      setTimeout(function(){ document.getElementById('chat-send') && document.getElementById('chat-send').click(); }, 200);
-    }
+    input.value = c
+      ? 'Analyse détaillée du secteur ' + s.name + ' au ' + c.name + ' : ressources disponibles, opportunités spécifiques, risques locaux, WACC, acteurs en place et recommandation WASI.'
+      : 'Analyse complète du secteur ' + s.name + ' en Afrique : opportunités, risques, pays prioritaires, WACC et recommandations WASI.';
+    setTimeout(function(){
+      var btn = document.getElementById('chat-send');
+      if (btn) btn.click();
+    }, 150);
   }
 }
 
