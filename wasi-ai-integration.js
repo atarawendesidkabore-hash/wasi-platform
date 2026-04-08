@@ -90,44 +90,101 @@
   // Expose globally so users can call wasiClearChat() from console
   window.wasiClearChat = clearChatHistory;
 
+  // ── Build compact 54-country encyclopedia for system prompt ─────────────
+  function buildCountryEncyclopedia() {
+    const countries = Array.isArray(window.COUNTRIES) ? window.COUNTRIES : [];
+    const details   = window.COUNTRY_DETAILS || {};
+    const risks     = window.COUNTRY_RISKS   || {};
+    if (!countries.length) return "";
+
+    const lines = countries.map(function(c) {
+      const d = details[c.code] || {};
+      const r = risks[c.code]   || {};
+      const coup = c.coup ? " [RÉGIME MILITAIRE]" : "";
+      const wacc = r.wacc ? ` WACC:${r.wacc}%` : "";
+      const credit = r.credit ? ` Crédit:${r.credit}` : "";
+      const resources = (d.resources || []).join("/");
+      const exports_  = (d.exports   || []).join("/");
+      return `${c.flag||""} ${c.name} (${c.code}${coup}) | Score:${c.score}/100 | Region:${c.region} | PIB:${c.gdp} | Croissance:${d.growth||"N/A"} | Inflation:${d.inflation||"N/A"} | Dette:${d.dette_pib||"N/A"} | Devise:${d.currency||"N/A"} | Capital:${d.capital||"N/A"} | President:${d.president||"N/A"} | Pop:${d.pop||"N/A"} | Ressources:${resources||"N/A"} | Exports:${exports_||"N/A"} | Politique:${(d.indices||{}).politique||"?"} Economie:${(d.indices||{}).economie||"?"} Infra:${(d.indices||{}).infra||"?"} Juridique:${(d.indices||{}).juridique||"?"} Humain:${(d.indices||{}).humain||"?"} Integration:${(d.indices||{}).integration||"?"}${credit}${wacc}`;
+    });
+
+    return "BASE DE DONNÉES WASI — 54 PAYS AFRICAINS (données World Bank 2024) :\n" + lines.join("\n");
+  }
+
   // ── Direct Claude API call ────────────────────────────────────────────────
   async function callClaude(userMessage, history, countryProfile) {
     const apiKey = getApiKey();
     if (!apiKey) throw new Error("Clé API Anthropic manquante.");
 
-    const wasiKnowledge = [
-      "WASI (Whole African Strategic Intelligence) est une infrastructure financière et économique africaine fondée par Tarawendesida Thomas KABORE, FMVA, CEO basé à Ouagadougou, Burkina Faso.",
-      "La plateforme couvre 54 pays africains souverains organisés en scores AFEX (African Exchange Index) mesurant stabilité politique, environnement économique, infrastructure, cadre juridique, capital humain et intégration régionale.",
-      "Modules de la plateforme : (1) WASI Intelligence — scores pays et IA géopolitique ; (2) WASI DEX — marchés financiers africains (BRVM, NGX Nigeria, GSE Ghana, JSE Afrique du Sud, BVMAC CEMAC, etc.) ; (3) CIREX Microfinance — crédit terrain et conformité pour IMF ; (4) WASI Private Market — portail investisseur et souscription privée ; (5) WASI Ecosystem Hub — navigation groupe ; (6) WASI CLI — terminal Bloomberg-style synchronisé Excel + web.",
-      "Zone de couverture prioritaire : 16 pays CEDEAO, zone OHADA (17 États), espace UEMOA/BCEAO, marchés anglophones (Nigeria, Ghana, Afrique du Sud, Kenya, Tanzanie).",
-      "Marchés cibles : TAM estimé $4.2 Mds USD. Concurrents : Refinitiv Eikon (trop cher), MSCI Frontier Markets (pas assez africain), Daba Finance (sans données macro). WASI est la seule plateforme combinant données officielles 54 pays + néobanque + courtage multi-marchés + accès marchés privés + conformité OHADA.",
-      "Cadres légaux maîtrisés : OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO, Code civil français, Code du travail français, Code de commerce français, Code pénal français.",
-    ].join(" ");
+    // ── Platform knowledge ─────────────────────────────────────────────────
+    const wasiKnowledge =
+      "Tu es WASI AI, l'intelligence artificielle officielle de WASI (Whole African Strategic Intelligence), " +
+      "infrastructure financière africaine fondée par Tarawendesida Thomas KABORE, FMVA, CEO à Ouagadougou, Burkina Faso. " +
+      "WASI couvre 54 pays africains avec scores WASI (0-100) sur 6 axes : Politique, Economie, Infra, Juridique, Humain, Intégration. " +
+      "Modules : (1) Intelligence — scores pays IA ; (2) DEX — marchés financiers (BRVM, NGX, GSE, JSE, BVMAC) ; " +
+      "(3) CIREX Microfinance ; (4) Private Market ; (5) Ecosystem Hub ; (6) CLI Bloomberg-style. " +
+      "Cadres légaux : OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO. TAM : $4.2Mds USD.";
 
-    const investmentInstructions = [
-      "RÉPONSES DIRECTES ET ACTIONNABLES : pour les questions d'investissement, cite des opportunités spécifiques, des secteurs porteurs, des corridors commerciaux, des chiffres GDP/croissance, des recommandations concrètes.",
-      "Pour 'Presentez WASI Ecosystem' ou toute question sur WASI : décris la plateforme, sa mission, ses 6 modules, ses marchés cibles, sa valeur ajoutée vs concurrents.",
-      "Pour les questions sur un pays spécifique : donne un verdict d'investissement clair (favorable / prudence / éviter), les 3 meilleurs secteurs d'entrée, les 2 risques principaux, et un corridor commercial clé.",
-      "Style : paragraphes courts, net, stratégique. Zéro titre markdown, zéro tableau. Réponds TOUJOURS en français.",
-      "Ne dis jamais que ton analyse remplace un avis juridique formel.",
-    ].join(" ");
+    // ── Instructions ───────────────────────────────────────────────────────
+    const instructions =
+      "RÈGLES DE RÉPONSE OBLIGATOIRES :\n" +
+      "1. Utilise EXCLUSIVEMENT les données WASI fournies dans ce prompt pour les chiffres (PIB, croissance, inflation, score, dette, WACC, président, ressources, exports).\n" +
+      "2. Pour toute question sur un pays : cite systématiquement son Score WASI, son PIB, sa croissance, son inflation, son président, sa devise, ses 3 ressources principales et ses 3 exports principaux.\n" +
+      "3. Donne un verdict d'investissement clair : FAVORABLE / PRUDENCE / ÉVITER, avec les 3 secteurs porteurs et les 2 risques majeurs.\n" +
+      "4. Pour des comparaisons de pays : compare les scores WASI, PIB, croissance et WACC côte à côte avec des chiffres précis.\n" +
+      "5. Pour les corridors commerciaux : cite les pays, les produits échangés et les devises concernées.\n" +
+      "6. Style : analytique, structuré, chiffré. Paragraphes courts. Réponds TOUJOURS en français.\n" +
+      "7. Si une donnée n'est pas dans ce prompt, dis-le clairement au lieu d'inventer.\n" +
+      "8. Ne remplace pas un avis juridique ou financier formel.";
 
-    const countryCtx = countryProfile
-      ? [
-          `Pays focal actif : ${countryProfile.name}`,
-          `Score WASI : ${countryProfile.currentScore}/100 (région ${countryProfile.region}${countryProfile.coup ? " — TRANSITION MILITAIRE" : ""})`,
-          `Données World Bank ${countryProfile.gdp_year} : PIB ${countryProfile.gdp}, Croissance ${countryProfile.growth}, Inflation ${countryProfile.inflation}, Dette ${countryProfile.debt_gdp}`,
-          `Source macro : ${countryProfile.dataSource || "WASI base"}`,
-          `Sous-indices WASI : Politique=${countryProfile.politique}, Economie=${countryProfile.economie}, Infra=${countryProfile.infra}, Juridique=${countryProfile.juridique}, Humain=${countryProfile.humain}, Integration=${countryProfile.integration}`,
-          `Ressources : ${countryProfile.resources} | Exports : ${countryProfile.exports} | Devise : ${countryProfile.currency}`,
-        ].join("\n")
-      : "";
+    // ── Focused country deep profile ────────────────────────────────────────
+    let focusedCtx = "";
+    if (countryProfile) {
+      const riskData = (window.COUNTRY_RISKS || {})[countryProfile.code] || {};
+      const risques = (riskData.risques || []).map(function(r) {
+        return r.nom + " (cat:" + r.cat + " prob:" + r.prob + "/5 impact:" + r.impact + "/5)";
+      }).join("; ");
+
+      focusedCtx =
+        "═══ PAYS EN FOCUS ACTIF : " + countryProfile.name + " (" + countryProfile.code + ") ═══\n" +
+        "Score WASI global : " + countryProfile.currentScore + "/100" + (countryProfile.coup ? " ⚠ RÉGIME MILITAIRE" : "") + "\n" +
+        "Région : " + countryProfile.region + "\n" +
+        "Président : " + (countryProfile.president || "N/A") + "\n" +
+        "Capitale : " + (countryProfile.capital || "N/A") + " | Centre éco : " + (countryProfile.eco_center || "N/A") + "\n" +
+        "Population : " + (countryProfile.pop || "N/A") + " | Devise : " + (countryProfile.currency || "N/A") + "\n" +
+        "PIB : " + countryProfile.gdp + " (" + (countryProfile.gdp_year || "2024") + ") | Source : " + (countryProfile.dataSource || "WASI") + "\n" +
+        "Croissance : " + countryProfile.growth + " | Inflation : " + countryProfile.inflation + " | Dette/PIB : " + countryProfile.debt_gdp + "\n" +
+        "Ressources naturelles : " + countryProfile.resources + "\n" +
+        "Exports principaux : " + countryProfile.exports + "\n" +
+        "Sous-indices WASI :\n" +
+        "  - Politique : " + countryProfile.politique + "/100\n" +
+        "  - Economie : " + countryProfile.economie + "/100\n" +
+        "  - Infrastructure : " + countryProfile.infra + "/100\n" +
+        "  - Juridique : " + countryProfile.juridique + "/100\n" +
+        "  - Capital Humain : " + countryProfile.humain + "/100\n" +
+        "  - Intégration régionale : " + countryProfile.integration + "/100\n" +
+        (riskData.credit ? "Signal Crédit WASI : " + riskData.credit + "\n" : "") +
+        (riskData.wacc   ? "WACC pays : " + riskData.wacc + "% (" + (riskData.waccNote || "") + ")\n" : "") +
+        (riskData.fxRisk ? "Risque FX : " + riskData.fxRisk + " — " + (riskData.fxNote || "") + "\n" : "") +
+        (riskData.electionYear ? "Prochaine élection : " + riskData.electionYear + "\n" : "") +
+        (risques ? "Risques spécifiques identifiés : " + risques + "\n" : "") +
+        (countryProfile.micro ? (
+          "Micro-économie : Élasticité-prix=" + countryProfile.micro.elasticite_prix +
+          " Concentration export=" + countryProfile.micro.concentration_export +
+          " Productivité=" + countryProfile.micro.productivite +
+          " Compétitivité=" + countryProfile.micro.competitivite +
+          " Résilience=" + countryProfile.micro.resilience + "\n"
+        ) : "");
+    }
+
+    // ── 54-country encyclopedia ────────────────────────────────────────────
+    const encyclopedia = buildCountryEncyclopedia();
 
     const systemPrompt = [
-      "Tu es WASI AI, l'intelligence artificielle officielle de la plateforme WASI.",
       wasiKnowledge,
-      investmentInstructions,
-      countryCtx,
+      instructions,
+      encyclopedia,
+      focusedCtx,
     ].filter(Boolean).join("\n\n");
 
     const messages = [
@@ -145,7 +202,7 @@
         "anthropic-version": "2023-06-01",
         "anthropic-dangerous-direct-browser-access": "true",
       },
-      body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens: 950, system: systemPrompt, messages }),
+      body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens: 1800, system: systemPrompt, messages }),
     });
 
     if (!resp.ok) {
@@ -884,17 +941,27 @@
           region: focusedCountry.region,
           gdp: focusedCountry.gdp || "N/A",
           risk: focusedCountry.risk || "N/A",
+          // Detail fields
+          president: det.president || "N/A",
+          capital: det.capital || "N/A",
+          eco_center: det.eco_center || det.capital || "N/A",
+          pop: det.pop || "N/A",
+          currency: det.currency || "N/A",
+          zone: det.zone || focusedCountry.region || "N/A",
+          // Sub-indices
           politique: idx.politique ?? 50,
           economie: idx.economie ?? 50,
           infra: idx.infra ?? 50,
           juridique: idx.juridique ?? 50,
           humain: idx.humain ?? 50,
           integration: idx.integration ?? 50,
+          // Micro-indices
+          micro: idx.micro || null,
+          // Macro
           growth: focusedCountry.liveGrowth != null ? focusedCountry.liveGrowth + "%" : (det.growth || "N/A"),
           inflation: focusedCountry.liveInflation != null ? focusedCountry.liveInflation + "%" : (det.inflation || "N/A"),
-          debt_gdp: focusedCountry.liveDebt != null ? focusedCountry.liveDebt + "% PIB" : "N/A",
+          debt_gdp: focusedCountry.liveDebt != null ? focusedCountry.liveDebt + "% PIB" : (det.dette_pib || "N/A"),
           gdp_year: focusedCountry.liveGdpYear || "2024",
-          currency: det.currency || "N/A",
           resources: (det.resources || []).join(", ") || "N/A",
           exports: (det.exports || []).join(", ") || "N/A",
           dataSource: state.worldBankLoaded ? "World Bank 2024 (live)" : "WASI base",
