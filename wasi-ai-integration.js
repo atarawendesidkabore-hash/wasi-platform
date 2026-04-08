@@ -143,6 +143,7 @@
         "Content-Type": "application/json",
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
       },
       body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens: 950, system: systemPrompt, messages }),
     });
@@ -920,13 +921,14 @@
         typing.classList.remove("show");
       }
 
-      const fallback =
-        typeof window.generateLocalResponse === "function"
-          ? window.generateLocalResponse(message, focusedCountry ? focusedCountry.name : "AFRIQUE")
-          : "Le serveur WASI AI n'est pas disponible actuellement.";
-      appendRichBotMessage(fallback, [], focusedSignal);
+      const errMsg = error?.message || String(error);
+      const isKeyMissing = errMsg.includes("manquante") || errMsg.includes("401");
+      const errorReply = isKeyMissing
+        ? "⚠️ **Clé API manquante ou invalide.** Rechargez la page et entrez votre clé `sk-ant-...` Anthropic."
+        : `⚠️ **Erreur WASI AI :** ${errMsg}`;
+      appendRichBotMessage(errorReply, [], focusedSignal);
       window.chatHistory.push({ role: "user", content: message });
-      window.chatHistory.push({ role: "assistant", content: fallback });
+      window.chatHistory.push({ role: "assistant", content: errorReply });
       saveChatHistory();
     } finally {
       state.chatBusy = false;
