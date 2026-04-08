@@ -113,7 +113,14 @@
     ].join(" ");
 
     const countryCtx = countryProfile
-      ? `Pays focal actif : ${countryProfile.name} (score WASI ${countryProfile.currentScore}/100, région ${countryProfile.region}${countryProfile.coup ? ", TRANSITION POLITIQUE" : ""}, politique=${countryProfile.politique || "N/A"}, economie=${countryProfile.economie || "N/A"}, infra=${countryProfile.infra || "N/A"}, juridique=${countryProfile.juridique}, humain=${countryProfile.humain || "N/A"}, integration=${countryProfile.integration}).`
+      ? [
+          `Pays focal actif : ${countryProfile.name}`,
+          `Score WASI : ${countryProfile.currentScore}/100 (région ${countryProfile.region}${countryProfile.coup ? " — TRANSITION MILITAIRE" : ""})`,
+          `Données World Bank ${countryProfile.gdp_year} : PIB ${countryProfile.gdp}, Croissance ${countryProfile.growth}, Inflation ${countryProfile.inflation}, Dette ${countryProfile.debt_gdp}`,
+          `Source macro : ${countryProfile.dataSource || "WASI base"}`,
+          `Sous-indices WASI : Politique=${countryProfile.politique}, Economie=${countryProfile.economie}, Infra=${countryProfile.infra}, Juridique=${countryProfile.juridique}, Humain=${countryProfile.humain}, Integration=${countryProfile.integration}`,
+          `Ressources : ${countryProfile.resources} | Exports : ${countryProfile.exports} | Devise : ${countryProfile.currency}`,
+        ].join("\n")
       : "";
 
     const systemPrompt = [
@@ -707,16 +714,93 @@
     }
   }
 
+  // ── Live World Bank data loader ───────────────────────────────────────────
+  // Fetches data/country-macros.json (auto-refreshed weekly by GitHub Actions)
+  // and merges real GDP, growth, inflation, scoreAdj into window.COUNTRIES.
+  async function loadWorldBankData() {
+    try {
+      const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, "");
+      const url  = base + "/data/country-macros.json";
+      const res  = await fetch(url + "?v=" + Date.now());
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function mergeWorldBankData(wb) {
+    if (!wb || !wb.countries || !Array.isArray(window.COUNTRIES)) return;
+
+    window.COUNTRIES.forEach((country) => {
+      const live = wb.countries[country.code];
+      if (!live) return;
+
+      // Update GDP display string if we have live data
+      if (live.gdp_fmt) {
+        country.gdp = live.gdp_fmt;
+      }
+      // Store macro data for AI context
+      country.liveGrowth    = live.growth;
+      country.liveInflation = live.inflation;
+      country.liveDebt      = live.debt_gdp;
+      country.liveGdpYear   = live.gdp_year;
+      country.liveMacroAdj  = live.scoreAdj ?? 0;
+
+      // Blend the macro adjustment into the base score (capped ±5)
+      if (typeof live.scoreAdj === "number") {
+        country.macroAdj = live.scoreAdj;
+      }
+    });
+
+    const fetchDate = wb.fetchedAt ? new Date(wb.fetchedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }) : "N/A";
+    state.worldBankFetchedAt = fetchDate;
+    state.worldBankLoaded = true;
+  }
+
+  // Enhanced signal that incorporates live World Bank macro adjustment
+  function computeLiveSignal(country) {
+    const base    = typeof country.baseScore === "number" ? country.baseScore : country.score;
+    const macroAdj = typeof country.macroAdj === "number" ? country.macroAdj : 0;
+    const stabilityAdj = country.coup ? -4 : base >= 70 ? 2 : base >= 50 ? 1 : 0;
+    const totalAdj = macroAdj + stabilityAdj;
+    const finalScore = Math.min(100, Math.max(0, Math.round(base + totalAdj)));
+
+    const growthStr   = country.liveGrowth    != null ? country.liveGrowth + "%" : "N/A";
+    const inflStr     = country.liveInflation != null ? country.liveInflation + "%" : "N/A";
+    const debtStr     = country.liveDebt      != null ? country.liveDebt + "% PIB" : "N/A";
+    const gdpYear     = country.liveGdpYear || "2024";
+
+    const coverageLabel = base >= 70 ? "Couverture nationale approfondie"
+      : base >= 50 ? "Couverture régionale BCEAO / UMOA / UEMOA"
+      : "Couverture annuaire pays UA";
+
+    return {
+      code: country.code,
+      baseScore: base,
+      macroAdj,
+      stabilityAdj,
+      aiAdjustment: totalAdj,
+      finalScore,
+      legalReadiness: finalScore >= 65 ? "Élevée" : finalScore >= 45 ? "Moyenne" : "Limitée",
+      summary: `PIB ${country.gdp} (${gdpYear}) · Croissance ${growthStr} · Inflation ${inflStr} · Dette ${debtStr}.`,
+      frameworks: [country.region || "UA", country.coup ? "Transition" : "Stabilité", state.worldBankLoaded ? "Données BM 2024" : "Données locales"],
+      coverageLabel,
+      officialSources: [],
+    };
+  }
+
   async function loadSourceStatus() {
     installHeaderUi();
     state.source = { aiEnabled: true, legalCodes: [], apps: [], sourceAgeHours: 0 };
-    updateStatus("WASI AI · mode autonome (Claude direct)", "ready");
+    updateStatus("WASI AI · chargement données BM...", "loading");
     buildCompositeCard();
   }
 
   async function refreshAiSources() {
     installHeaderUi();
-    updateStatus("Recalcul des signaux WASI AI...", "loading");
+    updateStatus("Actualisation données World Bank...", "loading");
     await loadCountrySignals();
   }
 
@@ -726,15 +810,31 @@
     }
 
     state.loadingSignals = true;
-    updateStatus("Calcul des scores WASI IA...", "loading");
+    updateStatus("Chargement données World Bank 2024...", "loading");
 
     try {
       ensureBaseScores();
-      const localSignals = window.COUNTRIES.map((c) => computeLocalSignal(c));
-      state.signals = new Map(localSignals.map((s) => [s.code, s]));
-      state.source = { aiEnabled: true, legalCodes: [], apps: [], sourceAgeHours: 0 };
+
+      // 1. Fetch live World Bank data
+      const wb = await loadWorldBankData();
+      if (wb) {
+        mergeWorldBankData(wb);
+        updateStatus("Intégration données BM " + (state.worldBankFetchedAt || "") + "...", "loading");
+      }
+
+      // 2. Compute signals (live if WB loaded, local fallback otherwise)
+      const signals = window.COUNTRIES.map((c) =>
+        state.worldBankLoaded ? computeLiveSignal(c) : computeLocalSignal(c)
+      );
+      state.signals = new Map(signals.map((s) => [s.code, s]));
+      state.source  = { aiEnabled: true, legalCodes: [], apps: [], sourceAgeHours: 0 };
+
       applySignalsToCountries();
-      updateStatus("WASI AI · signaux locaux actifs", "ready");
+
+      const label = state.worldBankLoaded
+        ? `WASI AI · Données BM ${state.worldBankFetchedAt || "2024"}`
+        : "WASI AI · signaux locaux actifs";
+      updateStatus(label, "ready");
     } catch (error) {
       updateStatus("Erreur calcul signaux", "error");
       buildCompositeCard();
@@ -783,11 +883,14 @@
           juridique: idx.juridique ?? 50,
           humain: idx.humain ?? 50,
           integration: idx.integration ?? 50,
-          growth: det.growth || "N/A",
-          inflation: det.inflation || "N/A",
+          growth: focusedCountry.liveGrowth != null ? focusedCountry.liveGrowth + "%" : (det.growth || "N/A"),
+          inflation: focusedCountry.liveInflation != null ? focusedCountry.liveInflation + "%" : (det.inflation || "N/A"),
+          debt_gdp: focusedCountry.liveDebt != null ? focusedCountry.liveDebt + "% PIB" : "N/A",
+          gdp_year: focusedCountry.liveGdpYear || "2024",
           currency: det.currency || "N/A",
           resources: (det.resources || []).join(", ") || "N/A",
           exports: (det.exports || []).join(", ") || "N/A",
+          dataSource: state.worldBankLoaded ? "World Bank 2024 (live)" : "WASI base",
         }
       : null;
 
