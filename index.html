@@ -2767,6 +2767,13 @@ input, select, textarea { font-family: inherit; outline: none; }
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;" id="pme-ratios-grid"></div>
           </div>
 
+          <!-- CARTOGRAPHIE DES RISQUES ENTREPRISE -->
+          <div id="pme-enterprise-risk" style="display:none;margin-top:18px;">
+            <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:600;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);">⚠ Cartographie des Risques Entreprise</div>
+            <div id="pme-risk-axes" style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px;"></div>
+            <div id="pme-risk-matrix-wrap"></div>
+          </div>
+
           <div class="sm-score-card" id="pme-score-card">
             <h3>Score WASI estim&eacute;</h3>
             <div class="sm-score-result" id="pme-score-result" style="color:var(--text-dim);">Remplissez les champs ci-dessus</div>
@@ -3291,6 +3298,246 @@ const COUNTRY_DETAILS = {
     indices:{politique:8,economie:22,infra:30,juridique:12,humain:28,integration:10,
     micro:{elasticite_prix:15,concentration_export:8,productivite:35,rendements_echelle:30,substituabilite:10,competitivite:25,resilience:12,adaptabilite:12}}},
 };
+
+/* ================================================================
+   WASI RISK INTELLIGENCE — Country Risk Data, WACC & Credit Signal
+   ================================================================ */
+const COUNTRY_RISKS = {
+  NG:{credit:'B-',fxRisk:'Élevé',fxNote:'Naira flottant, marché parallèle persistant',wacc:22,waccNote:'Rf 4.5% + CRP 12% + FX 5.5%',electionYear:2027,
+    risques:[
+      {nom:'Dévaluation Naira / instabilité FX',cat:'Macro',prob:4,impact:4},
+      {nom:'Inflation persistante > 30%',cat:'Macro',prob:5,impact:4},
+      {nom:'Insécurité Nord-Est (Boko Haram)',cat:'Sécurité',prob:4,impact:3},
+      {nom:'Réforme subventions carburant',cat:'Politique',prob:3,impact:3},
+      {nom:'Volatilité cours pétrole',cat:'Marché',prob:4,impact:4},
+      {nom:'Succession politique 2027',cat:'Politique',prob:3,impact:3},
+    ]},
+  CI:{credit:'BB-',fxRisk:'Faible',fxNote:'XOF ancré EUR — risque maîtrisé',wacc:14,waccNote:'Rf 4.5% + CRP 7% + Zone UEMOA 2.5%',electionYear:2025,
+    risques:[
+      {nom:'Succession Ouattara / transition politique',cat:'Politique',prob:3,impact:5},
+      {nom:'Dépendance monoculture cacao (40% export)',cat:'Marché',prob:3,impact:4},
+      {nom:'Dette publique croissante (52% PIB)',cat:'Macro',prob:2,impact:3},
+      {nom:'Instabilité régionale (Sahel)',cat:'Sécurité',prob:2,impact:2},
+      {nom:'Élections présidentielles 2025',cat:'Politique',prob:2,impact:3},
+    ]},
+  GH:{credit:'CCC+',fxRisk:'Élevé',fxNote:'Cedi en dépréciation structurelle',wacc:24,waccNote:'Rf 4.5% + CRP 14% + FX 5.5%',electionYear:2028,
+    risques:[
+      {nom:'Restructuration dette souveraine (FMI)',cat:'Macro',prob:3,impact:5},
+      {nom:'Dépréciation Cedi accélérée',cat:'Macro',prob:4,impact:4},
+      {nom:'Inflation résiduelle > 20%',cat:'Macro',prob:4,impact:3},
+      {nom:'Secteur or/cacao : volatilité prix',cat:'Marché',prob:3,impact:3},
+    ]},
+  SN:{credit:'BB-',fxRisk:'Faible',fxNote:'XOF stable, production pétrolière naissante',wacc:13,waccNote:'Rf 4.5% + CRP 6.5% + Zone UEMOA 2%',electionYear:2029,
+    risques:[
+      {nom:'Risques liés à la production pétrolière',cat:'Marché',prob:2,impact:3},
+      {nom:'Transition politique — nouveau gouvernement',cat:'Politique',prob:2,impact:3},
+      {nom:'Endettement croissant (68% PIB)',cat:'Macro',prob:3,impact:3},
+      {nom:'Dépendance aide extérieure',cat:'Macro',prob:2,impact:2},
+    ]},
+  BF:{credit:'CCC',fxRisk:'Modéré',fxNote:'XOF mais isolement économique AES',wacc:32,waccNote:'Rf 4.5% + CRP 18% + Conflit 9.5%',electionYear:null,
+    risques:[
+      {nom:'Instabilité régime militaire',cat:'Politique',prob:5,impact:5},
+      {nom:'Terrorisme jihadiste (JNIM / EIGS)',cat:'Sécurité',prob:5,impact:5},
+      {nom:'Retrait CEDEAO / Alliance AES',cat:'Politique',prob:4,impact:4},
+      {nom:'Fermetures frontières économiques',cat:'Marché',prob:4,impact:3},
+      {nom:'Coupures internet / restrictions médias',cat:'Conformité',prob:4,impact:2},
+    ]},
+  ML:{credit:'CCC',fxRisk:'Modéré',fxNote:'XOF — AES isolement croissant',wacc:30,waccNote:'Rf 4.5% + CRP 16% + Conflit 9.5%',electionYear:null,
+    risques:[
+      {nom:'Régime militaire — pas d\'élections prévues',cat:'Politique',prob:5,impact:4},
+      {nom:'Terrorisme — centre et nord du pays',cat:'Sécurité',prob:5,impact:5},
+      {nom:'Expulsion forces françaises / MINUSMA',cat:'Politique',prob:5,impact:3},
+      {nom:'Sanctions économiques résiduelles',cat:'Conformité',prob:3,impact:3},
+    ]},
+  KE:{credit:'B',fxRisk:'Modéré',fxNote:'Shilling volatil, dette USD élevée',wacc:17,waccNote:'Rf 4.5% + CRP 9% + FX 3.5%',electionYear:2027,
+    risques:[
+      {nom:'Pression dette FMI (Eurobonds)',cat:'Macro',prob:3,impact:4},
+      {nom:'Instabilité politique / manifestations',cat:'Politique',prob:3,impact:3},
+      {nom:'Sécheresse et insécurité alimentaire',cat:'Sécurité',prob:3,impact:3},
+      {nom:'Tensions régionales (Somalie, Éthiopie)',cat:'Sécurité',prob:2,impact:2},
+    ]},
+  RW:{credit:'B+',fxRisk:'Faible',fxNote:'Franc rwandais relativement stable',wacc:15,waccNote:'Rf 4.5% + CRP 7.5% + FX 3%',electionYear:2029,
+    risques:[
+      {nom:'Risque de succession (Kagame)',cat:'Politique',prob:2,impact:5},
+      {nom:'Tensions Congo-Rwanda (M23)',cat:'Sécurité',prob:4,impact:4},
+      {nom:'Forte dépendance aide internationale',cat:'Macro',prob:2,impact:3},
+    ]},
+  ZA:{credit:'BB-',fxRisk:'Élevé',fxNote:'Rand très volatile, lié commodités',wacc:18,waccNote:'Rf 4.5% + CRP 8% + FX 5.5%',electionYear:2029,
+    risques:[
+      {nom:'Crise énergétique (load shedding)',cat:'Marché',prob:4,impact:4},
+      {nom:'Chômage structurel (32%)',cat:'Macro',prob:5,impact:4},
+      {nom:'Violence sociale et criminalité',cat:'Sécurité',prob:4,impact:3},
+      {nom:'Volatilité Rand / sensibilité USD',cat:'Macro',prob:4,impact:3},
+      {nom:'Gouvernance ANC / corruption',cat:'Politique',prob:4,impact:3},
+    ]},
+  EG:{credit:'B',fxRisk:'Critique',fxNote:'EGP dévalué -60% depuis 2022, contrôles FX',wacc:26,waccNote:'Rf 4.5% + CRP 12% + FX 9.5%',electionYear:2029,
+    risques:[
+      {nom:'Crise FX — dévaluation structurelle EGP',cat:'Macro',prob:4,impact:5},
+      {nom:'Inflation > 25% (pic 38% en 2023)',cat:'Macro',prob:5,impact:4},
+      {nom:'Dette extérieure FMI / obligations',cat:'Macro',prob:3,impact:4},
+      {nom:'Réserves FX sous pression',cat:'Macro',prob:3,impact:4},
+      {nom:'Tensions géopolitiques (Gaza / mer Rouge)',cat:'Sécurité',prob:3,impact:3},
+    ]},
+  MA:{credit:'BB+',fxRisk:'Faible',fxNote:'Dirham semi-fixe — stabilité reconnue',wacc:12,waccNote:'Rf 4.5% + CRP 5% + Zone UMA 2.5%',electionYear:2026,
+    risques:[
+      {nom:'Dépendance tourisme et transferts diaspora',cat:'Marché',prob:2,impact:3},
+      {nom:'Vulnérabilité sécheresse / eau',cat:'Marché',prob:3,impact:3},
+      {nom:'Tensions politiques régionales (Algérie)',cat:'Politique',prob:2,impact:2},
+      {nom:'Réforme fiscale en cours',cat:'Conformité',prob:2,impact:2},
+    ]},
+  TN:{credit:'CCC+',fxRisk:'Élevé',fxNote:'Dinar sous pression, FMI en suspens',wacc:26,wackNote:'Rf 4.5% + CRP 14% + FX 7.5%',electionYear:2029,
+    risques:[
+      {nom:'Crise financement FMI bloqué',cat:'Macro',prob:4,impact:5},
+      {nom:'Dérive autoritaire — risque gouvernance',cat:'Politique',prob:4,impact:4},
+      {nom:'Endettement critique (81% PIB)',cat:'Macro',prob:4,impact:4},
+      {nom:'Chômage élevé — instabilité sociale',cat:'Politique',prob:3,impact:3},
+    ]},
+  ET:{credit:'CCC',fxRisk:'Critique',fxNote:'Birr dévalué, contrôles stricts changes',wacc:28,waccNote:'Rf 4.5% + CRP 15% + FX 8.5%',electionYear:2027,
+    risques:[
+      {nom:'Conflits armés régionaux (Amhara, Oromia)',cat:'Sécurité',prob:4,impact:5},
+      {nom:'Restrictions sévères devises étrangères',cat:'Macro',prob:5,impact:4},
+      {nom:'Endettement extérieur (FMI/Chine)',cat:'Macro',prob:3,impact:4},
+      {nom:'Instabilité politique interne',cat:'Politique',prob:3,impact:4},
+    ]},
+  TZ:{credit:'B+',fxRisk:'Faible',fxNote:'Shilling stable, économie diversifiée',wacc:15,waccNote:'Rf 4.5% + CRP 7.5% + FX 3%',electionYear:2025,
+    risques:[
+      {nom:'Gouvernance autoritaire — liberté presse',cat:'Politique',prob:3,impact:3},
+      {nom:'Dépendance matières premières',cat:'Marché',prob:2,impact:3},
+      {nom:'Élections 2025 — tensions potentielles',cat:'Politique',prob:2,impact:2},
+    ]},
+  UG:{credit:'B',fxRisk:'Modéré',fxNote:'Shilling volatil, dépendance aide',wacc:18,waccNote:'Rf 4.5% + CRP 9% + FX 4.5%',electionYear:2026,
+    risques:[
+      {nom:'Pétrole — début exploitation risqué',cat:'Marché',prob:2,impact:3},
+      {nom:'Gouvernance Museveni (40 ans au pouvoir)',cat:'Politique',prob:3,impact:3},
+      {nom:'Dettes infrastructure Chine',cat:'Macro',prob:3,impact:3},
+    ]},
+  AO:{credit:'B',fxRisk:'Élevé',fxNote:'Kwanza volatile, dépendance pétrole 90%',wacc:21,waccNote:'Rf 4.5% + CRP 11% + FX 5.5%',electionYear:2027,
+    risques:[
+      {nom:'Dépendance pétrole > 90% revenus',cat:'Marché',prob:3,impact:5},
+      {nom:'Dépréciation Kwanza structurelle',cat:'Macro',prob:4,impact:4},
+      {nom:'Gouvernance et corruption',cat:'Conformité',prob:3,impact:3},
+    ]},
+  ZM:{credit:'CCC+',fxRisk:'Élevé',fxNote:'Kwacha volatil — défaut 2020, restructuré',wacc:24,waccNote:'Rf 4.5% + CRP 13% + FX 6.5%',electionYear:2026,
+    risques:[
+      {nom:'Post-défaut 2020 — restructuration dette',cat:'Macro',prob:3,impact:4},
+      {nom:'Vulnérabilité copper price',cat:'Marché',prob:3,impact:4},
+      {nom:'Kwacha dépréciation récurrente',cat:'Macro',prob:3,impact:3},
+    ]},
+  DZ:{credit:'BB',fxRisk:'Modéré',fxNote:'Dinar fixé — réserves hydrocarbures',wacc:16,waccNote:'Rf 4.5% + CRP 8% + FX 3.5%',electionYear:2027,
+    risques:[
+      {nom:'Dépendance hydrocarbures (95% revenus)',cat:'Marché',prob:4,impact:5},
+      {nom:'Tensions régionales (Mali, Sahel)',cat:'Sécurité',prob:3,impact:3},
+      {nom:'Réformes économiques insuffisantes',cat:'Politique',prob:3,impact:3},
+    ]},
+  MU:{credit:'BBB-',fxRisk:'Faible',fxNote:'Roupie stable, IFSC center',wacc:10,waccNote:'Rf 4.5% + CRP 3.5% + FX 2%',electionYear:2029,
+    risques:[
+      {nom:'Petite économie insulaire vulnérable',cat:'Marché',prob:2,impact:3},
+      {nom:'Dépendance tourisme et offshore',cat:'Marché',prob:2,impact:3},
+    ]},
+  BW:{credit:'BBB',fxRisk:'Faible',fxNote:'Pula semi-fixe, réserves diamants',wacc:10,waccNote:'Rf 4.5% + CRP 3.5% + FX 2%',electionYear:2029,
+    risques:[
+      {nom:'Dépendance diamants (80% exports)',cat:'Marché',prob:3,impact:5},
+      {nom:'Succession politique — nouveaux dirigeants',cat:'Politique',prob:2,impact:2},
+    ]},
+};
+
+/* -- WACC & Credit computation for countries without explicit data -- */
+function getCountryRisk(code) {
+  if (COUNTRY_RISKS[code]) return COUNTRY_RISKS[code];
+  var c = COUNTRIES.find(function(x){ return x.code === code; });
+  if (!c) return null;
+  var s = c.score || 50;
+  var credit = s>=85?'AA':s>=75?'A':s>=65?'BBB':s>=55?'BB':s>=45?'B':s>=35?'B-':s>=25?'CCC':'CC';
+  var fxRisk = c.coup?'Élevé':s>=65?'Faible':s>=45?'Modéré':'Élevé';
+  var wacc = c.coup? Math.round(28+(100-s)*0.15) : Math.round(9+(100-s)*0.15);
+  wacc = Math.max(9, Math.min(40, wacc));
+  return {credit:credit, fxRisk:fxRisk, fxNote:'Estimation WASI', wacc:wacc, waccNote:'Rf 4.5% + CRP estimé', risques:[], electionYear:null};
+}
+
+/* -- Risk matrix builder -- */
+function buildRiskMatrix(risques) {
+  if (!risques || !risques.length) return '<div style="color:var(--text-dim);font-size:.75rem;padding:8px;">Données de risques en cours de mise à jour.</div>';
+  var cats = {Politique:'#448AFF',Macro:'#FF9100',Sécurité:'#FF5252',Marché:'#C8922A',Conformité:'#18FFFF'};
+  var cells = {};
+  risques.forEach(function(r){
+    var key = r.prob + '_' + r.impact;
+    if (!cells[key]) cells[key] = [];
+    cells[key].push(r);
+  });
+  var html = '<div style="display:grid;grid-template-columns:28px repeat(5,1fr);grid-template-rows:repeat(5,32px) 28px;gap:2px;font-size:.6rem;">';
+  var cellColor = function(p,i){ var v=p*i; return v>=15?'rgba(255,82,82,.25)':v>=9?'rgba(255,145,0,.2)':v>=4?'rgba(200,146,42,.15)':'rgba(0,230,118,.1)'; };
+  // Y axis labels (Prob 5→1)
+  for (var p=5;p>=1;p--) {
+    html += '<div style="display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:.58rem;">P'+p+'</div>';
+    for (var i=1;i<=5;i++) {
+      var key = p+'_'+i;
+      var dots = cells[key]||[];
+      html += '<div style="background:'+cellColor(p,i)+';border-radius:3px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2px;padding:2px;position:relative;">';
+      dots.forEach(function(r){
+        var col = cats[r.cat]||'#888';
+        html += '<div title="'+r.nom+' ('+r.cat+')" style="width:8px;height:8px;border-radius:50%;background:'+col+';cursor:help;flex-shrink:0;"></div>';
+      });
+      html += '</div>';
+    }
+  }
+  // X axis labels
+  html += '<div></div>';
+  ['I1','I2','I3','I4','I5'].forEach(function(l){ html += '<div style="display:flex;align-items:center;justify-content:center;color:var(--text-dim);">'+l+'</div>'; });
+  html += '</div>';
+  // Legend
+  html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">';
+  Object.entries(cats).forEach(function(e){ html += '<span style="display:flex;align-items:center;gap:3px;font-size:.62rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:50%;background:'+e[1]+';display:inline-block;"></span>'+e[0]+'</span>'; });
+  html += '</div>';
+  // Risk list
+  html += '<div style="margin-top:10px;">';
+  risques.sort(function(a,b){ return (b.prob*b.impact)-(a.prob*a.impact); }).forEach(function(r){
+    var score = r.prob*r.impact;
+    var col = score>=15?'var(--red)':score>=9?'var(--orange)':score>=4?'var(--gold)':'var(--green)';
+    var label = score>=15?'Critique':score>=9?'Significatif':score>=4?'Tolérable':'Négligeable';
+    var col2 = cats[r.cat]||'#888';
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.72rem;">';
+    html += '<span style="min-width:24px;text-align:center;font-weight:700;color:'+col+';">'+score+'</span>';
+    html += '<span style="flex:1;color:var(--text-primary);">'+r.nom+'</span>';
+    html += '<span style="padding:1px 6px;border-radius:10px;font-size:.6rem;background:rgba(0,0,0,.3);border:1px solid '+col2+';color:'+col2+';">'+r.cat+'</span>';
+    html += '<span style="font-size:.62rem;color:'+col+';">'+label+'</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+/* -- WACC investor card builder -- */
+function buildWACCCard(code) {
+  var risk = getCountryRisk(code);
+  var c = COUNTRIES.find(function(x){ return x.code === code; });
+  if (!risk || !c) return '';
+  var creditCol = risk.credit.startsWith('AA')||risk.credit.startsWith('A')?'var(--green)':
+    risk.credit.startsWith('BBB')||risk.credit.startsWith('BB')?'var(--gold)':
+    risk.credit.startsWith('B')?'var(--orange)':'var(--red)';
+  var fxCol = risk.fxRisk==='Faible'?'var(--green)':risk.fxRisk==='Modéré'?'var(--gold)':risk.fxRisk==='Élevé'?'var(--orange)':'var(--red)';
+  var waccCol = risk.wacc<=12?'var(--green)':risk.wacc<=18?'var(--gold)':risk.wacc<=25?'var(--orange)':'var(--red)';
+  var election = risk.electionYear ? 'Élections ' + risk.electionYear : 'Pas d\'élections prévues';
+  return '<div style="background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:8px;padding:14px;margin-bottom:14px;">' +
+    '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:10px;">Signaux Investisseur WASI</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">' +
+    '<div style="text-align:center;padding:10px 6px;background:var(--bg-primary);border-radius:6px;">' +
+      '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">Signal Crédit WASI</div>' +
+      '<div style="font-size:1.4rem;font-weight:700;color:'+creditCol+';">'+risk.credit+'</div>' +
+    '</div>' +
+    '<div style="text-align:center;padding:10px 6px;background:var(--bg-primary);border-radius:6px;">' +
+      '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">WACC Pays</div>' +
+      '<div style="font-size:1.4rem;font-weight:700;color:'+waccCol+';">'+risk.wacc+'%</div>' +
+    '</div>' +
+    '<div style="text-align:center;padding:10px 6px;background:var(--bg-primary);border-radius:6px;">' +
+      '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">Risque FX</div>' +
+      '<div style="font-size:.9rem;font-weight:700;color:'+fxCol+';">'+risk.fxRisk+'</div>' +
+    '</div>' +
+    '</div>' +
+    '<div style="font-size:.68rem;color:var(--text-dim);margin-bottom:4px;">📐 '+risk.waccNote+'</div>' +
+    '<div style="font-size:.68rem;color:var(--text-dim);margin-bottom:8px;">💱 '+risk.fxNote+'</div>' +
+    '<div style="font-size:.68rem;padding:4px 8px;background:rgba(200,146,42,.08);border-radius:4px;color:var(--text-secondary);display:inline-block;">🗳 '+election+'</div>' +
+    '</div>';
+}
 
 const BRVM_STOCKS=[
   {name:'Sonatel',ticker:'SNTS',sector:'Telecom',price:16500,change:2.1,volume:45200,per:12.3,signal:'ACHAT'},
@@ -4243,6 +4490,11 @@ function renderDesktopCountryDetail(code) {
     ${bar('Juridique', d.indices.juridique)}
     ${bar('Humain', d.indices.humain)}
     ${bar('Integration', d.indices.integration)}
+
+    ${buildWACCCard(code)}
+
+    <div class="comp-section-title">Cartographie des Risques Pays</div>
+    ${buildRiskMatrix((getCountryRisk(code)||{}).risques||[])}
 
     <div class="comp-section-title" style="margin-top:14px;">Ressources</div>
     <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
@@ -6997,6 +7249,115 @@ function updateSMScore() {
     resultEl.textContent = 'Remplissez les champs financiers ci-dessus';
     resultEl.style.color = 'var(--text-dim)';
   }
+
+  // Update enterprise risk cartography
+  updateEnterpriseRisk({ ca, resultat, actif, capitaux, dettes, ebitda, exercices,
+    marge_nette: marge_nette !== null ? parseFloat(marge_nette) : null,
+    roe: roe !== null ? parseFloat(roe) : null,
+    levier: levier !== null ? parseFloat(levier) : null });
+}
+
+/* ── Enterprise Risk Cartography ─────────────────────────────────── */
+function updateEnterpriseRisk(fin) {
+  var riskWrap = document.getElementById('pme-enterprise-risk');
+  var axesDiv  = document.getElementById('pme-risk-axes');
+  var matrixDiv= document.getElementById('pme-risk-matrix-wrap');
+  if (!riskWrap || !axesDiv) return;
+
+  var code = document.getElementById('pme-country').value;
+  var hasData = fin.ca > 0 || fin.actif > 0;
+  if (!hasData && !code) { riskWrap.style.display = 'none'; return; }
+  riskWrap.style.display = 'block';
+
+  // ── Axis scores 1 (low risk) → 5 (high risk) ──────────────────
+  var axes = [];
+
+  // 1. Santé financière
+  var sf = 3; // neutral default
+  if (fin.ca > 0) {
+    var scoreF = 0;
+    if (fin.marge_nette !== null) scoreF += fin.marge_nette >= 10 ? 2 : fin.marge_nette >= 5 ? 1 : fin.marge_nette >= 0 ? 0 : -2;
+    if (fin.roe !== null)         scoreF += fin.roe >= 15 ? 2 : fin.roe >= 10 ? 1 : fin.roe >= 0 ? 0 : -2;
+    if (fin.ebitda > 0 && fin.ca > 0) { var me = fin.ebitda/fin.ca*100; scoreF += me >= 20 ? 2 : me >= 10 ? 1 : 0; }
+    sf = scoreF >= 5 ? 1 : scoreF >= 2 ? 2 : scoreF >= 0 ? 3 : scoreF >= -2 ? 4 : 5;
+  }
+  axes.push({ label:'Santé financière', score: sf, cat:'Financier',
+    note: sf<=2 ? 'Marges solides' : sf===3 ? 'Marges correctes' : 'Marges sous pression' });
+
+  // 2. Risque pays
+  var rp = 3;
+  if (code) {
+    var cr = getCountryRisk(code);
+    var countryObj = COUNTRIES.find(function(x){return x.code===code;});
+    var ws = countryObj ? countryObj.score : 50;
+    rp = ws >= 70 ? 1 : ws >= 55 ? 2 : ws >= 45 ? 3 : ws >= 35 ? 4 : 5;
+    if (countryObj && countryObj.coup) rp = Math.min(5, rp + 2);
+  }
+  axes.push({ label:'Risque pays', score: rp, cat:'Géopolitique',
+    note: rp<=2 ? 'Environnement stable' : rp===3 ? 'Risques modérés' : 'Environnement instable' });
+
+  // 3. Risque sectoriel (from description length / sector keywords as proxy)
+  var desc = (document.getElementById('pme-desc') ? document.getElementById('pme-desc').value : '').toLowerCase();
+  var rs = 3;
+  if (desc.indexOf('mine') >= 0 || desc.indexOf('extract') >= 0 || desc.indexOf('petrole') >= 0) rs = 4;
+  else if (desc.indexOf('agri') >= 0 || desc.indexOf('elevage') >= 0) rs = 2;
+  else if (desc.indexOf('tech') >= 0 || desc.indexOf('fintech') >= 0 || desc.indexOf('digital') >= 0) rs = 2;
+  else if (desc.indexOf('immobil') >= 0 || desc.indexOf('construc') >= 0) rs = 4;
+  else if (desc.indexOf('export') >= 0 || desc.indexOf('commerce') >= 0) rs = 3;
+  axes.push({ label:'Risque sectoriel', score: rs, cat:'Marché',
+    note: rs<=2 ? 'Secteur porteur' : rs===3 ? 'Secteur standard' : 'Secteur cyclique/exposé' });
+
+  // 4. Gouvernance
+  var ex = fin.exercices || 1;
+  var rg = ex >= 4 ? 1 : ex === 3 ? 2 : ex === 2 ? 3 : 5;
+  axes.push({ label:'Gouvernance / Audit', score: rg, cat:'Conformité',
+    note: rg<=2 ? 'Historique solide' : rg===3 ? '2 exercices audités' : 'Historique insuffisant' });
+
+  // 5. Liquidité / Endettement
+  var rl = 3;
+  if (fin.levier !== null) {
+    rl = fin.levier <= 0.5 ? 1 : fin.levier <= 1 ? 2 : fin.levier <= 2 ? 3 : fin.levier <= 4 ? 4 : 5;
+  } else if (fin.capitaux > 0) {
+    rl = 2; // Has capital but no debt info
+  }
+  axes.push({ label:'Liquidité / Levier', score: rl, cat:'Financier',
+    note: rl<=2 ? 'Bilan sain' : rl===3 ? 'Levier acceptable' : 'Surendettement détecté' });
+
+  // ── Render axes bars ─────────────────────────────────────────────
+  var catColors = { 'Financier':'var(--cyan)', 'Géopolitique':'var(--gold)', 'Marché':'var(--blue)', 'Conformité':'var(--orange)' };
+  axesDiv.innerHTML = axes.map(function(a) {
+    var pct = a.score * 20; // 1→20%, 5→100%
+    var col = a.score <= 2 ? 'var(--green)' : a.score === 3 ? 'var(--orange)' : 'var(--red)';
+    var label = a.score <= 2 ? 'Faible' : a.score === 3 ? 'Modéré' : 'Élevé';
+    var catCol = catColors[a.cat] || 'var(--text-secondary)';
+    return '<div style="background:var(--bg-primary);border-radius:6px;padding:10px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
+        '<span style="font-size:.75rem;font-weight:600;color:var(--text-primary);">' + a.label + '</span>' +
+        '<span style="font-size:.65rem;color:' + catCol + ';font-weight:600;">' + a.cat + '</span>' +
+      '</div>' +
+      '<div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden;margin-bottom:6px;">' +
+        '<div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:3px;transition:width .4s;"></div>' +
+      '</div>' +
+      '<div style="display:flex;justify-content:space-between;">' +
+        '<span style="font-size:.65rem;color:var(--text-dim);">' + a.note + '</span>' +
+        '<span style="font-size:.7rem;font-weight:700;color:' + col + ';">' + label + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // ── Verdict global ────────────────────────────────────────────────
+  var avgRisk = axes.reduce(function(s,a){return s+a.score;},0) / axes.length;
+  var verdict, verdictCol;
+  if (avgRisk <= 2)      { verdict = '✅ Profil risque FAIBLE — Candidature solide';    verdictCol = 'var(--green)'; }
+  else if (avgRisk <= 3) { verdict = '⚠ Profil risque MODERE — Points à renforcer';    verdictCol = 'var(--orange)'; }
+  else if (avgRisk <= 4) { verdict = '🔴 Profil risque ELEVE — Due diligence approfondie'; verdictCol = 'var(--red)'; }
+  else                   { verdict = '🚨 Profil risque CRITIQUE — Non recommandé';      verdictCol = 'var(--red)'; }
+
+  matrixDiv.innerHTML = '<div style="margin-top:10px;padding:12px;border-radius:6px;border:1px solid ' + verdictCol + ';background:rgba(0,0,0,.15);text-align:center;">' +
+    '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:4px;">Verdict WASI Risk</div>' +
+    '<div style="font-size:.85rem;font-weight:700;color:' + verdictCol + ';">' + verdict + '</div>' +
+    '<div style="font-size:.65rem;color:var(--text-dim);margin-top:4px;">Score moyen : ' + avgRisk.toFixed(1) + ' / 5</div>' +
+  '</div>';
 }
 
 function submitPME() {
