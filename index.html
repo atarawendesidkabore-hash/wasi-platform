@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="WASI">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://wasi-intelligence-core.onrender.com https://wasi-web-api.onrender.com http://localhost:3000 http://localhost:3200 http://localhost:8010; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.anthropic.com https://wasi-intelligence-core.onrender.com https://wasi-web-api.onrender.com http://localhost:3000 http://localhost:3200 http://localhost:8010; img-src 'self' data:;">
 <link rel="manifest" href="manifest.json">
 <title>WASI — Whole African Strategic Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4126,7 +4126,7 @@ function renderDesktopCountryDetail(code) {
       ${d.exports.map(e => `<span style="padding:3px 8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;font-size:.7rem;color:var(--text-secondary);">📦 ${e}</span>`).join('')}
     </div>
 
-    <button onclick="document.getElementById('chat-input').value='Analyse complete de ${esc(c.name)} : opportunites, risques, corridors et previsions';sendChat();" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${esc(c.name)}</button>
+    <button onclick="interrogateCurrentCountry()" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${esc(c.name)}</button>
     <button onclick="clearCountryFocus()" style="width:100%;padding:8px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--radius);font-size:.78rem;cursor:pointer;">← Vue composite</button>
   `;
 
@@ -4279,7 +4279,7 @@ function showMobileCountryDetail(code) {
     </div>
 
     <div class="cd-actions">
-      <button class="cd-action-btn primary" onclick="askAboutCountry('${esc(c.name)}')">💬 Interroger l'IA</button>
+      <button class="cd-action-btn primary" onclick="askAboutCurrentMobileCountry()">💬 Interroger l'IA</button>
       <button class="cd-action-btn secondary" onclick="closeMobileCountries()">← Retour</button>
     </div>
   `;
@@ -4292,6 +4292,26 @@ function askAboutCountry(name) {
   document.getElementById('mobile-country-panel').classList.remove('show');
   document.getElementById('chat-input').value = 'Analyse complete de ' + name + ' : opportunites, risques, et previsions';
   sendChat();
+}
+
+function interrogateCurrentCountry() {
+  var c = currentCountry ? COUNTRIES.find(function(x) { return x.code === currentCountry; }) : null;
+  if (!c) return;
+  document.getElementById('chat-input').value = 'Analyse complète de ' + c.name + ' : opportunités d\'investissement, risques 2026, corridors commerciaux, secteurs porteurs. Donne des recommandations directes et actionnables.';
+  sendChat();
+  var chatEl = document.querySelector('.intel-center');
+  if (chatEl) setTimeout(function() { chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+}
+
+function askAboutCurrentMobileCountry() {
+  var panel = document.getElementById('mobile-country-panel');
+  if (panel) panel.classList.remove('show');
+  var c = currentCountry ? COUNTRIES.find(function(x) { return x.code === currentCountry; }) : null;
+  if (!c) return;
+  document.getElementById('chat-input').value = 'Analyse complète de ' + c.name + ' : opportunités d\'investissement, risques 2026, corridors commerciaux, secteurs porteurs. Donne des recommandations directes et actionnables.';
+  sendChat();
+  var chatEl = document.querySelector('.intel-center');
+  if (chatEl) setTimeout(function() { chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 200);
 }
 
 /* ========== COMPOSITE ========== */

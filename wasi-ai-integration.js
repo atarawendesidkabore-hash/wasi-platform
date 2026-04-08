@@ -38,22 +38,90 @@
     return entered;
   }
 
+  // ── Chat persistence ─────────────────────────────────────────────────────
+  const CHAT_STORAGE_KEY = "wasi_chat_history_v2";
+  const MAX_STORED_MSGS  = 30;
+
+  function saveChatHistory() {
+    try {
+      const toSave = (window.chatHistory || []).slice(-MAX_STORED_MSGS);
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(toSave));
+    } catch (_) {}
+  }
+
+  function loadChatHistory() {
+    try {
+      const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+      if (!raw) return;
+      const history = JSON.parse(raw);
+      if (!Array.isArray(history) || !history.length) return;
+      window.chatHistory = history;
+
+      const container = document.getElementById("chat-messages");
+      if (!container) return;
+
+      // Keep welcome message, append restored turns
+      const restored = history.slice(-12);
+      restored.forEach((msg) => {
+        const div = document.createElement("div");
+        div.className = "chat-msg " + (msg.role === "user" ? "user" : "bot");
+        div.textContent = String(msg.content || "");
+        container.appendChild(div);
+      });
+
+      // Add a small separator
+      const sep = document.createElement("div");
+      sep.className = "chat-msg bot";
+      sep.style.cssText = "font-size:.72rem;color:var(--text-dim);border-top:1px solid var(--border);padding-top:8px;margin-top:4px;";
+      sep.textContent = "— Historique restauré · " + new Date().toLocaleDateString("fr-FR", { day:"2-digit", month:"short" }) + " —";
+      container.appendChild(sep);
+
+      container.scrollTop = container.scrollHeight;
+    } catch (_) {}
+  }
+
+  function clearChatHistory() {
+    try { localStorage.removeItem(CHAT_STORAGE_KEY); } catch (_) {}
+    window.chatHistory = [];
+    const container = document.getElementById("chat-messages");
+    if (container) container.innerHTML = '<div class="chat-msg bot">Historique effacé. Nouvelle session WASI AI.</div>';
+  }
+
+  // Expose globally so users can call wasiClearChat() from console
+  window.wasiClearChat = clearChatHistory;
+
   // ── Direct Claude API call ────────────────────────────────────────────────
   async function callClaude(userMessage, history, countryProfile) {
     const apiKey = getApiKey();
     if (!apiKey) throw new Error("Clé API Anthropic manquante.");
 
+    const wasiKnowledge = [
+      "WASI (Whole African Strategic Intelligence) est une infrastructure financière et économique africaine fondée par Tarawendesida Thomas KABORE, FMVA, CEO basé à Ouagadougou, Burkina Faso.",
+      "La plateforme couvre 54 pays africains souverains organisés en scores AFEX (African Exchange Index) mesurant stabilité politique, environnement économique, infrastructure, cadre juridique, capital humain et intégration régionale.",
+      "Modules de la plateforme : (1) WASI Intelligence — scores pays et IA géopolitique ; (2) WASI DEX — marchés financiers africains (BRVM, NGX Nigeria, GSE Ghana, JSE Afrique du Sud, BVMAC CEMAC, etc.) ; (3) CIREX Microfinance — crédit terrain et conformité pour IMF ; (4) WASI Private Market — portail investisseur et souscription privée ; (5) WASI Ecosystem Hub — navigation groupe ; (6) WASI CLI — terminal Bloomberg-style synchronisé Excel + web.",
+      "Zone de couverture prioritaire : 16 pays CEDEAO, zone OHADA (17 États), espace UEMOA/BCEAO, marchés anglophones (Nigeria, Ghana, Afrique du Sud, Kenya, Tanzanie).",
+      "Marchés cibles : TAM estimé $4.2 Mds USD. Concurrents : Refinitiv Eikon (trop cher), MSCI Frontier Markets (pas assez africain), Daba Finance (sans données macro). WASI est la seule plateforme combinant données officielles 54 pays + néobanque + courtage multi-marchés + accès marchés privés + conformité OHADA.",
+      "Cadres légaux maîtrisés : OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO, Code civil français, Code du travail français, Code de commerce français, Code pénal français.",
+    ].join(" ");
+
+    const investmentInstructions = [
+      "RÉPONSES DIRECTES ET ACTIONNABLES : pour les questions d'investissement, cite des opportunités spécifiques, des secteurs porteurs, des corridors commerciaux, des chiffres GDP/croissance, des recommandations concrètes.",
+      "Pour 'Presentez WASI Ecosystem' ou toute question sur WASI : décris la plateforme, sa mission, ses 6 modules, ses marchés cibles, sa valeur ajoutée vs concurrents.",
+      "Pour les questions sur un pays spécifique : donne un verdict d'investissement clair (favorable / prudence / éviter), les 3 meilleurs secteurs d'entrée, les 2 risques principaux, et un corridor commercial clé.",
+      "Style : paragraphes courts, net, stratégique. Zéro titre markdown, zéro tableau. Réponds TOUJOURS en français.",
+      "Ne dis jamais que ton analyse remplace un avis juridique formel.",
+    ].join(" ");
+
+    const countryCtx = countryProfile
+      ? `Pays focal actif : ${countryProfile.name} (score WASI ${countryProfile.currentScore}/100, région ${countryProfile.region}${countryProfile.coup ? ", TRANSITION POLITIQUE" : ""}, politique=${countryProfile.politique || "N/A"}, economie=${countryProfile.economie || "N/A"}, infra=${countryProfile.infra || "N/A"}, juridique=${countryProfile.juridique}, humain=${countryProfile.humain || "N/A"}, integration=${countryProfile.integration}).`
+      : "";
+
     const systemPrompt = [
-      "Tu es WASI AI, la couche d'intelligence documentaire de la plateforme WASI.",
-      "Tu analyses 54 pays africains avec des signaux économiques, financiers, réglementaires et géopolitiques.",
-      "Tu maîtrises OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO, les marchés financiers africains et les codes français embarqués.",
-      "Réponds toujours en français dans un style net, stratégique et directement exploitable.",
-      "Privilégie des paragraphes courts. Pas de titres markdown, pas de tableaux.",
-      "Ne dis jamais que ton analyse remplace un avis juridique ou réglementaire formel.",
-      countryProfile
-        ? `Pays focal: ${countryProfile.name} (score ${countryProfile.currentScore}, région ${countryProfile.region}).`
-        : "",
-    ].filter(Boolean).join(" ");
+      "Tu es WASI AI, l'intelligence artificielle officielle de la plateforme WASI.",
+      wasiKnowledge,
+      investmentInstructions,
+      countryCtx,
+    ].filter(Boolean).join("\n\n");
 
     const messages = [
       ...history.slice(-8)
@@ -225,8 +293,22 @@
     refreshButton.textContent = "Actualiser IA";
     refreshButton.addEventListener("click", () => refreshAiSources());
 
+    const clearButton = document.createElement("button");
+    clearButton.id = "wasi-ai-clear";
+    clearButton.className = "wasi-ai-refresh";
+    clearButton.type = "button";
+    clearButton.title = "Effacer l'historique de conversation";
+    clearButton.textContent = "Effacer";
+    clearButton.style.cssText = "opacity:.7;";
+    clearButton.addEventListener("click", () => {
+      if (window.confirm("Effacer tout l'historique de conversation ?")) {
+        clearChatHistory();
+      }
+    });
+
     header.appendChild(status);
     header.appendChild(refreshButton);
+    header.appendChild(clearButton);
   }
 
   function updateStatus(text, tone) {
@@ -682,6 +764,8 @@
 
     const focusedCountry = window.currentCountry ? getCountryByCode(window.currentCountry) : null;
     const focusedSignal = focusedCountry ? getCountrySignal(focusedCountry.code) : null;
+    const det = focusedCountry ? (window.COUNTRY_DETAILS?.[focusedCountry.code] || {}) : {};
+    const idx = det.indices || {};
     const countryProfile = focusedCountry
       ? {
           code: focusedCountry.code,
@@ -691,8 +775,19 @@
           aiAdjustment: focusedSignal?.aiAdjustment ?? 0,
           coup: Boolean(focusedCountry.coup),
           region: focusedCountry.region,
-          juridique: window.COUNTRY_DETAILS?.[focusedCountry.code]?.indices?.juridique ?? 50,
-          integration: window.COUNTRY_DETAILS?.[focusedCountry.code]?.indices?.integration ?? 50,
+          gdp: focusedCountry.gdp || "N/A",
+          risk: focusedCountry.risk || "N/A",
+          politique: idx.politique ?? 50,
+          economie: idx.economie ?? 50,
+          infra: idx.infra ?? 50,
+          juridique: idx.juridique ?? 50,
+          humain: idx.humain ?? 50,
+          integration: idx.integration ?? 50,
+          growth: det.growth || "N/A",
+          inflation: det.inflation || "N/A",
+          currency: det.currency || "N/A",
+          resources: (det.resources || []).join(", ") || "N/A",
+          exports: (det.exports || []).join(", ") || "N/A",
         }
       : null;
 
@@ -710,6 +805,7 @@
       appendRichBotMessage(reply, data.citations || [], data.countrySignal || focusedSignal);
       window.chatHistory.push({ role: "user", content: message });
       window.chatHistory.push({ role: "assistant", content: reply });
+      saveChatHistory();
     } catch (error) {
       if (typing) {
         typing.classList.remove("show");
@@ -722,6 +818,7 @@
       appendRichBotMessage(fallback, [], focusedSignal);
       window.chatHistory.push({ role: "user", content: message });
       window.chatHistory.push({ role: "assistant", content: fallback });
+      saveChatHistory();
     } finally {
       state.chatBusy = false;
       if (typeof window.scrollChat === "function") {
@@ -771,6 +868,8 @@
       state.booted = true;
       loadSourceStatus();
       loadCountrySignals();
+      // Restore chat history after a tick so the DOM is ready
+      setTimeout(loadChatHistory, 200);
       return;
     }
 
