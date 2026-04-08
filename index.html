@@ -4871,28 +4871,401 @@ async function callWASIChat(message, countryFocus, history) {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   WASI LOCAL AI ENGINE — full offline intelligence, no API key needed
+   ═══════════════════════════════════════════════════════════════════ */
+function n_(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+function detectCountryInMessage(msg, excludeCode) {
+  const m = n_(msg);
+  const aliases = {
+    'cote d ivoire':'CI',"cote d'ivoire":'CI','ivoire':'CI','abidjan':'CI',
+    'burkina':'BF','ouagadougou':'BF',
+    'sierra leone':'SL','sierra':'SL','freetown':'SL',
+    'guinee bissau':'GW','bissau':'GW',
+    'guinee equatoriale':'GQ','equatoriale':'GQ','malabo':'GQ',
+    'cap vert':'CV','cabo verde':'CV','cap-vert':'CV','praia':'CV',
+    'rdc':'CD','congo kinshasa':'CD','kinshasa':'CD','rd congo':'CD','congo democratique':'CD',
+    'brazzaville':'CG','congo brazza':'CG','pointe noire':'CG',
+    'afrique du sud':'ZA','south africa':'ZA','johannesburg':'ZA','pretoria':'ZA','cape town':'ZA','jo\'burg':'ZA',
+    'ethiopie':'ET','addis abeba':'ET','addis':'ET',
+    'tanzanie':'TZ','dar es salaam':'TZ','dodoma':'TZ',
+    'ouganda':'UG','kampala':'UG',
+    'egypte':'EG','le caire':'EG','cairo':'EG',
+    'maroc':'MA','casablanca':'MA','rabat':'MA',
+    'algerie':'DZ','alger':'DZ',
+    'tunisie':'TN','tunis':'TN',
+    'libye':'LY','tripoli':'LY',
+    'mauritanie':'MR','nouakchott':'MR',
+    'somalie':'SO','mogadiscio':'SO',
+    'soudan du sud':'SS','soudan-du-sud':'SS','juba':'SS',
+    'soudan':'SD','khartoum':'SD',
+    'djibouti':'DJ',
+    'erythree':'ER','eritree':'ER','asmara':'ER',
+    'kenya':'KE','nairobi':'KE',
+    'nigeria':'NG','lagos':'NG','abuja':'NG',
+    'ghana':'GH','accra':'GH',
+    'senegal':'SN','dakar':'SN',
+    'cameroun':'CM','yaounde':'CM','douala':'CM',
+    'gabon':'GA','libreville':'GA',
+    'togo':'TG','lome':'TG',
+    'benin':'BJ','cotonou':'BJ',
+    'gambie':'GM','banjul':'GM',
+    'liberia':'LR','monrovia':'LR',
+    'mali':'ML','bamako':'ML',
+    'niger':'NE','niamey':'NE',
+    'tchad':'TD','ndjamena':'TD',
+    'centrafrique':'CF','centrafricaine':'CF','rca':'CF','bangui':'CF',
+    'guinee':'GN','conakry':'GN',
+    'mozambique':'MZ','maputo':'MZ',
+    'zimbabwe':'ZW','harare':'ZW',
+    'zambie':'ZM','lusaka':'ZM',
+    'botswana':'BW','gaborone':'BW',
+    'namibie':'NA','windhoek':'NA',
+    'malawi':'MW','lilongwe':'MW',
+    'angola':'AO','luanda':'AO',
+    'madagascar':'MG','antananarivo':'MG',
+    'maurice':'MU','port louis':'MU','ile maurice':'MU',
+    'seychelles':'SC',
+    'eswatini':'SZ','swaziland':'SZ','mbabane':'SZ',
+    'lesotho':'LS','maseru':'LS',
+    'comores':'KM','moroni':'KM',
+    'rwanda':'RW','kigali':'RW',
+    'burundi':'BI','bujumbura':'BI',
+    'cap-vert':'CV'
+  };
+  const sortedAliases = Object.keys(aliases).sort((a,b)=>b.length-a.length);
+  for(const alias of sortedAliases){
+    if(m.includes(n_(alias))){
+      const code=aliases[alias];
+      if(code===excludeCode) continue;
+      const found=COUNTRIES.find(x=>x.code===code);
+      if(found) return found;
+    }
+  }
+  const sorted=[...COUNTRIES].sort((a,b)=>b.name.length-a.name.length);
+  for(const c of sorted){
+    if(c.code===excludeCode) continue;
+    if(m.includes(n_(c.name))||m.includes(c.code.toLowerCase())) return c;
+  }
+  return null;
+}
+
+function buildComparison(c1, c2) {
+  const d1=COUNTRY_DETAILS[c1.code]||{}, d2=COUNTRY_DETAILS[c2.code]||{};
+  const r1=(window.COUNTRY_RISKS||{})[c1.code]||{}, r2=(window.COUNTRY_RISKS||{})[c2.code]||{};
+  const idx1=d1.indices||{}, idx2=d2.indices||{};
+  function win(a,b){ return a>b?'✅':'❌'; }
+  const avg=Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length);
+  return `━━━ COMPARAISON WASI : ${c1.flag} ${c1.name.toUpperCase()} vs ${c2.flag} ${c2.name.toUpperCase()} ━━━
+
+📊 SCORE GLOBAL
+• ${c1.name} : ${c1.score}/100 ${win(c1.score,c2.score)}
+• ${c2.name} : ${c2.score}/100 ${win(c2.score,c1.score)}
+• Moyenne WASI 54 pays : ${avg}/100
+
+💰 MACROÉCONOMIE
+                      ${c1.name.substring(0,12).padEnd(14)} ${c2.name.substring(0,12)}
+• PIB              :  ${(c1.gdp||'N/A').padEnd(16)} ${c2.gdp||'N/A'}
+• Croissance       :  ${(d1.growth||'N/A').padEnd(16)} ${d2.growth||'N/A'}
+• Inflation        :  ${(d1.inflation||'N/A').padEnd(16)} ${d2.inflation||'N/A'}
+• Dette / PIB      :  ${(d1.dette_pib||'N/A').padEnd(16)} ${d2.dette_pib||'N/A'}
+• Devise           :  ${(d1.currency||'N/A').padEnd(16)} ${d2.currency||'N/A'}
+• Population       :  ${(d1.pop||'N/A').padEnd(16)} ${d2.pop||'N/A'}
+
+📐 SOUS-INDICES WASI (sur 100)
+• Politique   :  ${String(idx1.politique||'?').padEnd(16)} ${idx2.politique||'?'} ${win(idx1.politique,idx2.politique)}
+• Economie    :  ${String(idx1.economie||'?').padEnd(16)} ${idx2.economie||'?'} ${win(idx1.economie,idx2.economie)}
+• Infra       :  ${String(idx1.infra||'?').padEnd(16)} ${idx2.infra||'?'} ${win(idx1.infra,idx2.infra)}
+• Juridique   :  ${String(idx1.juridique||'?').padEnd(16)} ${idx2.juridique||'?'} ${win(idx1.juridique,idx2.juridique)}
+• Humain      :  ${String(idx1.humain||'?').padEnd(16)} ${idx2.humain||'?'} ${win(idx1.humain,idx2.humain)}
+• Intégration :  ${String(idx1.integration||'?').padEnd(16)} ${idx2.integration||'?'} ${win(idx1.integration,idx2.integration)}
+
+🏆 AVANTAGES COMPARATIFS
+${c1.flag} ${c1.name} excelle en : ${Object.entries(idx1).filter(([k])=>k!=='micro').sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,v])=>k+' ('+v+')').join(', ')}
+${c2.flag} ${c2.name} excelle en : ${Object.entries(idx2).filter(([k])=>k!=='micro').sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,v])=>k+' ('+v+')').join(', ')}
+
+⛏️ RESSOURCES
+• ${c1.name} : ${(d1.resources||[]).join(' · ')||'N/A'}
+• ${c2.name} : ${(d2.resources||[]).join(' · ')||'N/A'}
+
+📦 EXPORTS PRINCIPAUX
+• ${c1.name} : ${(d1.exports||[]).join(' · ')||'N/A'}
+• ${c2.name} : ${(d2.exports||[]).join(' · ')||'N/A'}
+
+${r1.wacc||r2.wacc?`💹 COÛT DU CAPITAL (WACC)
+• ${c1.name} : ${r1.wacc?r1.wacc+'%':'N/A'}${r1.credit?' — Crédit '+r1.credit:''}
+• ${c2.name} : ${r2.wacc?r2.wacc+'%':'N/A'}${r2.credit?' — Crédit '+r2.credit:''}
+`:''}
+🎯 VERDICT WASI
+• Stabilité politique : ${c1.coup?'⚠ '+c1.name+' en transition militaire':c2.coup?'⚠ '+c2.name+' en transition militaire':'Les deux pays ont un gouvernement civil'}
+• Meilleur environnement d'investissement : ${c1.score>c2.score?c1.flag+' '+c1.name:c2.flag+' '+c2.name} (score ${Math.max(c1.score,c2.score)}/100)
+• Meilleure croissance : ${parseFloat(d1.growth||0)>parseFloat(d2.growth||0)?c1.flag+' '+c1.name+' ('+d1.growth+')':c2.flag+' '+c2.name+' ('+d2.growth+')'}
+• Meilleure stabilité des prix : ${parseFloat(d1.inflation||999)<parseFloat(d2.inflation||999)?c1.flag+' '+c1.name+' ('+d1.inflation+')':c2.flag+' '+c2.name+' ('+d2.inflation+')'}`;
+}
+
+function buildRanking(msg) {
+  const isBottom = msg.includes('pire')||msg.includes('moins bon')||msg.includes('plus bas')||msg.includes('risque eleve')||msg.includes('risque le plus');
+  const byGrowth = msg.includes('croissance');
+  const byScore  = msg.includes('score')||msg.includes('wasi')||(!byGrowth);
+  const sorted   = [...COUNTRIES].sort((a,b)=>byGrowth
+    ? parseFloat((COUNTRY_DETAILS[b.code]||{}).growth||0)-parseFloat((COUNTRY_DETAILS[a.code]||{}).growth||0)
+    : b.score-a.score);
+  const list = isBottom ? sorted.slice(-10).reverse() : sorted.slice(0,10);
+  const title = isBottom ? 'BOTTOM 10 — RISQUE ÉLEVÉ' : 'TOP 10 — MEILLEURS ENVIRONNEMENTS';
+  const metric = byGrowth ? 'Croissance' : 'Score WASI';
+  return `━━━ WASI CLASSEMENT — ${title} ━━━\n\n${metric.toUpperCase()} | 54 PAYS AFRICAINS\n\n`+
+    list.map((c,i)=>{
+      const d=COUNTRY_DETAILS[c.code]||{};
+      const val=byGrowth?(d.growth||'N/A'):c.score+'/100';
+      const coup=c.coup?' ⚠ MILITAIRE':'';
+      return `${(isBottom?list.length-i:i+1).toString().padStart(2)}. ${c.flag} ${c.name.padEnd(20)} ${val}${coup}`;
+    }).join('\n')+
+    `\n\n💡 Posez "analyse [pays]" pour un profil complet de n'importe quel pays.`;
+}
+
+function buildWACCAnalysis(c, d, r) {
+  const risk = r || {};
+  const wacc = risk.wacc || Math.round(4.5 + (100-c.score)*0.25);
+  const credit = risk.credit || (c.score>=70?'BB+':c.score>=55?'B+':c.score>=40?'B-':'CCC');
+  const fxRisk = risk.fxRisk || (c.score>=65?'Faible':c.score>=45?'Modéré':'Élevé');
+  const riskPremium = Math.round(wacc-4.5);
+  return `━━━ ANALYSE WACC — ${c.flag} ${c.name.toUpperCase()} ━━━
+
+💹 COÛT DU CAPITAL WASI
+• WACC pays estimé : ${wacc}%
+• Signal Crédit WASI : ${credit}
+• Risque FX : ${fxRisk}
+
+📐 DÉCOMPOSITION DU WACC
+• Taux sans risque (US Treasury 10Y) : 4.5%
+• Prime de risque pays (CRP)         : ${Math.round(riskPremium*0.65)}%
+• Prime de risque FX                 : ${Math.round(riskPremium*0.35)}%
+• WACC total                         : ${wacc}%
+${risk.waccNote?'• Détail : '+risk.waccNote:''}
+
+📊 CONTEXTE MACRO
+• PIB : ${c.gdp} | Croissance : ${d.growth||'N/A'} | Inflation : ${d.inflation||'N/A'}
+• Dette/PIB : ${d.dette_pib||'N/A'} | Devise : ${d.currency||'N/A'}
+• Score WASI : ${c.score}/100 (${c.score>=65?'Favorable':c.score>=45?'Modéré':'Défavorable'})
+
+🔢 IMPLICATIONS POUR LES INVESTISSEURS
+• Taux de rendement minimum exigé : ${wacc}%
+• Pour un projet à 5 ans, le VAN doit être positive avec un taux d'actualisation de ${wacc}%
+• Comparaison régionale :
+  - Pays stables (CI, SN, MA) : WACC 10-14%
+  - Pays modérés (GH, KE, TZ) : WACC 14-18%
+  - Pays à risque élevé (NG, AO) : WACC 18-25%
+  - Zone de crise (BF, ML, NE)  : WACC 28-35%
+
+${risk.electionYear?`⚠️ RISQUE POLITIQUE : Élection prévue en ${risk.electionYear} — surveiller la prime de risque politique.`:''}
+
+💡 RECOMMANDATION WASI
+${c.score>=65?'Le WACC de '+wacc+'% reflète un environnement d\'investissement raisonnable. Les projets industriels, logistiques et télécoms peuvent atteindre ce seuil.':
+c.score>=45?'Le WACC de '+wacc+'% est élevé. Privilégier les secteurs primaires (extraction, agri), les concessions d\'infrastructure et les instruments de dette structurée.':
+'Le WACC de '+wacc+'% est prohibitif pour la plupart des investissements. Limiter l\'exposition aux joint-ventures avec partenaires locaux bien établis et instruments couverts.'}`;
+}
+
+function buildSectorAnalysis(c, d, r) {
+  const score = c.score;
+  const resources = d.resources || [];
+  const exports_ = d.exports || [];
+  const region = c.region;
+  const isCFA = (d.currency||'').includes('CFA');
+  const isOHADA = ['UEMOA','CEMAC'].some(z=>(d.zone||'').includes(z));
+
+  // Determine top sectors based on country data
+  const sectors = [];
+  if(resources.some(r=>/(or|mine|cuivre|cobalt|bauxite|fer|titanite|manganèse|manganese|diamant|phosphate|uranium|zinc)/i.test(r))){
+    sectors.push({name:'Industries extractives / Mining',note:'Ressources identifiées : '+(resources.filter(r=>/(or|mine|cuivre|cobalt|bauxite|fer|manganèse|diamant|phosphate|uranium)/i.test(r)).join(', ')||resources[0]),signal:'⚡ Potentiel élevé'});
+  }
+  if(resources.some(r=>/(cacao|cafe|coton|arachide|palmier|hevea|cajou|karite|sésame|sesame|ananas|manioc)/i.test(r))||exports_.some(e=>/(agri|cacao|cafe|coton)/i.test(e))){
+    sectors.push({name:'Agri-transformation & Export agricole',note:'Principaux produits : '+(exports_.slice(0,3).join(', ')),signal:'🌱 Fort potentiel ZLECAf'});
+  }
+  if(score>=50){
+    sectors.push({name:'Télécoms & Mobile Money',note:'Pénétration mobile en forte croissance. Mobile Money = inclusion financière.',signal:'📱 Secteur porteur continental'});
+  }
+  if(score>=55){
+    sectors.push({name:'Logistique & Infrastructures portuaires',note:region==='CEDEAO'?'Positionnement sur corridor côtier CEDEAO.':region==='EAC'?'Corridor EAC vers pays enclavés.':'Hub régional potentiel.',signal:'🚢 Priorité BAD 2025-2030'});
+  }
+  if(score>=60&&isOHADA){
+    sectors.push({name:'Services financiers & Microfinance',note:'Zone OHADA : cadre SYSCOHADA, supervision BCEAO/COBAC.',signal:'🏦 Croissance 12%+/an'});
+  }
+  if((d.resources||[]).some(r=>/(petrole|gaz)/i.test(r))||exports_.some(e=>/(petrole|gnl|gaz)/i.test(e))){
+    sectors.push({name:'Énergie & Pétrole / Gaz',note:'Production identifiée. Opportunités : services pétroliers, FPSO, pipeline, raffinerie.',signal:'⛽ Revenus stables (prix commodités)'});
+  }
+  if(score>=55){
+    sectors.push({name:'Immobilier & Construction urbaine',note:'Déficit de logements estimé à 100M+ unités sur le continent. Urbanisation 3.5%/an.',signal:'🏗 Demande structurelle forte'});
+  }
+  if(sectors.length<3){
+    sectors.push({name:'Commerce & Distribution',note:'Marché de consommation en croissance. Classe moyenne émergente.',signal:'🛒 Résistant aux cycles'});
+  }
+
+  return `━━━ ANALYSE SECTORIELLE — ${c.flag} ${c.name.toUpperCase()} ━━━
+
+📊 PROFIL PAYS : Score WASI ${c.score}/100 | PIB ${c.gdp} | Croissance ${d.growth||'N/A'}
+Zone : ${d.zone||c.region} | Devise : ${d.currency||'N/A'}${isOHADA?' | Comptabilité : SYSCOHADA':''}
+
+🎯 SECTEURS PORTEURS IDENTIFIÉS PAR WASI
+${sectors.slice(0,5).map((s,i)=>`
+${i+1}. ${s.name}
+   ${s.signal}
+   ${s.note}`).join('\n')}
+
+⚠️ SECTEURS À APPROCHER AVEC PRUDENCE
+${score<50?'• Banque classique : cadre réglementaire fragile, risque de crédit élevé\n• Retail haut de gamme : pouvoir d\'achat limité':''}
+• Secteurs dépendants des subventions publiques (risque budgétaire)
+• Importation sans valeur ajoutée locale (pression devises)
+
+🏛️ CADRE RÉGLEMENTAIRE
+• Système juridique : ${isOHADA?'OHADA — Actes Uniformes applicables':'Common Law / Droit national'}
+• Comptabilité : ${isOHADA?'SYSCOHADA révisé (2017)':'IFRS ou normes locales'}
+• Investissements étrangers : ${score>=60?'Code des investissements favorable, guichet unique opérationnel':score>=45?'Procédures existantes mais délais administratifs':'Cadre en reconstruction, due diligence approfondie requise'}
+
+💡 RECOMMANDATION WASI
+${score>=65?'Environnement favorable. Privilégier les investissements greenfield avec partenaires locaux. Horizon 5-7 ans.':
+score>=45?'Approche sélective. Partenariats locaux indispensables. Préférer les concessions et PPP. Horizon 7-10 ans.':
+'Exposition à limiter. Joint-ventures avec garanties institutionnelles (MIGA, IFC). Instruments de couverture obligatoires.'}`;
+}
+
+function buildMacroAnalysis(c, d) {
+  const idx = d.indices||{};
+  const score = c.score;
+  return `━━━ ANALYSE MACROÉCONOMIQUE — ${c.flag} ${c.name.toUpperCase()} ━━━
+
+📊 INDICATEURS FONDAMENTAUX (World Bank 2024)
+• PIB total          : ${c.gdp}
+• Croissance réelle  : ${d.growth||'N/A'}
+• Inflation (CPI)    : ${d.inflation||'N/A'}
+• Dette / PIB        : ${d.dette_pib||'N/A'}
+• Devise             : ${d.currency||'N/A'}
+• Population         : ${d.pop||'N/A'}
+• Capital            : ${d.capital||'N/A'} | Centre éco : ${d.eco_center||d.capital||'N/A'}
+• Président          : ${d.president||'N/A'}${c.coup?' ⚠ (régime militaire)':''}
+
+📐 DÉCOMPOSITION INDICE WASI : ${score}/100
+• Stabilité politique   : ${idx.politique||'?'}/100 ${idx.politique>=60?'✅':idx.politique>=40?'⚠':'🔴'}
+• Environnement éco     : ${idx.economie||'?'}/100 ${idx.economie>=60?'✅':idx.economie>=40?'⚠':'🔴'}
+• Infrastructure        : ${idx.infra||'?'}/100 ${idx.infra>=60?'✅':idx.infra>=40?'⚠':'🔴'}
+• Cadre juridique       : ${idx.juridique||'?'}/100 ${idx.juridique>=60?'✅':idx.juridique>=40?'⚠':'🔴'}
+• Capital humain        : ${idx.humain||'?'}/100 ${idx.humain>=60?'✅':idx.humain>=40?'⚠':'🔴'}
+• Intégration régionale : ${idx.integration||'?'}/100 ${idx.integration>=60?'✅':idx.integration>=40?'⚠':'🔴'}
+
+⛏️ RESSOURCES & EXPORTS
+• Ressources : ${(d.resources||[]).join(' · ')||'N/A'}
+• Exports    : ${(d.exports||[]).join(' · ')||'N/A'}
+
+📈 LECTURE WASI
+• Croissance ${parseFloat(d.growth||0)>=5?'forte ('+d.growth+') — supérieure à la moyenne africaine (4.5%)':parseFloat(d.growth||0)>=3?'correcte ('+d.growth+') — dans la moyenne':d.growth?'faible ('+d.growth+') — sous la moyenne africaine':'non disponible'}
+• Inflation ${parseFloat(d.inflation||0)<=5?'maîtrisée ('+d.inflation+') — favorable aux entreprises':parseFloat(d.inflation||0)<=15?'modérée ('+d.inflation+') — à surveiller':d.inflation?'élevée ('+d.inflation+') — érosion du pouvoir d\'achat':'non disponible'}
+• Endettement ${parseFloat(d.dette_pib||0)<=40?'soutenable ('+d.dette_pib+') — marge de manœuvre budgétaire disponible':parseFloat(d.dette_pib||0)<=70?'modéré ('+d.dette_pib+') — vigilance requise':d.dette_pib?'élevé ('+d.dette_pib+') — pression sur les finances publiques':'non disponible'}
+
+🔢 POSITIONNEMENT RÉGIONAL
+• Rang WASI (54 pays) : ${[...COUNTRIES].sort((a,b)=>b.score-a.score).findIndex(x=>x.code===c.code)+1}/54
+• Vs moyenne WASI (${Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length)}/100) : ${c.score>Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length)?'Supérieur ↑':'Inférieur ↓'}`;
+}
+
+function buildInvestmentVerdict(c, d, r) {
+  const risk = r||{};
+  const score = c.score;
+  const verdict = score>=65?'✅ FAVORABLE':score>=45?'⚠ PRUDENCE':'🔴 ÉVITER';
+  const horizon = score>=65?'Long terme (5-10 ans)':score>=45?'Moyen terme (3-7 ans) avec couverture':'Court terme uniquement, instruments sécurisés';
+  const idx = d.indices||{};
+  const strengths = Object.entries(idx).filter(([k])=>k!=='micro').sort((a,b)=>b[1]-a[1]).slice(0,2);
+  const weaknesses = Object.entries(idx).filter(([k])=>k!=='micro').sort((a,b)=>a[1]-b[1]).slice(0,2);
+  return `━━━ VERDICT D'INVESTISSEMENT WASI — ${c.flag} ${c.name.toUpperCase()} ━━━
+
+🎯 VERDICT : ${verdict}
+Score WASI : ${score}/100 | PIB : ${c.gdp} | Croissance : ${d.growth||'N/A'}
+Horizon recommandé : ${horizon}
+${c.coup?'\n⚠️ RÉGIME MILITAIRE — risque politique maximal\n':''}
+💪 FORCES
+• ${strengths.map(([k,v])=>k.charAt(0).toUpperCase()+k.slice(1)+' ('+v+'/100)').join('\n• ')}
+• Ressources : ${(d.resources||[]).slice(0,3).join(', ')||'N/A'}
+• Croissance : ${d.growth||'N/A'}
+
+⚠️ FAIBLESSES
+• ${weaknesses.map(([k,v])=>k.charAt(0).toUpperCase()+k.slice(1)+' ('+v+'/100)').join('\n• ')}
+• Inflation : ${d.inflation||'N/A'} | Dette : ${d.dette_pib||'N/A'}
+${risk.fxRisk?'• Risque FX : '+risk.fxRisk+' — '+( risk.fxNote||''):''}
+
+🎯 TOP 3 SECTEURS D'ENTRÉE
+${buildSectorAnalysis(c,d,r).split('SECTEURS PORTEURS IDENTIFIÉS PAR WASI\n')[1]?.split('\n\n')[0]?.split('\n').filter(l=>l.match(/^\d\./)).slice(0,3).map(l=>l.trim()).join('\n')||'• Agri-transformation\n• Télécoms & Mobile Money\n• Infrastructure logistique'}
+
+💹 PARAMÈTRES FINANCIERS
+• WACC estimé : ${risk.wacc||Math.round(4.5+(100-score)*0.25)}%
+• Signal Crédit WASI : ${risk.credit||(score>=70?'BB+':score>=55?'B+':score>=40?'B-':'CCC')}
+${risk.electionYear?'• Prochaine élection : '+risk.electionYear:''}
+
+📋 DUE DILIGENCE RECOMMANDÉE
+${score>=65?'• Vérification cadre OHADA/Common Law selon zone\n• Audit comptable (SYSCOHADA ou IFRS)\n• Analyse de la concurrence locale':
+score>=45?'• Revue juridique approfondie (risque réglementaire)\n• Étude de marché locale obligatoire\n• Partenaire local stratégique indispensable\n• Garanties MIGA recommandées':
+'• Validation par ambassade et chambre de commerce\n• Assurance investissement (MIGA, ONDD, Bpifrance)\n• Clause de stabilisation dans les contrats\n• Structure offshore recommandée (Île Maurice)'}`;
+}
+
+function buildRiskAnalysis(c, d, r) {
+  const risk = r||{};
+  const idx = d.indices||{};
+  const risques = risk.risques||[];
+  const score = c.score;
+  return `━━━ CARTOGRAPHIE DES RISQUES — ${c.flag} ${c.name.toUpperCase()} ━━━
+
+🔴 SCORE WASI : ${score}/100 | Risque global : ${c.risk||'N/A'}${c.coup?' | ⚠ RÉGIME MILITAIRE':''}
+
+📊 RISQUES PAR DIMENSION
+• Politique    : ${100-idx.politique||'?'}/100 ${(idx.politique||0)<40?'🔴 CRITIQUE':(idx.politique||0)<60?'🟡 MODÉRÉ':'🟢 FAIBLE'}
+• Économique   : ${100-(idx.economie||0)}/100 ${(idx.economie||0)<40?'🔴 CRITIQUE':(idx.economie||0)<60?'🟡 MODÉRÉ':'🟢 FAIBLE'}
+• Infra        : ${100-(idx.infra||0)}/100 ${(idx.infra||0)<40?'🔴 CRITIQUE':(idx.infra||0)<60?'🟡 MODÉRÉ':'🟢 FAIBLE'}
+• Juridique    : ${100-(idx.juridique||0)}/100 ${(idx.juridique||0)<40?'🔴 CRITIQUE':(idx.juridique||0)<60?'🟡 MODÉRÉ':'🟢 FAIBLE'}
+• Social/Human : ${100-(idx.humain||0)}/100 ${(idx.humain||0)<40?'🔴 CRITIQUE':(idx.humain||0)<60?'🟡 MODÉRÉ':'🟢 FAIBLE'}
+
+${risques.length?`⚡ RISQUES SPÉCIFIQUES IDENTIFIÉS (Probabilité × Impact / 25)
+${risques.sort((a,b)=>b.prob*b.impact-a.prob*a.impact).map(r=>{
+  const score=r.prob*r.impact;
+  const lvl=score>=16?'🔴 CRITIQUE':score>=9?'🟡 SIGNIFICATIF':score>=4?'🟠 TOLÉRABLE':'🟢 NÉGLIGEABLE';
+  return `• ${r.nom} [${r.cat}] — P:${r.prob}/5 × I:${r.impact}/5 = ${score}/25 ${lvl}`;
+}).join('\n')}`:''}
+
+${risk.fxRisk?`💱 RISQUE DE CHANGE
+• Niveau : ${risk.fxRisk}
+• ${risk.fxNote||''}
+• Devise : ${d.currency||'N/A'}`:''}
+
+${risk.electionYear?`🗳️ RISQUE POLITIQUE CALENDAIRE
+• Prochaine élection : ${risk.electionYear}
+• À surveiller : transition politique, modification des codes d'investissement`:''}
+
+💹 RISQUE CRÉDIT
+• Signal WASI : ${risk.credit||(score>=70?'BB+':score>=55?'B+':score>=40?'B-':'CCC')}
+• WACC : ${risk.wacc||Math.round(4.5+(100-score)*0.25)}%
+
+🛡️ STRATÉGIES DE COUVERTURE WASI
+${score>=65?'• Assurance risque commercial standard\n• Clause OHADA dans les contrats\n• Compte escrow USD/EUR recommandé':
+score>=45?'• Assurance MIGA (Groupe Banque Mondiale)\n• Structuration offshore (Île Maurice / Singapour)\n• Clause de stabilisation et d\'arbitrage CIRDI\n• Couverture FX via instruments NDF':
+'• Garantie souveraine obligatoire\n• Co-investissement avec IFC/BAD\n• Structure de financement en USD exclusivement\n• Clause d\'expropriation + arbitrage international'}`;
+}
+
 function generateLocalResponse(message, focus) {
   const msg = message.toLowerCase();
-  const country = focus || 'la continent africain';
+  const msgN = n_(msg);
+  const country = focus || 'le continent africain';
 
-  // Try to find a matching country in the question
-  const matchedCountry = COUNTRIES.find(x =>
-    msg.includes(x.name.toLowerCase()) ||
-    msg.includes(x.code.toLowerCase()) ||
-    (x.name === "Cote d'Ivoire" && (msg.includes('ivoire') || msg.includes('cote d'))) ||
-    (x.name === "Burkina Faso" && msg.includes('burkina')) ||
-    (x.name === "Sierra Leone" && msg.includes('sierra')) ||
-    (x.name === "Guinee-Bissau" && msg.includes('bissau')) ||
-    (x.name === "Cap-Vert" && (msg.includes('cap-vert') || msg.includes('cap vert') || msg.includes('cabo')))
-  );
+  // ── Smart country + intent detection ──────────────────────────
+  const focusedC = detectCountryInMessage(msg)||(window.currentCountry?COUNTRIES.find(x=>x.code===window.currentCountry):null);
+  const secondC  = focusedC ? detectCountryInMessage(msg, focusedC.code) : null;
 
-  // Deep country analysis
-  if (matchedCountry || (currentCountry && (msg.includes('analyse') || msg.includes('detail') || msg.includes('complete') || msg.includes('profil') || msg.includes('situation') || msg.includes('comment') || msg.includes('quoi')))) {
-    const c = matchedCountry || COUNTRIES.find(x => x.code === currentCountry);
-    if (c) {
-      const d = COUNTRY_DETAILS[c.code];
-      if (d) return buildDeepCountryAnalysis(c, d);
-    }
+  if(focusedC && secondC) return buildComparison(focusedC, secondC);
+  if(msgN.includes('top ')||msgN.includes('meilleur')||msgN.includes('classement')||msgN.includes('pire')||msgN.includes('plus eleve')||msgN.includes('rang ')) return buildRanking(msgN);
+
+  if(focusedC){
+    const d=COUNTRY_DETAILS[focusedC.code]||{};
+    const r=(window.COUNTRY_RISKS||{})[focusedC.code]||null;
+    if(msgN.includes('wacc')||msgN.includes('cout du capital')||msgN.includes('actualisation')) return buildWACCAnalysis(focusedC,d,r);
+    if(msgN.includes('secteur')||msgN.includes('ou investir')||msgN.includes('secteurs porteur')) return buildSectorAnalysis(focusedC,d,r);
+    if(msgN.includes('pib')||msgN.includes('croissance')||msgN.includes('inflation')||msgN.includes('dette')||msgN.includes('macroeco')) return buildMacroAnalysis(focusedC,d);
+    if(msgN.includes('verdict')||msgN.includes('faut-il')||msgN.includes('faut il')||msgN.includes('recommand')) return buildInvestmentVerdict(focusedC,d,r);
+    if(msgN.includes('risque')&&!msgN.includes('sahel')) return buildRiskAnalysis(focusedC,d,r);
+    return buildDeepCountryAnalysis(focusedC,d);
   }
 
   // Corridor analysis
@@ -6163,82 +6536,73 @@ Bloomberg n'a pas ces donnees. Refinitiv non plus. WASI, oui.`;
 }
 
 function buildDeepCountryAnalysis(c, d) {
-  const scoreCol = c.score >= 65 ? '🟢' : c.score >= 45 ? '🟡' : '🔴';
-  const indices = d.indices;
-  function bar(val) {
-    const filled = Math.round(val / 5);
-    return '█'.repeat(filled) + '░'.repeat(20 - filled) + ' ' + val + '/100';
-  }
+  const scoreEmoji = c.score>=65?'🟢':c.score>=45?'🟡':'🔴';
+  const idx = d.indices||{};
+  const r = (window.COUNTRY_RISKS||{})[c.code]||{};
+  const avg = Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length);
+  const rank = [...COUNTRIES].sort((a,b)=>b.score-a.score).findIndex(x=>x.code===c.code)+1;
+  const best = Object.entries(idx).filter(([k])=>k!=='micro').sort((a,b)=>b[1]-a[1]);
+  function bar(val){ const f=Math.round(val/5); return '█'.repeat(f)+'░'.repeat(20-f)+' '+val+'/100'; }
 
-  return `━━━ ANALYSE APPROFONDIE — ${c.flag} ${c.name.toUpperCase()} ━━━
+  return `━━━ ANALYSE COMPLÈTE — ${c.flag} ${c.name.toUpperCase()} ━━━
 
-${scoreCol} SCORE WASI : ${c.score}/100 | Tendance : ${c.trend} | Risque : ${c.risk}
-${c.coup ? '⚠️ ATTENTION : REGIME MILITAIRE / TRANSITION EN COURS\n' : ''}
-📋 FICHE PAYS :
-• President : ${d.president}
-• Capital : ${d.capital} | Centre economique : ${d.eco_center}
-• Population : ${d.pop} | Zone : ${d.zone}
-• PIB : ${c.gdp} | Croissance : ${d.growth}
-• Devise : ${d.currency}
-• Inflation : ${d.inflation} | Dette/PIB : ${d.dette_pib}
+${scoreEmoji} SCORE WASI : ${c.score}/100 | Rang : ${rank}/54 | Tendance : ${c.trend||'→'} | Risque : ${c.risk||'N/A'}
+${c.coup?'⚠️ RÉGIME MILITAIRE / TRANSITION EN COURS\n':''}
+📋 FICHE PAYS
+• Président          : ${d.president||'N/A'}
+• Capitale           : ${d.capital||'N/A'} | Centre éco : ${d.eco_center||d.capital||'N/A'}
+• Population         : ${d.pop||'N/A'} | Zone : ${d.zone||c.region}
+• PIB                : ${c.gdp} | Croissance : ${d.growth||'N/A'}
+• Inflation          : ${d.inflation||'N/A'} | Dette/PIB : ${d.dette_pib||'N/A'}
+• Devise             : ${d.currency||'N/A'}
 
-📊 DÉCOMPOSITION INDICE WASI :
-• Stabilite politique   ${bar(indices.politique)}
-• Env. economique       ${bar(indices.economie)}
-• Infrastructure        ${bar(indices.infra)}
-• Cadre juridique       ${bar(indices.juridique)}
-• Capital humain        ${bar(indices.humain)}
-• Integration regionale ${bar(indices.integration)}
+📊 INDICE WASI — DÉCOMPOSITION
+• Stabilité politique   ${bar(idx.politique||0)}
+• Env. économique       ${bar(idx.economie||0)}
+• Infrastructure        ${bar(idx.infra||0)}
+• Cadre juridique       ${bar(idx.juridique||0)}
+• Capital humain        ${bar(idx.humain||0)}
+• Intégration régionale ${bar(idx.integration||0)}
 
-⛏️ RESSOURCES NATURELLES :
-${d.resources.map(r => '  • ' + r).join('\n')}
+💹 SIGNAL INVESTISSEUR
+• Crédit WASI : ${r.credit||(c.score>=70?'BB+':c.score>=55?'B+':c.score>=40?'B-':'CCC')}
+• WACC estimé : ${r.wacc||Math.round(4.5+(100-c.score)*0.25)}%
+• Risque FX   : ${r.fxRisk||(c.score>=65?'Faible':c.score>=45?'Modéré':'Élevé')}
+${r.electionYear?'• Élection    : '+r.electionYear:''}
 
-📦 EXPORTATIONS PRINCIPALES :
-${d.exports.map(e => '  • ' + e).join('\n')}
+⛏️ RESSOURCES NATURELLES
+${(d.resources||[]).map(x=>'  • '+x).join('\n')||'  N/A'}
 
-${c.score >= 65 ? `💡 OPPORTUNITÉS :
-• Environnement d'investissement favorable avec un cadre institutionnel stable
-• Croissance superieure a la moyenne regionale (${d.growth})
-• Acces aux marches UEMOA/AFRIQUE depuis ce pays
-• Secteurs porteurs : telecoms, agri-transformation, services financiers, BTP
-• Recommandation WASI : allocation strategique recommandee, horizon long terme
+📦 EXPORTATIONS PRINCIPALES
+${(d.exports||[]).map(x=>'  • '+x).join('\n')||'  N/A'}
 
-⚠️ POINTS DE VIGILANCE :
-• Dependance aux matieres premieres pour les recettes d'exportation
-• Infrastructure encore deficiente dans certaines zones rurales
-• Risque de succession politique a surveiller
-• Bureaucratie et delais administratifs dans certains secteurs`
-: c.score >= 45 ? `💡 OPPORTUNITÉS SÉLECTIVES :
-• Potentiel de croissance significatif si stabilisation politique confirmee
-• Ressources naturelles sous-exploitees
-• Cout de la main d'oeuvre competitif
-• Marche interieur en expansion (classe moyenne emergente)
-• Recommandation WASI : investissements cibles, due diligence approfondie
+${c.score>=65?
+`✅ VERDICT : FAVORABLE — Horizon long terme (5-10 ans)
+• Meilleur axe : ${best[0]?best[0][0]+' ('+best[0][1]+'/100)':'N/A'} — point d'entrée fort
+• Secteurs porteurs : agri-transformation, télécoms, services financiers, BTP
+• Croissance ${d.growth||'N/A'} — supérieure à la moyenne régionale
+• Cadre institutionnel stable — partenariats directs possibles
+• Risque de succession politique à surveiller à horizon 2027+`:
+c.score>=45?
+`⚠️ VERDICT : PRUDENCE — Approche sélective recommandée
+• Potentiel de croissance réel mais environnement instable
+• Ressources naturelles sous-exploitées — opportunités concession/extraction
+• Main-d'œuvre compétitive — secteur manufacturier à explorer
+• Due diligence approfondie : cadre juridique fragile
+• Partenaire local indispensable | Garanties MIGA recommandées`:
+`🔴 VERDICT : ÉVITER sauf instruments couverts
+• Instabilité politique majeure${c.coup?' (régime militaire en place)':''}
+• Cadre d'investissement imprévisible — risque réglementaire élevé
+• Fuite des capitaux et des compétences constatée
+• Seule exposition viable : ressources naturelles via joint-venture + garantie souveraine
+• Attendre normalisation politique avant tout engagement significatif`}
 
-⚠️ RISQUES MAJEURS :
-• Instabilite politique/securitaire potentielle
-• Cadre juridique encore fragile pour la protection des investissements
-• Infrastructure deficiente (energie, transport, eau)
-• Acces au financement bancaire limite
-• Inflation et pression sur le pouvoir d'achat`
-: `🔴 ZONE À RISQUE ÉLEVÉ :
-• Instabilite politique majeure — regime militaire ou transition
-• Sanctions regionales AFRIQUE impactant le commerce
-• Insecurite physique dans certaines regions du pays
-• Cadre d'investissement imprevisible — risque d'expropriation ou de changement reglementaire brutal
-• Fuite des capitaux et des competences
-• Recommandation WASI : exposition minimale, instruments couverts uniquement
+📊 POSITIONNEMENT RÉGIONAL
+• Score vs moyenne WASI 54 pays (${avg}/100) : ${c.score>avg?'SUPÉRIEUR ↑':c.score===avg?'ÉGAL →':'INFÉRIEUR ↓'}
+• Meilleur indice : ${best[0]?best[0][0]+' ('+best[0][1]+')':'N/A'}
+• Axe à améliorer : ${best[best.length-1]?best[best.length-1][0]+' ('+best[best.length-1][1]+')':'N/A'}
 
-💡 MALGRÉ LES RISQUES :
-• Les ressources naturelles restent exploitables via des partenariats internationaux
-• Le secteur humanitaire et les infrastructures de base offrent des debouches
-• A moyen terme (3-5 ans), une normalisation politique pourrait offrir des opportunites d'entree a prix decoté`}
-
-📊 COMPARAISON RÉGIONALE :
-• Score vs moyenne AFRIQUE (${Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length)}) : ${c.score > Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length) ? 'SUPÉRIEUR ↑' : c.score === Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length) ? 'EGAL →' : 'INFÉRIEUR ↓'}
-• Rang AFRIQUE : ${[...COUNTRIES].sort((a,b)=>b.score-a.score).findIndex(x=>x.code===c.code)+1}/16
-• Meilleur indice : ${Object.entries(indices).sort((a,b)=>b[1]-a[1])[0][0]} (${Object.entries(indices).sort((a,b)=>b[1]-a[1])[0][1]}/100)
-• Plus faible indice : ${Object.entries(indices).sort((a,b)=>a[1]-b[1])[0][0]} (${Object.entries(indices).sort((a,b)=>a[1]-b[1])[0][1]}/100)`;
+💬 Demandez : "secteurs ${c.name}" · "risques ${c.name}" · "WACC ${c.name}" · "comparer ${c.name} vs [autre pays]"`;
 }
 
 /* ========== BRVM ========== */

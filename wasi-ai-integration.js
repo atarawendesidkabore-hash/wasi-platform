@@ -988,14 +988,13 @@
         typing.classList.remove("show");
       }
 
-      const errMsg = error?.message || String(error);
-      const isKeyMissing = errMsg.includes("manquante") || errMsg.includes("401");
-      const errorReply = isKeyMissing
-        ? "⚠️ **Clé API manquante ou invalide.** Rechargez la page et entrez votre clé `sk-ant-...` Anthropic."
-        : `⚠️ **Erreur WASI AI :** ${errMsg}`;
-      appendRichBotMessage(errorReply, [], focusedSignal);
+      // Fallback to local AI engine (no API key needed)
+      const localReply = typeof window.generateLocalResponse === "function"
+        ? window.generateLocalResponse(message, focusedCountry ? focusedCountry.name : "")
+        : "WASI AI hors ligne — vérifiez votre clé API Anthropic.";
+      appendRichBotMessage(localReply, [], focusedSignal);
       window.chatHistory.push({ role: "user", content: message });
-      window.chatHistory.push({ role: "assistant", content: errorReply });
+      window.chatHistory.push({ role: "assistant", content: localReply });
       saveChatHistory();
     } finally {
       state.chatBusy = false;
