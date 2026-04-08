@@ -2584,23 +2584,60 @@ input, select, textarea { font-family: inherit; outline: none; }
       <div class="sm-panel" id="sm-panel-soumettre">
         <div class="sm-form-card">
           <h3>Candidature &Eacute;metteur &mdash; WASI Stock Market</h3>
+          <p style="font-size:.8rem;color:var(--text-secondary);margin-bottom:18px;">Syst&egrave;me comptable d&eacute;tect&eacute; automatiquement selon le pays &mdash; SYSCOHADA, IFRS ou r&eacute;f&eacute;rentiel local.</p>
+
+          <!-- SECTION 1: IDENTIFICATION -->
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid var(--border);">1 — Identification de l'entreprise</div>
           <div class="sm-form-grid">
             <div class="form-group">
               <label class="form-label">Nom de l'entreprise</label>
               <input type="text" class="form-input" id="pme-name" placeholder="Ex: AgriPlus SA" oninput="updateSMScore()">
             </div>
             <div class="form-group">
-              <label class="form-label">Pays</label>
-              <select class="form-select" id="pme-country" onchange="updateSMScore()">
+              <label class="form-label">Pays (54 pays africains)</label>
+              <select class="form-select" id="pme-country" onchange="onPMECountryChange()">
                 <option value="">-- S&eacute;lectionner --</option>
-                <option value="BJ">B&eacute;nin</option><option value="BF">Burkina Faso</option>
-                <option value="CV">Cap-Vert</option><option value="CI">C&ocirc;te d'Ivoire</option>
-                <option value="GM">Gambie</option><option value="GH">Ghana</option>
-                <option value="GN">Guin&eacute;e</option><option value="GW">Guin&eacute;e-Bissau</option>
-                <option value="LR">Lib&eacute;ria</option><option value="ML">Mali</option>
-                <option value="MR">Mauritanie</option><option value="NE">Niger</option>
-                <option value="NG">Nigeria</option><option value="SN">S&eacute;n&eacute;gal</option>
-                <option value="SL">Sierra Leone</option><option value="TG">Togo</option>
+                <optgroup label="CEDEAO">
+                  <option value="BJ">B&eacute;nin</option><option value="BF">Burkina Faso</option>
+                  <option value="CV">Cap-Vert</option><option value="CI">C&ocirc;te d'Ivoire</option>
+                  <option value="GM">Gambie</option><option value="GH">Ghana</option>
+                  <option value="GN">Guin&eacute;e</option><option value="GW">Guin&eacute;e-Bissau</option>
+                  <option value="LR">Lib&eacute;ria</option><option value="ML">Mali</option>
+                  <option value="MR">Mauritanie</option><option value="NE">Niger</option>
+                  <option value="NG">Nigeria</option><option value="SN">S&eacute;n&eacute;gal</option>
+                  <option value="SL">Sierra Leone</option><option value="TG">Togo</option>
+                </optgroup>
+                <optgroup label="CEMAC">
+                  <option value="CM">Cameroun</option><option value="CF">Centrafrique</option>
+                  <option value="TD">Tchad</option><option value="CG">Congo-Brazzaville</option>
+                  <option value="GA">Gabon</option><option value="GQ">Guin&eacute;e &Eacute;quatoriale</option>
+                </optgroup>
+                <optgroup label="EAC / IGAD">
+                  <option value="BI">Burundi</option><option value="KE">Kenya</option>
+                  <option value="RW">Rwanda</option><option value="SS">Soudan du Sud</option>
+                  <option value="TZ">Tanzanie</option><option value="UG">Ouganda</option>
+                  <option value="ET">Ethiopie</option><option value="DJ">Djibouti</option>
+                  <option value="ER">Erythr&eacute;e</option><option value="SO">Somalie</option>
+                  <option value="SD">Soudan</option>
+                </optgroup>
+                <optgroup label="SADC">
+                  <option value="AO">Angola</option><option value="BW">Botswana</option>
+                  <option value="KM">Comores</option><option value="LS">Lesotho</option>
+                  <option value="MG">Madagascar</option><option value="MW">Malawi</option>
+                  <option value="MU">Maurice</option><option value="MZ">Mozambique</option>
+                  <option value="NA">Namibie</option><option value="SC">Seychelles</option>
+                  <option value="ZA">Afrique du Sud</option><option value="SZ">Eswatini</option>
+                  <option value="TZ">Tanzanie</option><option value="ZM">Zambie</option>
+                  <option value="ZW">Zimbabwe</option>
+                </optgroup>
+                <optgroup label="Afrique du Nord / UMA">
+                  <option value="DZ">Alg&eacute;rie</option><option value="EG">Egypte</option>
+                  <option value="LY">Libye</option><option value="MA">Maroc</option>
+                  <option value="TN">Tunisie</option>
+                </optgroup>
+                <optgroup label="Autres">
+                  <option value="CD">RD Congo</option><option value="MG">Madagascar</option>
+                </optgroup>
               </select>
             </div>
             <div class="form-group">
@@ -2609,37 +2646,127 @@ input, select, textarea { font-family: inherit; outline: none; }
                 <option value="">-- S&eacute;lectionner --</option>
                 <option>Agro-industrie</option><option>BTP &amp; Mat&eacute;riaux</option>
                 <option>Transport &amp; Logistique</option><option>Sant&eacute; &amp; Pharmacie</option>
-                <option>Tech / Fintech</option><option>&Eacute;nergie</option>
-                <option>Microfinance</option><option>Immobilier</option>
+                <option>Tech / Fintech</option><option>&Eacute;nergie &amp; Mines</option>
+                <option>Microfinance / Banque</option><option>Immobilier</option>
+                <option>Commerce &amp; Distribution</option><option>Industrie manufacturiere</option>
+                <option>Services aux entreprises</option><option>T&eacute;l&eacute;coms</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Chiffre d'affaires dernier exercice (XOF)</label>
+              <label class="form-label">Forme juridique</label>
+              <select class="form-select" id="pme-legal-form" onchange="updateSMScore()">
+                <option value="">-- S&eacute;lectionner --</option>
+                <option>SA (Soci&eacute;t&eacute; Anonyme)</option>
+                <option>SAS (Soci&eacute;t&eacute; par Actions Simplifi&eacute;e)</option>
+                <option>SARL</option><option>Public Limited Company (PLC)</option>
+                <option>Private Limited Company (Ltd)</option>
+                <option>Cooperative</option><option>GIE</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- SECTION 2: SYSTEME COMPTABLE AUTO-DETECTE -->
+          <div id="pme-compta-banner" style="display:none;margin:16px 0;padding:14px 16px;border-radius:8px;background:rgba(200,146,42,.08);border:1px solid var(--gold-dim);">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+              <div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:4px;">Syst&egrave;me comptable applicable</div>
+                <div id="pme-compta-system" style="font-size:1rem;font-weight:700;color:var(--text-primary);"></div>
+                <div id="pme-compta-regulator" style="font-size:.75rem;color:var(--text-secondary);margin-top:3px;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div id="pme-compta-currency" style="font-size:.9rem;font-weight:600;color:var(--gold);"></div>
+                <div id="pme-compta-zone" style="font-size:.72rem;color:var(--text-dim);margin-top:2px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: ETATS FINANCIERS -->
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin:16px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--border);">2 — &Eacute;tats financiers (dernier exercice cl&ocirc;tur&eacute;)</div>
+          <div class="sm-form-grid">
+            <div class="form-group">
+              <label class="form-label" id="lbl-ca">Chiffre d'affaires / Revenus</label>
               <input type="number" class="form-input" id="pme-ca" placeholder="0" oninput="updateSMScore()">
+              <div style="font-size:.68rem;color:var(--text-dim);margin-top:3px;" id="hint-ca">Ventes de marchandises + Production vendue</div>
             </div>
             <div class="form-group">
-              <label class="form-label">Capital social (XOF)</label>
-              <input type="number" class="form-input" id="pme-capital" placeholder="0" oninput="updateSMScore()">
+              <label class="form-label" id="lbl-resultat">R&eacute;sultat net</label>
+              <input type="number" class="form-input" id="pme-resultat" placeholder="0" oninput="updateSMScore()">
+              <div style="font-size:.68rem;color:var(--text-dim);margin-top:3px;" id="hint-resultat">Apr&egrave;s imp&ocirc;ts et participation</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lbl-actif">Total Actif / Total Assets</label>
+              <input type="number" class="form-input" id="pme-actif" placeholder="0" oninput="updateSMScore()">
+              <div style="font-size:.68rem;color:var(--text-dim);margin-top:3px;" id="hint-actif">Actif immobilis&eacute; + Actif circulant</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lbl-capitaux">Capitaux propres / Equity</label>
+              <input type="number" class="form-input" id="pme-capitaux" placeholder="0" oninput="updateSMScore()">
+              <div style="font-size:.68rem;color:var(--text-dim);margin-top:3px;" id="hint-capitaux">Capital + R&eacute;serves + R&eacute;sultat</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lbl-ebitda">EBE / EBITDA</label>
+              <input type="number" class="form-input" id="pme-ebitda" placeholder="0" oninput="updateSMScore()">
+              <div style="font-size:.68km;color:var(--text-dim);margin-top:3px;" id="hint-ebitda">Exc&eacute;dent Brut d'Exploitation</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lbl-caf">CAF / Cash Flow op&eacute;rationnel</label>
+              <input type="number" class="form-input" id="pme-caf" placeholder="0" oninput="updateSMScore()">
+              <div style="font-size:.68rem;color:var(--text-dim);margin-top:3px;" id="hint-caf">Capacit&eacute; d'Autofinancement</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dettes financi&egrave;res totales</label>
+              <input type="number" class="form-input" id="pme-dettes" placeholder="0" oninput="updateSMScore()">
             </div>
             <div class="form-group">
               <label class="form-label">Nombre d'exercices audit&eacute;s</label>
               <select class="form-select" id="pme-exercices" onchange="updateSMScore()">
-                <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
+                <option value="1">1 exercice</option><option value="2">2 exercices</option><option value="3">3 exercices ou plus</option>
               </select>
             </div>
+          </div>
+
+          <!-- SECTION 4: LEVEE DE FONDS -->
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin:16px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--border);">3 — Op&eacute;ration financi&egrave;re souhait&eacute;e</div>
+          <div class="sm-form-grid">
             <div class="form-group">
-              <label class="form-label">Montant de la lev&eacute;e souhait&eacute;e (XOF)</label>
+              <label class="form-label">Montant de la lev&eacute;e souhait&eacute;e</label>
               <input type="number" class="form-input" id="pme-levee" placeholder="0" oninput="updateSMScore()">
             </div>
             <div class="form-group">
-              <label class="form-label">Upload &eacute;tats financiers</label>
-              <input type="file" class="form-input" id="pme-files" accept=".pdf,.xlsx,.xls" style="padding:8px;">
+              <label class="form-label">Type d'op&eacute;ration</label>
+              <select class="form-select" id="pme-op-type" onchange="updateSMScore()">
+                <option value="">-- S&eacute;lectionner --</option>
+                <option>Introduction en bourse (IPO)</option>
+                <option>Augmentation de capital</option>
+                <option>&Eacute;mission obligataire</option>
+                <option>Financement mezzanine</option>
+                <option>Levee de fonds priv&eacute;e</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Compartiment vis&eacute;</label>
+              <select class="form-select" id="pme-compartiment" onchange="updateSMScore()">
+                <option value="venture">Venture (PME &lt; 500M XOF CA)</option>
+                <option value="growth">Growth (PME 500M–5Mds XOF CA)</option>
+                <option value="premier">Premier (ETI &gt; 5Mds XOF CA)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Upload &eacute;tats financiers (PDF / Excel)</label>
+              <input type="file" class="form-input" id="pme-files" accept=".pdf,.xlsx,.xls" style="padding:8px;" multiple>
             </div>
           </div>
           <div class="form-group" style="margin-top:12px;">
-            <label class="form-label">Description de l'activit&eacute;</label>
-            <textarea class="form-input" id="pme-desc" rows="4" placeholder="D&eacute;crivez votre entreprise, march&eacute;, avantage concurrentiel..." oninput="updateSMScore()"></textarea>
+            <label class="form-label">Description de l'activit&eacute; &amp; avantage concurrentiel</label>
+            <textarea class="form-input" id="pme-desc" rows="4" placeholder="D&eacute;crivez votre entreprise, march&eacute; cible, avantage concurrentiel, utilisation des fonds lev&eacute;s..." oninput="updateSMScore()"></textarea>
           </div>
+
+          <!-- RATIOS CALCULES -->
+          <div id="pme-ratios-card" style="display:none;margin-top:14px;padding:14px;background:var(--bg-tertiary);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);margin-bottom:10px;">Ratios calcul&eacute;s automatiquement</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;" id="pme-ratios-grid"></div>
+          </div>
+
           <div class="sm-score-card" id="pme-score-card">
             <h3>Score WASI estim&eacute;</h3>
             <div class="sm-score-result" id="pme-score-result" style="color:var(--text-dim);">Remplissez les champs ci-dessus</div>
@@ -6699,37 +6826,188 @@ function submitSMOrder() {
   showNotif('Ordre soumis : ' + action + ' de ' + qty + ' ' + ticker + ' pour la prochaine s\u00e9ance de fixing (mercredi).', 'success');
 }
 
+/* ── Accounting system map for 54 African countries ────────────────────── */
+var PME_COMPTA = {
+  // OHADA zone → SYSCOHADA révisé 2017
+  BJ:{sys:'SYSCOHADA révisé',reg:'DGI-Bénin / CREPMF',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  BF:{sys:'SYSCOHADA révisé',reg:'DGI-BF',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  CI:{sys:'SYSCOHADA révisé',reg:'DGI-CI / CREPMF',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  ML:{sys:'SYSCOHADA révisé',reg:'DGI-Mali',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  SN:{sys:'SYSCOHADA révisé',reg:'DGID-Sénégal',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  TG:{sys:'SYSCOHADA révisé',reg:'OTR-Togo',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  NE:{sys:'SYSCOHADA révisé',reg:'DGI-Niger',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  GN:{sys:'SYSCOHADA révisé',reg:'DGI-Guinée',currency:'GNF',zone:'OHADA',ifrs:false},
+  GW:{sys:'SYSCOHADA révisé',reg:'DGI-Guinée-Bissau',currency:'XOF',zone:'UEMOA / OHADA',ifrs:false},
+  MR:{sys:'SYSCOHADA révisé',reg:'DGI-Mauritanie',currency:'MRU',zone:'OHADA',ifrs:false},
+  CM:{sys:'SYSCOHADA révisé',reg:'DGI-Cameroun',currency:'XAF',zone:'CEMAC / OHADA',ifrs:false},
+  CF:{sys:'SYSCOHADA révisé',reg:'DGI-RCA',currency:'XAF',zone:'CEMAC / OHADA',ifrs:false},
+  TD:{sys:'SYSCOHADA révisé',reg:'DGI-Tchad',currency:'XAF',zone:'CEMAC / OHADA',ifrs:false},
+  CG:{sys:'SYSCOHADA révisé',reg:'DGI-Congo',currency:'XAF',zone:'CEMAC / OHADA',ifrs:false},
+  GA:{sys:'SYSCOHADA révisé',reg:'DGI-Gabon',currency:'XAF',zone:'CEMAC / OHADA',ifrs:false},
+  GQ:{sys:'SYSCOHADA révisé',reg:'DGI-GEQ',currency:'XAF',zone:'CEMAC / OHADA',ifrs:false},
+  CD:{sys:'SYSCOHADA révisé',reg:'DGI-RDC',currency:'CDF',zone:'OHADA',ifrs:false},
+  KM:{sys:'SYSCOHADA révisé',reg:'DGI-Comores',currency:'KMF',zone:'OHADA',ifrs:false},
+  BI:{sys:'SYSCOHADA révisé',reg:'OBR-Burundi',currency:'BIF',zone:'OHADA (depuis 2012)',ifrs:false},
+  DJ:{sys:'SYSCOHADA révisé',reg:'DGI-Djibouti',currency:'DJF',zone:'OHADA',ifrs:false},
+  // IFRS countries
+  NG:{sys:'IFRS (FRC Nigeria)',reg:'FRCN / SEC Nigeria',currency:'NGN',zone:'CEDEAO',ifrs:true},
+  GH:{sys:'IFRS (ICAG Ghana)',reg:'SEC Ghana / ICAG',currency:'GHS',zone:'CEDEAO',ifrs:true},
+  KE:{sys:'IFRS (ICPAK Kenya)',reg:'CMA Kenya / ICPAK',currency:'KES',zone:'EAC',ifrs:true},
+  TZ:{sys:'IFRS (NBAA Tanzania)',reg:'CMSA Tanzania',currency:'TZS',zone:'EAC',ifrs:true},
+  UG:{sys:'IFRS (ICPAU Uganda)',reg:'CMA Uganda',currency:'UGX',zone:'EAC',ifrs:true},
+  RW:{sys:'IFRS (ICPAR Rwanda)',reg:'CMA Rwanda',currency:'RWF',zone:'EAC',ifrs:true},
+  ZA:{sys:'IFRS (IASB / SAICA)',reg:'JSE / FSCA',currency:'ZAR',zone:'SADC',ifrs:true},
+  ZM:{sys:'IFRS (ZICA)',reg:'SEC Zambie',currency:'ZMW',zone:'SADC',ifrs:true},
+  ZW:{sys:'IFRS (ICAZ)',reg:'SECZ Zimbabwe',currency:'ZWG',zone:'SADC',ifrs:true},
+  BW:{sys:'IFRS (BICA)',reg:'BSE Botswana',currency:'BWP',zone:'SADC',ifrs:true},
+  NA:{sys:'IFRS (ICAN)',reg:'NSX Namibie',currency:'NAD',zone:'SADC',ifrs:true},
+  MW:{sys:'IFRS (ICAM)',reg:'MSE Malawi',currency:'MWK',zone:'SADC',ifrs:true},
+  MZ:{sys:'IFRS (OCAM)',reg:'BVM Mozambique',currency:'MZN',zone:'SADC',ifrs:true},
+  AO:{sys:'IFRS (OCAM Angola)',reg:'CMC Angola',currency:'AOA',zone:'SADC',ifrs:true},
+  MU:{sys:'IFRS (MIA Maurice)',reg:'SEM Maurice',currency:'MUR',zone:'SADC / IOC',ifrs:true},
+  SC:{sys:'IFRS (ICASL)',reg:'FSA Seychelles',currency:'SCR',zone:'SADC / IOC',ifrs:true},
+  SZ:{sys:'IFRS (ICAS)',reg:'FSC Eswatini',currency:'SZL',zone:'SADC',ifrs:true},
+  LS:{sys:'IFRS (LICA)',reg:'LSM Lesotho',currency:'LSL',zone:'SADC',ifrs:true},
+  ET:{sys:'IFRS (AABE Éthiopie)',reg:'NBE Éthiopie',currency:'ETB',zone:'IGAD',ifrs:true},
+  SS:{sys:'IFRS (ICPSS)',reg:'BSS Soudan du Sud',currency:'SSP',zone:'IGAD',ifrs:true},
+  SO:{sys:'Normes locales / IPSAS',reg:'CBS Somalie',currency:'SOS',zone:'IGAD',ifrs:false},
+  ER:{sys:'Normes locales',reg:'BNE Érythrée',currency:'ERN',zone:'IGAD',ifrs:false},
+  SD:{sys:'Normes IPSAS / Locales',reg:'BSS Soudan',currency:'SDG',zone:'IGAD',ifrs:false},
+  // North Africa
+  MA:{sys:'CGNC (Code Général de Normalisation Comptable)',reg:'CDVM / AMF Maroc',currency:'MAD',zone:'UMA',ifrs:false},
+  TN:{sys:'SCE (Système Comptable des Entreprises)',reg:'CMF Tunisie',currency:'TND',zone:'UMA',ifrs:false},
+  DZ:{sys:'SCF (Système Comptable Financier)',reg:'COSOB Algérie',currency:'DZD',zone:'UMA',ifrs:false},
+  EG:{sys:'EAS (Egyptian Accounting Standards)',reg:'FRA Égypte',currency:'EGP',zone:'UMA',ifrs:false},
+  LY:{sys:'Normes locales / adaptées IFRS',reg:'CBL Libye',currency:'LYD',zone:'UMA',ifrs:false},
+  // Other
+  CV:{sys:'IFRS (ICCA Cap-Vert)',reg:'BCV / CMV',currency:'CVE',zone:'CEDEAO',ifrs:true},
+  GM:{sys:'IFRS (ICAG Gambie)',reg:'CBG',currency:'GMD',zone:'CEDEAO',ifrs:true},
+  SL:{sys:'IFRS (ICASL)',reg:'BSL',currency:'SLL',zone:'CEDEAO',ifrs:true},
+  LR:{sys:'IFRS (LICPA)',reg:'CBL Liberia',currency:'LRD',zone:'CEDEAO',ifrs:true},
+  MG:{sys:'PCG malgache (adapté IFRS)',reg:'CEM Madagascar',currency:'MGA',zone:'SADC',ifrs:false},
+};
+
+function onPMECountryChange() {
+  var code = document.getElementById('pme-country').value;
+  var banner = document.getElementById('pme-compta-banner');
+  if (!code || !PME_COMPTA[code]) { banner.style.display = 'none'; updateSMScore(); return; }
+  var c = PME_COMPTA[code];
+  banner.style.display = 'block';
+  document.getElementById('pme-compta-system').textContent = c.sys;
+  document.getElementById('pme-compta-regulator').textContent = 'Régulateur: ' + c.reg;
+  document.getElementById('pme-compta-currency').textContent = 'Devise: ' + c.currency;
+  document.getElementById('pme-compta-zone').textContent = c.zone;
+
+  // Adapt field labels based on accounting system
+  if (c.ifrs) {
+    document.getElementById('lbl-ca').textContent = 'Revenue / Turnover';
+    document.getElementById('hint-ca').textContent = 'Total operating revenue for the period';
+    document.getElementById('lbl-resultat').textContent = 'Net Profit / Loss';
+    document.getElementById('hint-resultat').textContent = 'Profit after tax and minority interest';
+    document.getElementById('lbl-actif').textContent = 'Total Assets';
+    document.getElementById('hint-actif').textContent = 'Non-current + Current assets';
+    document.getElementById('lbl-capitaux').textContent = 'Total Equity';
+    document.getElementById('hint-capitaux').textContent = 'Share capital + Retained earnings';
+    document.getElementById('lbl-ebitda').textContent = 'EBITDA';
+    document.getElementById('hint-ebitda').textContent = 'Earnings Before Interest, Tax, Depreciation & Amortisation';
+    document.getElementById('lbl-caf').textContent = 'Operating Cash Flow';
+    document.getElementById('hint-caf').textContent = 'Net cash from operating activities';
+  } else if (c.sys.includes('SYSCOHADA')) {
+    document.getElementById('lbl-ca').textContent = 'Chiffre d\'affaires (SYSCOHADA)';
+    document.getElementById('hint-ca').textContent = 'Comptes 70x — Ventes marchandises + Production vendue + Services';
+    document.getElementById('lbl-resultat').textContent = 'Résultat net de l\'exercice';
+    document.getElementById('hint-resultat').textContent = 'Compte 131/139 — Bénéfice ou perte après IS';
+    document.getElementById('lbl-actif').textContent = 'Total Actif (Bilan SYSCOHADA)';
+    document.getElementById('hint-actif').textContent = 'Actif immobilisé (Cl.2) + Actif circulant (Cl.3,4) + Trésorerie (Cl.5)';
+    document.getElementById('lbl-capitaux').textContent = 'Capitaux propres et ressources assimilées';
+    document.getElementById('hint-capitaux').textContent = 'Classe 1 — Capital + Réserves + Report + Résultat';
+    document.getElementById('lbl-ebitda').textContent = 'EBE (Excédent Brut d\'Exploitation)';
+    document.getElementById('hint-ebitda').textContent = 'VA − Charges de personnel − Impôts et taxes';
+    document.getElementById('lbl-caf').textContent = 'CAF (Capacité d\'Autofinancement)';
+    document.getElementById('hint-caf').textContent = 'Résultat net + Dotations − Reprises − Plus-values cessions';
+  } else {
+    document.getElementById('lbl-ca').textContent = 'Chiffre d\'affaires / Revenus';
+    document.getElementById('hint-ca').textContent = 'Selon référentiel ' + c.sys;
+    document.getElementById('lbl-resultat').textContent = 'Résultat net';
+    document.getElementById('hint-resultat').textContent = 'Après impôts';
+    document.getElementById('lbl-actif').textContent = 'Total Actif / Total Assets';
+    document.getElementById('hint-actif').textContent = '';
+    document.getElementById('lbl-capitaux').textContent = 'Capitaux propres / Equity';
+    document.getElementById('hint-capitaux').textContent = '';
+    document.getElementById('lbl-ebitda').textContent = 'EBITDA / EBE';
+    document.getElementById('hint-ebitda').textContent = '';
+    document.getElementById('lbl-caf').textContent = 'Cash Flow opérationnel';
+    document.getElementById('hint-caf').textContent = '';
+  }
+  updateSMScore();
+}
+
 function updateSMScore() {
-  var ca = parseFloat(document.getElementById('pme-ca').value) || 0;
-  var capital = parseFloat(document.getElementById('pme-capital').value) || 0;
+  var ca       = parseFloat(document.getElementById('pme-ca').value) || 0;
+  var resultat = parseFloat(document.getElementById('pme-resultat').value) || 0;
+  var actif    = parseFloat(document.getElementById('pme-actif').value) || 0;
+  var capitaux = parseFloat(document.getElementById('pme-capitaux').value) || 0;
+  var dettes   = parseFloat(document.getElementById('pme-dettes').value) || 0;
+  var ebitda   = parseFloat(document.getElementById('pme-ebitda').value) || 0;
   var exercices = parseInt(document.getElementById('pme-exercices').value) || 1;
   var resultEl = document.getElementById('pme-score-result');
   if (!resultEl) return;
 
-  if (ca >= 2000000000 && capital >= 150000000 && exercices >= 3) {
-    resultEl.textContent = 'WASI Premier \u2014 Score estim\u00e9 : A/B';
+  // Compute key ratios
+  var marge_nette  = ca > 0 ? (resultat / ca * 100).toFixed(1) : null;
+  var roe          = capitaux > 0 ? (resultat / capitaux * 100).toFixed(1) : null;
+  var levier       = capitaux > 0 ? (dettes / capitaux).toFixed(2) : null;
+  var marge_ebitda = ca > 0 && ebitda > 0 ? (ebitda / ca * 100).toFixed(1) : null;
+
+  // Show ratios card
+  var ratiosCard = document.getElementById('pme-ratios-card');
+  var ratiosGrid = document.getElementById('pme-ratios-grid');
+  if (ratiosCard && ratiosGrid && (ca > 0 || actif > 0)) {
+    ratiosCard.style.display = 'block';
+    var ratios = [];
+    if (marge_nette !== null) ratios.push({label:'Marge nette', val: marge_nette + '%', ok: parseFloat(marge_nette) >= 5});
+    if (roe !== null) ratios.push({label:'ROE', val: roe + '%', ok: parseFloat(roe) >= 10});
+    if (levier !== null) ratios.push({label:'Levier D/CP', val: levier + 'x', ok: parseFloat(levier) <= 2});
+    if (marge_ebitda !== null) ratios.push({label:'Marge EBITDA', val: marge_ebitda + '%', ok: parseFloat(marge_ebitda) >= 10});
+    if (exercices) ratios.push({label:'Exercices audités', val: exercices + (exercices >= 3 ? '+' : ''), ok: exercices >= 2});
+    ratiosGrid.innerHTML = ratios.map(function(r) {
+      return '<div style="text-align:center;padding:10px;background:var(--bg-primary);border-radius:6px;">' +
+        '<div style="font-size:.68rem;color:var(--text-dim);margin-bottom:4px;">' + r.label + '</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:' + (r.ok ? 'var(--green)' : 'var(--orange)') + ';">' + r.val + '</div>' +
+        '</div>';
+    }).join('');
+  } else if (ratiosCard) {
+    ratiosCard.style.display = 'none';
+  }
+
+  // Score and compartiment eligibility
+  if (ca >= 5000000000 && exercices >= 2 && resultat > 0) {
+    resultEl.textContent = 'WASI Premier — Score estimé A · Éligible IPO ou Emprunt Obligataire';
     resultEl.style.color = 'var(--green)';
-  } else if (ca >= 500000000 && capital >= 50000000 && exercices >= 2) {
-    resultEl.textContent = 'WASI Growth \u2014 Score estim\u00e9 : B';
+  } else if (ca >= 500000000 && exercices >= 2) {
+    resultEl.textContent = 'WASI Growth — Score estimé B · Éligible compartiment Growth';
     resultEl.style.color = 'var(--gold)';
-  } else if (ca >= 100000000 && capital >= 10000000) {
-    resultEl.textContent = 'WASI Venture \u2014 Score estim\u00e9 : C';
+  } else if (ca >= 100000000) {
+    resultEl.textContent = 'WASI Venture — Score estimé C · Éligible compartiment Venture';
     resultEl.style.color = 'var(--cyan)';
-  } else if (ca > 0 || capital > 0) {
-    resultEl.textContent = 'Non \u00e9ligible \u2014 crit\u00e8res minimum non atteints';
+  } else if (ca > 0) {
+    resultEl.textContent = 'Non éligible actuellement — CA minimum 100M XOF (ou équivalent)';
     resultEl.style.color = 'var(--red)';
   } else {
-    resultEl.textContent = 'Remplissez les champs ci-dessus';
+    resultEl.textContent = 'Remplissez les champs financiers ci-dessus';
     resultEl.style.color = 'var(--text-dim)';
   }
 }
 
 function submitPME() {
   var name = document.getElementById('pme-name').value.trim();
-  if (!name) { showNotif('Veuillez saisir le nom de l\u2019entreprise.', 'error'); return; }
+  if (!name) { showNotif('Veuillez saisir le nom de l\'entreprise.', 'error'); return; }
   var country = document.getElementById('pme-country').value;
-  if (!country) { showNotif('Veuillez s\u00e9lectionner un pays.', 'error'); return; }
-  showNotif('Candidature de "' + name + '" soumise avec succ\u00e8s. Analyse WASI sous 48h.', 'success');
+  if (!country) { showNotif('Veuillez sélectionner un pays.', 'error'); return; }
+  var ca = parseFloat(document.getElementById('pme-ca').value) || 0;
+  if (!ca) { showNotif('Veuillez renseigner le chiffre d\'affaires.', 'error'); return; }
+  var compta = PME_COMPTA[country] || {};
+  showNotif('Candidature de "' + name + '" (' + (compta.sys || '') + ') soumise avec succès. Analyse WASI sous 48h.', 'success');
 }
 
 /* ================================================================
