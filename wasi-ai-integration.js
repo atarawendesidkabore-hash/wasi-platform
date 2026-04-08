@@ -832,9 +832,15 @@
       applySignalsToCountries();
 
       const label = state.worldBankLoaded
-        ? `WASI AI · Données BM ${state.worldBankFetchedAt || "2024"}`
+        ? `WASI AI · Données World Bank ${state.worldBankFetchedAt || "2024"}`
         : "WASI AI · signaux locaux actifs";
       updateStatus(label, "ready");
+
+      // Show live data badge in topbar
+      if (state.worldBankLoaded) {
+        const badge = document.getElementById("wb-data-badge");
+        if (badge) badge.style.display = "inline-block";
+      }
     } catch (error) {
       updateStatus("Erreur calcul signaux", "error");
       buildCompositeCard();
