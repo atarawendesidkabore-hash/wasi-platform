@@ -6101,101 +6101,453 @@ c.score>=45?
 
 /* ========== SECTOR INTELLIGENCE ========== */
 const WASI_SECTORS = [
-  { id:'agri', icon:'🌾', name:'Agriculture & Agro-industrie',
-    keywords:['agri','cacao','cafe','coton','karite','arachide','noix de cajou','hevea','palmier','sésame','manioc','riz','elevage','peche','semences','irrigation'],
-    desc:"Secteur dominant en Afrique subsaharienne — 60% de l'emploi, 30% du PIB moyen.",
-    opportunites:['Transformation locale (valeur ajoutée +300% vs export brut)','Certification bio & fair trade (primes 20-40%)','Irrigation & intrants (low-penetration)','Cold chain & stockage post-récolte','Agri-fintech & assurance récolte'],
-    risques:['Dépendance aux cours mondiaux des commodités','Aléas climatiques (El Niño, sécheresse)','Faible accès au crédit agricole','Coûts logistiques intra-continent élevés'],
-    pays_cles:['CI','GH','SN','NG','KE','ET','TZ','BJ','MW'],
+  {
+    id:'agri', icon:'🌾', name:'Agriculture & Agro-industrie',
+    keywords:['agri','cacao','cafe','coton','karite','arachide','noix de cajou','hevea','palmier','sesame','manioc','riz','elevage','peche','semences','irrigation','soja','anacarde','vanille'],
+    desc:"60% de l'emploi africain, 30% du PIB moyen. Le continent produit 70% du cacao mondial, 40% du café robusta, 35% des noix de cajou — mais exporte 90% brut, sans transformation.",
+    opportunites:[
+      'Transformation locale : +200-400% de valeur ajoutée vs export brut (ex: cacao fève → chocolat)',
+      'Certification bio & fair trade : primes marché 20-40% sur cacao, café, karité',
+      'Irrigation & intrants : taux d\'équipement < 5% — marché quasi-vierge',
+      'Cold chain & stockage : pertes post-récolte = 30-40% — $4Mds de pertes évitables/an',
+      'Agri-fintech : crédit scoring récolte, assurance paramétrique satellite',
+      'Semences améliorées & engrais bio : productivité x2-3 possible',
+      'Aquaculture & pêche : déficit protéines animales — demande +8%/an',
+      'Agri-tourisme & tracabilité blockchain (origine, durabilité)',
+    ],
+    risques:[
+      'Dépendance cours mondiaux : volatilité cacao ±40% en 2024',
+      'Aléas climatiques : El Niño 2023-2024 a réduit récoltes CI/GH de 20%',
+      'Accès au foncier : titres de propriété < 10% en zones rurales',
+      'Faible accès crédit agricole : taux bancaire 18-27% pour agriculteurs',
+      'Coûts logistiques : transport = 35% du prix final (vs 10% Brésil)',
+      'Contrefaçon intrants : 30-40% des pesticides africains sont falsifiés',
+    ],
+    acteurs:['Olam International','Louis Dreyfus','Barry Callebaut (CI/GH)','ETG Group','Advanta Seeds','Wave (agri-fintech)','Hello Tractor','Apollo Agriculture'],
+    cadre_reglementaire:'OHADA (contrats & suretes), CEDEAO (libre circulation marchandises), UEMOA (normes sanitaires), réglementations nationales OCP/ANADER. ZLECAf : suppression droits douane agri d\'ici 2035.',
+    modes_entree:['JV avec coopérative locale','Contrat de culture (outgrower scheme)','Acquisition terres via bail emphytéotique 25-50 ans','Franchise agro-industrie','Fonds agri-impact (AfricInvest, Injaro)'],
+    financement:['BOAD : prêts infra agricole 2-4% / 15 ans','AFDB Agri-Finance','IFC Agribusiness','Proparco Green bonds','USAID Feed the Future','Garanties FAGACE/FSA'],
+    corridors:['Corridor Abidjan-Lagos (cacao/huile de palme)','Corridor Dakar-Bamako (arachide/coton)','Corridor Dar es Salaam-Lusaka (maïs/soja)','Corridor Mombasa-Kampala (café/thé)'],
+    zlecaf_impact:'Élimination droits douane sur 90% produits agri → marché intégré $180Mds. Potentiel commerce intra-africain agri x3 d\'ici 2035.',
+    indicateurs_cles:['Prix cacao LME : $6,200-8,500/t (2024)','Prix café robusta ICE : $4,200-5,100/t','Prix anacarde FOB Abidjan : $1,200-1,600/t','Déficit céréalier Afrique : 40M t/an'],
+    pays_cles:['CI','GH','SN','NG','KE','ET','TZ','BJ','MW','MZ','ZM','CM'],
     wacc_range:'10-16%', croissance:'5.2% CAGR 2024-2030', tam:'$180Mds USD (ZLECAf)'
   },
-  { id:'mining', icon:'⛏️', name:'Mines & Industries Extractives',
-    keywords:['mine','or','cobalt','cuivre','bauxite','fer','titane','manganese','diamant','phosphate','uranium','zinc','coltan','rutile','platine','nickel'],
-    desc:"Afrique détient 30% des réserves minières mondiales. Sous-valorisation chronique.",
-    opportunites:['Services miniers (drilling, blasting, équipement)','Raffinage & fonderie locaux','Mines artisanales formalisées (MAPE)','Traçabilité blockchain (cobalt, coltan)','Réhabilitation environnementale (ESG)'],
-    risques:['Volatilité des cours des matières premières','Risque de nationalisation / renégociation contrats','Conflits communautaires','Réglementation ESG internationale'],
-    pays_cles:['CD','ZM','ZA','GH','NG','SL','GN','BF','NA','ZW'],
+  {
+    id:'mining', icon:'⛏️', name:'Mines & Industries Extractives',
+    keywords:['mine','or','cobalt','cuivre','bauxite','fer','titane','manganese','diamant','phosphate','uranium','zinc','coltan','rutile','platine','nickel','lithium','graphite'],
+    desc:"Afrique détient 30% des réserves mondiales : 60% cobalt (CD), 90% platine (ZA), 50% diamants, 40% or. Valeur extraite $240Mds/an — 85% exporté brut. Transition énergétique mondiale crée demande explosive sur cobalt, lithium, graphite.",
+    opportunites:[
+      'Raffinage & fonderie locaux : cobalt brut $15/kg vs hydroxyde $45/kg vs cathode $33/kg',
+      'Services miniers spécialisés : forage, sautage, maintenance — marché $18Mds/an Afrique',
+      'Mines artisanales formalisées (MAPE) : 10M mineurs artisanaux — formalisation = traçabilité ESG',
+      'Traçabilité blockchain : cobalt certifié RCI premium +20% sur marchés européens',
+      'Minéraux transition énergétique : cobalt, lithium, graphite, manganèse — demande x4-6 d\'ici 2040',
+      'Réhabilitation environnementale : marché ESG croissant, obligations légales mine closure',
+      'Exploration géologique : 70% sous-sols africains non prospectés',
+      'Transformation batteries & matériaux avancés : ZA, MA potentiels hubs',
+    ],
+    risques:[
+      'Volatilité cours : cobalt -60% en 2023, or +25% en 2024',
+      'Nationalisation : RDC (cobalt 15% royalties), Zimbabwe (lithium), Guinée',
+      'Conflits communautaires : 40% des projets miniers retardés par oppositions locales',
+      'Réglementation ESG : CSRD Europe impose due diligence chaîne approvisionnement',
+      'Infrastructure : énergie & transport = 30-40% coûts opérationnels mines isolées',
+      'Risque sécurité : zones d\'extraction souvent en régions instables (Sahel, Est-CD)',
+    ],
+    acteurs:['Glencore (CD/ZA)','Anglo American (ZA)','Barrick Gold (ML/CI)','AngloGold Ashanti (GH)','Kinross','Ivanhoe Mines (CD)','ENRC','Endeavour Mining'],
+    cadre_reglementaire:'Codes miniers nationaux (redevances 3-15%), ITIE (transparence), Règlement UE minerais conflits, Protocole SADC mines. Tendance : contenu local obligatoire 20-40%.',
+    modes_entree:['Permis d\'exploration (coût $50K-500K)','JV avec État (participation 10-30% État)','Acquisition juniors cotées TSX/ASX','Offtake agreement + financement','Service mining contract (pas d\'actifs)'],
+    financement:['Export credit agencies (Sinosure, UKEF)','IFC-MIGA garanties','Streaming & royalty (Royal Gold, Wheaton)','Bonds projet (taux 8-12%)','Fonds souverains partenaires'],
+    corridors:['Corridor cuivre : Kolwezi(CD)-Dar es Salaam(TZ) via Zambie','Corridor or : Bamako(ML)-Abidjan(CI)','Corridor bauxite : Conakry(GN)-Freetown(SL)'],
+    zlecaf_impact:'Protocole investissement ZLECAf : protection investisseurs, arbitrage continental. Potentiel transformation locale impose par politique industrielle = +$80Mds valeur ajoutée.',
+    indicateurs_cles:['Or COMEX : $2,300-2,500/oz (2024)','Cobalt LME : $25,000-33,000/t','Cuivre LME : $8,500-10,000/t','Bauxite spot : $45-55/t (FOB Guinée)'],
+    pays_cles:['CD','ZM','ZA','GH','NG','SL','GN','BF','NA','ZW','ML','TZ'],
     wacc_range:'14-22%', croissance:'4.8% CAGR', tam:'$95Mds USD'
   },
-  { id:'energy', icon:'⚡', name:'Énergie & Pétrole / Gaz',
-    keywords:['petrole','gaz','energie','solaire','eolien','hydro','electricite','renouvelable','pipeline','raffinerie','fpso','gnl'],
-    desc:"Déficit électrique de 600M de personnes non connectées. Pétrole: $60Mds/an exports.",
-    opportunites:['Énergie solaire off-grid (marché non servi)','Mini-réseaux ruraux (payant-à-usage)','GNL + Pipeline (SN, MZ, TZ)','Efficacité énergétique industrie','EPC & services pétroliers'],
-    risques:['Transition énergétique mondiale (stranded assets pétroliers)','Fluctuation prix Brent','Risque souverain (renégociation contrats)','Délais permis & raccordement réseau'],
-    pays_cles:['NG','AO','EG','DZ','GH','SN','CM','GA','MZ','TZ'],
+  {
+    id:'energy', icon:'⚡', name:'Énergie & Pétrole / Gaz',
+    keywords:['petrole','gaz','energie','solaire','eolien','hydro','electricite','renouvelable','pipeline','raffinerie','fpso','gnl','biogaz','charbon','uranium','kwh'],
+    desc:"600M personnes sans électricité. Taux électrification rural : 26%. Pétrole : $60Mds exports/an. Renouvelables : 10 GW installés vs potentiel 1,000 GW solaire. Paradoxe : continent le plus ensoleillé = moins électrifié.",
+    opportunites:[
+      'Solaire off-grid : marché PAYG (pay-as-you-go) — M-KOPA, Sun King, BBOXX ont prouvé le modèle',
+      'Mini-réseaux hybrides : solaire+batterie+diesel — coût kWh divisé par 3 vs groupes',
+      'GNL & pipeline : Sénégal (GTA 2024), Mozambique (Coral Sul FLNG), Tanzania',
+      'Efficacité énergétique industrie : mines, cimenteries — économies 20-35%',
+      'EPC & services pétroliers locaux : contenu local en hausse (40-60% requis)',
+      'Hydro : potentiel 350 GW (Afrique centrale/est) vs 40 GW installés',
+      'Éolien côtier : Maroc, Afrique du Sud, Kenya pionniers — LCOE $0.03-0.05/kWh',
+      'Trading énergie : marchés régionaux WAPP (Afrique Ouest), SAPP (Afrique Australe)',
+    ],
+    risques:[
+      'Transition énergétique : financement pétrolier se raréfie (IEA, banques dev.)',
+      'Brent volatilité : $65-95/bbl range 2024 — impact budgets pétroéconomies',
+      'Risque souverain : Nigeria NNPC retards paiements, Angola renégociations',
+      'Délais permis : 3-7 ans pour grands projets hydro/solaire',
+      'Subventions énergie : prix régulés < coût de production → barrières entrée',
+      'Monnaie locale : revenus en devise locale, dette en USD → risque FX',
+    ],
+    acteurs:['TotalEnergies (NG/AO/SN/UG)','ENI (NG/MZ/CI)','Shell (NG)','Azura Power','Scatec (renouvelables)','Engie Africa','CrossBoundary Energy','M-KOPA (off-grid)'],
+    cadre_reglementaire:'Codes pétroliers nationaux (PSA, concessionnaire). IRENA zone Afrique. ECOWAS Energy Protocol. Règlement WAPP. COP28 : African Energy Bank créée $25Mds.',
+    modes_entree:['PSA (Production Sharing Agreement) — État garde 70-80%','IPP (Independent Power Producer) PPA 15-25 ans','Service company (pas de risque réservoir)','Acquisition actifs stranded (pétrole) décotés','PAYG off-grid (capital léger, recouvrement usage)'],
+    financement:['African Development Bank ($1Mds/an renouvelables)','IFC Scaling Solar','PIDG / GuarantCo','Green bonds Afrique (taux 6-9%)','Fonds Vert pour le Climat','Export credits COFACE/Euler Hermes'],
+    corridors:['Pipeline WAGP (NG-GH-TG-BJ)','EAPP East Africa Power Pool','SADC interconnexion ZA-MZ-ZM-ZW','Projet INGA III (CD → Afrique)'],
+    zlecaf_impact:'Protocole énergie ZLECAf : marché électricité continental. Interconnexions planifiées $30Mds BAD 2030. Potentiel commerce électricité intra-africain x5.',
+    indicateurs_cles:['Brent : $75-95/bbl (2024)','LCOE solaire Afrique : $0.03-0.06/kWh','Taux électrification urbain : 75% / rural : 26%','Déficit génération : 180 GW estimé'],
+    pays_cles:['NG','AO','EG','DZ','GH','SN','CM','GA','MZ','TZ','KE','MA'],
     wacc_range:'12-20%', croissance:'7.1% CAGR (renouvelables)', tam:'$120Mds USD'
   },
-  { id:'telecom', icon:'📱', name:'Télécoms & Mobile Money',
-    keywords:['telecom','mobile','fintech','orange','mtn','wave','mpesa','mobile money','internet','4g','5g','fibre','tower','data center'],
-    desc:"Mobile Money = infrastructure financière de l'Afrique. 150M+ comptes actifs.",
-    opportunites:['Infrastructure tours & fibre (sale & leaseback)','Super-apps (paiement+commerce+crédit)','Data centers souverains','Identité numérique (KYC)','MVNO & connectivité rurale'],
-    risques:['Réglementation des paiements (BCEAO, CBN)','Concurrence intense (WAve vs Orange Money)','Risque cyber & fraude','Dépendance aux équipements Huawei/ZTE (géopolitique)'],
-    pays_cles:['NG','KE','GH','CI','SN','TZ','ZA','CM','ET','RW'],
+  {
+    id:'telecom', icon:'📱', name:'Télécoms, Mobile Money & Digital',
+    keywords:['telecom','mobile','fintech','orange','mtn','wave','mpesa','mobile money','internet','4g','5g','fibre','tower','data center','gsm','sim','airtel','moov'],
+    desc:"547M abonnés mobile Afrique subsaharienne. Mobile Money : $912Mds transactionnels 2023 (GSMA). Taux smartphone : 50% en hausse. Fibre optique : 5% des foyers. 5G : déployée ZA, NG, EG, KE.",
+    opportunites:[
+      'Infrastructure tours : IHS Towers, ATC Africa — sale & leaseback, rendement 8-12%',
+      'Fibre optique dernière-mile : $15Mds d\'investissement nécessaire d\'ici 2030',
+      'Super-apps : M-Pesa style — paiement + épargne + crédit + commerce sur 1 plateforme',
+      'Data centers souverains : chaque pays veut héberger données localement',
+      'Identité numérique & KYC : marché $2Mds — base inclusion financière',
+      'B2B SaaS pour PME africaines : ERP, comptabilité, gestion stocks',
+      'Cybersécurité : 200M cyberattaques/an Afrique — marché $3Mds en croissance',
+      'Satellite internet : Starlink opère déjà dans 30+ pays africains',
+    ],
+    risques:[
+      'Réglementation paiements : BCEAO, CBN Nigeria exigent licences coûteuses',
+      'Concurrence prix destructrice : Wave a imposé 0% frais transfert en UEMOA',
+      'Cyber & fraude SIM swap : pertes $4Mds/an estimées Afrique',
+      'Infrastructure énergie : pannes fréquentes = opex groupes électrogènes +30%',
+      'Dépendance Huawei/ZTE : risques géopolitiques & sanctions potentielles',
+      'Taxes télécoms excessives : 15-25% du revenu en taxes dans certains pays',
+    ],
+    acteurs:['MTN Group (22 pays)','Orange Africa (17 pays)','Airtel Africa (14 pays)','Wave (UEMOA)','Safaricom/M-Pesa (KE)','IHS Towers','Flutterwave','Interswitch'],
+    cadre_reglementaire:'Régulateurs nationaux (ARCEP, NCC Nigeria, CA Kenya). BCEAO monnaie électronique. GSMA standards. Règlement données CEDEAO. Chaque pays : licence opérateur $10-100M.',
+    modes_entree:['Licence opérateur mobile (coût $10-100M)','MVNO (Mobile Virtual Network Operator) — capital léger','Acquisition startup fintech locale','Partenariat distribution avec opérateur existant','Infrastructure passive (tours, fibre) — rendement stable'],
+    financement:['IFC Digital 2030','GSMA Mobile for Development','AfricInvest Digital','Adaverse (VC Web3 Afrique)','Orange Ventures','MTN Ventures'],
+    corridors:['Corridor UEMOA : Wave domine 8 pays','Axe Lagos-Accra-Abidjan : interopérabilité mobile money','East Africa : M-Pesa interconnecté KE-TZ-UG-RW'],
+    zlecaf_impact:'Protocole numérique ZLECAf : marché digital africain intégré. Interopérabilité mobile money transfrontalière. Objectif : 100% connectivité haut débit 2030.',
+    indicateurs_cles:['ARPU mobile Afrique : $3-8/mois','Taux pénétration mobile money : 55% Afrique subsaharienne','Valeur transactions MM : $912Mds (2023)','Coût data mobile : $0.50-3/GB selon pays'],
+    pays_cles:['NG','KE','GH','CI','SN','TZ','ZA','CM','ET','RW','EG','MA'],
     wacc_range:'10-14%', croissance:'12.4% CAGR', tam:'$65Mds USD'
   },
-  { id:'finance', icon:'🏦', name:'Services Financiers & Microfinance',
-    keywords:['banque','finance','microfinance','assurance','credit','emprunt','bourse','investissement','dette','obligataire','capital risque','fonds','sfd'],
-    desc:"Taux de bancarisation moyen 35%. IMF: 200M+ clients. Marché sous-servi.",
-    opportunites:["Microfinance digitale (crédit scoring IA)",'Assurance indicielle agricole','Marchés obligataires locaux','Trade finance intra-africain',"Fonds d'investissement impact"],
-    risques:['Cadre réglementaire fragmenté (54 juridictions)','Risque de crédit élevé (NPL 10-25%)','Instabilité des devises',"Faible culture de l'épargne long terme"],
-    pays_cles:['CI','SN','GH','KE','MA','ZA','NG','TZ','BJ','RW'],
+  {
+    id:'finance', icon:'🏦', name:'Services Financiers & Capital Markets',
+    keywords:['banque','finance','microfinance','assurance','credit','emprunt','bourse','investissement','dette','obligataire','capital risque','fonds','sfd','brvm','ngx','epargne','leasing','factoring'],
+    desc:"Taux bancarisation : 35% (vs 95% Europe). NPL moyen : 12%. Assurance : pénétration 3% PIB (vs 10% monde). BRVM : $10Mds capitalisation. Marchés obligataires locaux en expansion : $120Mds souverains africains.",
+    opportunites:[
+      'Microfinance digitale : crédit scoring IA sur données mobile — marché $30Mds non servi',
+      'Assurance indicielle agricole : satellite + weather data — prime $15-30/ha',
+      'Marchés obligataires souverains : émissions UEMOA 7-10% — rendement attractif',
+      'Trade finance intra-africain : déficit $81Mds/an (BAD) — garanties & LC',
+      'Leasing équipements : PME préfèrent leasing à crédit — marché $8Mds Afrique',
+      'Retraite & épargne longue : démographie → fonds de pension en création',
+      'BRVM/NGX/GSE : IPO PME locales — sous-valorisation vs pairs émergents',
+      'Fonds impact africains : ESG premium, diaspora capital, DFI co-investissement',
+    ],
+    risques:[
+      'NPL élevés : Nigeria 12%, Kenya 15%, Cameroun 18% — risque crédit systémique',
+      'Réglementation fragmentée : 54 cadres légaux, 42 banques centrales',
+      'Instabilité monétaire : dévaluations Naira, CFA, Cedi impactent bilans',
+      'Faible épargne longue : absence fonds de pension → liquidité marché limitée',
+      'Taux usure contraignants : BCEAO plafond 15% limite rentabilité IMF',
+      'Cyber fraude financière : $4Mds/an pertes institutions financières africaines',
+    ],
+    acteurs:['Ecobank (36 pays)','Standard Bank','Attijariwafa Bank','BGFI Group','NSIA (assurances)','Allianz Africa','Oragroup','BRVM (CI)','NGX (Nigeria)'],
+    cadre_reglementaire:'BCEAO (UEMOA), BEAC (CEMAC), Banque Centrale Kenya/Nigeria/Afrique du Sud. SYSCOHADA comptes. CREPMF marchés régionaux. Bâle III progressif. FATF recommandations.',
+    modes_entree:['Acquisition banque locale (due diligence 12-18 mois)','Licence MFI ($50K-500K selon pays)','Partenariat bancaire (agent banking)','Fonds d\'investissement agréé CREPMF','Insurtech : licence assurance digitale'],
+    financement:['IFC Financial Institutions Group','FMO (Pays-Bas)','DEG (Allemagne)','Proparco ligne crédit','ADB Trade Finance Program','BOAD lignes IMF'],
+    corridors:['Zone UEMOA : BCEAO règlement unifié — 8 pays marché intégré','Zone CEMAC : BEAC — 6 pays','Afrique Australe : SADC finance harmonisée','Afrique Est : EAC financial integration'],
+    zlecaf_impact:'Protocole services financiers : libre prestation services bancaires continental. Passeport unique fonds d\'investissement panafricain. Potentiel marché intégré $500Mds actifs.',
+    indicateurs_cles:['Taux directeur BCEAO : 5.5% (2024)','Yield obligation UEMOA 10 ans : 6.5-8.5%','Capitalisation BRVM : $10.2Mds','NPL moyen Afrique subsaharienne : 12%'],
+    pays_cles:['CI','SN','GH','KE','MA','ZA','NG','TZ','BJ','RW','CM','EG'],
     wacc_range:'12-18%', croissance:'9.3% CAGR', tam:'$55Mds USD'
   },
-  { id:'logistics', icon:'🚢', name:'Logistique & Transport',
-    keywords:['logistique','transport','port','corridor','fret','warehouse','conteneur','route','rail','aviation','supply chain','douane'],
-    desc:"Coûts logistiques = 30-50% du prix final en Afrique (vs 8-15% Asie). Goulot d'étranglement continental.",
-    opportunites:['Plateformes logistiques multimodales','Dernière mile delivery (urbain)','Entreposage & cold chain','Services douaniers digitaux','Corridor management (BAD 2030)'],
-    risques:['Infrastructure routière dégradée','Postes de contrôle et corruption','Fragmentation réglementaire','Sécurité des cargaisons (sahel)'],
-    pays_cles:['CI','SN','TG','BJ','KE','TZ','ZA','EG','MA','DZ'],
+  {
+    id:'logistics', icon:'🚢', name:'Logistique, Ports & Transport',
+    keywords:['logistique','transport','port','corridor','fret','warehouse','conteneur','route','rail','aviation','supply chain','douane','transit','camion','hub'],
+    desc:"Coûts logistiques = 30-50% du prix final (vs 8-15% Asie). 16 des 54 pays africains enclavés. Port Abidjan : 1er port Afrique Ouest — 28M t/an. ZLECAf : potentiel x3 commerce intra-africain nécessite infrastructure.",
+    opportunites:[
+      'Plateformes logistiques multimodales : hubs combinant port/rail/route/entrepôt',
+      'Dernière mile urbaine : Lagos, Nairobi, Dakar — boom e-commerce → livraison J+1',
+      'Cold chain & stockage : $4Mds de pertes agri évitables — marché frigori sous-développé',
+      'Services douaniers digitaux : dédouanement 48h → 4h avec systèmes GTP',
+      'Fret aérien : cargo post-COVID — hub Addis-Abeba (Ethiopian Airlines) model',
+      'Rail continental : SGR Kenya, Lobito Corridor (AO-ZM-CD), Maghreb',
+      'Gestion ports : concessions 25-30 ans — Bolloré, DP World, MSC TiL',
+      'Freight forwarding digital : Kobo360, Lori Systems — matching camions-fret',
+    ],
+    risques:[
+      'Infrastructure dégradée : 30% routes africaines impraticables saison pluies',
+      'Postes de contrôle : Lagos-Abidjan = 69 postes, délai moyen 14 jours',
+      'Fragmentation réglementaire : 54 régimes douaniers différents',
+      'Sécurité cargaisons : Sahel, Golfe de Guinée piraterie, vol fret',
+      'Dépendance USD : fret maritime en dollars → risque FX pour importateurs',
+      'Retards portuaires : temps séjour conteneur Afrique : 8-20 jours vs 3-5 monde',
+    ],
+    acteurs:['Bolloré Logistics (Afrilogistix)','DP World (Dakar, Berbera)','MSC TiL','Ethiopian Airlines Cargo','DHL Express Africa','Kobo360 (Nigeria)','Lori Systems','Maersk Africa'],
+    cadre_reglementaire:'OHADA transport de marchandises. CEDEAO protocole libre circulation. Convention TIR. Code IATA cargo. Règlement MARPOL maritime. Accords bilatéraux aérien open sky.',
+    modes_entree:['Concession portuaire (investissement $100M-2Mds, durée 25-30 ans)','Franchiseur 3PL (asset-light)','Acquisition flotte camions + plateforme digitale','JV avec transporteur local (accès réseau + licences)','Freight tech : plateforme matching (capex minimal)'],
+    financement:['BAD fonds transport $2Mds/an','AIIB infrastructure','PPP gouvernementaux (garanti BAD/IDA)','Sukuk islamiques (Maroc, Sénégal, Côte d\'Ivoire)','Green bonds corridor'],
+    corridors:['Abidjan-Lagos : 1,028 km, $10Mds commerce/an','Dakar-Bamako : 1,300 km enclavé Mali','Lobito Corridor : AO-ZM-CD 1,300 km ferrée','Mombasa-Kampala-Kigali : EAC Northern Corridor','Dar es Salaam-Lusaka-Harare : Southern Corridor'],
+    zlecaf_impact:'ZLECAf Single African Air Transport Market (SAATM) : open sky continental. Suppression barrières transit → économie $5Mds/an. Investissement infrastructure : $130Mds BAD Plan 2030.',
+    indicateurs_cles:['Coût transport routier Afrique : $0.15-0.20/t-km (vs $0.05 Asie)','Temps dédouanement moyen : 12 jours','Indice performance logistique (Banque Mondiale) Afrique : 2.4/5','Taux remplissage camions retour : 40% (inefficacité énorme)'],
+    pays_cles:['CI','SN','TG','BJ','KE','TZ','ZA','EG','MA','DZ','ET','NG'],
     wacc_range:'12-16%', croissance:'6.8% CAGR', tam:'$85Mds USD'
   },
-  { id:'health', icon:'🏥', name:'Santé & Pharmacie',
-    keywords:['sante','pharmacie','hopital','medicament','vaccine','laboratoire','biotech','medecine','clinique','healthcare','medi'],
-    desc:"Déficit de 2.4M professionnels de santé. Import médicaments = $17Mds/an.",
-    opportunites:['Production pharmaceutique locale (ZLECAf)','Télémédecine & diagnostic IA','Chaîne du froid vaccins','Équipements médicaux refurb','Assurance santé mobile'],
-    risques:['Régulation stricte (homologation 5-7 ans)','Contrefaçon médicaments (30% du marché)',"Faible pouvoir d'achat patient","Dépendance aux importations Inde/Chine"],
-    pays_cles:['ZA','NG','EG','KE','MA','GH','CI','TZ','SN','CM'],
+  {
+    id:'health', icon:'🏥', name:'Santé, Pharmacie & Biotech',
+    keywords:['sante','pharmacie','hopital','medicament','vaccine','laboratoire','biotech','medecine','clinique','healthcare','medi','chirurgie','diagnostic','ong','msf'],
+    desc:"Déficit 2.4M professionnels santé. Import médicaments $17Mds/an (80% de la consommation). 1 médecin pour 10,000 hab (vs 1/300 Europe). Pandémie COVID a révélé vulnérabilité : 99% vaccins importés en 2020.",
+    opportunites:[
+      'Production pharmaceutique locale : objectif UA 60% vaccins fabriqués Afrique 2040',
+      'Télémédecine & diagnostic IA : déploiement rural, formation médecins hybride',
+      'Chaîne froid vaccins : 30% vaccins perdus faute cold chain — opportunité marché',
+      'Cliniques privées moyens revenus : classe moyenne croissante → qualité exigée',
+      'Dispositifs médicaux reconditionnés : IRM, scanner refurb — marché $2Mds',
+      'Assurance santé mobile : micro-assurance à prime journalière via mobile',
+      'Recherche clinique : coût essais 40% moins cher qu\'Europe, diversité génétique',
+      'Santé mentale digitale : tabou en baisse — startups comme Mindspa (ZA)',
+    ],
+    risques:[
+      'Homologation lente : 5-7 ans pour nouveau médicament (AMRH harmonisation en cours)',
+      'Contrefaçon : 30% médicaments africains falsifiés — risque légal & réputationnel',
+      'Pouvoir achat patient : 60% des dépenses santé out-of-pocket',
+      'Ressources humaines : fuite des cerveaux médicaux vers Europe/USA',
+      'Dépendance Inde/Chine : API (principes actifs) 70% importés — vulnérabilité supply',
+      'Réglementation éthique essais : risque réputation si protocoles non respectés',
+    ],
+    acteurs:['Aspen Pharmacare (ZA)','Cipla Quality Chemical (UG)','Institut Mérieux','Sanofi Afrique','Novartis Access','GSK Afrique','mPharma','Zipline (drones médicaux)'],
+    cadre_reglementaire:'AMRH (African Medicines Regulatory Harmonisation). EAC, ECOWAS, SADC protocoles santé. BRICS API réglementation. OMS pré-qualification. Chaque pays : ministère santé + agence médicaments.',
+    modes_entree:['Franchise clinique premium (modèle Clinique Pasteur Maroc)','Acquisition laboratoire local (accès licences + clientèle)','Partenariat hôpital public (PPP santé)','Distribution pharmaceutique (capital léger, marge 15-25%)','Healthtech : téléconsultation + IA diagnostic'],
+    financement:['GAVI Alliance vaccins','Fonds Mondial (VIH/TB/Paludisme)','IFC Health in Africa','USAID Global Health','BMGF (Gates Foundation)','Africa Health Holdings'],
+    corridors:['Hub pharma Maroc : exportateur vers 40 pays africains','Afrique Australe : Aspen domine 26 pays','Kenya hub pharma Est-Africain : exportations régionales'],
+    zlecaf_impact:'Protocole pharmaceutique ZLECAf : harmonisation homologation → 1 dossier pour 54 pays. Objectif autosuffisance vaccins 2040. Marché intégré santé $259Mds d\'ici 2030.',
+    indicateurs_cles:['Dépense santé/hab : $70-200/an (vs $4,000 OCDE)','Part médicaments génériques : 60% marché','Taux couverture assurance maladie : 20% Afrique','Marché pharmacie Afrique : $30Mds (2024)'],
+    pays_cles:['ZA','NG','EG','KE','MA','GH','CI','TZ','SN','CM','ET','RW'],
     wacc_range:'12-16%', croissance:'8.5% CAGR', tam:'$45Mds USD'
   },
-  { id:'immobilier', icon:'🏗️', name:'Immobilier & Construction',
-    keywords:['immobilier','construction','btp','logement','bureau','centre commercial','promoteur','ciment','beton','acier','urbanisme'],
-    desc:"Déficit de 100M+ logements. Urbanisation 3.6%/an — la plus rapide au monde.",
-    opportunites:['Logements abordables (financement hypothécaire)','Infrastructure publique (PPP)','Parcs industriels & ZES','Matériaux de construction locaux','Smart cities & BIM'],
-    risques:['Accès difficile au foncier (titres)','Financement hypothécaire quasi-inexistant','Délais permis (2-4 ans)','Risque de change sur matériaux importés'],
-    pays_cles:['NG','KE','CI','GH','TZ','ZA','EG','MA','SN','ET'],
+  {
+    id:'immobilier', icon:'🏗️', name:'Immobilier, BTP & Infrastructure',
+    keywords:['immobilier','construction','btp','logement','bureau','centre commercial','promoteur','ciment','beton','acier','urbanisme','smart city','zes','zone franche'],
+    desc:"Déficit 100M+ logements. Urbanisation +3.6%/an — la plus rapide au monde. 1Mds d\'Africains en 2050 dans les villes. Cimenteries Lafarge/Dangote dominent. Infrastructures : déficit $100Mds/an estimé BAD.",
+    opportunites:[
+      'Logements abordables (affordable housing) : $10K-30K/unité, financement BAD/IFC',
+      'Parcs industriels & ZES (Zones Économiques Spéciales) : Maroc, Éthiopie modèles',
+      'PPP infrastructure : routes, hôpitaux, universités — états cherchent privé',
+      'Matériaux construction locaux : briques compressées, bambou, terre cuite — import-substitution',
+      'Immobilier commercial premium : Lagos, Nairobi, Abidjan — loyers $30-60/m²/mois',
+      'Smart cities & BIM : Konza (KE), Diamniadio (SN), Eko Atlantic (NG)',
+      'Réhabilitation centres historiques : médinas MA, EA, SN — tourisme patrimonial',
+      'Bureaux & coworking : télétravail + startups → espaces flexibles demandés',
+    ],
+    risques:[
+      'Foncier : titres propriété < 10% en zones périurbaines — insécurité juridique',
+      'Financement hypothécaire : taux 12-22%, durée max 15 ans → inaccessible',
+      'Délais permis : 2-4 ans (vs 3 mois France) — coût de portage élevé',
+      'Matériaux importés : 60% des intrants en devises → risque FX construction',
+      'Surchauffe marchés premium : Lagos Island, Westlands Nairobi — bulles possibles',
+      'Qualité construction : absence normes appliquées → risques structurels',
+    ],
+    acteurs:['Shelter Afrique','Dangote Cement (14 pays)','LafargeHolcim Africa','SAPCO Sénégal','Knight Frank Africa','Actis (private equity immo)','Rendeavour (villes nouvelles)','Mixta Africa'],
+    cadre_reglementaire:'OHADA droit immobilier & construction. Codes urbanisme nationaux. PPP lois nationales. Foncier : régimes fonciers coutumiers vs titre foncier. SYSCOHADA pour promoteurs.',
+    modes_entree:['Bail emphytéotique 50-99 ans (accès foncier sans achat)','PPP avec État (garantie gouvernementale)','REIT cotée (BRVM, NSE) — liquidité','Promotion résidentielle affordable (volume + marge faible)','Asset management fonds immobilier (fee-based, capital léger)'],
+    financement:['Shelter Afrique (prêts promoteurs)','IFC Housing Finance','BAD Urban Development','Sukuk islamiques infrastructure','Obligations municipales','CDC Group / BII (UK)'],
+    corridors:['Axe Abidjan-Lagos : corridor urbain 25M hab — immobilier en tension','Nairobi-Kigali : East Africa urban belt','Casablanca-Rabat-Tunis : Maghreb urbanisé'],
+    zlecaf_impact:'ZLECAf : facilitation investissement transfrontalier immo. Standards construction harmonisés. Objectif : 1M logements/an Afrique d\'ici 2030 via fonds panafricains.',
+    indicateurs_cles:['Déficit logement Afrique : 100-200M unités','Taux vacance bureaux Lagos : 30% (surconstruction premium)','Rendement locatif brut : 8-12% (vs 3-4% Europe)','Coût construction : $400-800/m² selon pays'],
+    pays_cles:['NG','KE','CI','GH','TZ','ZA','EG','MA','SN','ET','CM','RW'],
     wacc_range:'14-20%', croissance:'7.2% CAGR', tam:'$70Mds USD'
   },
-  { id:'agroalim', icon:'🥫', name:'Agroalimentaire & Grande Conso',
-    keywords:['agroalimentaire','agroalim','biscuit','boisson','lait','farine','sucre','huile','conserve','grande conso','fmcg','distribution','supermarche'],
-    desc:"FMCG Afrique: $400Mds. 60% importé alors que matières premières locales disponibles.",
-    opportunites:['Substitution importations (import-substitution)','Marques locales premium','Distribution moderne (franchise)','Conditionnement & packaging local','E-commerce alimentaire'],
-    risques:['Volatilité prix matières premières','Coûts logistiques élevés','Contrefaçon & sous-standard',"Pouvoir d'achat cyclique"],
-    pays_cles:['NG','ZA','EG','CI','KE','GH','MA','CM','TZ','SN'],
+  {
+    id:'agroalim', icon:'🥫', name:'Agroalimentaire & Grande Consommation',
+    keywords:['agroalimentaire','agroalim','biscuit','boisson','lait','farine','sucre','huile','conserve','grande conso','fmcg','distribution','supermarche','brasserie','eau','jus'],
+    desc:"FMCG Afrique : $400Mds de marché. 60% importé. Classe moyenne 350M personnes → upgrade consommation. Brasseries : Heineken/Castel dominent. Distribution moderne : 5% du retail (vs 80% France).",
+    opportunites:[
+      'Import-substitution : produits locaux vs importés — farine, lait, sucre, huile',
+      'Marques locales premium : consommateur africain préfère local quand qualité = import',
+      'Distribution moderne : supermarchés, franchises, e-commerce alimentaire',
+      'Boissons non alcoolisées : jus locaux, lait végétal (karité, soja), eau minérale',
+      'Conditionnement & packaging : usines locales sachet/bouteille — marché captif',
+      'Boulangerie & pâtisserie industrielle : urbanisation → habitudes alimentaires',
+      'Nutrition & diététique : classe moyenne consciente santé — marché $3Mds',
+      'Restauration rapide & food service : franchise modèle Burger King/KFC adapté local',
+    ],
+    risques:[
+      'Volatilité matières premières : blé +60% post-Ukraine, sucre +40% en 2023',
+      'Concurrence produits subventionnés : importations dumping Asie/Europe',
+      'Distribution fragmentée : 95% commerce informel — coûts commercialisation élevés',
+      'Contrefaçon & sous-standard : marques locales copiées',
+      'Pouvoir achat cyclique : dépenses alimentaires compressées lors crises FX',
+      'Cold chain défaillante : pertes 20-30% pour produits frais & laitiers',
+    ],
+    acteurs:['Nestlé Afrique','Unilever Africa','Castel Group','Heineken Africa','CFAO Retail','Shoprite (ZA)','Fan Milk (GH/CI)','Flour Mills Nigeria','BUA Group'],
+    cadre_reglementaire:'Normes sanitaires nationales. ECOWAS/CEMAC réglementations alimentaires. SYSCOHADA comptes industriels. Labels halal (Afrique Nord & Ouest musulmane). Certification bio (ECOCERT, Rainforest Alliance).',
+    modes_entree:['Greenfield usine (zone franche — exonération 5-10 ans)','Acquisition marque locale (accès distribution + clientèle fidèle)','Franchise internationale (Subway, KFC, Carrefour)','Partenariat coopérative agricole (intégration amont)','Distribution B2B : agent commercial territoire défini'],
+    financement:['IFC Agribusiness lines','BAD Agri-Financement','DEG/FMO lignes PME','Obligations corporate locales (7-11%)','Fonds SANAD (Afrique Nord)','Private equity CFAO/Jacobs'],
+    corridors:['UEMOA : libre circulation marchandises alimentaires sans droits','Afrique Australe : Shoprite distribue 12 pays depuis ZA','Nigeria hub : marché 220M hab → exportation régionale possible'],
+    zlecaf_impact:'Suppression droits douane agri-alimentaires d\'ici 2030. Normes sanitaires harmonisées → 1 certification pour 54 pays. Marché alimentaire intégré : $1,000Mds potentiel 2050.',
+    indicateurs_cles:['Dépense alimentaire % revenu : 40-60% (vs 12% Europe)','Taux croissance classe moyenne : +3.5%/an','Marché FMCG Afrique : $400Mds (2024)','Part distribution moderne : 5-15% selon pays'],
+    pays_cles:['NG','ZA','EG','CI','KE','GH','MA','CM','TZ','SN','ET','DZ'],
     wacc_range:'10-14%', croissance:'5.9% CAGR', tam:'$160Mds USD'
   },
-  { id:'edu', icon:'🎓', name:'Éducation & Formation Professionnelle',
-    keywords:['education','formation','école','université','e-learning','apprentissage','compétence','edtech','certification','bourse'],
-    desc:"200M+ jeunes Africains à former d'ici 2035. EdTech = secteur à plus forte croissance.",
-    opportunites:['EdTech mobile (cours en ligne)','Centres de formation technique (TVET)','Certification professionnelle internationale','Francophonie numérique','Bourses & financement étudiant'],
-    risques:['Faible monétisation (habitude gratuit)','Connectivité insuffisante (zones rurales)','Réglementation des diplômes étrangers','Concurrence des MOOC globaux'],
-    pays_cles:['NG','KE','ZA','GH','CI','SN','MA','RW','EG','TZ'],
+  {
+    id:'edu', icon:'🎓', name:'Éducation, Formation & EdTech',
+    keywords:['education','formation','ecole','universite','e-learning','apprentissage','competence','edtech','certification','bourse','tvet','enseignement','alphabetisation'],
+    desc:"450M jeunes Africains < 18 ans. 200M à former d\'ici 2035. Taux alphabétisation adultes : 65%. Moins de 10% accèdent enseignement supérieur (vs 55% OCDE). Marché privé : $180Mds en sous-développement.",
+    opportunites:[
+      'EdTech mobile-first : cours hors-ligne + synchronisation — Atingi, uLesson, Eneza',
+      'TVET (formation professionnelle technique) : mécanique, électricité, plomberie, numérique',
+      'Certifications internationales localisées : Microsoft, AWS, PMI en français/swahili',
+      'Universités privées : marché sous-servi — frais $2,000-15,000/an selon pays',
+      'Financement étudiant : prêts remboursables sur salaire futur (income share agreement)',
+      'Apprentissage langues : anglais pour UEMOA, français pour EAC — marché $1Mds',
+      'Formation professionnelle continue : PME africaines manquent de compétences clés',
+      'Simulation & gamification : apprenants mobiles — engagement par le jeu',
+    ],
+    risques:[
+      'Faible monétisation : habitude du gratuit (YouTube, Facebook) — ARPU $2-8/mois',
+      'Connectivité rurale insuffisante : 50% zones rurales sans 4G',
+      'Réglementation diplômes : non-reconnaissance certificats étrangers dans certains pays',
+      'Concurrence MOOCs gratuits : Coursera, edX, Khan Academy en français',
+      'Rétention apprenants : taux completion MOOC < 10%',
+      'Devaluation diplomes locaux : brain drain des formés vers Europe/Canada',
+    ],
+    acteurs:['Coursera Africa','uLesson (NG)','Andela (tech talent)','GetSmarter (ZA)','Moringa School (KE)','Mastercard Foundation','eLimu','Bridge International Academies'],
+    cadre_reglementaire:'Ministères éducation nationaux. Accréditation universitaire nationale. CAMES (Conseil Africain Malgache Enseignement Supérieur) pour UEMOA. Reconnaissance diplômes CEDEAO partielle.',
+    modes_entree:['SaaS B2B : vendre à entreprises (formation employés)','B2C abonnement mensuel $5-15','Contrat gouvernemental : programme national compétences','Franchise école privée reconnue','Partenariat université accréditée (co-diplôme)'],
+    financement:['Mastercard Foundation ($5Mds éducation)','IFC Education Finance','AFD éducation','Fonds islamiques Al-Baraka','Impact investors (Acumen, Omidyar)','Gouvernements : PPP éducation'],
+    corridors:['Francophonie numérique : marché CI/SN/CM/BF/ML/TG commun en français','Zone anglophone EAC : KE/TZ/UG/RW — marché intégré','Afrique australe SADC : harmonisation qualifications'],
+    zlecaf_impact:'Protocole libre circulation personnes qualifiées ZLECAf. Reconnaissance mutuelle qualifications professionnelles. Marché compétences africain intégré → mobilité talents x3.',
+    indicateurs_cles:['Budget éducation moyen : 4-6% PIB','Taux scolarisation secondaire : 42% Afrique sub.','Marché edtech Afrique : $3Mds (2024) → $6Mds (2028)','Coût formation universitaire privée : $1,500-20,000/an'],
+    pays_cles:['NG','KE','ZA','GH','CI','SN','MA','RW','EG','TZ','ET','CM'],
     wacc_range:'10-14%', croissance:'14.2% CAGR', tam:'$30Mds USD'
   },
-  { id:'tourisme', icon:'✈️', name:'Tourisme & Hôtellerie',
-    keywords:['tourisme','hotel','voyage','safari','plage','patrimoine','resort','aviation','aéroport','convention'],
-    desc:"Afrique = 3% du tourisme mondial. Potentiel x5 avec infrastructure adéquate.",
-    opportunites:['Écotourisme & safari premium','Tourisme médical (coût compétitif)','Conférences & MICE Africa','Tourisme de diaspora','Hôtellerie budget (40M chambre-nuits/an)'],
-    risques:['Instabilité sécuritaire (deterrent)','Visa et connectivité aérienne','Saisonnalité (dépendance météo)','Réputation sanitaire'],
-    pays_cles:['MA','ZA','TZ','KE','EG','MU','SC','RW','GH','SN'],
+  {
+    id:'tourisme', icon:'✈️', name:'Tourisme, Hôtellerie & Voyage',
+    keywords:['tourisme','hotel','voyage','safari','plage','patrimoine','resort','aviation','aeroport','convention','mice','ecotourisme','culture','lodge','croisiere'],
+    desc:"Afrique = 3% du tourisme mondial, 5% des recettes. Potentiel x5 avec infrastructure. Pre-COVID : $29Mds recettes touristiques. Afrique du Sud, Maroc, Égypte = 50% des touristes. Safari : premium $500-1,500/nuit. Diaspora africaine : 40M voyageurs potentiels.",
+    opportunites:[
+      'Safari & écotourisme premium : EBDITA margin 35-45% — Masaï Mara, Serengeti, Okavango',
+      'Tourisme médical : chirurgie esthétique, dentaire, ophtalmo — Maroc, Tunisie, Afrique Sud',
+      'MICE (Meetings, Incentives, Conferences) : African Union, UA, banques développement',
+      'Tourisme de diaspora : 40M africains de la diaspora → voyages racines + investissement',
+      'Hôtellerie budget : chaînes locales $30-80/nuit — classe moyenne africaine mobile',
+      'Aviation africaine : Ethiopian Airlines hub mondial — code-share AFRIQUE',
+      'Croisiérisme côtier : côte atlantique + indianocéan — marché inexploité',
+      'Patrimoine UNESCO & routes culturelles : 100+ sites africains sous-valorisés',
+    ],
+    risques:[
+      'Insécurité : Sahel, Corne Afrique, Mozambique nord — 40% territoire à risque',
+      'Connectivité aérienne : vol Afrique-Afrique souvent via Paris ou Dubai — coûts x2',
+      'Visa restrictions : 52% Africains ont besoin visa pour voyager en Afrique',
+      'Infrastructure hôtelière déficitaire : 500,000 chambres Afrique vs 5M Europe',
+      'Saisonnalité marquée : safaris/plages = 60% du CA en 3 mois',
+      'Réputation sanitaire & politique : une crise impacte l\'ensemble d\'une région',
+    ],
+    acteurs:['Ethiopian Airlines','Accor Africa','Marriott Africa','Anantara Resorts','&Beyond Safaris','Airbnb Africa (60% croissance)','Jumia Travel','Wilderness Safaris'],
+    cadre_reglementaire:'IATA régulations aériennes. Visa on arrival CEDEAO (15 pays). UNWTO standards. Réglementation environnementale parcs nationaux. Certification éco-tourisme (Rainforest Alliance, PAN Parks).',
+    modes_entree:['Gestion hôtelière (management contract — 2-4% revenus, 8-12% GOP)','Franchise chaîne internationale (Accor, Marriott — redevance 5-7%)','Acquisition lodge/camp existant (goodwill clientèle fidèle)','Tour-opérateur réceptif local (capital léger)','Plateforme digitale réservation (OTA — Online Travel Agency)'],
+    financement:['IFC Tourism Finance','AfDB Tourism Fund','EBRD (Méditerranée/Afrique Nord)','Impact investors tourisme durable','Fonds souverains tourism (Rwanda Development Board)','Diaspora bonds tourisme'],
+    corridors:['East Africa Circuit : KE-TZ-RW-UG — safari & gorilles','Maghreb côtier : MA-TN-DZ — tourisme balnéaire','Afrique Australe : ZA-ZM-ZW-BW — circuit safari','Côte Ouest : SN-GM-CV — tourisme balnéaire émergent'],
+    zlecaf_impact:'SAATM (Single African Air Transport Market) : open sky continental. Accord visa africain unique. Potentiel : 134M touristes intra-africains d\'ici 2030 vs 39M aujourd\'hui.',
+    indicateurs_cles:['Recettes tourisme Afrique : $29Mds (2023)','Touristes internationaux Afrique : 65M (2023)','Taux occupation hôtelier : 45-65% selon destination','RevPAR (Revenue per Available Room) : $40-180 selon standing'],
+    pays_cles:['MA','ZA','TZ','KE','EG','MU','SC','RW','GH','SN','TN','ET'],
     wacc_range:'12-16%', croissance:'6.1% CAGR', tam:'$35Mds USD'
   },
-  { id:'tech', icon:'💻', name:'Tech, IA & Innovation',
-    keywords:['tech','ia','intelligence artificielle','startup','innovation','software','saas','cybersécurité','blockchain','fintech','proptech','agritech'],
-    desc:"Hub tech africains : Lagos, Nairobi, Accra, Dakar, Cape Town. $6Mds levés en 2024.",
-    opportunites:['IA appliquée agriculture/santé/finance','Cybersécurité souveraine','Solutions GovTech','Plateformes B2B SaaS locales','Hub data souverain'],
-    risques:['Pénurie de talents tech','Faible écosystème VC local','Risque réglementaire (données)','Dépendance infrastructure cloud US/EU'],
-    pays_cles:['NG','KE','ZA','GH','EG','MA','SN','RW','CI','TZ'],
+  {
+    id:'tech', icon:'💻', name:'Tech, IA & Innovation Africaine',
+    keywords:['tech','ia','intelligence artificielle','startup','innovation','software','saas','cybersecurite','blockchain','fintech','proptech','agritech','healthtech','govtech','web3'],
+    desc:"$6Mds levés par startups africaines en 2022, $2.9Mds en 2023 (correction). Hubs : Lagos, Nairobi, Accra, Dakar, Le Caire, Cap Town. 700+ startups tech financées. IA : Africa AI Market $3.1Mds 2024 → $18Mds 2030.",
+    opportunites:[
+      'IA appliquée contexte africain : agriculture (détection maladies cultures), santé (diagnostic), finance (crédit scoring)',
+      'Cybersécurité souveraine : 200M cyberattaques/an — gouvernements & entreprises demandeurs',
+      'GovTech : digitalisation services publics — état civil, impôts, marchés publics',
+      'B2B SaaS PME : ERP, comptabilité SYSCOHADA, gestion RH — marché 50M+ PME',
+      'Web3 & blockchain : traçabilité supply chain, titres fonciers, identité décentralisée',
+      'Satellite & IoT : données agricoles, suivi flotte, smart meters énergie',
+      'Développement logiciels offshore : talents tech africains à $15-40/h vs $80-150 Europe',
+      'Plateformes marketplace : Jumia, Jiji, Tridge — modèles prouvés à dupliquer vertical',
+    ],
+    risques:[
+      'Pénurie talents tech : 3.5M développeurs manquants Afrique d\'ici 2025',
+      'Écosystème VC local faible : 80% du financement vient d\'investisseurs non-africains',
+      'Réglementation données : GDPR africains (SADC, CEDEAO) en construction — instabilité',
+      'Infrastructure cloud : latence élevée, coût AWS/Azure 2x Europe en Afrique',
+      'Scalabilité transfrontalière : 54 marchés différents → expansion coûteuse',
+      'Cycle de financement : après peak 2022, correction 2023-2024 fragilise startups',
+    ],
+    acteurs:['Flutterwave (paiements)','Andela (talent tech)','Jumia (ecommerce)','Interswitch','M-KOPA (IoT+fintech)','Twiga Foods (agritech)','mPharma (healthtech)','Africa\'s Talking (APIs)'],
+    cadre_reglementaire:'Lois protection données : RGPD Kenya, Nigeria Data Protection Act, POPIA Afrique du Sud. Licences fintech : BCEAO, CBN, FSCA. Réglementation IA : en émergence. Cadre crypto : fragmenté (EG interdit, MA libéralise).',
+    modes_entree:['VC seed : $50K-500K pour prototype + traction','Accélérateur local : Flat6Labs, Seedstars, Orange Fab','Partenariat corporate : pilote payant avec grande entreprise','Government tender : contrat GovTech (long cycle, paiement sûr)','Acquisition micro-startup (acqui-hire talent + technologie)'],
+    financement:['Partech Africa (VC)','TLcom Capital','4Di Capital (ZA)','Novastar Ventures','Orange Digital Ventures','Consonance Investment Managers (NG)','Y Combinator Alumni Africa','Google for Startups Africa'],
+    corridors:['Lagos-Accra-Abidjan : West Africa Tech Corridor','Nairobi-Kigali-Kampala : East Africa Silicon Savannah','Le Caire-Casablanca : North Africa Tech Hub','Cape Town-Johannesburg : Southern Africa Innovation Hub'],
+    zlecaf_impact:'Protocole commerce numérique ZLECAf : reconnaissance licences tech, libre flux données, protection PI. Marché digital unifié : $180Mds d\'ici 2025. Objectif : 1M développeurs formés via programmes continentaux.',
+    indicateurs_cles:['Financement startups Afrique : $2.9Mds (2023)','Nb startups tech africaines : 5,000+','ARPU SaaS PME africaine : $50-200/mois','Taux adoption mobile payment : 55% Afrique sub-saharienne'],
+    pays_cles:['NG','KE','ZA','GH','EG','MA','SN','RW','CI','TZ','ET','CM'],
     wacc_range:'14-20%', croissance:'18.5% CAGR', tam:'$40Mds USD'
+  },
+  {
+    id:'industrie', icon:'🏭', name:'Industrie Manufacturière & ZES',
+    keywords:['industrie','manufacture','usine','zone franche','zes','zone economique','textile','habillement','cuir','chimie','plastique','emballage','metallurgie','automobile','electronique'],
+    desc:"Part industrie manufacturière dans PIB africain : 10% (vs 25% Asie). Éthiopie et Maroc ont réussi l\'industrialisation légère (textile, automobile). Chine+1 : délocalisations vers Afrique en cours. ZES : 200+ zones économiques spéciales africaines.",
+    opportunites:[
+      'Textile & habillement : Éthiopie (Hawassa), Madagascar — coûts salaires $80-150/mois',
+      'Industrie automobile : Maroc hub (Renault, PSA, Stellantis) — 700,000 véhicules/an',
+      'Agroalimentaire industriel : transformation céréales, conserverie, conditionnement',
+      'Emballage & packaging : substitution importations — croissance portée par FMCG local',
+      'Chimie de base & engrais : production locale engrais (OCP Maroc modèle), fertilisants',
+      'Électronique assemblage : Egypte, Tunisie (sous-traitance Europe)',
+      'Cuir & maroquinerie : Éthiopie, Maroc — chaîne valeur locale (élevage→tannerie→produit)',
+      'Pièces détachées & maintenance industrielle : import-substitution maintenance mines/énergie',
+    ],
+    risques:[
+      'Compétition Asie : coûts chine encore compétitifs malgré hausse salaires',
+      'Infrastructure énergie : coupures fréquentes → pertes production + groupes = +25% coûts',
+      'Main-d\'œuvre qualifiée : opérateurs techniques manquants → formation coûteuse',
+      'Accès devises : pénuries USD pour importer machines & intrants (Nigeria, Éthiopie)',
+      'Complexité réglementaire : licences, normes, douanes → délai installation 12-24 mois',
+      'Logistique export : coûts fret Afrique vers Europe 40% plus élevés qu\'Asie',
+    ],
+    acteurs:['Maroc : Renault-Dacia, Stellantis, Boeing sous-traitants','Éthiopie : PVH Corp, H&M, Huajian','Nigeria : Dangote Industries, BUA','Égypte : hub assemblage électronique','OCP Maroc (engrais mondial)','Afreximbank (financement trade)'],
+    cadre_reglementaire:'AGOA (USA) : accès duty-free marché américain pour 39 pays africains. EPAs Europe-Afrique. OHADA contrats industrie. Codes investissement avec exonérations ZES (5-10 ans). Normes ISO qualité export.',
+    modes_entree:['Greenfield usine en ZES (exonérations fiscales 5-10 ans)','Sous-traitance industrielle : usine pour compte de marque internationale','Acquisition usine locale (actifs existants + main d\'œuvre formée)','JV avec groupe industriel local (accès licences + marché)','Contrat EPC + O&M (construction + exploitation)'],
+    financement:['AFREXIMBANK trade finance','BAD industrial parks','IFC manufacturing lines','Export credit agencies (COFACE, Euler Hermes, UKEF)','Fonds investissement Afrique industrielle','Sukuk islamiques ZES Maroc, Sénégal'],
+    corridors:['Corridor Tanger-Casablanca : hub automobile & aéro Maroc','Addis-Djibouti : industrie légère + accès mer','Accra-Lagos industrial belt : hub FMCG Afrique Ouest','Durban-Johannesburg : corridor industriel ZA'],
+    zlecaf_impact:'Protocole investissement ZLECAf : cadre protection investors + arbitrage. Règles d\'origine panafricaines → produits "made in Africa" accèdent marchés préférentiels. Industrialisation : objectif UA 2063.',
+    indicateurs_cles:['Part manufacturière PIB Afrique : 10% (Asie : 25%)','Coût main d\'oeuvre Éthiopie : $80-120/mois','Coût Maroc (textile) : $300-400/mois','Nombre ZES africaines : 200+ actives'],
+    pays_cles:['MA','ET','EG','NG','ZA','TN','GH','CI','KE','SN','CM','DZ'],
+    wacc_range:'12-18%', croissance:'6.3% CAGR', tam:'$75Mds USD'
+  },
+  {
+    id:'eau', icon:'💧', name:'Eau, Assainissement & Environnement',
+    keywords:['eau','assainissement','irrigation','traitement','purification','dechets','recyclage','environnement','climat','carbone','biodiversite','foret','plastique','solaire'],
+    desc:"750M Africains sans accès eau potable sécurisée. 900M sans assainissement adéquat. Changement climatique : Afrique subit 5% des émissions mondiales mais 40% des impacts. Crédits carbone africains : potentiel $1,000Mds non exploité.",
+    opportunites:[
+      'Dessalement eau : Maroc, Namibie, Kenya côtier — coût tombé à $0.5/m³',
+      'Traitement eaux usées : recyclage pour agriculture — économie circulaire eau',
+      'Marchés carbone : forêts africaines 25% stock mondial — crédits REDD+ sous-exploités',
+      'Gestion déchets & recyclage : Lagos produit 13,000 t/jour — taux recyclage < 5%',
+      'WASH (Water, Sanitation, Hygiene) : infrastructures rurales — financements ODA massifs',
+      'Irrigation micro-goutte : réduction consommation 40-60% — marché $3Mds',
+      'Aquaculture eau douce : tilapia, silure — substitution imports poisson',
+      'Technologies propres : biogaz, compostage, solar pump — marché rural',
+    ],
+    risques:[
+      'Risque politique tarification eau : service public = résistance hausse prix',
+      'Financement ODA conditionné : aide liée aux réformes governance eau',
+      'Changement climatique : sécheresses + inondations impactent infrastructure',
+      'Capacité technique locale : maintenance infrastructures eau complexe',
+      'Marché carbone africain : intégrité (Verra controverses) + prix volatils',
+      'Foncier riverain : droits eau & conflits usage agriculteurs vs industrie',
+    ],
+    acteurs:['Veolia Africa','Suez Environnement','ONEP Maroc','SODECI CI','Water.org','IRC WASH','Wildlife Works (crédits carbone)','South Pole Group'],
+    cadre_reglementaire:'AMCOW (African Ministers Council on Water). Objectifs SDG 6 (eau propre). Article 6 Accord Paris (marchés carbone). Réglementations nationales SONEDE, ONAS, SODECI. Droit international eau transfrontalière.',
+    modes_entree:['DSP (Délégation Service Public) eau 15-25 ans','PPP assainissement (BOT : Build-Operate-Transfer)','Développement crédits carbone (REDD+, clean cookstoves)','Vente équipements traitement eau (B2B gouvernements)','Impact fund WASH (rendement 4-7% + impact)'],
+    financement:['Fonds Vert Climat (GCF)','USAID Water for Africa','AFD eau & assainissement','AIIB infrastructure bleue','IDA Banque Mondiale WASH','Fonds PROPARCO eau'],
+    corridors:['Bassin du Niger : 9 pays — coopération eau transfrontalière','Nil : 11 pays — GIBE III (ET), Renaissance Dam (ET vs EG/SD)','Congo : réserve eau douce mondiale — potentiel hydroélectrique 100 GW'],
+    zlecaf_impact:'Protocole environnement ZLECAf. Standards eau harmonisés. Commerce eau & technologies propres facilité. Potentiel marché crédits carbone africain : $25Mds/an d\'ici 2030.',
+    indicateurs_cles:['Population sans eau potable : 750M (Afrique)','Marché eau Afrique : $20Mds (2024)','Prix crédit carbone africain : $5-50/tCO2 selon qualité','Investissement WASH nécessaire : $35Mds/an (vs $7Mds actuel)'],
+    pays_cles:['MA','EG','KE','TZ','ET','NG','ZA','SN','CI','RW','MZ','ZM'],
+    wacc_range:'10-14%', croissance:'7.8% CAGR', tam:'$25Mds USD'
   }
 ];
 
@@ -6393,44 +6745,109 @@ function showSectorDetail(id, countryCode) {
   }
 
   detail.style.display = 'block';
+  function sec(title, col) {
+    return '<div style="font-size:.68rem;font-weight:700;color:'+col+';text-transform:uppercase;letter-spacing:.8px;margin:12px 0 5px 0;">'+title+'</div>';
+  }
+  function ul(items, max) {
+    return '<ul style="margin:0 0 4px 0;padding-left:14px;font-size:.72rem;color:var(--text-secondary);line-height:1.75;">'+
+      (items||[]).slice(0,max||99).map(function(i){return '<li>'+i+'</li>';}).join('')+'</ul>';
+  }
+  function pill(txt, col) {
+    return '<span style="display:inline-block;padding:2px 8px;background:var(--bg-tertiary);border:1px solid '+(col||'var(--border)')+';border-radius:10px;font-size:.65rem;color:'+(col||'var(--text-secondary)')+';margin:2px;">'+txt+'</span>';
+  }
+
   detail.innerHTML =
     '<div style="background:var(--bg-card);border:1px solid var(--gold-dim);border-radius:var(--radius);padding:14px;">' +
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);">' +
-        '<span style="font-size:1.6rem;">' + s.icon + '</span>' +
-        '<div>' +
-          '<div style="font-size:.85rem;font-weight:700;color:var(--gold);">' + s.name + '</div>' +
-          '<div style="font-size:.65rem;color:var(--text-dim);">' + (c ? c.flag+' '+c.name+' · ' : '') + 'WASI Sector Intelligence</div>' +
-        '</div>' +
-      '</div>' +
-      verdict +
-      macroLine +
-      '<div style="font-size:.75rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.6;">' + s.desc + '</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">' +
-        '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">' +
-          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">TAM Afrique</div>' +
-          '<div style="font-size:.75rem;font-weight:700;color:var(--gold);">' + s.tam + '</div>' +
-        '</div>' +
-        '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">' +
-          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">CAGR</div>' +
-          '<div style="font-size:.75rem;font-weight:700;color:var(--green);">' + s.croissance + '</div>' +
-        '</div>' +
-        '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">' +
-          '<div style="font-size:.6rem;color:var(--text-dim);text-transform:uppercase;">' + (c?'WACC '+c.name:'WACC') + '</div>' +
-          '<div style="font-size:.75rem;font-weight:700;color:var(--text-primary);">' + (typeof wacc==='number'?wacc+'%':wacc) + '</div>' +
-        '</div>' +
-      '</div>' +
-      (ctx && ctx.resources !== 'N/A' ? '<div style="font-size:.7rem;font-weight:700;color:var(--cyan);text-transform:uppercase;margin-bottom:4px;">⛏ Ressources locales</div><div style="font-size:.72rem;color:var(--text-secondary);margin-bottom:10px;">'+ctx.resources+'</div>' : '') +
-      '<div style="font-size:.7rem;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:6px;">✅ Opportunités' + (c?' — '+c.name:'') + '</div>' +
-      '<ul style="margin:0 0 10px 0;padding-left:16px;font-size:.73rem;color:var(--text-secondary);line-height:1.8;">' +
-        opps.slice(0,6).map(function(o){ return '<li>'+o+'</li>'; }).join('') +
-      '</ul>' +
-      '<div style="font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:6px;">⚠ Risques' + (c?' — '+c.name:'') + '</div>' +
-      '<ul style="margin:0 0 10px 0;padding-left:16px;font-size:.73rem;color:var(--text-secondary);line-height:1.8;">' +
-        risks.slice(0,5).map(function(r){ return '<li>'+r+'</li>'; }).join('') +
-      '</ul>' +
-      '<div style="font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">🌍 Pays Clés Afrique</div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">' + paysHTML + '</div>' +
-      '<button onclick="askAboutSector(\'' + id + '\',\'' + code + '\')" style="width:100%;padding:9px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.78rem;font-weight:700;cursor:pointer;">💬 Interroger WASI AI — ' + s.name + (c?' au '+c.name:'') + '</button>' +
+
+    // ── Header ──────────────────────────────────────────────────────
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);">'+
+      '<span style="font-size:1.6rem;">'+s.icon+'</span>'+
+      '<div>'+
+        '<div style="font-size:.88rem;font-weight:700;color:var(--gold);">'+s.name+'</div>'+
+        '<div style="font-size:.65rem;color:var(--text-dim);">'+(c?c.flag+' '+c.name+' · ':'')+' WASI Sector Intelligence</div>'+
+      '</div>'+
+    '</div>'+
+
+    verdict + macroLine +
+
+    // ── Description ─────────────────────────────────────────────────
+    '<div style="font-size:.75rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.65;">'+s.desc+'</div>'+
+
+    // ── KPI row ─────────────────────────────────────────────────────
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">'+
+      '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">'+
+        '<div style="font-size:.58rem;color:var(--text-dim);text-transform:uppercase;">TAM Afrique</div>'+
+        '<div style="font-size:.75rem;font-weight:700;color:var(--gold);">'+s.tam+'</div>'+
+      '</div>'+
+      '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">'+
+        '<div style="font-size:.58rem;color:var(--text-dim);text-transform:uppercase;">CAGR</div>'+
+        '<div style="font-size:.75rem;font-weight:700;color:var(--green);">'+s.croissance+'</div>'+
+      '</div>'+
+      '<div style="text-align:center;padding:8px;background:var(--bg-tertiary);border-radius:var(--radius);">'+
+        '<div style="font-size:.58rem;color:var(--text-dim);text-transform:uppercase;">'+(c?'WACC '+c.name:'WACC range')+'</div>'+
+        '<div style="font-size:.75rem;font-weight:700;color:var(--text-primary);">'+(typeof wacc==='number'?wacc+'%':wacc)+'</div>'+
+      '</div>'+
+    '</div>'+
+
+    // ── Ressources locales ───────────────────────────────────────────
+    (ctx && ctx.resources !== 'N/A' ?
+      sec('⛏ Ressources locales — '+c.name,'var(--cyan)')+
+      '<div style="font-size:.72rem;color:var(--text-secondary);margin-bottom:4px;">'+ctx.resources+'</div>'
+    : '')+
+
+    // ── Opportunités ─────────────────────────────────────────────────
+    sec('✅ Opportunités'+(c?' — '+c.name:''),'var(--green)')+
+    ul(opps, 8)+
+
+    // ── Risques ──────────────────────────────────────────────────────
+    sec('⚠ Risques'+(c?' — '+c.name:''),'var(--red)')+
+    ul(risks, 6)+
+
+    // ── Acteurs clés ─────────────────────────────────────────────────
+    (s.acteurs ? sec('🏢 Acteurs Clés du Secteur','var(--gold)')+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;">'+(s.acteurs||[]).map(function(a){return pill(a,'var(--gold-dim)');}).join('')+'</div>'
+    : '')+
+
+    // ── Cadre réglementaire ──────────────────────────────────────────
+    (s.cadre_reglementaire ? sec('⚖ Cadre Réglementaire','var(--text-secondary)')+
+      '<div style="font-size:.72rem;color:var(--text-secondary);line-height:1.65;margin-bottom:4px;">'+s.cadre_reglementaire+'</div>'
+    : '')+
+
+    // ── Modes d'entrée ───────────────────────────────────────────────
+    (s.modes_entree ? sec('🚪 Modes d\'Entrée Marché','var(--cyan)')+
+      ul(s.modes_entree, 5)
+    : '')+
+
+    // ── Sources de financement ───────────────────────────────────────
+    (s.financement ? sec('💰 Sources de Financement','var(--blue)')+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;">'+(s.financement||[]).map(function(f){return pill(f,'var(--border)');}).join('')+'</div>'
+    : '')+
+
+    // ── Corridors commerciaux ────────────────────────────────────────
+    (s.corridors ? sec('🛣 Corridors & Marchés Régionaux','var(--orange)')+
+      ul(s.corridors, 5)
+    : '')+
+
+    // ── Indicateurs clés ─────────────────────────────────────────────
+    (s.indicateurs_cles ? sec('📊 Indicateurs Clés 2024','var(--text-secondary)')+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;">'+(s.indicateurs_cles||[]).map(function(ind){
+        return '<div style="padding:5px 8px;background:var(--bg-tertiary);border-radius:4px;font-size:.65rem;color:var(--text-secondary);">'+ind+'</div>';
+      }).join('')+'</div>'
+    : '')+
+
+    // ── Impact ZLECAf ────────────────────────────────────────────────
+    (s.zlecaf_impact ? sec('🌍 Impact ZLECAf','var(--gold)')+
+      '<div style="font-size:.72rem;color:var(--text-secondary);line-height:1.65;margin-bottom:10px;padding:8px;background:rgba(200,146,42,.06);border-radius:var(--radius);border-left:2px solid var(--gold-dim);">'+s.zlecaf_impact+'</div>'
+    : '')+
+
+    // ── Pays clés ────────────────────────────────────────────────────
+    '<div style="font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;margin-bottom:5px;">🌍 Pays Clés Afrique</div>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">'+paysHTML+'</div>'+
+
+    // ── CTA ──────────────────────────────────────────────────────────
+    '<button onclick="askAboutSector(\''+id+'\',\''+code+'\')" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.78rem;font-weight:700;cursor:pointer;">'+
+      '💬 Interroger WASI AI — '+s.name+(c?' au '+c.name:'')+
+    '</button>'+
     '</div>';
   detail.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
