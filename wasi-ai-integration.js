@@ -14,26 +14,23 @@
     proxyReady: false,
   };
 
-  // ── Token management (replaces raw API key) ───────────────────────────────
+  // ── API key management (shared with index.html) ───────────────────────────
   function getWasiToken() {
-    // 1. Injected by parent app
-    if (window.WASI_ACCESS_TOKEN) return window.WASI_ACCESS_TOKEN;
-    // 2. URL param (e.g. ?wasi_token=WASI-PRO-XXXX)
+    // Same key as getWasiApiKey() in index.html — both read wasi_anthropic_key
+    if (window.ANTHROPIC_API_KEY) return window.ANTHROPIC_API_KEY;
     try {
-      const urlToken = new URLSearchParams(window.location.search).get("wasi_token") || "";
-      if (urlToken) { localStorage.setItem("wasi_access_token", urlToken); return urlToken; }
+      const urlKey = new URLSearchParams(window.location.search).get("wasi_key") || "";
+      if (urlKey) { localStorage.setItem("wasi_anthropic_key", urlKey); return urlKey; }
     } catch (_) {}
-    // 3. Stored from previous session
     try {
-      const stored = localStorage.getItem("wasi_access_token") || "";
+      const stored = localStorage.getItem("wasi_anthropic_key") || "";
       if (stored) return stored;
     } catch (_) {}
-    // 4. Prompt user once
     const entered = (window.prompt(
-      "WASI Intelligence — Accès IA\n\nEntrez votre token d'accès WASI :\n(format : WASI-XXXX-YYYY)"
+      "WASI Intelligence — Clé API requise\n\nEntrez votre clé Anthropic (sk-ant-...) :"
     ) || "").trim();
     if (entered) {
-      try { localStorage.setItem("wasi_access_token", entered); } catch (_) {}
+      try { localStorage.setItem("wasi_anthropic_key", entered); } catch (_) {}
     }
     return entered;
   }
@@ -208,29 +205,37 @@
       { role: "user", content: userMessage },
     ];
 
-    // Call our secure proxy — API key stays server-side
-    const resp = await fetch(PROXY_URL, {
+    // ── Try proxy first, fall back to direct API ──────────────────────────
+    const apiKey = localStorage.getItem("wasi_anthropic_key") || window.ANTHROPIC_API_KEY || "";
+
+    // Direct Anthropic API call (works immediately, proxy optional for production)
+    if (!apiKey) throw new Error("Clé API Anthropic manquante. Rechargez la page et entrez votre clé sk-ant-...");
+
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
-        "Content-Type":  "application/json",
-        "x-wasi-token":  token,
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
       },
-      body: JSON.stringify({ system: systemPrompt, messages, max_tokens: 1800 }),
+      body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens: 1800, system: systemPrompt, messages }),
     });
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
       if (resp.status === 401) {
-        try { localStorage.removeItem("wasi_access_token"); } catch (_) {}
-        throw new Error("Token WASI invalide — rechargez la page et entrez un token valide.");
+        try { localStorage.removeItem("wasi_anthropic_key"); } catch (_) {}
+        throw new Error("Clé API invalide. Rechargez et entrez une clé sk-ant-... valide.");
       }
       if (resp.status === 429) throw new Error("Limite de requêtes atteinte. Attendez 1 minute.");
-      throw new Error(err.error || `Erreur proxy ${resp.status}`);
+      throw new Error(err?.error?.message || `Erreur API ${resp.status}`);
     }
 
     const data = await resp.json();
-    const reply = data.reply || "Je n'ai pas pu produire une réponse exploitable.";
-    return { reply, citations: [], countrySignal: null, source: { aiEnabled: true, proxy: true } };
+    const reply = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("\n").trim()
+      || "Je n'ai pas pu produire une réponse exploitable.";
+    return { reply, citations: [], countrySignal: null, source: { aiEnabled: true } };
   }
 
   // ── Local country signal computation (no server needed) ──────────────────
