@@ -4272,33 +4272,95 @@ function scrollChat() {
 async function callWASIChat(message, countryFocus, history) {
   const apiKey = getWasiApiKey();
   if (!apiKey) return generateLocalResponse(message, countryFocus);
+
+  // ── Build rich system prompt with all WASI country data ──────────────────
+  var focusCode = currentCountry || '';
+  var focusC    = focusCode ? COUNTRIES.find(function(x){ return x.code === focusCode; }) : null;
+  var focusD    = focusCode ? (COUNTRY_DETAILS[focusCode] || {}) : {};
+  var focusR    = focusCode ? ((window.COUNTRY_RISKS||{})[focusCode] || {}) : {};
+
+  var countryData = COUNTRIES.map(function(c) {
+    var d = COUNTRY_DETAILS[c.code] || {};
+    var r = (window.COUNTRY_RISKS||{})[c.code] || {};
+    return c.flag+' '+c.name+' ('+c.code+'): Score='+c.score+'/100'+
+      (c.coup?' ⚠COUP':'')+
+      ', PIB='+c.gdp+', Croissance='+(d.growth||'N/A')+
+      ', Inflation='+(d.inflation||'N/A')+', Dette='+(d.dette_pib||'N/A')+
+      ', Président='+(d.president||'N/A')+', Devise='+(d.currency||'N/A')+
+      ', Ressources='+(d.resources||[]).join('/')+
+      ', Exports='+(d.exports||[]).join('/')+
+      ', Politique='+((d.indices||{}).politique||'?')+
+      '/Eco='+((d.indices||{}).economie||'?')+
+      '/Infra='+((d.indices||{}).infra||'?')+
+      '/Juridique='+((d.indices||{}).juridique||'?')+
+      '/Humain='+((d.indices||{}).humain||'?')+
+      '/Integration='+((d.indices||{}).integration||'?')+
+      (r.credit ? ', Crédit='+r.credit : '')+
+      (r.wacc   ? ', WACC='+r.wacc+'%' : '')+
+      (r.fxRisk ? ', FX='+r.fxRisk : '');
+  }).join('\n');
+
+  var focusCtx = focusC ? (
+    '\n\n═══ PAYS EN FOCUS ACTIF : '+focusC.flag+' '+focusC.name+' ═══\n'+
+    'Score WASI : '+focusC.score+'/100'+(focusC.coup?' — RÉGIME MILITAIRE':'')+'\n'+
+    'PIB : '+focusC.gdp+' | Croissance : '+(focusD.growth||'N/A')+' | Inflation : '+(focusD.inflation||'N/A')+'\n'+
+    'Président : '+(focusD.president||'N/A')+' | Capitale : '+(focusD.capital||'N/A')+'\n'+
+    'Devise : '+(focusD.currency||'N/A')+' | Zone : '+(focusD.zone||'N/A')+'\n'+
+    'Ressources : '+(focusD.resources||[]).join(', ')+'\n'+
+    'Exports : '+(focusD.exports||[]).join(', ')+'\n'+
+    'Indices WASI — Politique:'+((focusD.indices||{}).politique||'?')+
+    ' Eco:'+((focusD.indices||{}).economie||'?')+
+    ' Infra:'+((focusD.indices||{}).infra||'?')+
+    ' Juridique:'+((focusD.indices||{}).juridique||'?')+
+    ' Humain:'+((focusD.indices||{}).humain||'?')+
+    ' Integration:'+((focusD.indices||{}).integration||'?')+'\n'+
+    (focusR.credit ? 'Signal Crédit WASI : '+focusR.credit+'\n' : '')+
+    (focusR.wacc   ? 'WACC : '+focusR.wacc+'% ('+focusR.waccNote+')\n' : '')+
+    (focusR.fxRisk ? 'Risque FX : '+focusR.fxRisk+' — '+focusR.fxNote+'\n' : '')+
+    (focusR.electionYear ? 'Prochaine élection : '+focusR.electionYear+'\n' : '')
+  ) : '';
+
+  var systemPrompt =
+    'Tu es WASI AI, l\'intelligence artificielle officielle de WASI (Whole African Strategic Intelligence), '+
+    'plateforme financière africaine fondée par Tarawendesida Thomas KABORE, FMVA, CEO à Ouagadougou.\n\n'+
+    'RÈGLES ABSOLUES :\n'+
+    '1. Utilise EXCLUSIVEMENT les données WASI ci-dessous pour les chiffres (PIB, score, croissance, inflation, president, ressources).\n'+
+    '2. Pour chaque pays mentionné : cite son Score WASI, PIB, croissance, président et ressources principales.\n'+
+    '3. Donne un verdict d\'investissement : FAVORABLE / PRUDENCE / ÉVITER + 3 secteurs porteurs + 2 risques majeurs.\n'+
+    '4. Réponds TOUJOURS en français. Style analytique, chiffré, paragraphes courts. Pas de markdown.\n'+
+    '5. Si une donnée manque dans ce prompt, dis-le clairement au lieu d\'inventer.\n\n'+
+    '═══ BASE DE DONNÉES WASI — 54 PAYS AFRICAINS ═══\n'+countryData+focusCtx;
+
+  var messages = [
+    ...(history||[]).slice(-10)
+      .filter(function(m){ return m.role==='user'||m.role==='assistant'; })
+      .map(function(m){ return {role:m.role, content:String(m.content)}; }),
+    {role:'user', content:message}
+  ];
+
   try {
-    const systemPrompt = [
-      "Tu es WASI AI, la couche d'intelligence documentaire de la plateforme WASI.",
-      "Tu analyses 54 pays africains avec des signaux économiques, financiers, réglementaires et géopolitiques.",
-      "Tu maîtrises OHADA, SYSCOHADA, BCEAO, UEMOA, CEDEAO, les marchés financiers africains et les codes français embarqués.",
-      "Réponds toujours en français dans un style net, stratégique et directement exploitable.",
-      "Privilégie des paragraphes courts. Pas de titres markdown, pas de tableaux.",
-      "Ne dis jamais que ton analyse remplace un avis juridique ou réglementaire formel.",
-      countryFocus ? "Pays focal: " + countryFocus + "." : ""
-    ].filter(Boolean).join(" ");
-    const messages = [
-      ...(history || []).filter(function(m) { return m.role === 'user' || m.role === 'assistant'; })
-        .map(function(m) { return {role: m.role, content: String(m.content)}; }),
-      {role: 'user', content: message}
-    ];
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01'},
-      body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 950, system: systemPrompt, messages: messages})
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1800, system:systemPrompt, messages:messages})
     });
     if (!res.ok) {
-      if (res.status === 401) try { localStorage.removeItem('wasi_anthropic_key'); } catch(_) {}
-      throw new Error('API error ' + res.status);
+      const err = await res.json().catch(function(){ return {}; });
+      if (res.status === 401) {
+        try { localStorage.removeItem('wasi_anthropic_key'); } catch(_) {}
+        return 'Clé API invalide — rechargez la page et entrez une clé sk-ant-... valide.';
+      }
+      throw new Error(err.error && err.error.message ? err.error.message : 'Erreur API '+res.status);
     }
     const data = await res.json();
-    return (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('\n').trim() || 'Réponse indisponible.';
+    return (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n').trim() || 'Réponse indisponible.';
   } catch(e) {
+    console.error('WASI AI error:', e.message);
     return generateLocalResponse(message, countryFocus);
   }
 }
