@@ -355,39 +355,7 @@
   }
 
   function installHeaderUi() {
-    const header = document.querySelector(".chat-header");
-    if (!header || header.querySelector("#wasi-ai-status")) {
-      return;
-    }
-
-    const status = document.createElement("div");
-    status.id = "wasi-ai-status";
-    status.className = "wasi-ai-status loading";
-    status.textContent = "Connexion à WASI AI...";
-
-    const refreshButton = document.createElement("button");
-    refreshButton.id = "wasi-ai-refresh";
-    refreshButton.className = "wasi-ai-refresh";
-    refreshButton.type = "button";
-    refreshButton.textContent = "Actualiser IA";
-    refreshButton.addEventListener("click", () => refreshAiSources());
-
-    const clearButton = document.createElement("button");
-    clearButton.id = "wasi-ai-clear";
-    clearButton.className = "wasi-ai-refresh";
-    clearButton.type = "button";
-    clearButton.title = "Effacer l'historique de conversation";
-    clearButton.textContent = "Effacer";
-    clearButton.style.cssText = "opacity:.7;";
-    clearButton.addEventListener("click", () => {
-      if (window.confirm("Effacer tout l'historique de conversation ?")) {
-        clearChatHistory();
-      }
-    });
-
-    header.appendChild(status);
-    header.appendChild(refreshButton);
-    header.appendChild(clearButton);
+    // Header bar removed — status/refresh/clear buttons suppressed
   }
 
   function updateStatus(text, tone) {
@@ -406,15 +374,7 @@
   }
 
   function upgradeWelcomeCopy() {
-    const headerTitle = document.querySelector(".chat-header-title");
-    if (headerTitle) {
-      headerTitle.textContent = "WASI Intelligence IA";
-    }
-
-    const focus = document.getElementById("chat-focus");
-    if (focus) {
-      focus.textContent = "Focus: AFRIQUE + CODES FRANCAIS";
-    }
+    // Header bar hidden — skip title/focus updates
 
     const firstBotMessage = document.querySelector("#chat-messages .chat-msg.bot");
     if (firstBotMessage) {

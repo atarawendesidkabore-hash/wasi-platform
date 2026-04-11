@@ -1550,11 +1550,10 @@ input, select, textarea { font-family: inherit; outline: none; }
     </div>
     <!-- Center: Chat -->
     <div class="intel-center">
-      <div class="chat-header">
+      <div class="chat-header" style="display:none;" aria-hidden="true">
         <div class="chat-header-title">WASI Intelligence</div>
         <div class="chat-header-focus" id="chat-focus">Focus: AFRIQUE</div>
         <button class="mobile-country-btn" onclick="openMobileCountries()">🌍 Pays</button>
-        <button onclick="toggleSectorPanel()" style="font-size:.72rem;padding:4px 10px;background:rgba(139,69,19,.15);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);cursor:pointer;">🏭 Secteurs</button>
       </div>
       <!-- SECTOR INTELLIGENCE PANEL -->
       <div id="sector-intel-panel" style="display:none;padding:16px;overflow-y:auto;height:calc(100vh - 84px);box-sizing:border-box;">
