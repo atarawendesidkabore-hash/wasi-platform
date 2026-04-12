@@ -2145,14 +2145,22 @@ input, select, textarea { font-family: inherit; outline: none; }
             </div>
             <div class="form-group">
               <label class="form-label">Secteur d'activit&eacute;</label>
-              <select class="form-select" id="pme-sector" onchange="updateSMScore()">
+              <select class="form-select" id="pme-sector" onchange="updateSMScore();onPMESectorChange();">
                 <option value="">-- S&eacute;lectionner --</option>
-                <option>Agro-industrie</option><option>BTP &amp; Mat&eacute;riaux</option>
-                <option>Transport &amp; Logistique</option><option>Sant&eacute; &amp; Pharmacie</option>
-                <option>Tech / Fintech</option><option>&Eacute;nergie &amp; Mines</option>
-                <option>Microfinance / Banque</option><option>Immobilier</option>
-                <option>Commerce &amp; Distribution</option><option>Industrie manufacturiere</option>
-                <option>Services aux entreprises</option><option>T&eacute;l&eacute;coms</option>
+                <option value="agri">🌾 Agro-industrie &amp; Agriculture</option>
+                <option value="immobilier">🏗️ BTP, Immobilier &amp; Infrastructure</option>
+                <option value="logistics">🚢 Transport &amp; Logistique</option>
+                <option value="health">🏥 Sant&eacute; &amp; Pharmacie</option>
+                <option value="tech">💻 Tech / Fintech / Innovation</option>
+                <option value="energy">⚡ &Eacute;nergie, P&eacute;trole &amp; Gaz</option>
+                <option value="mining">⛏️ Mines &amp; Industries Extractives</option>
+                <option value="finance">🏦 Microfinance / Banque / Assurance</option>
+                <option value="agroalim">🥫 Agroalimentaire &amp; Grande Conso</option>
+                <option value="industrie">🏭 Industrie Manufacturi&egrave;re &amp; ZES</option>
+                <option value="telecom">📱 T&eacute;l&eacute;coms &amp; Mobile Money</option>
+                <option value="tourisme">✈️ Tourisme &amp; H&ocirc;tellerie</option>
+                <option value="edu">🎓 &Eacute;ducation &amp; Formation</option>
+                <option value="eau">💧 Eau, Assainissement &amp; Environnement</option>
               </select>
             </div>
             <div class="form-group">
@@ -2182,6 +2190,9 @@ input, select, textarea { font-family: inherit; outline: none; }
               </div>
             </div>
           </div>
+
+          <!-- SECTION 2b: WASI SECTOR INTELLIGENCE PREVIEW -->
+          <div id="pme-sector-intel" style="display:none;margin:16px 0;padding:14px 16px;border-radius:8px;background:rgba(46,204,113,.06);border:1px solid var(--green);"></div>
 
           <!-- SECTION 3: ETATS FINANCIERS -->
           <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin:16px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--border);">2 — &Eacute;tats financiers (dernier exercice cl&ocirc;tur&eacute;)</div>
@@ -7884,10 +7895,65 @@ var PME_COMPTA = {
   MG:{sys:'PCG malgache (adapté IFRS)',reg:'CEM Madagascar',currency:'MGA',zone:'SADC',ifrs:false},
 };
 
+function onPMESectorChange() {
+  var sectorId = document.getElementById('pme-sector').value;
+  var countryCode = document.getElementById('pme-country').value;
+  var div = document.getElementById('pme-sector-intel');
+  if (!div) return;
+  if (!sectorId || typeof WASI_SECTORS === 'undefined') { div.style.display = 'none'; return; }
+  var s = WASI_SECTORS.find(function(x){ return x.id === sectorId; });
+  if (!s) { div.style.display = 'none'; return; }
+
+  var c = countryCode ? COUNTRIES.find(function(x){ return x.code === countryCode; }) : null;
+  var r = countryCode ? ((window.COUNTRY_RISKS||{})[countryCode]||{}) : {};
+  var waccBase = c ? (r.wacc || Math.round(4.5 + (100 - c.score) * 0.25)) : null;
+  var waccMin = parseInt((s.wacc_range||'12-18').split('-')[0], 10);
+  var waccDisplay = waccBase ? Math.max(waccBase, waccMin) + '%' : s.wacc_range;
+  var isKey = c && (s.pays_cles||[]).includes(countryCode);
+
+  div.style.display = 'block';
+  div.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">' +
+      '<span style="font-size:1.4rem;">'+s.icon+'</span>' +
+      '<div>' +
+        '<div style="font-size:.82rem;font-weight:700;color:var(--green);">'+s.name+'</div>' +
+        '<div style="font-size:.65rem;color:var(--text-dim);">WASI Sector Intelligence'+(c?' — '+c.flag+' '+c.name:'')+'</div>' +
+      '</div>' +
+      (isKey ? '<span style="margin-left:auto;padding:2px 8px;background:rgba(46,204,113,.15);border:1px solid var(--green);border-radius:10px;font-size:.62rem;color:var(--green);font-weight:700;">✅ Pays Clé</span>' : '') +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">' +
+      '<div style="text-align:center;padding:7px;background:var(--bg-tertiary);border-radius:6px;">' +
+        '<div style="font-size:.56rem;color:var(--text-dim);text-transform:uppercase;">TAM Afrique</div>' +
+        '<div style="font-size:.72rem;font-weight:700;color:var(--gold);">'+s.tam+'</div>' +
+      '</div>' +
+      '<div style="text-align:center;padding:7px;background:var(--bg-tertiary);border-radius:6px;">' +
+        '<div style="font-size:.56rem;color:var(--text-dim);text-transform:uppercase;">CAGR</div>' +
+        '<div style="font-size:.72rem;font-weight:700;color:var(--green);">'+s.croissance+'</div>' +
+      '</div>' +
+      '<div style="text-align:center;padding:7px;background:var(--bg-tertiary);border-radius:6px;">' +
+        '<div style="font-size:.56rem;color:var(--text-dim);text-transform:uppercase;">WACC'+(c?' '+c.name.split(' ')[0]:'')+'</div>' +
+        '<div style="font-size:.72rem;font-weight:700;color:var(--text-primary);">'+waccDisplay+'</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:.68rem;font-weight:700;color:var(--green);margin-bottom:5px;">✅ Top 3 opportunités</div>' +
+    '<ul style="margin:0 0 8px 0;padding-left:14px;font-size:.7rem;color:var(--text-secondary);line-height:1.7;">' +
+      (s.opportunites||[]).slice(0,3).map(function(o){ return '<li>'+o+'</li>'; }).join('') +
+    '</ul>' +
+    '<div style="font-size:.68rem;font-weight:700;color:var(--gold);margin-bottom:4px;">💰 Financement disponible</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:10px;">' +
+      (s.financement||[]).slice(0,4).map(function(f){
+        return '<span style="padding:2px 7px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;font-size:.62rem;color:var(--text-secondary);">'+f+'</span>';
+      }).join('') +
+    '</div>' +
+    '<button onclick="openSectorsForCountry(\''+(countryCode||'')+'\');document.querySelectorAll(\'.nav-btn\').forEach(function(b){b.classList.remove(\'active\')});document.querySelector(\'.nav-btn[onclick*=private]\').classList.add(\'active\');" ' +
+    'style="width:100%;padding:8px;background:rgba(46,204,113,.1);border:1px solid var(--green);color:var(--green);border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;">' +
+    '🏭 Voir analyse complète — ' + s.name + '</button>';
+}
+
 function onPMECountryChange() {
   var code = document.getElementById('pme-country').value;
   var banner = document.getElementById('pme-compta-banner');
-  if (!code || !PME_COMPTA[code]) { banner.style.display = 'none'; updateSMScore(); return; }
+  if (!code || !PME_COMPTA[code]) { banner.style.display = 'none'; updateSMScore(); onPMESectorChange(); return; }
   var c = PME_COMPTA[code];
   banner.style.display = 'block';
   document.getElementById('pme-compta-system').textContent = c.sys;
@@ -7937,6 +8003,7 @@ function onPMECountryChange() {
     document.getElementById('hint-caf').textContent = '';
   }
   updateSMScore();
+  onPMESectorChange();
 }
 
 function updateSMScore() {
