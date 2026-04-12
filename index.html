@@ -5657,12 +5657,6 @@ ${sorted.map((c, i) => {
 💡 Pour un investissement PME, WASI recommande : Cote d'Ivoire (hub UEMOA), Senegal (gaz + tech), Kenya (hub EAC), Rwanda (climat des affaires), Maroc (industrie + Europe), ou Maurice (finance + services).`;
   }
 
-  // Specific deep country analysis if a country is detected
-  if (matchedCountry) {
-    const d = COUNTRY_DETAILS[matchedCountry.code];
-    if (d) return buildDeepCountryAnalysis(matchedCountry, d);
-  }
-
   // Infrastructure
   if (msg.includes('infra') || msg.includes('route') || msg.includes('electri') || msg.includes('energie') || msg.includes('eau') || msg.includes('construction')) {
     return `━━━ INFRASTRUCTURE — ÉTAT DES LIEUX AFRIQUE ━━━
