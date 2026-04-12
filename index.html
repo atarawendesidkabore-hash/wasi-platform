@@ -4743,7 +4743,7 @@ function generateLocalResponse(message, focus) {
     const d=COUNTRY_DETAILS[focusedC.code]||{};
     const r=(window.COUNTRY_RISKS||{})[focusedC.code]||null;
     if(msgN.includes('wacc')||msgN.includes('cout du capital')||msgN.includes('actualisation')) return buildWACCAnalysis(focusedC,d,r);
-    if(msgN.includes('secteur')&&!WASI_SECTORS.some(s=>s.keywords.some(kw=>msgN.includes(n_(kw))))
+    if((msgN.includes('secteur')&&!WASI_SECTORS.some(s=>s.keywords.some(kw=>msgN.includes(n_(kw)))))
       ||msgN.includes('ou investir')||msgN.includes('secteurs porteur')) return buildSectorAnalysis(focusedC,d,r);
     if(msgN.includes('pib')||msgN.includes('croissance')||msgN.includes('inflation')||msgN.includes('dette')||msgN.includes('macroeco')) return buildMacroAnalysis(focusedC,d);
     if(msgN.includes('verdict')||msgN.includes('faut-il')||msgN.includes('faut il')||msgN.includes('recommand')) return buildInvestmentVerdict(focusedC,d,r);
@@ -4756,13 +4756,22 @@ function generateLocalResponse(message, focus) {
     return buildDeepCountryAnalysis(focusedC,d);
   }
 
-  // ── SECTOR DETECTION — must come before all topic blocks ─────────────────
+  // ── SECTOR DETECTION — before topic blocks; skip if it's a specific query ─
   if(typeof WASI_SECTORS!=='undefined'){
-    const secMatch=WASI_SECTORS.find(s=>
-      s.keywords.some(kw=>msgN.includes(n_(kw))) ||
-      msgN.includes(n_(s.name).split('&')[0].trim().split(' ').slice(0,2).join(' '))
-    );
-    if(secMatch) return buildLocalSectorDive(secMatch, window.currentCountry||null);
+    // Let dedicated handlers take priority for corridors, BRVM, ETF, currencies
+    const skipSector = msg.includes('corridor') ||
+      msgN.includes('brvm') || msgN.includes('bourse region') ||
+      msgN.includes('etf') || msgN.includes('fonds ') ||
+      msgN.includes('cfa') || msgN.includes('naira') || msgN.includes('devaluation') ||
+      msgN.includes('monnaie') || msgN.includes('devise') ||
+      (msgN.includes('bourse') && !msgN.includes('bourse priv') && !msgN.includes('pme'));
+    if(!skipSector){
+      const secMatch=WASI_SECTORS.find(s=>
+        s.keywords.some(kw=>msgN.includes(n_(kw))) ||
+        msgN.includes(n_(s.name).split('&')[0].trim().split(' ').slice(0,2).join(' '))
+      );
+      if(secMatch) return buildLocalSectorDive(secMatch, window.currentCountry||null);
+    }
   }
 
   // Corridor analysis
