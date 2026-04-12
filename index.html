@@ -3802,11 +3802,11 @@ function selectCountry(code) {
   const c = COUNTRIES.find(x => x.code === code);
   document.getElementById('chat-focus').textContent = 'Focus: ' + c.name;
   renderCountries();
+  updateChatSuggestions(code);
   // On mobile, show country detail overlay
   if (window.innerWidth <= 640) {
     showMobileCountryDetail(code);
   } else {
-    // On desktop, render detail in right panel
     renderDesktopCountryDetail(code);
   }
 }
@@ -3817,6 +3817,45 @@ function clearCountryFocus() {
   document.getElementById('right-composite').style.display = '';
   document.getElementById('right-country-detail').style.display = 'none';
   renderCountries();
+  updateChatSuggestions(null);
+}
+
+/* Update suggestion buttons to match focused country */
+function updateChatSuggestions(code) {
+  var bar = document.querySelector('.chat-suggestions');
+  if (!bar) return;
+  if (!code) {
+    // Restore default suggestions
+    bar.innerHTML = [
+      'Agriculture &amp; Agro-industrie en Afrique',
+      'Energie solaire et renouvelables',
+      'Telecoms et Mobile Money',
+      'Mines et industries extractives',
+      'Analyse du corridor Abidjan-Lagos',
+      'Risque politique au Sahel',
+      'Qu\'est-ce que le WASI Stock Market ?',
+      'Presentez WASI Ecosystem'
+    ].map(function(t){ return '<button class="chat-sugg" onclick="sendSugg(this)">'+t+'</button>'; }).join('');
+    return;
+  }
+  var c = COUNTRIES.find(function(x){ return x.code === code; });
+  if (!c) return;
+  var d = COUNTRY_DETAILS[code]||{};
+  // Pick top 3 sectors for this country
+  var topSecs = [];
+  if (typeof WASI_SECTORS !== 'undefined') {
+    var txt = ((d.resources||[]).concat(d.exports||[])).join(' ').toLowerCase();
+    topSecs = WASI_SECTORS.map(function(s){
+      var hits = s.keywords.filter(function(kw){ return txt.includes(kw); }).length;
+      return { s: s, sc: hits * 3 + ((s.pays_cles||[]).includes(code) ? 5 : 0) };
+    }).sort(function(a,b){ return b.sc - a.sc; }).slice(0,3).map(function(x){ return x.s; });
+  }
+  var suggs = topSecs.map(function(s){ return s.icon + ' ' + s.name + ' ' + c.name; });
+  suggs.push('Analyse complete ' + c.name + ' : opportunites et risques 2026');
+  suggs.push('WACC et cout du capital ' + c.name);
+  suggs.push('Corridor commercial depuis ' + c.name);
+  suggs.push('Telecharger le brief de ' + c.name);
+  bar.innerHTML = suggs.map(function(t){ return '<button class="chat-sugg" onclick="sendSugg(this)">'+t+'</button>'; }).join('');
 }
 
 function renderDesktopCountryDetail(code) {
@@ -3999,6 +4038,7 @@ function showMobileCountryDetail(code) {
   document.getElementById('mobile-panel-title').textContent = c.flag + ' ' + c.name;
   document.getElementById('mobile-country-panel').classList.add('show');
   renderCountries();
+  updateChatSuggestions(code);
 
   if (!d) {
     document.getElementById('mobile-panel-body').innerHTML = '<div style="padding:20px;color:var(--text-dim);">Details non disponibles.</div>';
@@ -4070,6 +4110,8 @@ function showMobileCountryDetail(code) {
 
     <div class="cd-actions">
       <button class="cd-action-btn primary" onclick="askAboutCurrentMobileCountry()">💬 Interroger l'IA</button>
+      <button class="cd-action-btn secondary" onclick="openSectorsForCountry(currentCountry);closeMobileCountries();" style="background:rgba(46,204,113,.1);border-color:var(--green);color:var(--green);">🏭 Secteurs</button>
+      <button class="cd-action-btn secondary" onclick="downloadCountryBrief(currentCountry)">📄 Brief</button>
       <button class="cd-action-btn secondary" onclick="closeMobileCountries()">← Retour</button>
     </div>
   `;
@@ -4335,7 +4377,13 @@ async function sendChat() {
 }
 
 function sendSugg(btn) {
-  document.getElementById('chat-input').value = btn.textContent;
+  var txt = btn.textContent || btn.innerText || '';
+  // Brief download suggestion — trigger download, don't send to chat
+  if (txt.toLowerCase().includes('telecharger le brief')) {
+    downloadCountryBrief(currentCountry);
+    return;
+  }
+  document.getElementById('chat-input').value = txt;
   sendChat();
 }
 
