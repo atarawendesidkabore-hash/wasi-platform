@@ -1568,18 +1568,18 @@ input, select, textarea { font-family: inherit; outline: none; }
         <div id="sector-detail" style="display:none;margin-top:14px;"></div>
       </div>
       <div class="chat-messages" id="chat-messages">
-        <div class="chat-msg bot">Bienvenue dans WASI Intelligence. Posez vos questions sur la continent africain : indices de stabilite, risques politiques, opportunites economiques, corridors commerciaux.</div>
+        <div class="chat-msg bot">Bienvenue dans WASI Intelligence — IA économique Afrique. Je couvre 54 pays, 14 secteurs et les principaux corridors commerciaux. Sélectionnez un pays à gauche ou posez directement votre question.</div>
       </div>
       <div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>
       <div class="chat-suggestions">
-        <button class="chat-sugg" onclick="sendSugg(this)">Presentez WASI Ecosystem</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">WASI Terminal DEX et sources de donnees</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Qu'est-ce que le WASI Stock Market ?</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Agriculture &amp; Agro-industrie en Afrique</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Energie solaire et renouvelables</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Telecoms et Mobile Money</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Mines et industries extractives</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Analyse du corridor Abidjan-Lagos</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Opportunites BRVM + NGX + GSE 2026</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Comment coter ma PME sur WASI ?</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Projections financieres WASI 2030</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Qu'est-ce que le WASI Stock Market ?</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Presentez WASI Ecosystem</button>
       </div>
       <div class="chat-input-bar">
         <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -3916,6 +3916,7 @@ function renderDesktopCountryDetail(code) {
 
     <button onclick="openSectorsForCountry('${c.code}')" style="width:100%;padding:10px;background:rgba(46,204,113,.1);border:1px solid var(--green);color:var(--green);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">🏭 Secteurs d'activité — ${esc(c.name)}</button>
     <button onclick="interrogateCurrentCountry()" style="width:100%;padding:10px;background:rgba(200,146,42,.12);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">💬 Interroger l'IA sur ${esc(c.name)}</button>
+    <button onclick="downloadCountryBrief('${c.code}')" style="width:100%;padding:10px;background:rgba(100,181,246,.08);border:1px solid #64b5f6;color:#64b5f6;border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:8px;">📄 Télécharger Brief Pays</button>
     <button onclick="clearCountryFocus()" style="width:100%;padding:8px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--radius);font-size:.78rem;cursor:pointer;">← Vue composite</button>
   `;
 
@@ -4104,6 +4105,88 @@ function openSectorsForCountry(code) {
   // Scroll to chat/sector area
   var chatEl = document.querySelector('.intel-center');
   if (chatEl) chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function downloadCountryBrief(code) {
+  var c = COUNTRIES.find(function(x){ return x.code === (code||currentCountry); });
+  var d = COUNTRY_DETAILS[c ? c.code : ''] || {};
+  var r = (window.COUNTRY_RISKS||{})[c ? c.code : ''] || {};
+  if (!c) return;
+
+  var rank = [...COUNTRIES].sort(function(a,b){return b.score-a.score;}).findIndex(function(x){return x.code===c.code;})+1;
+  var idx = d.indices||{};
+  var bar = function(v){ return '█'.repeat(Math.round(v/10))+'░'.repeat(10-Math.round(v/10))+' '+v; };
+
+  // Build top sectors for this country using WASI_SECTORS
+  var topSec = '';
+  if(typeof WASI_SECTORS!=='undefined'){
+    var scored = WASI_SECTORS.map(function(s){
+      var txt = ((d.resources||[]).concat(d.exports||[])).join(' ').toLowerCase();
+      var hits = s.keywords.filter(function(kw){return txt.includes(kw);}).length;
+      var isKey = (s.pays_cles||[]).includes(c.code);
+      return {s:s, sc: hits*3+(isKey?5:0)};
+    }).sort(function(a,b){return b.sc-a.sc;});
+    topSec = scored.slice(0,5).map(function(x,i){
+      return (i+1)+'. '+x.s.icon+' '+x.s.name+'\n   Croissance: '+x.s.croissance+' | TAM: '+x.s.tam+' | WACC: '+x.s.wacc_range;
+    }).join('\n');
+  }
+
+  var brief = [
+    '╔══════════════════════════════════════════════════════════════╗',
+    '║           WASI INTELLIGENCE — BRIEF PAYS                    ║',
+    '║  '+(''+c.flag+' '+c.name).padEnd(58)+'║',
+    '║  Date: '+new Date().toLocaleDateString('fr-FR').padEnd(53)+'║',
+    '╚══════════════════════════════════════════════════════════════╝',
+    '',
+    '━━━ SCORE WASI ━━━',
+    'Score composite : '+c.score+'/100  |  Rang : '+rank+'/54  |  Tendance : '+(c.trend||'→'),
+    'Risque global   : '+(c.risk||'N/A')+(c.coup?' | ⚠️ RÉGIME MILITAIRE':''),
+    '',
+    '━━━ PROFIL PAYS ━━━',
+    'Président    : '+(d.president||'N/A'),
+    'Capitale     : '+(d.capital||'N/A')+'  |  Centre éco : '+(d.eco_center||d.capital||'N/A'),
+    'Population   : '+(d.pop||'N/A')+'  |  Zone : '+(d.zone||c.region),
+    'PIB          : '+c.gdp+'  |  Croissance : '+(d.growth||'N/A'),
+    'Inflation    : '+(d.inflation||'N/A')+'  |  Dette/PIB : '+(d.dette_pib||'N/A'),
+    'Devise       : '+(d.currency||'N/A'),
+    '',
+    '━━━ INDICES WASI ━━━',
+    'Politique    : '+bar(idx.politique||0),
+    'Économie     : '+bar(idx.economie||0),
+    'Infrastructure: '+bar(idx.infra||0),
+    'Juridique    : '+bar(idx.juridique||0),
+    'Capital hum. : '+bar(idx.humain||0),
+    'Intégration  : '+bar(idx.integration||0),
+    '',
+    '━━━ SIGNAL INVESTISSEUR ━━━',
+    'Crédit WASI  : '+(r.credit||(c.score>=70?'BB+':c.score>=55?'B+':c.score>=40?'B-':'CCC')),
+    'WACC estimé  : '+(r.wacc||Math.round(4.5+(100-c.score)*0.25))+'%',
+    'Risque FX    : '+(r.fxRisk||(c.score>=65?'Faible':c.score>=45?'Modéré':'Élevé')),
+    '',
+    '━━━ RESSOURCES NATURELLES ━━━',
+    (d.resources||[]).map(function(x){return '• '+x;}).join('\n')||'N/A',
+    '',
+    '━━━ EXPORTS PRINCIPAUX ━━━',
+    (d.exports||[]).map(function(x){return '• '+x;}).join('\n')||'N/A',
+    '',
+    '━━━ TOP 5 SECTEURS PORTEURS ━━━',
+    topSec||'N/A',
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    'Généré par WASI Intelligence — wasi-platform.github.io',
+    'Source: WASI Index composite (ports + marchés publics + données sectorielles)',
+    '© WASI Ecosystem '+new Date().getFullYear()+' — Tarawendesida T. KABORE, FMVA',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+  ].join('\n');
+
+  var blob = new Blob([brief], {type:'text/plain;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'WASI-Brief-'+c.code+'-'+new Date().toISOString().slice(0,10)+'.txt';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
 }
 
 function interrogateCurrentCountry() {
