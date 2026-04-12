@@ -8108,16 +8108,15 @@ function updateEnterpriseRisk(fin) {
   axes.push({ label:'Risque pays', score: rp, cat:'Géopolitique',
     note: rp<=2 ? 'Environnement stable' : rp===3 ? 'Risques modérés' : 'Environnement instable' });
 
-  // 3. Risque sectoriel (from description length / sector keywords as proxy)
-  var desc = (document.getElementById('pme-desc') ? document.getElementById('pme-desc').value : '').toLowerCase();
+  // 3. Risque sectoriel — use WASI_SECTORS WACC range as proxy for risk level
+  var sectorId = document.getElementById('pme-sector').value;
   var rs = 3;
-  if (desc.indexOf('mine') >= 0 || desc.indexOf('extract') >= 0 || desc.indexOf('petrole') >= 0) rs = 4;
-  else if (desc.indexOf('agri') >= 0 || desc.indexOf('elevage') >= 0) rs = 2;
-  else if (desc.indexOf('tech') >= 0 || desc.indexOf('fintech') >= 0 || desc.indexOf('digital') >= 0) rs = 2;
-  else if (desc.indexOf('immobil') >= 0 || desc.indexOf('construc') >= 0) rs = 4;
-  else if (desc.indexOf('export') >= 0 || desc.indexOf('commerce') >= 0) rs = 3;
+  var sectorRiskMap = {agri:2,mining:4,energy:4,telecom:2,finance:3,logistics:3,health:2,
+    immobilier:4,agroalim:2,edu:2,tourisme:3,tech:2,industrie:4,eau:2};
+  if (sectorId && sectorRiskMap[sectorId] !== undefined) rs = sectorRiskMap[sectorId];
+  var sObj = typeof WASI_SECTORS!=='undefined' ? WASI_SECTORS.find(function(x){return x.id===sectorId;}) : null;
   axes.push({ label:'Risque sectoriel', score: rs, cat:'Marché',
-    note: rs<=2 ? 'Secteur porteur' : rs===3 ? 'Secteur standard' : 'Secteur cyclique/exposé' });
+    note: rs<=2 ? 'Secteur porteur (WACC '+(sObj?sObj.wacc_range:'N/A')+')' : rs===3 ? 'Secteur standard' : 'Secteur cyclique/exposé — '+(sObj?'WACC '+sObj.wacc_range:'') });
 
   // 4. Gouvernance
   var ex = fin.exercices || 1;
@@ -8173,14 +8172,115 @@ function updateEnterpriseRisk(fin) {
 }
 
 function submitPME() {
-  var name = document.getElementById('pme-name').value.trim();
+  var name    = document.getElementById('pme-name').value.trim();
   if (!name) { showNotif('Veuillez saisir le nom de l\'entreprise.', 'error'); return; }
   var country = document.getElementById('pme-country').value;
   if (!country) { showNotif('Veuillez sélectionner un pays.', 'error'); return; }
   var ca = parseFloat(document.getElementById('pme-ca').value) || 0;
   if (!ca) { showNotif('Veuillez renseigner le chiffre d\'affaires.', 'error'); return; }
-  var compta = PME_COMPTA[country] || {};
-  showNotif('Candidature de "' + name + '" (' + (compta.sys || '') + ') soumise avec succès. Analyse WASI sous 48h.', 'success');
+
+  var c       = COUNTRIES.find(function(x){return x.code===country;});
+  var d       = COUNTRY_DETAILS[country]||{};
+  var r       = (window.COUNTRY_RISKS||{})[country]||{};
+  var compta  = PME_COMPTA[country]||{};
+  var sectorId= document.getElementById('pme-sector').value;
+  var sObj    = sectorId && typeof WASI_SECTORS!=='undefined' ? WASI_SECTORS.find(function(x){return x.id===sectorId;}) : null;
+  var legal   = document.getElementById('pme-legal-form').value;
+  var resultat= parseFloat(document.getElementById('pme-resultat').value)||0;
+  var actif   = parseFloat(document.getElementById('pme-actif').value)||0;
+  var capitaux= parseFloat(document.getElementById('pme-capitaux').value)||0;
+  var dettes  = parseFloat(document.getElementById('pme-dettes').value)||0;
+  var ebitda  = parseFloat(document.getElementById('pme-ebitda').value)||0;
+  var exercices=parseInt(document.getElementById('pme-exercices').value)||1;
+  var levee   = parseFloat(document.getElementById('pme-levee').value)||0;
+  var desc    = document.getElementById('pme-desc') ? document.getElementById('pme-desc').value : '';
+
+  // Compute ratios
+  var marge_nette   = ca>0 ? (resultat/ca*100).toFixed(1) : 'N/A';
+  var roe           = capitaux>0 ? (resultat/capitaux*100).toFixed(1) : 'N/A';
+  var levier        = capitaux>0 ? (dettes/capitaux).toFixed(2)+'x' : 'N/A';
+  var marge_ebitda  = ca>0&&ebitda>0 ? (ebitda/ca*100).toFixed(1) : 'N/A';
+
+  // Compartiment
+  var comp = ca>=5000000000&&exercices>=2&&resultat>0 ? 'WASI PREMIER (A) — Éligible IPO / Emprunt obligataire'
+           : ca>=500000000&&exercices>=2              ? 'WASI GROWTH (B) — Éligible compartiment Growth'
+           : ca>=100000000                            ? 'WASI VENTURE (C) — Éligible compartiment Venture'
+           :                                            'NON ÉLIGIBLE — CA minimum 100M ' + (compta.currency||'XOF');
+
+  var waccPays = c ? (r.wacc||Math.round(4.5+(100-c.score)*0.25)) : 'N/A';
+  var waccSec  = sObj ? sObj.wacc_range : 'N/A';
+
+  var report = [
+    '╔══════════════════════════════════════════════════════════════╗',
+    '║         WASI SCORE REPORT — PRIVATE MARKET STUDIO           ║',
+    '╚══════════════════════════════════════════════════════════════╝',
+    '',
+    '━━━ IDENTITÉ DE L\'ENTREPRISE ━━━',
+    'Nom          : ' + name,
+    'Pays         : ' + (c ? c.flag+' '+c.name : country),
+    'Secteur      : ' + (sObj ? sObj.icon+' '+sObj.name : sectorId||'Non renseigné'),
+    'Forme jur.   : ' + (legal||'Non renseignée'),
+    'Comptabilité : ' + (compta.sys||'N/A'),
+    'Régulateur   : ' + (compta.reg||'N/A'),
+    'Devise       : ' + (compta.currency||'N/A'),
+    '',
+    '━━━ DONNÉES FINANCIÈRES ━━━',
+    'Chiffre d\'affaires : ' + (ca>0 ? ca.toLocaleString('fr-FR') : 'N/A'),
+    'Résultat net       : ' + (resultat!==0 ? resultat.toLocaleString('fr-FR') : 'N/A'),
+    'Total Actif        : ' + (actif>0 ? actif.toLocaleString('fr-FR') : 'N/A'),
+    'Capitaux propres   : ' + (capitaux>0 ? capitaux.toLocaleString('fr-FR') : 'N/A'),
+    'Dettes financières : ' + (dettes>0 ? dettes.toLocaleString('fr-FR') : 'N/A'),
+    'EBITDA             : ' + (ebitda>0 ? ebitda.toLocaleString('fr-FR') : 'N/A'),
+    'Exercices audités  : ' + exercices,
+    'Levée souhaitée    : ' + (levee>0 ? levee.toLocaleString('fr-FR') : 'N/A'),
+    '',
+    '━━━ RATIOS CLÉS ━━━',
+    'Marge nette   : ' + marge_nette + (marge_nette!=='N/A'?'%':''),
+    'ROE           : ' + roe + (roe!=='N/A'?'%':''),
+    'Levier D/CP   : ' + levier,
+    'Marge EBITDA  : ' + marge_ebitda + (marge_ebitda!=='N/A'?'%':''),
+    '',
+    '━━━ SCORING WASI ━━━',
+    'Compartiment éligible : ' + comp,
+    'WACC pays (' + (c?c.name:'N/A') + ') : ' + waccPays + (waccPays!=='N/A'?'%':''),
+    'WACC sectoriel        : ' + waccSec,
+    'Score pays WASI       : ' + (c?c.score+'/100':'N/A'),
+    '',
+    (sObj ? [
+      '━━━ CONTEXTE SECTORIEL WASI ━━━',
+      'Secteur : ' + sObj.icon + ' ' + sObj.name,
+      'TAM Afrique : ' + sObj.tam,
+      'CAGR : ' + sObj.croissance,
+      '',
+      'Top 3 opportunités :',
+      (sObj.opportunites||[]).slice(0,3).map(function(o,i){return '  '+(i+1)+'. '+o;}).join('\n'),
+      '',
+      'Cadre réglementaire :',
+      '  ' + (sObj.cadre_reglementaire||'N/A'),
+      '',
+      'Financement disponible :',
+      (sObj.financement||[]).slice(0,4).map(function(f){return '  • '+f;}).join('\n'),
+    ].join('\n') : ''),
+    '',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    'WASI Private Market Studio — Analyse préliminaire automatique',
+    'Une analyse approfondie par nos analystes sera fournie sous 48h.',
+    'Généré le : ' + new Date().toLocaleDateString('fr-FR') + ' par WASI Intelligence',
+    '© WASI Ecosystem — Tarawendesida T. KABORE, FMVA',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+  ].join('\n');
+
+  // Download report
+  var blob = new Blob([report], {type:'text/plain;charset=utf-8'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href   = url;
+  a.download = 'WASI-Score-Report-' + name.replace(/\s+/g,'-').slice(0,20) + '-' + new Date().toISOString().slice(0,10) + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+
+  showNotif('✅ Rapport WASI téléchargé — "' + name + '" (' + (compta.sys||country) + '). Analyse WASI sous 48h.', 'success');
 }
 
 /* ================================================================
