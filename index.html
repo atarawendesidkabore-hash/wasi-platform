@@ -4564,62 +4564,50 @@ function buildSectorAnalysis(c, d, r) {
   const score = c.score;
   const resources = d.resources || [];
   const exports_ = d.exports || [];
-  const region = c.region;
-  const isCFA = (d.currency||'').includes('CFA');
   const isOHADA = ['UEMOA','CEMAC'].some(z=>(d.zone||'').includes(z));
+  const countryText = (resources.concat(exports_)).join(' ').toLowerCase();
 
-  // Determine top sectors based on country data
-  const sectors = [];
-  if(resources.some(r=>/(or|mine|cuivre|cobalt|bauxite|fer|titanite|manganèse|manganese|diamant|phosphate|uranium|zinc)/i.test(r))){
-    sectors.push({name:'Industries extractives / Mining',note:'Ressources identifiées : '+(resources.filter(r=>/(or|mine|cuivre|cobalt|bauxite|fer|manganèse|diamant|phosphate|uranium)/i.test(r)).join(', ')||resources[0]),signal:'⚡ Potentiel élevé'});
-  }
-  if(resources.some(r=>/(cacao|cafe|coton|arachide|palmier|hevea|cajou|karite|sésame|sesame|ananas|manioc)/i.test(r))||exports_.some(e=>/(agri|cacao|cafe|coton)/i.test(e))){
-    sectors.push({name:'Agri-transformation & Export agricole',note:'Principaux produits : '+(exports_.slice(0,3).join(', ')),signal:'🌱 Fort potentiel ZLECAf'});
-  }
-  if(score>=50){
-    sectors.push({name:'Télécoms & Mobile Money',note:'Pénétration mobile en forte croissance. Mobile Money = inclusion financière.',signal:'📱 Secteur porteur continental'});
-  }
-  if(score>=55){
-    sectors.push({name:'Logistique & Infrastructures portuaires',note:region==='CEDEAO'?'Positionnement sur corridor côtier CEDEAO.':region==='EAC'?'Corridor EAC vers pays enclavés.':'Hub régional potentiel.',signal:'🚢 Priorité BAD 2025-2030'});
-  }
-  if(score>=60&&isOHADA){
-    sectors.push({name:'Services financiers & Microfinance',note:'Zone OHADA : cadre SYSCOHADA, supervision BCEAO/COBAC.',signal:'🏦 Croissance 12%+/an'});
-  }
-  if((d.resources||[]).some(r=>/(petrole|gaz)/i.test(r))||exports_.some(e=>/(petrole|gnl|gaz)/i.test(e))){
-    sectors.push({name:'Énergie & Pétrole / Gaz',note:'Production identifiée. Opportunités : services pétroliers, FPSO, pipeline, raffinerie.',signal:'⛽ Revenus stables (prix commodités)'});
-  }
-  if(score>=55){
-    sectors.push({name:'Immobilier & Construction urbaine',note:'Déficit de logements estimé à 100M+ unités sur le continent. Urbanisation 3.5%/an.',signal:'🏗 Demande structurelle forte'});
-  }
-  if(sectors.length<3){
-    sectors.push({name:'Commerce & Distribution',note:'Marché de consommation en croissance. Classe moyenne émergente.',signal:'🛒 Résistant aux cycles'});
-  }
+  // ── Score each WASI_SECTOR for this country ──────────────────────────────
+  const scored = (typeof WASI_SECTORS!=='undefined' ? WASI_SECTORS : []).map(s => {
+    const hits = s.keywords.filter(kw=>countryText.includes(kw)).length;
+    const isKey = (s.pays_cles||[]).includes(c.code);
+    return { s, score: hits * 3 + (isKey ? 5 : 0) + (score >= 65 ? 2 : 0) };
+  }).sort((a,b)=>b.score-a.score);
+
+  const topSectors = scored.slice(0,5);
+  const waccBase = (r||{}).wacc || Math.round(4.5+(100-score)*0.25);
 
   return `━━━ ANALYSE SECTORIELLE — ${c.flag} ${c.name.toUpperCase()} ━━━
 
 📊 PROFIL PAYS : Score WASI ${c.score}/100 | PIB ${c.gdp} | Croissance ${d.growth||'N/A'}
-Zone : ${d.zone||c.region} | Devise : ${d.currency||'N/A'}${isOHADA?' | Comptabilité : SYSCOHADA':''}
+Zone : ${d.zone||c.region} | WACC pays : ${waccBase}%${isOHADA?' | OHADA/SYSCOHADA':''}
 
-🎯 SECTEURS PORTEURS IDENTIFIÉS PAR WASI
-${sectors.slice(0,5).map((s,i)=>`
-${i+1}. ${s.name}
-   ${s.signal}
-   ${s.note}`).join('\n')}
+🎯 TOP 5 SECTEURS WASI POUR ${c.name.toUpperCase()}
+
+${topSectors.map(({s},i)=>{
+  const waccSec = s.wacc_range || (waccBase+2)+'-'+(waccBase+6)+'%';
+  const isKey = (s.pays_cles||[]).includes(c.code);
+  return `${i+1}. ${s.icon} ${s.name}
+   📈 Croissance : ${s.croissance||'N/A'} | TAM : ${s.tam||'N/A'} | WACC : ${waccSec}
+   ${isKey?'🏆 Pays clé pour ce secteur | ':''}Top opportunité : ${(s.opportunites||['N/A'])[0]}
+   Entrée recommandée : ${(s.modes_entree||['N/A'])[0]}`;
+}).join('\n\n')}
 
 ⚠️ SECTEURS À APPROCHER AVEC PRUDENCE
-${score<50?'• Banque classique : cadre réglementaire fragile, risque de crédit élevé\n• Retail haut de gamme : pouvoir d\'achat limité':''}
-• Secteurs dépendants des subventions publiques (risque budgétaire)
-• Importation sans valeur ajoutée locale (pression devises)
+${score<50?'• Services bancaires formels : NPL élevés, cadre réglementaire fragile\n• Retail haut de gamme : pouvoir d\'achat limité':''}
+• Secteurs dépendants de subventions publiques (risque budgétaire)
+• Import sans valeur ajoutée locale (pression devises + concurrence asiatique)
 
 🏛️ CADRE RÉGLEMENTAIRE
-• Système juridique : ${isOHADA?'OHADA — Actes Uniformes applicables':'Common Law / Droit national'}
-• Comptabilité : ${isOHADA?'SYSCOHADA révisé (2017)':'IFRS ou normes locales'}
-• Investissements étrangers : ${score>=60?'Code des investissements favorable, guichet unique opérationnel':score>=45?'Procédures existantes mais délais administratifs':'Cadre en reconstruction, due diligence approfondie requise'}
+• Juridique : ${isOHADA?'OHADA — Actes Uniformes (contrats, sûretés, SYSCOHADA)':'Common Law / Droit national'}
+• Investissements : ${score>=60?'Code des investissements favorable, guichet unique opérationnel':score>=45?'Procédures existantes, délais 3-9 mois':'Cadre en reconstruction, due diligence approfondie'}
 
 💡 RECOMMANDATION WASI
-${score>=65?'Environnement favorable. Privilégier les investissements greenfield avec partenaires locaux. Horizon 5-7 ans.':
-score>=45?'Approche sélective. Partenariats locaux indispensables. Préférer les concessions et PPP. Horizon 7-10 ans.':
-'Exposition à limiter. Joint-ventures avec garanties institutionnelles (MIGA, IFC). Instruments de couverture obligatoires.'}`;
+${score>=65?'🟢 Environnement favorable. Greenfield avec partenaires locaux. Horizon 5-7 ans.':
+score>=45?'🟡 Approche sélective. PPP et concessions. Partenariats locaux indispensables. 7-10 ans.':
+'🔴 Exposition à limiter. JV + garanties MIGA/IFC. Instruments de couverture obligatoires.'}
+
+💬 Pour aller plus loin : posez-moi une question sur un secteur précis — "Agriculture en ${c.name}", "Énergie solaire ${c.name}", etc.`;
 }
 
 function buildMacroAnalysis(c, d) {
@@ -5681,6 +5669,19 @@ ${sorted.map((c, i) => {
 Score infrastructure moyen WASI : 41/100 — le secteur le plus deficitaire.`;
   }
 
+  // ── WASI SECTORS — keyword matching across all 14 sectors ──────────────────
+  if (typeof WASI_SECTORS !== 'undefined') {
+    // Detect sector from message
+    const matchedSector = WASI_SECTORS.find(s =>
+      s.keywords.some(kw => msgN.includes(kw)) ||
+      msgN.includes(s.name.toLowerCase().split('&')[0].trim().split(' ').slice(0,2).join(' '))
+    );
+    if (matchedSector) {
+      const focusCode = window.currentCountry || null;
+      return buildLocalSectorDive(matchedSector, focusCode);
+    }
+  }
+
   // WASI Ecosystem / Business Plan / About WASI
   if (msg.includes('wasi ecosystem') || msg.includes('business plan') || msg.includes('plan strategique') || msg.includes('qui est wasi') || msg.includes('c\'est quoi wasi') || msg.includes('kabore') || msg.includes('fondateur') || msg.includes('thomas') || msg.includes('presentation') || msg.includes('about') || msg.includes('a propos')) {
     return `━━━ WASI ECOSYSTEM — PRÉSENTATION COMPLÈTE ━━━
@@ -6017,16 +6018,117 @@ Bloomberg n'a pas ces donnees. Refinitiv non plus. WASI, oui.`;
 5. DIGITAL : La revolution Mobile Money transforme l'inclusion financiere. 150M+ comptes actifs. Wave et Orange Money en competition feroce.
 
 📋 QUESTIONS QUE VOUS POUVEZ ME POSER :
-• "Analyse complete de [pays]" — profil detaille avec macro, risques, opportunites
-• "Corridor Abidjan-Lagos" — analyse logistique et commerciale
+
+🌍 PAYS & MACRO
+• "Analyse complete de [pays]" — profil détaillé avec macro, risques, opportunités
 • "Comparer CI vs SN vs GH" — classement et benchmarking
-• "Risques Sahel" — analyse geopolitique approfondie
+• "WACC Sénégal" — coût du capital par pays
+• "Risques Sahel" — analyse géopolitique approfondie
+
+🏭 INTELLIGENCE SECTORIELLE (14 secteurs disponibles)
+• "Agriculture Côte d'Ivoire" — opportunités, acteurs, WACC, ZLECAf
+• "Énergie solaire Sénégal" — analyse énergie & renouvelables
+• "Telecoms Mobile Money Nigeria" — secteur digital
+• "Mines et extraction Ghana" — industrie minière
+• "Logistique ports Bénin" — corridors commerciaux
+• "Santé pharmacie Afrique" — secteur santé
+• "Immobilier construction" — BTP et urbanisation
+• "Industrie manufacturière" — zones économiques spéciales
+
+📈 MARCHÉS & INVESTISSEMENTS
+• "Corridor Abidjan-Lagos" — analyse logistique et commerciale
 • "Investir en BRVM" — analyse des actions et ETF
 • "Trade finance UEMOA" — produits bancaires et fintech
-• "Matieres premieres" — cacao, or, gaz, agriculture
-• "Telecoms et fintech" — secteur digital et mobile money
+• "WASI Stock Market" — bourse PME Afrique
 
-💡 Selectionnez un pays dans le panneau gauche pour un focus pays, ou posez votre question.`;
+💡 Sélectionnez un pays dans le panneau gauche pour un focus pays, ou posez votre question.`;
+}
+
+/* ── Local AI : Sector deep-dive using WASI_SECTORS data ───────────────── */
+function buildLocalSectorDive(s, countryCode) {
+  // Optional country overlay
+  const c   = countryCode ? (COUNTRIES||[]).find(x=>x.code===countryCode) : null;
+  const d   = countryCode ? (COUNTRY_DETAILS||{})[countryCode]||{} : {};
+  const r   = countryCode ? (window.COUNTRY_RISKS||{})[countryCode]||{} : {};
+
+  // Country-specific sector relevance & WACC
+  let countryBlock = '';
+  if (c) {
+    const res = (d.resources||[]).concat(d.exports||[]).join(' ').toLowerCase();
+    const matchScore = s.keywords.filter(kw=>res.includes(kw)).length;
+    const relevance  = matchScore >= 3 ? '🔥 TRÈS ÉLEVÉE' : matchScore >= 1 ? '✅ ÉLEVÉE' : '⚠️ MODÉRÉE (secteur non prioritaire pour ce pays)';
+    const waccBase   = r.wacc || Math.round(4.5+(100-c.score)*0.25);
+    const sectorAdd  = s.wacc_range ? parseInt(s.wacc_range.split('-')[0],10) - 10 : 2;
+    const wacc       = Math.max(waccBase, waccBase + sectorAdd);
+    const isCLA      = s.pays_cles && s.pays_cles.includes(countryCode);
+    countryBlock = `
+🎯 FOCUS PAYS : ${c.flag} ${c.name.toUpperCase()} (Score WASI ${c.score}/100)
+• Pertinence sectorielle : ${relevance}
+• WACC estimé pour ce secteur au ${c.name} : ${wacc}%${isCLA?' | Pays clé pour ce secteur ✅':''}
+• Ressources locales : ${(d.resources||[]).join(', ')||'N/A'}
+• Exports principaux : ${(d.exports||[]).slice(0,4).join(', ')||'N/A'}
+• Crédit WASI : ${r.credit||(c.score>=70?'BB+':c.score>=55?'B+':c.score>=40?'B-':'CCC')} | Risque FX : ${r.fxRisk||(c.score>=65?'Faible':c.score>=45?'Modéré':'Élevé')}
+`;
+  }
+
+  const listItems = arr => arr && arr.length ? arr.map(x=>'  • '+x).join('\n') : '  N/A';
+
+  return `━━━ INTELLIGENCE SECTORIELLE WASI ━━━
+${s.icon} ${s.name.toUpperCase()}
+${countryBlock}
+📊 DESCRIPTION
+${s.desc}
+
+📈 DONNÉES DE MARCHÉ
+• Croissance : ${s.croissance||'N/A'}
+• Marché adressable (TAM) : ${s.tam||'N/A'}
+• WACC de référence : ${s.wacc_range||'N/A'}
+
+💡 OPPORTUNITÉS (${(s.opportunites||[]).length} identifiées)
+${listItems(s.opportunites)}
+
+⚠️ RISQUES MAJEURS
+${listItems(s.risques)}
+
+🏢 ACTEURS CLÉS DU SECTEUR
+${listItems(s.acteurs)}
+
+🏛️ CADRE RÉGLEMENTAIRE
+${s.cadre_reglementaire||'N/A'}
+
+🚪 MODES D'ENTRÉE RECOMMANDÉS
+${listItems(s.modes_entree)}
+
+💰 SOURCES DE FINANCEMENT
+${listItems(s.financement)}
+
+🛣️ CORRIDORS COMMERCIAUX
+${listItems(s.corridors)}
+
+🌍 IMPACT ZLECAF
+${s.zlecaf_impact||'N/A'}
+
+📏 INDICATEURS CLÉS
+${listItems(s.indicateurs_cles)}
+
+🌍 PAYS PRIORITAIRES
+${(s.pays_cles||[]).map(code=>{
+  const ct = (COUNTRIES||[]).find(x=>x.code===code);
+  return ct ? ct.flag+' '+ct.name : code;
+}).join(' | ')||'N/A'}
+
+━━━ RECOMMANDATION WASI ━━━
+${s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 16
+  ? '🔴 Secteur à rendement élevé mais risque significatif. Structurer avec garanties institutionnelles (IFC, MIGA). Horizon 7-10 ans minimum.'
+  : s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 12
+  ? '🟡 Secteur porteur. Partenariat local indispensable. Approche progressive, monitoring trimestriel WASI Index.'
+  : '🟢 Secteur prioritaire WASI. Conditions d\'entrée favorables. Privilégier les marchés côtiers (CI, SN, GH, BJ) pour un premier déploiement.'}
+
+Posez-moi des questions spécifiques :
+• "Opportunités ${s.name} en [pays]" — analyse pays+secteur
+• "Acteurs dominants ${s.name}" — panorama concurrentiel
+• "Financer un projet ${s.name}" — structuration financière
+• "Risques ${s.name} Sahel" — géopolitique sectorielle`;
 }
 
 function buildDeepCountryAnalysis(c, d) {
