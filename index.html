@@ -4743,11 +4743,26 @@ function generateLocalResponse(message, focus) {
     const d=COUNTRY_DETAILS[focusedC.code]||{};
     const r=(window.COUNTRY_RISKS||{})[focusedC.code]||null;
     if(msgN.includes('wacc')||msgN.includes('cout du capital')||msgN.includes('actualisation')) return buildWACCAnalysis(focusedC,d,r);
-    if(msgN.includes('secteur')||msgN.includes('ou investir')||msgN.includes('secteurs porteur')) return buildSectorAnalysis(focusedC,d,r);
+    if(msgN.includes('secteur')&&!WASI_SECTORS.some(s=>s.keywords.some(kw=>msgN.includes(n_(kw))))
+      ||msgN.includes('ou investir')||msgN.includes('secteurs porteur')) return buildSectorAnalysis(focusedC,d,r);
     if(msgN.includes('pib')||msgN.includes('croissance')||msgN.includes('inflation')||msgN.includes('dette')||msgN.includes('macroeco')) return buildMacroAnalysis(focusedC,d);
     if(msgN.includes('verdict')||msgN.includes('faut-il')||msgN.includes('faut il')||msgN.includes('recommand')) return buildInvestmentVerdict(focusedC,d,r);
     if(msgN.includes('risque')&&!msgN.includes('sahel')) return buildRiskAnalysis(focusedC,d,r);
+    // Specific sector inside country context
+    if(typeof WASI_SECTORS!=='undefined'){
+      const secMatch=WASI_SECTORS.find(s=>s.keywords.some(kw=>msgN.includes(n_(kw))));
+      if(secMatch) return buildLocalSectorDive(secMatch, focusedC.code);
+    }
     return buildDeepCountryAnalysis(focusedC,d);
+  }
+
+  // ── SECTOR DETECTION — must come before all topic blocks ─────────────────
+  if(typeof WASI_SECTORS!=='undefined'){
+    const secMatch=WASI_SECTORS.find(s=>
+      s.keywords.some(kw=>msgN.includes(n_(kw))) ||
+      msgN.includes(n_(s.name).split('&')[0].trim().split(' ').slice(0,2).join(' '))
+    );
+    if(secMatch) return buildLocalSectorDive(secMatch, window.currentCountry||null);
   }
 
   // Corridor analysis
@@ -5667,19 +5682,6 @@ ${sorted.map((c, i) => {
 4. Eau & assainissement — 40% population sans acces eau potable
 
 Score infrastructure moyen WASI : 41/100 — le secteur le plus deficitaire.`;
-  }
-
-  // ── WASI SECTORS — keyword matching across all 14 sectors ──────────────────
-  if (typeof WASI_SECTORS !== 'undefined') {
-    // Detect sector from message
-    const matchedSector = WASI_SECTORS.find(s =>
-      s.keywords.some(kw => msgN.includes(kw)) ||
-      msgN.includes(s.name.toLowerCase().split('&')[0].trim().split(' ').slice(0,2).join(' '))
-    );
-    if (matchedSector) {
-      const focusCode = window.currentCountry || null;
-      return buildLocalSectorDive(matchedSector, focusCode);
-    }
   }
 
   // WASI Ecosystem / Business Plan / About WASI
