@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-04-08T01:19:44.198Z",
+  "fetchedAt": "2026-04-13T07:47:15.745Z",
   "source": "World Bank Open Data API",
   "countries": {
     "NG": {
@@ -13,7 +13,7 @@
       "debt_gdp": null,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "CI": {
       "iso3": "CIV",
@@ -26,7 +26,7 @@
       "debt_gdp": null,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "GH": {
       "iso3": "GHA",
@@ -39,7 +39,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SN": {
       "iso3": "SEN",
@@ -52,7 +52,7 @@
       "debt_gdp": null,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "BF": {
       "iso3": "BFA",
@@ -65,7 +65,7 @@
       "debt_gdp": 61.9,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "ML": {
       "iso3": "MLI",
@@ -78,7 +78,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "GN": {
       "iso3": "GIN",
@@ -91,7 +91,7 @@
       "debt_gdp": null,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "BJ": {
       "iso3": "BEN",
@@ -104,7 +104,7 @@
       "debt_gdp": null,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "TG": {
       "iso3": "TGO",
@@ -117,7 +117,7 @@
       "debt_gdp": null,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "NE": {
       "iso3": "NER",
@@ -130,7 +130,7 @@
       "debt_gdp": null,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "MR": {
       "iso3": "MRT",
@@ -143,7 +143,7 @@
       "debt_gdp": null,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "GW": {
       "iso3": "GNB",
@@ -156,7 +156,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SL": {
       "iso3": "SLE",
@@ -169,7 +169,7 @@
       "debt_gdp": null,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "LR": {
       "iso3": "LBR",
@@ -182,7 +182,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "GM": {
       "iso3": "GMB",
@@ -195,7 +195,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "CV": {
       "iso3": "CPV",
@@ -208,7 +208,7 @@
       "debt_gdp": null,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "CM": {
       "iso3": "CMR",
@@ -221,7 +221,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "GA": {
       "iso3": "GAB",
@@ -234,7 +234,7 @@
       "debt_gdp": null,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "CG": {
       "iso3": "COG",
@@ -247,7 +247,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "CD": {
       "iso3": "COD",
@@ -260,7 +260,7 @@
       "debt_gdp": 14.9,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "CF": {
       "iso3": "CAF",
@@ -273,7 +273,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "TD": {
       "iso3": "TCD",
@@ -286,7 +286,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "GQ": {
       "iso3": "GNQ",
@@ -299,7 +299,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "KE": {
       "iso3": "KEN",
@@ -312,7 +312,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "TZ": {
       "iso3": "TZA",
@@ -325,7 +325,7 @@
       "debt_gdp": null,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "UG": {
       "iso3": "UGA",
@@ -335,10 +335,10 @@
       "growth": 6.1,
       "growth_year": "2024",
       "inflation": 3.3,
-      "debt_gdp": 53.1,
+      "debt_gdp": 54.4,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "RW": {
       "iso3": "RWA",
@@ -351,7 +351,7 @@
       "debt_gdp": null,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "BI": {
       "iso3": "BDI",
@@ -364,7 +364,7 @@
       "debt_gdp": null,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SS": {
       "iso3": "SSD",
@@ -377,7 +377,7 @@
       "debt_gdp": null,
       "scoreAdj": -5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "ET": {
       "iso3": "ETH",
@@ -390,7 +390,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "DJ": {
       "iso3": "DJI",
@@ -403,7 +403,7 @@
       "debt_gdp": null,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "ER": {
       "iso3": "ERI",
@@ -416,7 +416,7 @@
       "debt_gdp": null,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SO": {
       "iso3": "SOM",
@@ -426,10 +426,10 @@
       "growth": 4.1,
       "growth_year": "2024",
       "inflation": 14.5,
-      "debt_gdp": 0,
+      "debt_gdp": 12.7,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SD": {
       "iso3": "SDN",
@@ -442,7 +442,7 @@
       "debt_gdp": null,
       "scoreAdj": -5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "ZA": {
       "iso3": "ZAF",
@@ -455,7 +455,7 @@
       "debt_gdp": 79.4,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "MZ": {
       "iso3": "MOZ",
@@ -468,7 +468,7 @@
       "debt_gdp": 71.8,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "ZW": {
       "iso3": "ZWE",
@@ -481,7 +481,7 @@
       "debt_gdp": null,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "ZM": {
       "iso3": "ZMB",
@@ -494,7 +494,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "BW": {
       "iso3": "BWA",
@@ -507,7 +507,7 @@
       "debt_gdp": null,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "NA": {
       "iso3": "NAM",
@@ -520,7 +520,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "MW": {
       "iso3": "MWI",
@@ -533,7 +533,7 @@
       "debt_gdp": 55.6,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "AO": {
       "iso3": "AGO",
@@ -546,7 +546,7 @@
       "debt_gdp": null,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "MG": {
       "iso3": "MDG",
@@ -555,11 +555,11 @@
       "gdp_year": "2024",
       "growth": 4.2,
       "growth_year": "2024",
-      "inflation": 9.9,
+      "inflation": 7.6,
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "MU": {
       "iso3": "MUS",
@@ -572,7 +572,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SC": {
       "iso3": "SYC",
@@ -585,7 +585,7 @@
       "debt_gdp": null,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "SZ": {
       "iso3": "SWZ",
@@ -598,7 +598,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "LS": {
       "iso3": "LSO",
@@ -611,7 +611,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "KM": {
       "iso3": "COM",
@@ -624,7 +624,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "MA": {
       "iso3": "MAR",
@@ -637,7 +637,7 @@
       "debt_gdp": null,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "TN": {
       "iso3": "TUN",
@@ -650,7 +650,7 @@
       "debt_gdp": null,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "EG": {
       "iso3": "EGY",
@@ -663,7 +663,7 @@
       "debt_gdp": null,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "DZ": {
       "iso3": "DZA",
@@ -676,7 +676,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     },
     "LY": {
       "iso3": "LBY",
@@ -689,7 +689,7 @@
       "debt_gdp": null,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-04-08T01:19:44.198Z"
+      "fetchedAt": "2026-04-13T07:47:15.745Z"
     }
   }
 }
