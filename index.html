@@ -4639,7 +4639,8 @@ function detectCountryInMessage(msg, excludeCode) {
   const sorted=[...COUNTRIES].sort((a,b)=>b.name.length-a.name.length);
   for(const c of sorted){
     if(c.code===excludeCode) continue;
-    if(m.includes(n_(c.name))||m.includes(c.code.toLowerCase())) return c;
+    // Only match full country names — never 2-letter codes (causes false positives)
+    if(m.includes(n_(c.name))) return c;
   }
   return null;
 }
@@ -4932,6 +4933,56 @@ function generateLocalResponse(message, focus) {
   const country = focus || 'le continent africain';
 
   // ── Smart country + intent detection ──────────────────────────
+  // ── HIGH-PRIORITY GLOBAL HANDLERS — run BEFORE country detection ──────────
+  // These topic queries must not be hijacked by incidental country-word matches
+
+  // ZLECAf / AfCFTA
+  if(msgN.includes('zlecaf')||msgN.includes('afcfta')||msgN.includes('zone de libre echange continentale')||msgN.includes('libre echange continental')||(msgN.includes('libre echange')&&msgN.includes('afrique'))||(msgN.includes('commerce')&&msgN.includes('continental')&&msgN.includes('afrique'))){
+    // Forward to ZLECAf handler below (duplicate inline for priority)
+    return generateLocalResponse.__zlecaf ? generateLocalResponse.__zlecaf(msg) : (() => {
+      // Full ZLECAf block — defined here for priority access
+      const n=n_;
+      return `🌍 ZLECAf — ZONE DE LIBRE-ÉCHANGE CONTINENTALE AFRICAINE\n════════════════════════════════════════\n\n📋 STATUT 2026 :\n  • Accord signé : 54/55 États UA (seul l'Érythrée absent)\n  • En vigueur : janvier 2021 | Phase opérationnelle : 2022-2030\n  • Secrétariat : Accra, Ghana | SG : Wamkele Mene (Afrique du Sud)\n  • Échanges intra-africains actuels : 15% (vs 65% Europe, 58% Asie)\n  • Objectif 2030 : doubler à 30% les échanges intra-africains\n\n💰 IMPACT MACROÉCONOMIQUE :\n  • +450 Mds USD/an à horizon 2035 (Banque Mondiale)\n  • 30 millions de personnes sorties de l'extrême pauvreté\n  • Réduction tarifs : de 16,8% moy → 0% sur 90% des lignes tarifaires\n\n🏭 SECTEURS PRIORITAIRES :\n  🌾 Agriculture : marché intégré $180Mds — élimination droits sur 90% produits\n  💊 Pharma : 42% médicaments produits localement d'ici 2030 (vs 3% aujourd'hui)\n  💻 Numérique : PAPSS paiements + protocole e-commerce\n  🏗️ Industrie : règles d'origine 35-60% → made in Africa\n\n🔗 CORRIDORS STRATÉGIQUES :\n  1. Abidjan-Lagos : 45 Mds USD/an | 5 pays\n  2. Casablanca-Le Caire : Route Atlantique-Méditerranée\n  3. Dar es Salaam-Lusaka : minerais DRC/ZM vers mer\n  4. Djibouti-Addis : 95% commerce éthiopien\n  5. LAPSSET : Kenya-Éthiopie-Soudan du Sud $24Mds\n\n⚠️ OBSTACLES 2026 :\n  • Règles d'origine non finalisées 30% des lignes tarifaires\n  • 42 devises différentes → risque change\n  • PAPSS adoption limitée (20% paiements intra-africains)\n  • Insécurité Sahel/Soudan bloque corridors terrestres\n\n💼 STRATÉGIE INVESTISSEUR :\n  1. Pays-hubs : CI, GH, MA, EG, KE, ET, ZA\n  2. Secteurs : transformation agri, pharma, logistique, fintech\n  3. Structure : holding multi-pays + SPV locaux (SARL OHADA ou Ltd)\n\n💬 "secteurs [pays]" · "corridor Abidjan-Lagos" · "verdict [pays]" · "codes commerciaux Afrique"`;
+    })();
+  }
+
+  // Microfinance / Mobile Money / Fintech continental
+  if((msgN.includes('microfinance')&&!msgN.match(/microfinance\s+\w{2,6}$/))
+    ||(msgN.includes('mobile money')&&msgN.includes('afrique'))
+    ||(msgN.includes('fintech')&&(msgN.includes('uemoa')||msgN.includes('afrique')||msgN.includes('cedeao')||msgN.includes('continental')))
+    ||msgN.includes('inclusion financiere')
+    ||msgN.includes('taux de bancarisation')
+    ||(msgN.includes('wave')&&msgN.includes('afrique'))
+    ||(msgN.includes('m-pesa')&&!msgN.match(/m-pesa\s+\w{2,}/))
+    ){
+    return `📱 MICROFINANCE & FINTECH EN AFRIQUE — ANALYSE WASI\n════════════════════════════════════════\n\n📊 CHIFFRES CLÉS 2024-2026 :\n  • 57% des adultes africains non-bancarisés (1,4 Md personnes)\n  • Mobile money : 835 Mds USD de transactions/an (+23% vs 2023)\n  • Afrique = 70% du volume mondial de mobile money\n  • 850+ fintechs actives sur le continent\n\n🏆 LEADERS MOBILE MONEY PAR ZONE :\n  Zone UEMOA (XOF) :\n  • Wave — frais 1% vs 3-5% Orange/MTN — 60M users UEMOA\n  • Orange Money — présent dans 17 pays africains\n  • MTN MoMo — 35M users Afrique de l'Ouest\n\n  Zone EAC (Kenya/Tanzanie) :\n  • M-Pesa (Safaricom) — 50M users, 50% PIB Kenya\n  • Airtel Money, T-Pesa (Tanzanie)\n\n  Zone Nigeria :\n  • PalmPay, OPay, Moniepoint — agentbanking explosif\n  • Flutterwave, Paystack — infrastructure B2B panafricaine\n\n🏗️ CADRE RÉGLEMENTAIRE :\n  • UEMOA : Instruction BCEAO 008-05-2015 — licences SFD 3 niveaux\n  • Nigeria : CBN Tier licensing PSB / MFB / PSSP\n  • Kenya : CBK Microfinance Act 2006 rév.2021\n  • CIREX = chambre règlement interprofessionnelle (WASI DEX connecté)\n\n💰 OPPORTUNITÉS INVESTISSEUR :\n  1. Agent banking rural — ticket $500K-5M, IRR 25-40%\n  2. Credit scoring IA sur données mobile\n  3. Assurance paramétrique agricole — gap $15Mds\n  4. PayTech B2B : TPE digitaux, facturation PME\n  5. BaaS (Banking-as-a-Service) — licence + API-first\n\n⚠️ RISQUES :\n  • Réglementation en mutation rapide\n  • NPL microfinance : 8-15% (élevé vs 2-3% banque)\n  • Guerre des prix : Wave 0% frais UEMOA\n\n💬 "cadre légal [pays]" · "secteur fintech [pays]" · "verdict [pays]"`;
+  }
+
+  // OHADA global (sans pays spécifique)
+  if(msgN.includes('ohada')&&!msgN.match(/ohada\s+\w{3,}/)){
+    return `⚖️ OHADA — ORGANISATION POUR L'HARMONISATION EN AFRIQUE DU DROIT DES AFFAIRES\n════════════════════════════════════════\n17 États membres : Bénin, BF, Cameroun, Centrafrique, Comores, Congo, Côte d'Ivoire, Gabon, Guinée, Guinée-Bissau, Guinée Éq., Mali, Niger, RDC*, Sénégal, Tchad, Togo\n\n📋 10 ACTES UNIFORMES :\n${OHADA_ACTES.map((a,i)=>`  ${i+1}. ${a}`).join('\n')}\n\n🏛️ INSTITUTIONS :\n  • CCJA Abidjan — juridiction suprême commerciale\n  • ERSUMA Porto-Novo — formation\n  • Secrétariat Yaoundé\n\n💼 AVANTAGES :\n  • SARL cap. min. 1 XOF | SAS, SA\n  • Injonction de payer inter-États\n  • Arbitrage CCJA exécutoire dans 17 États\n  • SYSCOHADA : plan comptable harmonisé\n\n💬 "cadre légal [pays]" · "code de commerce Afrique" · "droit des sociétés OHADA"`;
+  }
+
+  // Codes commerciaux africains (global)
+  if(typeof AFRICAN_CODES!=='undefined'){
+    const codeKwGlobal = ['code de commerce','droit commercial','acte de commerce','fonds de commerce','effets de commerce','cama ','petroleum industry act','companies act','startup act','code des assurances','cima ','oapi ','propriete intellectuelle','code foncier','marches publics','code travail','droit du travail','code bancaire','droit bancaire','arbitrage commercial','faillite','procedures collectives','redressement judiciaire','syscohada','syscoa','plan comptable','codes africains','cadres juridiques','legislation commerciale'];
+    const isGlobalCode = codeKwGlobal.some(kw=>msgN.includes(n_(kw)));
+    if(isGlobalCode){
+      // Try to extract country from message for context
+      const cc = (() => { const aliases={'maroc':'MA','nigeria':'NG','ghana':'GH','senegal':'SN','kenya':'KE','algerie':'DZ','egypte':'EG','tunisie':'TN','cameroun':'CM','gabon':'GA','côte d ivoire':'CI','cote d ivoire':'CI'}; for(const [k,v] of Object.entries(aliases)) if(msgN.includes(n_(k))) return v; return null; })();
+      return buildCodeReference(message, cc);
+    }
+  }
+
+  // Cadre légal/fiscal avec pays explicite — priorité avant détection 2 pays
+  if(msgN.includes('cadre legal')||msgN.includes('cadre reglementaire')||msgN.includes('cadre fiscal')||(msgN.includes('fiscal')&&(msgN.includes('cadre')||msgN.includes('regime')))){
+    const legalCountryCodes = {'maroc':'MA','nigeria':'NG','ghana':'GH','senegal':'SN','kenya':'KE','algerie':'DZ','egypte':'EG','tunisie':'TN','cameroun':'CM','gabon':'GA','guinee':'GN','mali':'ML','niger':'NE','burkina':'BF','benin':'BJ','togo':'TG','cote d ivoire':'CI','tanzanie':'TZ','ouganda':'UG','rwanda':'RW','ethiopie':'ET','afrique du sud':'ZA','seychelles':'SC','niger':'NE','mauritanie':'MR','angola':'AO','mozambique':'MZ','zimbabwe':'ZW','zambie':'ZM','namibie':'NA','mauritius':'MU','maurice':'MU'};
+    let lc=null; for(const [k,v] of Object.entries(legalCountryCodes)){ if(msgN.includes(n_(k))){ lc=COUNTRIES.find(x=>x.code===v); break; }}
+    if(lc) return buildLegalAnalysis(lc, typeof COUNTRY_LEGAL!=='undefined'?COUNTRY_LEGAL[lc.code]:null);
+  }
+
+  // ── END HIGH-PRIORITY HANDLERS ─────────────────────────────────────────────
+
   const focusedC = detectCountryInMessage(msg)||(window.currentCountry?COUNTRIES.find(x=>x.code===window.currentCountry):null);
   const secondC  = focusedC ? detectCountryInMessage(msg, focusedC.code) : null;
 
