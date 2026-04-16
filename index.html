@@ -1584,6 +1584,7 @@ input, select, textarea { font-family: inherit; outline: none; }
       <div class="chat-input-bar">
         <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." onkeydown="if(event.key==='Enter')sendChat()">
         <button class="chat-send" onclick="sendChat()">Envoyer</button>
+        <button onclick="clearChatHistory()" title="Effacer l'historique" style="padding:0 10px;background:none;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);cursor:pointer;font-size:.8rem;flex-shrink:0;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">🗑</button>
       </div>
     </div>
     <!-- Right: Composite + Country Detail -->
@@ -3649,6 +3650,8 @@ function initApp() {
   renderSMEmetteurs();
   renderSMPortfolio();
   // Compta & Banking: empty by default, loaded when documents are uploaded
+  // Restore chat history from previous session
+  restoreChatHistory();
   showNotif('Bienvenue sur la plateforme WASI. Mode demo actif.', 'success');
 }
 
@@ -4225,6 +4228,26 @@ function downloadCountryBrief(code) {
     '━━━ TOP 5 SECTEURS PORTEURS ━━━',
     topSec||'N/A',
     '',
+    '━━━ CADRE LÉGAL & FISCAL ━━━',
+    (function(){
+      var lg = (typeof COUNTRY_LEGAL!=='undefined') ? COUNTRY_LEGAL[c.code] : null;
+      if(!lg) return 'Données législatives non disponibles.';
+      return [
+        'Régime politique : '+lg.regime,
+        'Constitution     : '+lg.constitution,
+        'Système juridique: '+lg.legal_sys,
+        'OHADA            : '+(lg.ohada?'✅ Membre (10 Actes Uniformes)':'❌ Non-membre'),
+        'IS (sociétés)    : '+lg.is,
+        'TVA              : '+lg.tva,
+        'IRG (revenus)    : '+lg.irg,
+        'Zone monétaire   : '+lg.zone_monetaire,
+        'Code Investissem.: '+lg.invest,
+        'Législations clés: '+(lg.key||[]).join(' | '),
+        'Structure admin. : '+lg.admin,
+        'Point stratégique: '+lg.special,
+      ].join('\n');
+    })(),
+    '',
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     'Généré par WASI Intelligence — wasi-platform.github.io',
     'Source: WASI Index composite (ports + marchés publics + données sectorielles)',
@@ -4245,7 +4268,7 @@ function downloadCountryBrief(code) {
 function interrogateCurrentCountry() {
   var c = currentCountry ? COUNTRIES.find(function(x) { return x.code === currentCountry; }) : null;
   if (!c) return;
-  document.getElementById('chat-input').value = 'Analyse complète de ' + c.name + ' : opportunités d\'investissement, risques 2026, corridors commerciaux, secteurs porteurs. Donne des recommandations directes et actionnables.';
+  document.getElementById('chat-input').value = 'Verdict investissement ' + c.name + ' 2026 : faut-il investir ? Secteurs porteurs, risques, WACC, recommandation directe.';
   sendChat();
   var chatEl = document.querySelector('.intel-center');
   if (chatEl) setTimeout(function() { chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
@@ -4256,7 +4279,7 @@ function askAboutCurrentMobileCountry() {
   if (panel) panel.classList.remove('show');
   var c = currentCountry ? COUNTRIES.find(function(x) { return x.code === currentCountry; }) : null;
   if (!c) return;
-  document.getElementById('chat-input').value = 'Analyse complète de ' + c.name + ' : opportunités d\'investissement, risques 2026, corridors commerciaux, secteurs porteurs. Donne des recommandations directes et actionnables.';
+  document.getElementById('chat-input').value = 'Verdict investissement ' + c.name + ' 2026 : faut-il investir ? Secteurs porteurs, risques, WACC, recommandation directe.';
   sendChat();
   var chatEl = document.querySelector('.intel-center');
   if (chatEl) setTimeout(function() { chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 200);
@@ -4384,6 +4407,8 @@ async function sendChat() {
   // Push both turns AFTER the response is received
   chatHistory.push({role: 'user', content: msg});
   chatHistory.push({role: 'assistant', content: reply});
+  // Persist API history (last 20 turns) for context continuity
+  try { var h=chatHistory.slice(-20); localStorage.setItem('wasi_chat_history',JSON.stringify(h)); } catch(e) {}
   scrollChat();
 }
 
@@ -4404,6 +4429,15 @@ function appendChatMsg(text, role) {
   div.textContent = text;
   document.getElementById('chat-messages').appendChild(div);
   scrollChat();
+}
+
+function clearChatHistory() {
+  // Prefer wasi-ai-integration clearChatHistory if available (handles wasi_chat_history_v2)
+  if (typeof window.wasiClearChat === 'function') { window.wasiClearChat(); return; }
+  try { localStorage.removeItem('wasi_chat_history_v2'); } catch(e) {}
+  chatHistory = [];
+  var box = document.getElementById('chat-messages');
+  box.innerHTML = '<div class="chat-msg bot">Historique effacé. WASI Intelligence prêt.</div>';
 }
 
 function scrollChat() {
@@ -4442,6 +4476,17 @@ async function callWASIChat(message, countryFocus, history) {
       (r.fxRisk ? ', FX='+r.fxRisk : '');
   }).join('\n');
 
+  var legalCtxFocus = '';
+  if(focusC && typeof COUNTRY_LEGAL !== 'undefined' && COUNTRY_LEGAL[focusC.code]){
+    var lg = COUNTRY_LEGAL[focusC.code];
+    legalCtxFocus = '\nCADRE LÉGAL '+focusC.name+' : Régime='+lg.regime+' | Constitution='+lg.constitution+
+      ' | IS='+lg.is+' | TVA='+lg.tva+' | IRG='+lg.irg+
+      ' | OHADA='+(lg.ohada?'Oui':'Non')+' | Système='+lg.legal_sys+
+      ' | Invest='+lg.invest+' | ZoneMonétaire='+lg.zone_monetaire+
+      ' | Législations='+( lg.key||[]).join(', ')+
+      ' | '+lg.special;
+  }
+
   var focusCtx = focusC ? (
     '\n\n═══ PAYS EN FOCUS ACTIF : '+focusC.flag+' '+focusC.name+' ═══\n'+
     'Score WASI : '+focusC.score+'/100'+(focusC.coup?' — RÉGIME MILITAIRE':'')+'\n'+
@@ -4459,7 +4504,8 @@ async function callWASIChat(message, countryFocus, history) {
     (focusR.credit ? 'Signal Crédit WASI : '+focusR.credit+'\n' : '')+
     (focusR.wacc   ? 'WACC : '+focusR.wacc+'% ('+focusR.waccNote+')\n' : '')+
     (focusR.fxRisk ? 'Risque FX : '+focusR.fxRisk+' — '+focusR.fxNote+'\n' : '')+
-    (focusR.electionYear ? 'Prochaine élection : '+focusR.electionYear+'\n' : '')
+    (focusR.electionYear ? 'Prochaine élection : '+focusR.electionYear+'\n' : '')+
+    legalCtxFocus
   ) : '';
 
   var systemPrompt =
@@ -4884,18 +4930,63 @@ function generateLocalResponse(message, focus) {
   if(focusedC){
     const d=COUNTRY_DETAILS[focusedC.code]||{};
     const r=(window.COUNTRY_RISKS||{})[focusedC.code]||null;
+    // ── Short conversational answers ──
+    if((msgN.includes('score')||msgN.includes('note')||msgN.includes('indice')) && msg.split(' ').length<=8){
+      const rank=[...COUNTRIES].sort((a,b)=>b.score-a.score).findIndex(x=>x.code===focusedC.code)+1;
+      return `${focusedC.flag} ${focusedC.name} — Score WASI : ${focusedC.score}/100 (rang ${rank}/54)\n\nSignal crédit : ${(r||{}).credit||(focusedC.score>=70?'BB+':focusedC.score>=55?'B+':focusedC.score>=40?'B-':'CCC')} | WACC : ${(r||{}).wacc||Math.round(4.5+(100-focusedC.score)*0.25)}% | Risque : ${focusedC.risk||'N/A'}\n\nDemandez "Analyse complète" ou "Verdict investissement" pour plus de détails.`;
+    }
+    if((msgN.includes('capital')||msgN.includes('capitale')) && msg.split(' ').length<=8){
+      return `${focusedC.flag} ${focusedC.name} — Capitale : ${d.capital||'N/A'} | Centre économique : ${d.eco_center||d.capital||'N/A'}\nDevise : ${d.currency||'N/A'} | Président : ${d.president||'N/A'}`;
+    }
+    if((msgN.includes('president')||msgN.includes('chef')) && msg.split(' ').length<=8){
+      return `${focusedC.flag} ${focusedC.name} — Président : ${d.president||'N/A'}${focusedC.coup?' ⚠️ (régime militaire)':''}`;
+    }
     if(msgN.includes('wacc')||msgN.includes('cout du capital')||msgN.includes('actualisation')) return buildWACCAnalysis(focusedC,d,r);
     if((msgN.includes('secteur')&&!WASI_SECTORS.some(s=>s.keywords.some(kw=>msgN.includes(n_(kw)))))
       ||msgN.includes('ou investir')||msgN.includes('secteurs porteur')) return buildSectorAnalysis(focusedC,d,r);
     if(msgN.includes('pib')||msgN.includes('croissance')||msgN.includes('inflation')||msgN.includes('dette')||msgN.includes('macroeco')) return buildMacroAnalysis(focusedC,d);
-    if(msgN.includes('verdict')||msgN.includes('faut-il')||msgN.includes('faut il')||msgN.includes('recommand')) return buildInvestmentVerdict(focusedC,d,r);
-    if(msgN.includes('risque')&&!msgN.includes('sahel')) return buildRiskAnalysis(focusedC,d,r);
+    if(msgN.includes('verdict')||msgN.includes('faut-il')||msgN.includes('faut il')||msgN.includes('recommand')||msgN.includes('dois-je')||msgN.includes('vaut-il')||msgN.includes('rentable')||msgN.includes('opportunit')||msgN.includes('investir en')||msgN.includes('investir au')||msgN.includes('investir a ')||msgN.includes('faut investir')) return buildInvestmentVerdict(focusedC,d,r);
+    if(msgN.includes('risque')&&!msgN.includes('sahel')&&!(typeof WASI_SECTORS!=='undefined'&&WASI_SECTORS.some(s=>s.keywords.some(kw=>msgN.includes(n_(kw)))))) return buildRiskAnalysis(focusedC,d,r);
+    if(msgN.includes('legal')||msgN.includes('juridique')||msgN.includes('loi ')||msgN.includes('constitution')||msgN.includes('droit ')||msgN.includes('fiscal')||msgN.includes('impot')||msgN.includes(' is ')||msgN.includes('tva')||msgN.includes('irg')||msgN.includes('ohada')||msgN.includes('syscohada')||msgN.includes('code invest')||msgN.includes('legislation')||msgN.includes('code minier')||msgN.includes('code travail')||msgN.includes('regime polit')||msgN.includes('cadre legal')||msgN.includes('cadre reglementaire')||msgN.includes('code des impots')||msgN.includes('code fiscal')||msgN.includes('arbitrage')||msgN.includes('sarl')||msgN.includes('societe commerciale')) return buildLegalAnalysis(focusedC, typeof COUNTRY_LEGAL!=='undefined'?COUNTRY_LEGAL[focusedC.code]:null);
     // Specific sector inside country context
     if(typeof WASI_SECTORS!=='undefined'){
       const secMatch=WASI_SECTORS.find(s=>s.keywords.some(kw=>msgN.includes(n_(kw))));
       if(secMatch) return buildLocalSectorDive(secMatch, focusedC.code);
     }
     return buildDeepCountryAnalysis(focusedC,d);
+  }
+
+  // ── GLOBAL LEGAL / OHADA query (no country focus) ─────────────────────────
+  if(msgN.includes('ohada')&&!focusedC){
+    return `⚖️ OHADA — ORGANISATION POUR L'HARMONISATION EN AFRIQUE DU DROIT DES AFFAIRES
+════════════════════════════════════════
+17 États membres : Bénin, Burkina Faso, Cameroun, Centrafrique, Comores, Congo, Côte d'Ivoire, Gabon, Guinée, Guinée-Bissau, Guinée Équatoriale, Mali, Niger, RDC (partielle), Sénégal, Tchad, Togo
+
+📋 10 ACTES UNIFORMES EN VIGUEUR :
+${OHADA_ACTES.map((a,i)=>`  ${i+1}. ${a}`).join('\n')}
+
+🏛️ INSTITUTIONS OHADA :
+  • CCJA (Cour Commune de Justice et d'Arbitrage) — Abidjan : juridiction suprême commerciale
+  • ERSUMA (École Régionale) — Porto-Novo : formation juristes
+  • Secrétariat Permanent — Yaoundé
+
+💼 AVANTAGES INVESTISSEUR :
+  • Droit des sociétés unifié : SARL (cap. min. 1 XOF depuis 2014), SAS, SA
+  • Recouvrement transfrontalier : injonction de payer inter-États
+  • Arbitrage CCJA reconnu & exécutoire dans tous les États membres
+  • SYSCOHADA : plan comptable harmonisé (référence for audit/due diligence)
+
+💬 Demandez "cadre légal [pays]" pour l'analyse détaillée par pays`;
+  }
+
+  // ── GLOBAL CODES query — code de commerce, droit commercial, codes sectoriels ─
+  if(typeof AFRICAN_CODES!=='undefined'){
+    const codeKw = ['code de commerce','droit commercial','code des societes','droit des societes','acte de commerce','fonds de commerce','effets de commerce','cama ','pia ','petroleum industry act','companies act','startup act','finance act','code civil','obligations et contrats','doc maroc','code des assurances','cima ','oapi ','propriete intellectuelle','code minier','code foncier','marches publics','code travail','droit du travail','code bancaire','droit bancaire','arbitrage commercial','faillite','procedures collectives','redressement judiciaire','liquidation judiciaire','uemoa','cemac','beac ','bceao ','cobac','cosumaf','brvm ','bvmac','crepmf','eac ','sadc ','comesa','syscohada','syscoa','plan comptable','codes africains','cadres juridiques','legislation commerciale','legal framework','commercial law'];
+    const isCodeQuery = codeKw.some(kw=>msgN.includes(n_(kw)));
+    if(isCodeQuery){
+      const cc = focusedC ? focusedC.code : (countryCode||null);
+      return buildCodeReference(message, cc);
+    }
   }
 
   // ── SECTOR DETECTION — before topic blocks; skip if it's a specific query ─
@@ -4914,6 +5005,61 @@ function generateLocalResponse(message, focus) {
       );
       if(secMatch) return buildLocalSectorDive(secMatch, window.currentCountry||null);
     }
+  }
+
+  // WASI Ecosystem / Platform overview
+  if (msgN.includes('wasi ecosystem') || msgN.includes('ecosystem wasi') || msgN.includes('presentez wasi') || msgN.includes('presentation wasi') || msgN.includes('c\'est quoi wasi') || msgN.includes('c est quoi wasi') || (msgN.includes('wasi') && (msgN.includes('presentez') || msgN.includes('kesako') || msgN.includes('overview') || msgN.includes('qu\'est-ce que wasi') || msgN.includes('qu est ce que wasi')))) {
+    return `━━━ WASI — WHOLE AFRICAN STRATEGIC INTELLIGENCE ━━━
+
+🌍 VISION : La première plateforme d'intelligence économique intégrée dédiée à l'investissement et au commerce en Afrique. 54 pays. 14 secteurs. 5 modules interconnectés.
+
+━━━ LES 5 MODULES DE L'ÉCOSYSTÈME WASI ━━━
+
+1️⃣  WASI INTELLIGENCE (vous êtes ici)
+   IA économique africaine — 54 pays, 14 secteurs, corridors commerciaux
+   • Analyses pays : WACC, risque, macroéco, secteurs porteurs
+   • Corridors : Abidjan-Lagos, Dakar-Bamako, Mombasa-Kampala...
+   • BRVM, ETF WASI, signaux d'investissement
+   • Fonctionne hors ligne avec le moteur local WASI
+
+2️⃣  WASI DEX — Terminal de Change Décentralisé
+   Plateforme de change XOF/NGN/GHS sans intermédiaire bancaire
+   • Matching peer-to-peer instantané
+   • Taux de marché (vs taux bancaires + frais)
+   • 16 devises africaines supportées
+
+3️⃣  WASI STOCK MARKET — La Bourse Privée de l'Afrique
+   Système Multilatéral de Négociation (SMN) pour les PME africaines
+   • 3 compartiments : Venture / Growth / Premier
+   • PME cibles : 500M à 10 Mds FCFA de CA
+   • Cotations hebdomadaires (mercredi, fixing XOF/NGN/GHS)
+   • Gap adressé : 42 milliards USD/an de financement PME
+
+4️⃣  PRIVATE MARKET STUDIO — Studio d'Évaluation PME
+   Outil complet de scoring et de diagnostic financier
+   • WASI Score Report (6 axes : finance, secteur, gouvernance...)
+   • Prêt pour candidature au WASI Stock Market
+   • Benchmarks sectoriels intégrés (14 secteurs WASI)
+
+5️⃣  AFRITRADE BANK — Banque de l'Investissement Africain
+   Infrastructure bancaire intégrée à l'écosystème
+   • Comptes multi-devises (XOF, NGN, GHS, USD, EUR)
+   • Trade Finance pour le commerce intra-africain
+   • Carnet d'investisseurs pour le WASI Stock Market
+
+━━━ INDICATEURS CLÉS WASI 2026 ━━━
+📊 Couverture : 54 pays africains | 14 secteurs d'activité
+🏛️ Données : WASI Index composite (politique + économie + infra + juridique + humain + intégration)
+📅 WASI Stock Market : lancement T3 2027
+👤 Fondateur : Tarawendesida Thomas KABORE, FMVA — Ouagadougou, Burkina Faso
+🌐 Mission : Démocratiser l'intelligence économique africaine et connecter les capitaux aux opportunités
+
+━━━ QUESTIONS FRÉQUENTES ━━━
+• "Qu'est-ce que le WASI Stock Market ?" — détails de la bourse privée
+• "Analyse du Sénégal" — exemple d'analyse pays
+• "Secteur agriculture Afrique" — plongée sectorielle
+• "Analyse du corridor Abidjan-Lagos" — corridors commerciaux
+• "ETF WASI" — fonds d'investissement`;
   }
 
   // Corridor analysis
@@ -5130,8 +5276,8 @@ La continent africain compte 8 corridors principaux reliant 54 pays sur 5.1 mill
 └────────────────┴──────────┴──────────────────────────────┘`;
   }
 
-  // CFA / Currency
-  if (msg.includes('franc') || msg.includes('cfa') || msg.includes('monnaie') || msg.includes('devise') || msg.includes('change') || msg.includes('eco') || msg.includes('naira') || msg.includes('devaluation')) {
+  // CFA / Currency — note: 'eco' only matches standalone (ECOWAS currency), not 'ecosystem'
+  if (msg.includes('franc') || msg.includes('cfa') || msg.includes('monnaie') || msg.includes('devise') || (msg.includes('change') && (msg.includes('taux') || msg.includes('devises') || msg.includes('dollar') || msg.includes('euro') || msg.includes('forex'))) || /\beco\b/.test(msg) || msg.includes('naira') || msg.includes('devaluation')) {
     return `━━━ ANALYSE MONÉTAIRE — ZONE AFRIQUE ━━━
 
 💰 FRANC CFA (XOF) — ZONE UEMOA (8 pays)
@@ -6346,6 +6492,292 @@ c.score>=45?
 • Axe à améliorer : ${best[best.length-1]?best[best.length-1][0]+' ('+best[best.length-1][1]+')':'N/A'}
 
 💬 Demandez : "secteurs ${c.name}" · "risques ${c.name}" · "WACC ${c.name}" · "comparer ${c.name} vs [autre pays]"`;
+}
+
+/* ========== LEGAL & LEGISLATIVE INTELLIGENCE ========== */
+const COUNTRY_LEGAL = {
+  'DZ': { regime:'République présidentielle', constitution:'1996 rév.2020', is:'19%', tva:'19%', irg:'0-35%', ohada:false, legal_sys:'Civil law (fr) + droit musulman', invest:'Code Investissement 2022 — zones franches, exonérations 5-10 ans', key:['Code civil 1975','Code de commerce 1975','Code minier 2014 rév.2022','Loi Hydrocarbures 2019'], admin:'48 wilayas / 1541 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'DZD (Dinar algérien)', special:'Regel 51/49 assoupli secteurs non stratégiques (2020)' },
+  'AO': { regime:'République présidentielle', constitution:'2010 rév.2021', is:'25%', tva:'14%', irg:'10-25%', ohada:false, legal_sys:'Civil law (pt)', invest:'Lei do Investimento Privado 10/2018 — zones economicas especiais', key:['Code civil héritage portugais','Lei Petrolífera 2004 rév.2019','Lei das Minas 2011','Lei Cambial 2020'], admin:'18 províncias / 164 municípios', edu:'Licenciatura-Mestrado-Doutoramento', zone_monetaire:'AOA (Kwanza)', special:'Privatisations massives post-2017 (SONANGOL, TAAG, BPC)' },
+  'BJ': { regime:'République présidentielle (Rép.)', constitution:'1990 rév.2019', is:'30%', tva:'18%', irg:'10-45%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2020 — APIEX guichet unique, ZFI Glo-Djigbé', key:['Code minier 2006','Code foncier et domanial 2013','Code travail 1998 rév.2022','SYSCOHADA'], admin:'12 départements / 77 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'Zone Franche Industrielle Glo-Djigbé (GDIZ) — textile, agroalimentaire' },
+  'BW': { regime:'République parlementaire', constitution:'1966 rév.2006', is:'22%', tva:'14%', irg:'0-25%', ohada:false, legal_sys:'Roman-Dutch + Common law', invest:'Investment Promotion Act 2018 — BITC guichet unique', key:['Companies Act 2003','Mines and Minerals Act 1977 rév.2022','Employment Act','Botswana Innovation Hub Act 2013'], admin:'10 districts / 57 sous-districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'BWP (Pula)', special:'Score gouvernance #1 Afrique sub-saharienne (Mo Ibrahim 2024)' },
+  'BF': { regime:'Transition militaire (AES)', constitution:'1991 + Charte transition 2024', is:'27.5%', tva:'18%', irg:'10-25%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2018 — régimes préférentiels sectoriels', key:['Code minier 2015 rév.2024','Code général des impôts 2010 rév.2023','Code foncier rural 2012','SYSCOHADA'], admin:'13 régions / 45 provinces / 351 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'Sortie AES (Alliance Sahel) — instabilité sécuritaire majeure 2024-2026' },
+  'BI': { regime:'République présidentielle (autoritaire)', constitution:'2018', is:'30%', tva:'18%', irg:'0-35%', ohada:false, legal_sys:'Civil law (fr/be)', invest:'Code Investissements 2014 — exonérations limitées', key:['Code du commerce 2010','Code minier 2013','Code foncier 1986 rév.2011','Code travail 2020'], admin:'18 provinces / 119 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'BIF (Franc burundais)', special:'Risque pays très élevé — sanctions UE partiellement levées 2024' },
+  'CM': { regime:'République présidentielle (Rép.)', constitution:'1972 rév.2008', is:'33%', tva:'19.25%', irg:'10-38.5%', ohada:true, legal_sys:'Bijuridique civil+common law + OHADA', invest:'Charte Investissements 2002 + Lois incitatives sectorielles', key:['Code minier 2016 rév.2020','Code pétrolier 1999 rév.2019','Loi PPP 2006 rév.2020','SYSCOHADA'], admin:'10 régions / 58 départements / 360 arrondissements', edu:'Dual: LMD (fr) + Degree (en)', zone_monetaire:'XAF (BEAC/CEMAC)', special:'Seul pays bijuridique Afrique — système civil+common law coexistants' },
+  'CV': { regime:'République semi-présidentielle', constitution:'1992 rév.2010', is:'25%', tva:'15%', irg:'16.5-24%', ohada:false, legal_sys:'Civil law (pt)', invest:'Code Investissements 2016 — Zones Económicas Especiais', key:['Code commercial 2004','Loi sur les PPP 2015','Code du travail 2007 rév.2020'], admin:'22 municípios', edu:'Licenciatura-Mestrado-Doutoramento', zone_monetaire:'CVE (Escudo cap-verdien)', special:'Gateway Atlantique — AICEP, hub logistique entre Afrique/Europe/Amériques' },
+  'CF': { regime:'République présidentielle (transition)', constitution:'2016 rév.2023', is:'30%', tva:'19%', irg:'0-50%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2019 — avantages miniers', key:['Code minier 2009 rév.2020','Code forestier 2008','Code travail 2009','SYSCOHADA'], admin:'16 préfectures / 73 sous-préfectures', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XAF (BEAC/CEMAC)', special:'Opération militaire Wagner (GRD) — risque sécuritaire critique' },
+  'TD': { regime:'Transition militaire présidentielle', constitution:'Charte transition 2021 + Const.2024', is:'35%', tva:'18%', irg:'20-60%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Charte Investissements 2018 — avantages pétroliers et miniers', key:['Code pétrolier 2007 rév.2021','Code minier 2019','Code foncier et domanial 2022','SYSCOHADA'], admin:'23 provinces / 57 départements', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XAF (BEAC/CEMAC)', special:'Transition post-Déby — élections prévues; pétrole = 80% recettes export' },
+  'KM': { regime:'République fédérale islamique', constitution:'2018 (Union)', is:'35%', tva:'10%', irg:'0-30%', ohada:true, legal_sys:'Civil law + droit islamique', invest:'Code Investissements 2007 — Zone Franche de Fomboni', key:['Code du commerce 2001','Code travail 2012','Loi foncière 2014','SYSCOHADA'], admin:'3 îles autonomes (Grande Comore, Anjouan, Mohéli)', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'KMF (Franc comorien)', special:'Zone Franche de Fomboni (île de Mohéli) — exonérations 15 ans' },
+  'CG': { regime:'République présidentielle', constitution:'2015', is:'30%', tva:'18.9%', irg:'1-45%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Charte des Investissements 2019 — régimes pétrolier et minier', key:['Code pétrolier 2016','Code minier 2005 rév.2021','Code foncier 2004','SYSCOHADA'], admin:'12 départements / 86 districts', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XAF (BEAC/CEMAC)', special:'Pétrole = 65% PIB — très exposé aux chocs cours; programme FMI actif' },
+  'CD': { regime:'République semi-présidentielle', constitution:'2006 rév.2011', is:'35%', tva:'16%', irg:'3-40%', ohada:false, legal_sys:'Civil law (be) + droit coutumier', invest:'Code Investissements 2002 rév.2021 — régime minier OHADA-compatible', key:['Code minier 2002 rév.2018','Code forestier 2002','Code pétrolier 2015','Code travail 2016'], admin:'26 provinces / 145 territoires', edu:'Graduat-Licence-Master-Doctorat', zone_monetaire:'CDF (Franc congolais)', special:'Potentiel minier exceptionnel: cobalt (#1 mondial), coltan, diamant, cuivre' },
+  'CI': { regime:'République présidentielle (IIIe Rép.)', constitution:'2016 rév.2020', is:'25%', tva:'18%', irg:'2-36%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Ord.2018-646 Zones franches industrielles — CEPICI guichet unique', key:['Code foncier rural 98-750','Code minier 2014 rév.2019','Code électoral 2020','SYSCOHADA'], admin:'14 districts / 31 régions / 108 dép / 201 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'Hub économique CEDEAO (#1 UEMOA PIB) — gateway Afrique de l\'Ouest' },
+  'DJ': { regime:'République présidentielle', constitution:'1992 rév.2010', is:'25%', tva:'10%', irg:'2-30%', ohada:false, legal_sys:'Civil law (fr) + droit islamique', invest:'Code Investissements 2017 — PAID guichet unique, zones franches portuaires', key:['Code du commerce 2009','Code du travail 2006','Code foncier 2009','Loi zones franches 2004'], admin:'6 régions / 8 districts', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'DJF (Franc djiboutien, ancré USD)', special:'Hub logistique Corne d\'Afrique — Doraleh port + Zone Franche' },
+  'EG': { regime:'République présidentielle', constitution:'2014 rév.2019', is:'22.5%', tva:'14%', irg:'0-25%', ohada:false, legal_sys:'Civil law (fr/it influence)', invest:'Loi Investissement 72/2017 — GAFI guichet unique, zones économiques spéciales', key:['Companies Law 159/1981 rév.2023','Mining Law 198/2014','Labor Law 12/2003','New Administrative Capital SEZ Act'], admin:'27 gouvernorats', edu:'Licence 4 ans + Master + Doctorat', zone_monetaire:'EGP (Livre égyptienne)', special:'SEZ Canal de Suez — plus grande zone économique spéciale d\'Afrique (460 km²)' },
+  'GQ': { regime:'République présidentielle (autoritaire)', constitution:'2012 rév.2024', is:'35%', tva:'15%', irg:'0-35%', ohada:true, legal_sys:'Civil law (es) + OHADA', invest:'Loi Investissements 2014 — avantages pétroliers', key:['Loi pétrolière 2006 rév.2020','Code minier 2007','Code du travail 2012','SYSCOHADA'], admin:'8 provinces / 30 districts', edu:'Licenciatura-Máster-Doctorado', zone_monetaire:'XAF (BEAC/CEMAC)', special:'Pétrole = 70% PIB (en déclin 2020-2026) — transition vers diversification' },
+  'ER': { regime:'État-parti (PFDJ) — sans constitution effective', constitution:'1997 (jamais appliquée)', is:'30%', tva:'N/A', irg:'2-30%', ohada:false, legal_sys:'Civil law (it) + coutumier', invest:'Investment Proclamation 59/1994 rév.2020 — restrictions multiples', key:['Mining Law 2018','Land Proclamation 1994','Labor Law 2001'], admin:'6 régions / 58 sous-régions', edu:'Diplôme-Licence (système fragmenté)', zone_monetaire:'ERN (Nakfa)', special:'Économie la plus fermée d\'Afrique — aucun investissement étranger de portfolio' },
+  'ET': { regime:'République fédérale démocratique', constitution:'1995', is:'30%', tva:'15%', irg:'0-35%', ohada:false, legal_sys:'Civil law (fr) + droit coutumier fédéral', invest:'Investment Proclamation 1180/2020 — Ethiopian Investment Commission', key:['Commercial Code 2021 (nouveau)','Mining Proclamation 816/2013 rév.2021','Labour Proclamation 1156/2019','Industrial Parks Proclamation 886/2015'], admin:'12 états régionaux + 2 villes fédérales (Addis, Dire Dawa)', edu:'Degree-Masters-PhD (mixte)', zone_monetaire:'ETB (Birr éthiopien)', special:'Industrial Parks SEZ: Hawassa, Bole Lemi, Mekele — hub textile/manufacturing' },
+  'GA': { regime:'Transition militaire (CTRI)', constitution:'Acte fondamental CTRI 2023', is:'30%', tva:'18%', irg:'5-35%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 1998 rév.2021 — régimes pétrolier et forestier', key:['Code pétrolier 2014','Code des investissements 2021','Code forestier 2001 rév.2022','SYSCOHADA'], admin:'9 provinces / 50 départements', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XAF (BEAC/CEMAC)', special:'Transition post-Bongo — processus de normalisation institutionnelle 2024-2025' },
+  'GM': { regime:'République présidentielle', constitution:'1997 rév.2018', is:'27%', tva:'15%', irg:'0-35%', ohada:false, legal_sys:'Common law (gb)', invest:'Investment Act 2019 — GIEPA guichet unique', key:['Companies Act 1955 rév.2022','Land (Compensation and Allocation) Act','Labour Act 2007'], admin:'5 régions + Banjul (capitale)', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'GMD (Dalasi)', special:'Tourisme + arachides — marché faible (2.5M hab.) mais stabilité politique améliorée' },
+  'GH': { regime:'République présidentielle', constitution:'1992 rév.2002', is:'25%', tva:'15%', irg:'0-30%', ohada:false, legal_sys:'Common law (gb)', invest:'Ghana Investment Promotion Centre Act 2013 — GIPC guichet unique', key:['Companies Act 2019','Minerals and Mining Act 2006 rév.2019','Petroleum (Exploration and Production) Act 2016','Ghana Export Processing Zones Act 1995'], admin:'16 régions / 261 districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'GHS (Cedi)', special:'Standard de référence démocratie Afrique Ouest — 2 alternances pacifiques; hub tech Accra' },
+  'GN': { regime:'Transition militaire (CNRD)', constitution:'Charte fondamentale 2021', is:'35%', tva:'18%', irg:'2-40%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2015 — Guichet Unique Investissements', key:['Code minier 2011 rév.2022 (Simandou)','Code forestier 2019','Code du travail 2014 rév.2022','SYSCOHADA'], admin:'7 régions + Conakry / 33 préfectures', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'GNF (Franc guinéen)', special:'Simandou: plus grand gisement fer mondial inexploité — $20Mds investissement en cours' },
+  'GW': { regime:'République semi-présidentielle', constitution:'1984 rév.1993', is:'25%', tva:'19%', irg:'10-40%', ohada:true, legal_sys:'Civil law (pt) + OHADA', invest:'Code Investissements 2011 — CEPIL', key:['Code du commerce 2014','Code minier 2008','Code foncier 2011'], admin:'9 régions / 37 secteurs', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'Noix de cajou = 85% exports — instabilité institutionnelle chronique' },
+  'KE': { regime:'République présidentielle (gouvernement dévolu)', constitution:'2010', is:'30%', tva:'16%', irg:'10-35%', ohada:false, legal_sys:'Common law (gb)', invest:'Investment Promotion Act 2004 rév.2022 — KenInvest', key:['Companies Act 2015','Mining Act 2016','Employment Act 2007','Special Economic Zones Act 2015'], admin:'47 comtés', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'KES (Shilling kényan)', special:'Hub FinTech Afrique de l\'Est (M-Pesa, Safaricom) — Nairobi Silicon Savannah' },
+  'LS': { regime:'Monarchie constitutionnelle (Basotho)', constitution:'1993 rév.2011', is:'25%', tva:'15%', irg:'20-35%', ohada:false, legal_sys:'Roman-Dutch + Common law + droit coutumier', invest:'Basotho Enterprises Development Corporation Act — LNDC', key:['Companies Act 2011','Mines and Minerals Act 2005','Labour Code 1992 rév.2003'], admin:'10 districts / 128 circonscriptions', edu:'Degree-Masters-PhD (southern African system)', zone_monetaire:'LSL (Loti, ancré ZAR)', special:'Enclavé dans Afrique du Sud — AGOA bénéficiaire textile, eau (Lesotho Highlands Water Project)' },
+  'LR': { regime:'République présidentielle', constitution:'1986 rév.2013', is:'25%', tva:'10%', irg:'0-25%', ohada:false, legal_sys:'Civil law (us) + Common law', invest:'Investment Act 2010 — LIPA', key:['Revenue Code 2011 rév.2021','Mineral and Mining Law 2014','Labor Law 2015'], admin:'15 comtés', edu:'Degree-Masters (US system)', zone_monetaire:'LRD (Dollar libérien) + USD circulant', special:'Liberia Maritime Registry — 3e plus grand registre navires au monde (pavillon de complaisance)' },
+  'LY': { regime:'Gouvernement de transition (GUN + HoR)', constitution:'Déclaration Constitutionnelle 2011 (contestée)', is:'20%', tva:'0%', irg:'0%', ohada:false, legal_sys:'Civil law (it/fr) + droit islamique', invest:'Loi Investissements 9/2010 (partiellement applicable)', key:['Code du commerce','Loi pétrolière 25/1955 rév.2019 (NOC)'], admin:'Statut territorial contesté — 22 districts de facto', edu:'Licence-Master-Doctorat (système fragmenté)', zone_monetaire:'LYD (Dinar libyen)', special:'Guerre civile latente — pétrole géré par NOC (accord fragile GUN/HoR); réserves pétrole #1 Afrique' },
+  'MG': { regime:'République présidentielle (IVe Rép.)', constitution:'2010 rév.2021', is:'20%', tva:'20%', irg:'0-25%', ohada:false, legal_sys:'Civil law (fr) + droit coutumier', invest:'Code des Investissements 2007 rév.2020 — EDBM guichet unique', key:['Loi minière 2021','Code forestier 2015','Code du travail 2003 rév.2020','Code maritime 2014'], admin:'6 provinces / 22 régions / 119 districts', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'MGA (Ariary malgache)', special:'Biodiversité unique (90% endémisme) + terres rares + ilménite — forte pression environnementale' },
+  'MW': { regime:'République présidentielle', constitution:'1994 rév.2017', is:'30%', tva:'16.5%', irg:'0-35%', ohada:false, legal_sys:'Common law (gb)', invest:'Malawi Investment and Trade Centre Act 2012', key:['Companies Act 2013','Mines and Minerals Act 2019','Labour Relations Act 1996 rév.2022'], admin:'3 régions / 28 districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'MWK (Kwacha malawite)', special:'Tabac = 55% exports — diversification vers uranium, tourisme (Lac Malawi)' },
+  'ML': { regime:'Transition militaire (AES)', constitution:'Charte transition 2021 + Const.2023', is:'30%', tva:'18%', irg:'10-40%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2012 rév.2022 — API-Mali', key:['Code minier 2019 rév.2023','Code pétrolier 2004 rév.2023','Code foncier et domanial 2017 rév.2022','SYSCOHADA'], admin:'20 régions (dont 2 nouvelles) / 49 cercles / 703 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'AES — refonte code minier 2023 pour augmenter royalties État; or = 70% exports' },
+  'MR': { regime:'République islamique présidentielle', constitution:'1991 rév.2017', is:'25%', tva:'18%', irg:'0-40%', ohada:true, legal_sys:'Civil law + droit islamique + OHADA', invest:'Code Investissements 2012 rév.2021 — Guichet Unique APIM', key:['Code minier 2008 rév.2023','Code pétrolier 2010 rév.2021 (GTA Grand Tortue Ahmeyim)','Code du travail 2004','SYSCOHADA'], admin:'15 régions / 56 moughataas', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'MRU (Ouguiya mauritanien)', special:'GTA LNG field (Mauritanie/Sénégal) opérationnel 2024 — major LNG producer émergent' },
+  'MU': { regime:'République parlementaire', constitution:'1968 rév.1992', is:'15%', tva:'15%', irg:'10-15%', ohada:false, legal_sys:'Civil law (fr) + Common law (gb) hybride', invest:'Investment Promotion Act 2000 rév.2019 — EDB guichet unique', key:['Companies Act 2001 rév.2022','Income Tax Act 1995 rév.2023','Financial Services Act 2007','Freeport Act 2004'], admin:'9 districts / 3 dépendances (Rodrigues, Agaléga, St.Brandon)', edu:'Degree-Masters-PhD (UK+fr hybride)', zone_monetaire:'MUR (Roupie mauricienne)', special:'IFI #1 Afrique — hub financier offshore, traités DTA avec 46 pays; Freeport Port-Louis' },
+  'MA': { regime:'Monarchie constitutionnelle (Rép. Islam.)', constitution:'2011', is:'31%', tva:'20%', irg:'10-38%', ohada:false, legal_sys:'Civil law (fr) + droit islamique', invest:'Charte Investissements 2022 — AMDIE, Régions SEZ, C2D France', key:['Code général des impôts 2023','Code du commerce 2019','Loi mines 33-13 2015 rév.2021','Code travail 65-99 2003 rév.2022'], admin:'12 régions / 75 provinces et préfectures / 1503 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'MAD (Dirham marocain)', special:'Hub Atlantique — accès CEDEAO potentiel, hub aérien RAM, Casablanca Finance City' },
+  'MZ': { regime:'République présidentielle', constitution:'2004 rév.2018', is:'32%', tva:'17%', irg:'10-32%', ohada:false, legal_sys:'Civil law (pt)', invest:'Lei do Investimento 3/1993 rév.2018 — APIEX', key:['Lei de Minas 14/2002 rév.2014','Código Comercial 2005','Código do Trabalho 2007 rév.2020','Lei de PPP 15/2011'], admin:'11 províncias / 154 distritos', edu:'Licenciatura-Mestrado-Doutoramento', zone_monetaire:'MZN (Metical)', special:'LNG Rovuma (TotalEnergies, ENI) — réserves gaz #3 Afrique mais insécurité Cabo Delgado' },
+  'NA': { regime:'République présidentielle', constitution:'1990 rév.2014', is:'32%', tva:'15%', irg:'0-37%', ohada:false, legal_sys:'Roman-Dutch + Common law (mixte)', invest:'Foreign Investment Act 1990 rév.2022 — NIPDB', key:['Companies Act 2004 rév.2019','Minerals (Prospecting and Mining) Act 1992 rév.2020','Labour Act 2007'], admin:'14 régions / 121 circonscriptions', edu:'Degree-Masters-PhD (southern African system)', zone_monetaire:'NAD (Dollar namibien, ancré ZAR)', special:'Uranium #3 mondial + diamants offshore + hydrogène vert (projet Hyphen H2)' },
+  'NE': { regime:'Transition militaire (CNSP)', constitution:'Charte transition 2023', is:'30%', tva:'19%', irg:'5-35%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2019 — API Niger', key:['Code minier 2006 rév.2021 (uranium, pétrole)','Code pétrolier 2007','Code rural 1993 rév.2019','SYSCOHADA'], admin:'8 régions / 63 départements / 265 communes', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'AES — uranium (ORANO/Areva) + pétrole (CNPC); pipeline Agadem-Sème opérationnel 2024' },
+  'NG': { regime:'République fédérale présidentielle', constitution:'1999 rév.2023', is:'30%', tva:'7.5%', irg:'7-24%', ohada:false, legal_sys:'Common law (gb) fédéral + États (common/coutumier/sharia)', invest:'Nigerian Investment Promotion Commission Act 1995 rév.2020 — NIPC', key:['Companies and Allied Matters Act 2020','Petroleum Industry Act 2021','Startup Act 2022','Finance Act 2023'], admin:'36 États + FCT Abuja / 774 LGAs', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'NGN (Naira)', special:'#1 PIB Afrique — Petroleum Industry Act 2021 refonde secteur pétrolier; Lagos = capital fintech Afrique' },
+  'RW': { regime:'République présidentielle', constitution:'2003 rév.2015', is:'30%', tva:'18%', irg:'0-30%', ohada:false, legal_sys:'Common law (gb) — a rejoint Commonwealth 2009', invest:'Investment Code 2015 rév.2021 — RDB guichet unique', key:['Companies Law 2009 rév.2021','Mining Law 2018','Labour Law 2018','Special Economic Zones Law 2021'], admin:'5 provinces / 30 districts / 416 secteurs', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'RWF (Franc rwandais)', special:'Doing Business #2 Afrique — hub tech Kigali, MICE, KCC; ambition Singapore of Africa' },
+  'ST': { regime:'République semi-présidentielle', constitution:'1990 rév.2003', is:'25%', tva:'15%', irg:'13-25%', ohada:true, legal_sys:'Civil law (pt) + OHADA', invest:'Code Investissements 2006 rév.2020 — APCI', key:['Code du commerce 2004','Code du travail 2004 rév.2019','Code foncier 1992 rév.2015','SYSCOHADA'], admin:'2 provinces autonomes (São Tomé + Príncipe) / 7 concelhos', edu:'Licenciatura-Mestrado', zone_monetaire:'STN (Dobra, ancré EUR)', special:'Pétrole offshore (blocs potentiels non encore exploités) + cacao premium + tourisme' },
+  'SN': { regime:'République présidentielle (Rép.)', constitution:'2001 rév.2016', is:'30%', tva:'18%', irg:'0-40%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2004 rév.2021 — APIX guichet unique', key:['Code minier 2003 rév.2016','Code pétrolier 2019 (Sangomar, GTA)','Code du travail 1997 rév.2023','SYSCOHADA'], admin:'14 régions / 45 départements / 113 arrondissements', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'Sangomar oil (Woodside) + GTA LNG — transition vers pays pétrolier/gazier 2024-2026' },
+  'SL': { regime:'République présidentielle', constitution:'1991 rév.2013', is:'30%', tva:'15%', irg:'0-30%', ohada:false, legal_sys:'Common law (gb)', invest:'Sierra Leone Investment and Export Promotion Agency Act 2014', key:['Mines and Minerals Act 2009 rév.2023','Companies Act 2009','Labour Law 2023'], admin:'5 régions / 16 districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'SLL (Leone sierra-léonais)', special:'Diamants + fer (Tonkolili 2024 restart) + rutile #1 mondial' },
+  'SO': { regime:'République fédérale (en reconstruction)', constitution:'2012 (provisoire)', is:'10%', tva:'5%', irg:'N/A', ohada:false, legal_sys:'Civil law fragmenté + droit islamique + coutumier', invest:'Investment Act 2019 — cadre très limité', key:['Petroleum Law 2020','Fishing Act 2014'], admin:'18 régions fédérales + Puntland + Jubaland + Somaliland (auto-proclamé)', edu:'Système fragmenté', zone_monetaire:'SOS (Shilling somalien) + USD', special:'Reconstruction post-conflit — pêche + pétrole offshore (exploration); risque souverain extrême' },
+  'ZA': { regime:'République parlementaire (ANC-led coalition)', constitution:'1996 rév.2012', is:'28%', tva:'15%', irg:'18-45%', ohada:false, legal_sys:'Common law (gb/nl) + droit coutumier', invest:'Investment Act 2022 — InvestSA, ZEZs spéciales', key:['Companies Act 2008 rév.2021','Mineral and Petroleum Resources Development Act 2002 rév.2023','Labour Relations Act 1995 rév.2022','National Credit Act 2005'], admin:'9 provinces / 257 municipalités', edu:'Degree (3 ans) + Honours + Masters + PhD', zone_monetaire:'ZAR (Rand)', special:'#2 PIB Afrique — JSE = bourse #1 Afrique, infrastructure financière régionale benchmark' },
+  'SS': { regime:'République présidentielle (conflit)', constitution:'2011 rév.2015 (Accord de paix R-ARCSS)', is:'20%', tva:'N/A', irg:'N/A', ohada:false, legal_sys:'Common law (gb) + coutumier', invest:'Investment Act 2009 — très limité en pratique', key:['Petroleum Act 2012','Land Act 2009'], admin:'10 états / 79 comtés', edu:'Système fragmenté post-conflit', zone_monetaire:'SSP (Livre sud-soudanaise)', special:'Pétrole = 95% recettes État — guerre civile latente; hyperinflation chronique' },
+  'SD': { regime:'Conseil de souveraineté (transition militaro-civile)', constitution:'Document constitutionnel 2019 (suspendu 2021)', is:'35%', tva:'17%', irg:'0-20%', ohada:false, legal_sys:'Civil law (eg) + droit islamique (Sharia)', invest:'Investment Encouragement Act 2013 (partiellement applicable)', key:['Mining Act 2015 rév.2022','Petroleum Act 1998 rév.2021','Companies Act 2015'], admin:'18 états', edu:'Licence (4 ans) + Master + Doctorat', zone_monetaire:'SDG (Livre soudanaise)', special:'Conflit militaro-RSF 2023-2026 — économie quasi à l\'arrêt; or = premier export' },
+  'SZ': { regime:'Monarchie absolue (Mbargane)', constitution:'2005 rév.2015', is:'27.5%', tva:'15%', irg:'20-33%', ohada:false, legal_sys:'Roman-Dutch + Common law + droit coutumier swazi', invest:'Investment Promotion Act 1998 rév.2018 — SIPA', key:['Companies Act 2009','Minerals Act 2011','Employment Act 1980 rév.2019'], admin:'4 tinkhundla regions / 59 tinkhundla', edu:'Degree-Masters (southern African system)', zone_monetaire:'SZL (Lilangeni, ancré ZAR)', special:'AGOA bénéficiaire textile — monarchie absolue; marché très petit (1.2M hab.)' },
+  'TZ': { regime:'République présidentielle (Union TZ-Zanzibar)', constitution:'1977 rév.1984', is:'30%', tva:'18%', irg:'9-30%', ohada:false, legal_sys:'Common law (gb)', invest:'Tanzania Investment Act 1997 rév.2022 — TIC', key:['Companies Act 2002 rév.2019','Mining Act 2010 rév.2023','Employment and Labour Relations Act 2004','EPZ Act 2002'], admin:'31 régions (26 Tanzanie mainland + 5 Zanzibar) / 185 districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'TZS (Shilling tanzanien)', special:'Gold + tanzanite + gaz naturel offshore (LNG TPDC/Shell retardé) + tourisme Serengeti/Kili' },
+  'TG': { regime:'République présidentielle', constitution:'1992 rév.2024 (présidence à vie possible)', is:'29%', tva:'18%', irg:'1-45%', ohada:true, legal_sys:'Civil law + OHADA', invest:'Code Investissements 2012 rév.2023 — CEPICI Togo', key:['Code minier 2011 rév.2023','Code portuaire 2017','Code du travail 2021','SYSCOHADA'], admin:'6 régions / 39 préfectures', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'XOF (BCEAO)', special:'Port Lomé hub transbordement Afrique Ouest + phosphates + zone franche Togo (SAZOF)' },
+  'TN': { regime:'République présidentielle (Constitution 2022)', constitution:'2022 (hyper-présidentialiste)', is:'15%', tva:'19%', irg:'0-35%', ohada:false, legal_sys:'Civil law (fr) + droit islamique', invest:'Code Investissements 2016 rév.2023 — FIPA Tunisie', key:['Code des sociétés commerciales 2000 rév.2022','Code minier 2003 rév.2021','Code du travail 1966 rév.2022','Loi PPP 2015'], admin:'24 gouvernorats / 264 délégations', edu:'Licence-Master-Doctorat (LMD)', zone_monetaire:'TND (Dinar tunisien)', special:'Offshore financier + textile (protocole Euromed) + tourisme + phosphates + transition énergétique EU' },
+  'UG': { regime:'République présidentielle', constitution:'1995 rév.2017', is:'30%', tva:'18%', irg:'10-40%', ohada:false, legal_sys:'Common law (gb)', invest:'Uganda Investment Authority Act 2019', key:['Companies Act 2012 rév.2022','Mining Act 2003 rév.2021','Employment Act 2006','Petroleum (Exploration, Dev. & Prod.) Act 2013'], admin:'146 districts / 1382 sous-comtés', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'UGX (Shilling ougandais)', special:'EACOP (East Africa Crude Oil Pipeline) — pétrole Lac Albert; café + Nile sourcing' },
+  'ZM': { regime:'République présidentielle', constitution:'2016 rév.2021', is:'30%', tva:'16%', irg:'0-37.5%', ohada:false, legal_sys:'Common law (gb)', invest:'Zambia Development Agency Act 2006 rév.2022 — ZDA', key:['Companies Act 2017','Mines and Minerals Development Act 2015 rév.2023','Employment Code Act 2019'], admin:'10 provinces / 116 districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'ZMW (Kwacha zambien)', special:'Cuivre = 70% exports (#2 Afrique après DRC) + cobalt; restructuration dette FMI 2023' },
+  'ZW': { regime:'République présidentielle', constitution:'2013 rév.2021', is:'25%', tva:'15%', irg:'20-40%', ohada:false, legal_sys:'Roman-Dutch + Common law (mixte)', invest:'Zimbabwe Investment and Development Agency Act 2020 — ZIDA', key:['Companies and Other Business Entities Act 2019','Mines and Minerals Act 1961 rév.2022','Labour Act 1985 rév.2023','Indigenisation Act 2007 rév.2021'], admin:'10 provinces / 2 municipalities (Harare, Bulawayo)', edu:'Degree-Masters-PhD (southern African system)', zone_monetaire:'ZiG (Zimbabwe Gold, 2024)', special:'Lithium #1 Afrique (réserves) + platine + chrome; ZiG nouvelle monnaie 2024 pour stopper hyperinflation' },
+};
+
+/* -------- OHADA common frameworks -------- */
+const OHADA_ACTES = [
+  'AU Droit Commercial Général (AUDCG) — commerçants, fonds de commerce, bail commercial',
+  'AU Sociétés Commerciales (AUSC) — SA, SAS, SARL, SNC, SCS, GIE',
+  'AU Sûretés (AUS) — garanties, hypothèques, nantissements, privilèges',
+  'AU Procédures Simplifiées de Recouvrement (AUPSRVE) — injonction de payer',
+  'AU Procédures Collectives d\'Apurement du Passif (AUPCAP) — redressement, liquidation',
+  'AU Droit de l\'Arbitrage (AUA) — arbitrage commercial international',
+  'AU Organisation et Harmonisation de la Comptabilité (SYSCOHADA) — plan comptable',
+  'AU Contrats de Transport de Marchandises par Route (AUCTMR)',
+  'AU Droit des Sociétés Coopératives (AUSC Coop)',
+  'AU Droit des Sociétés Commerciales Révisé 2014 + SASU/SAS',
+];
+
+function buildLegalAnalysis(c, legal) {
+  if (!legal) return `Données législatives non disponibles pour ${c.name}. Consultez un cabinet juridique local.`;
+  const ohada_avg_is = '28%'; const ohada_avg_tva = '18%';
+  const is_num = parseFloat(legal.is); const tva_num = parseFloat(legal.tva);
+  const is_vs = !isNaN(is_num) ? (is_num < 28 ? '↓ SOUS la moyenne OHADA (28%)' : is_num === 28 ? '= moyenne OHADA' : '↑ AU-DESSUS de la moyenne OHADA (28%)') : '';
+  const tva_vs = !isNaN(tva_num) ? (tva_num < 18 ? '↓ SOUS la moyenne OHADA (18%)' : tva_num === 18 ? '= moyenne OHADA' : '↑ AU-DESSUS de la moyenne OHADA (18%)') : '';
+  const ohadaBlock = legal.ohada
+    ? `✅ OHADA membre — 10 Actes Uniformes applicables\n  Principaux AU pour investisseurs :\n  ${OHADA_ACTES.slice(0,5).map(a=>'• '+a).join('\n  ')}\n  + 5 autres AU (arbitrage, transport, coopératives, SYSCOHADA comptabilité)`
+    : `❌ Non-membre OHADA — système propre (${legal.legal_sys})\n  Vérifier les conventions bilatérales et accords d\'arbitrage disponibles`;
+  const keyLegis = legal.key && legal.key.length ? legal.key.map(k=>'  • '+k).join('\n') : '  • Données à vérifier';
+  return `⚖️ CADRE LÉGAL & RÉGLEMENTAIRE — ${c.flag} ${c.name.toUpperCase()}
+════════════════════════════════════════
+
+🏛️ RÉGIME POLITIQUE & CONSTITUTION
+  Régime : ${legal.regime}
+  Constitution : ${legal.constitution}
+  Système juridique : ${legal.legal_sys}
+
+💰 FISCALITÉ INVESTISSEUR
+  IS (impôt sociétés)  : ${legal.is}  ${is_vs}
+  TVA                  : ${legal.tva}  ${tva_vs}
+  IRG (revenu personnes) : ${legal.irg}
+
+${ohadaBlock}
+
+📋 LÉGISLATIONS CLÉS
+${keyLegis}
+
+🏗️ CADRE INVESTISSEMENT
+  ${legal.invest}
+  Zone monétaire : ${legal.zone_monetaire}
+
+🗺️ STRUCTURE ADMINISTRATIVE
+  ${legal.admin}
+${legal.edu ? '📚 Système éducatif : '+legal.edu : ''}
+
+⚡ POINT STRATÉGIQUE
+  ${legal.special || 'Données complémentaires à vérifier auprès des autorités locales'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💼 IMPLICATIONS INVESTISSEUR
+  1. Structure d'entrée recommandée : ${legal.ohada ? 'SARL OHADA (capital min. 100 000 XOF) ou SAS' : 'Vérifier Companies Act local — Limited Company ou Branch Office'}
+  2. Due diligence prioritaire : ${legal.key && legal.key[0] ? legal.key[0] : 'Cadre sectoriel applicable'}
+  3. Arbitrage : ${legal.ohada ? 'CCJA Abidjan (OHADA) — neutre et contraignant' : 'CIRDI + convention bilatérale si disponible'}
+  4. Comptabilité : ${legal.ohada ? 'SYSCOHADA obligatoire — harmonisé zone OHADA' : 'Normes locales + IFRS pour sociétés cotées/grandes entreprises'}
+
+💬 Pour aller plus loin : "verdict ${c.name}" · "secteurs ${c.name}" · "risques ${c.name}" · "WACC ${c.name}"`;
+}
+
+/* ========== AFRICAN COMMERCIAL CODES DATABASE ========== */
+const AFRICAN_CODES = {
+  ohada: {
+    label:'OHADA — Droit des Affaires Unifié (17 États)', pays:'Bénin, BF, Cameroun, Centrafrique, Comores, Congo, Côte d\'Ivoire, Gabon, Guinée, Guinée-Bissau, Guinée Éq., Mali, Niger, RDC*, Sénégal, Tchad, Togo',
+    zone:'Francophone Afrique subsaharienne', siege:'CCJA Abidjan + Secrétariat Yaoundé',
+    codes:[
+      {name:'AU Droit Commercial Général (AUDCG) 2010', equiv:'Code de commerce fr. Livre I (L.110-1 à L.110-4)', scope:'Commerçants, actes de commerce, fonds de commerce, bail commercial, intermédiaires, vente commerciale', note:'Équivalent direct du Livre I du Code de commerce français — base de tout acte commercial'},
+      {name:'AU Sociétés Commerciales et GIE (AUSC) 2014', equiv:'Code de commerce fr. L.210 à L.244 + loi sociétés', scope:'SARL (capital 1 XOF min.), SAS, SASU, SA, SNC, SCS, GIE — gouvernance, droits actionnaires, dissolution, fusion', note:'Plus moderne que la plupart des codes nationaux africains — SASU introduite 2014'},
+      {name:'AU Sûretés (AUS) 2010', equiv:'Code civil fr. art.2284-2488 + Code de commerce', scope:'Hypothèques, nantissements, gages sans dépossession, privilèges, fiducie-sûreté, cession de créance', note:'Réforme majeure 2010 alignée UNCITRAL — facilite le financement sécurisé transfrontalier'},
+      {name:'AU Procédures Simplifiées de Recouvrement (AUPSRVE)', equiv:'NCPC art.1405-1425 (injonction payer) + CPCE', scope:'Injonction de payer, saisie-attribution, saisie-vente, saisie immobilière — exécution cross-border', note:'Exécutable dans tous États membres sans exequatur supplémentaire'},
+      {name:'AU Procédures Collectives (AUPCAP) 2015', equiv:'Code de commerce fr. Livre VI (L.620-L.670)', scope:'Conciliation, sauvegarde, redressement judiciaire, liquidation des biens, règlement préventif', note:'Réforme 2015 — introduction de la conciliation préventive (avant cessation paiements)'},
+      {name:'AU Arbitrage (AUA) 2017', equiv:'Code de procédure civile fr. art.1442-1527', scope:'Arbitrage commercial interne et international, clause compromissoire, reconnaissance et exequatur sentences', note:'CCJA Abidjan = cour arbitrage supranationale — sentences exécutoires dans 17 États sans formalité'},
+      {name:'SYSCOHADA Révisé (AU Comptabilité) 2017', equiv:'Plan Comptable Général (PCG) fr. + IFRS PME', scope:'Plan de comptes, états financiers (bilan, compte résultat, tableau flux), consolidation, liasse fiscale', note:'Obligatoire toutes entités dans États OHADA — harmonise l\'audit et due diligence transfrontalière'},
+      {name:'AU Transport Marchandises par Route (AUCTMR)', equiv:'Convention CMR (internationale) + Code commerce L.132', scope:'Contrat transport, lettre de voiture OHADA, responsabilité transporteur, avaries, délais', note:'Harmonise le transport routier transfrontalier — crucial pour corridors logistiques'},
+      {name:'AU Droit des Sociétés Coopératives (AUSCOOP) 2010', equiv:'Loi fr. 47-1775 (coopératives)', scope:'Coopératives agricoles, artisanales, de consommation, d\'épargne-crédit — gouvernance et dissolution', note:'Adapté aux réalités économie sociale africaine — coopératives agricoles = pilier secteur primaire'},
+      {name:'AU Médiation (AUM) 2017', equiv:'Ord.2011-1540 fr. + Loi 95-125', scope:'Médiation commerciale, accord de médiation, exécution — complément à l\'arbitrage CCJA', note:'Encourage règlement amiable différends commerciaux — moins coûteux et plus rapide que l\'arbitrage'},
+    ]
+  },
+  uemoa: {
+    label:'UEMOA — Règlements Communautaires Zone XOF', pays:'Bénin, Burkina Faso, Côte d\'Ivoire, Guinée-Bissau, Mali, Niger, Sénégal, Togo',
+    zone:'Afrique de l\'Ouest — monnaie unique XOF (BCEAO)', siege:'Commission UEMOA Ouagadougou',
+    codes:[
+      {name:'Règlement 09/2010 UEMOA — Systèmes de Paiement', equiv:'Code monétaire et financier fr. L.311-L.318', scope:'Systèmes de paiement, monnaie électronique, interopérabilité bancaire BCEAO', note:'Cadre réglementaire fintech et mobile money — socle Orange Money, Wave, MTN MoMo UEMOA'},
+      {name:'Instruction BCEAO 008-05-2015 — Monnaie Électronique', equiv:'DSP2 européenne (adaptation africaine)', scope:'Agrément établissements monnaie électronique, limits transactions, KYC allégé', note:'Afrique de l\'Ouest = 2e région mondiale mobile money en % PIB — cadre BCEAO pionnier'},
+      {name:'Règlement CREPMF — Marché Financier Régional UEMOA', equiv:'Règlement Général AMF fr.', scope:'BRVM (Bourse Régionale Valeurs Mobilières), émissions obligataires, OPC, SGI agréés', note:'BRVM Abidjan = seule bourse régionale supranationale au monde — 48 sociétés cotées'},
+      {name:'Directive UEMOA 01/2009 — Marchés Publics', equiv:'Code des marchés publics fr.', scope:'Passation, exécution, contrôle marchés publics — harmonisée dans 8 États membres', note:'Transposée dans codes nationaux — ARMP/DGMP contrôle intégrité des appels d\'offres'},
+      {name:'Règlement UEMOA — Droit de la Concurrence', equiv:'Code de commerce fr. L.420-1-L.420-7', scope:'Ententes, abus de position dominante, concentrations — supervision Commission UEMOA', note:'Première réglementation antitrust supranationale Afrique de l\'Ouest'},
+      {name:'Règlement UEMOA 09/2007 — Comptabilité Publique', equiv:'LOLF fr. + Instructions comptabilité État', scope:'Budget et comptabilité des États membres UEMOA — convergence critères de Dakar', note:'Critères de convergence UEMOA : déficit ≤3% PIB, dette ≤70% PIB, inflation ≤3%'},
+    ]
+  },
+  cemac: {
+    label:'CEMAC — Règlements Communautaires Zone XAF', pays:'Cameroun, Centrafrique, Congo, Gabon, Guinée Équatoriale, Tchad',
+    zone:'Afrique Centrale — monnaie unique XAF (BEAC)', siege:'Commission CEMAC Bangui',
+    codes:[
+      {name:'Règlement COBAC — Supervision Bancaire CEMAC', equiv:'Réglementation CRB/ACPR fr. + Bâle III', scope:'Agrément bancaire, ratio solvabilité (12%), liquidité, contrôle prudentiel 6 pays CEMAC', note:'COBAC Yaoundé = équivalent ACPR pour zone CEMAC — 52 établissements bancaires supervisés'},
+      {name:'Règlement COSUMAF — Marché Financier CEMAC', equiv:'Règlement Général AMF fr.', scope:'BVMAC Libreville (Bourse Valeurs Afrique Centrale), émissions, intermédiaires agréés', note:'Fusion DSX Douala + BVMAC Libreville actée 2019 — marché encore peu développé'},
+      {name:'Règlement BEAC — Change et Transferts Extérieurs CEMAC', equiv:'Code monétaire fr. + contrôle des changes', scope:'Réglementation changes, transferts capitaux, déclarations IDE, investissements directs', note:'XAF ancré EUR — convertibilité garantie Trésor français (Accord révisé 2021)'},
+      {name:'Règlement CEMAC — Droit de la Concurrence 01/99', equiv:'Code de commerce fr. L.420', scope:'Pratiques anticoncurrentielles, concentrations, aides d\'État — supervision Commission CEMAC', note:''},
+    ]
+  },
+  maghreb: {
+    label:'Codes Commerciaux — Maghreb & Égypte', pays:'Maroc, Algérie, Tunisie, Libye, Égypte',
+    zone:'Afrique du Nord — influences civil law française + droit islamique', siege:'Codes nationaux',
+    codes:[
+      {name:'Code de Commerce Marocain (Loi 15-95) 1996 rév.2019', equiv:'Code de commerce fr. classique — 730 articles', scope:'Actes de commerce, commerçants, registre du commerce, fonds de commerce, effets de commerce, bail commercial, contrats commerciaux', note:'Plus complet du Maghreb. Loi 87-18 (2019) introduit SAS marocaine — capital min. 300 000 MAD'},
+      {name:'Code Général des Obligations et Contrats (DOC) Maroc 1913 rév.2019', equiv:'Code civil fr. L.1101-L.1386 (droit des obligations)', scope:'Droit des obligations, conditions validité contrats, responsabilité civile, quasi-contrats', note:'Base de tout contrat au Maroc — jurisprudence centenaire très stable. Réforme numérique 2019 (actes électroniques)'},
+      {name:'Loi Marocaine 17-95 sur les SA rév.2021', equiv:'Code de commerce fr. L.225-1-L.225-270', scope:'SA marocaine — conseil d\'administration, directoire-conseil de surveillance, actionnaires, OPA', note:'Réforme 2021 — réunions CA par visioconférence, OPA simplifiées, droits minoritaires renforcés'},
+      {name:'Code de Commerce Algérien (Ord.75-59) rév.2015', equiv:'Code de commerce fr. classique', scope:'Droit commercial, SPA, SARL, EURL, SNC, contrats commerciaux, effets de commerce', note:'Réforme 2015 — EURL introduite. Règle 51/49 assouplie 2020 pour secteurs non stratégiques'},
+      {name:'Code des Sociétés Commerciales Tunisien (Loi 2000-93) rév.2022', equiv:'Code des sociétés fr.', scope:'SA, SARL, SNC, SCA, Holding — gouvernance d\'entreprise, droits actionnaires, contrôle commissaires', note:'Réforme corporate governance 2022 — administrateurs indépendants, comité d\'audit obligatoire SA cotées'},
+      {name:'Code de Commerce Tunisien 1959 rév.2020', equiv:'Code de commerce fr.', scope:'Actes de commerce, fonds de commerce, effets de commerce, contrats commerciaux spéciaux', note:''},
+      {name:'Egyptian Commercial Law No.17/1999', equiv:'Code de commerce fr. + droit allemand (influence)', scope:'Actes de commerce, contrats commerciaux, transport, assurance, compte courant, arbitrage commercial', note:'Plus moderne du Maghreb-Machreq à sa promulgation — influence droit commercial allemand'},
+      {name:'Egyptian Companies Law No.159/1981 rév.2023', equiv:'Code des sociétés fr.', scope:'SAE (Société Anonyme Égyptienne), SARL, branche étrangère, free zones, investissements étrangers', note:'Loi 72/2017 (Investissements) + Companies Law — GAFI guichet unique IDE'},
+    ]
+  },
+  west_africa_common: {
+    label:'Commercial Codes — Afrique Ouest Anglophone', pays:'Nigeria, Ghana, Sierra Leone, Liberia, Gambie',
+    zone:'Common law (UK heritage) — monnaies nationales', siege:'Codes nationaux',
+    codes:[
+      {name:'Nigeria Companies and Allied Matters Act (CAMA) 2020', equiv:'UK Companies Act 2006', scope:'Ltd, Plc, LLP, LLC (nouveau 2020), NGO, cooperative — CAC registration online', note:'Réforme majeure — supprime 2 directors minimum, introduit LLC, simplifie AGM virtuelle, electronic filing'},
+      {name:'Nigeria Petroleum Industry Act (PIA) 2021', equiv:'Code pétrolier fr. (sans équivalent direct)', scope:'NNPC Ltd privatisée, fiscal terms host government, frontier basins incentives, local content', note:'Loi la plus importante secteur énergétique africain depuis 20 ans — refond tout le cadre pétrolier'},
+      {name:'Nigeria Startup Act 2022', equiv:'Loi Pacte fr. (partiellement)', scope:'Label startup "Innovative Enterprise", incitations fiscales IS, stock-options simplifiées, startup visa', note:'Premier Startup Act Afrique de l\'Ouest — Lagos = hub FinTech #1 continental'},
+      {name:'Nigeria Finance Act 2023', equiv:'Loi de finances fr. annuelle', scope:'Réformes fiscales annuelles — TVA, IS, retenues source, taxation économie numérique', note:'Finance Act annuelle = principal vecteur de réforme fiscale Nigeria'},
+      {name:'Ghana Companies Act 2019 (Act 992)', equiv:'UK Companies Act 2006', scope:'Private Ltd, Public Ltd, foreign branch, external company — electronic filing Registrar General', note:'Remplace Companies Code 1963 après 56 ans — modernisation complète, beneficial ownership'},
+      {name:'Ghana Minerals and Mining Act 2006 rév.2019 (Act 703)', equiv:'Code minier fr.', scope:'Licence minière, royalties (5% or, 10% surface), community development, local content mining 10%', note:'Gold = 48% exports Ghana — loi minière critique pour investisseurs secteur extractif'},
+    ]
+  },
+  east_africa: {
+    label:'Commercial Codes — Afrique de l\'Est', pays:'Kenya, Tanzanie, Ouganda, Rwanda, Éthiopie, RDC',
+    zone:'Common law (Kenya/TZ/UG/RW) + Civil law fr. (RDC) + Hybrid (Éthiopie)', siege:'Codes nationaux',
+    codes:[
+      {name:'Ethiopia Commercial Code 2021 (Proc. 1243/2021)', equiv:'Code de commerce fr. + UK Companies Act — 1540 articles', scope:'Business organizations, banking law, insurance, maritime transport, IP, FinTech — code complet', note:'Révolution juridique — remplace code 1960. Premier code africain à intégrer FinTech explicitement. Ouverture aux IDE renforcée'},
+      {name:'Kenya Companies Act 2015 (No.17/2015) rév.2022', equiv:'UK Companies Act 2006 (adaptation EAC)', scope:'Private Limited, Public Limited, LLP, foreign branch, beneficial ownership registry — BRS online', note:'Modèle de référence réformes Afrique de l\'Est — enregistrement en ligne 24h'},
+      {name:'Rwanda Company Law 2009 rév.2021', equiv:'UK + Singapore (influences)', scope:'Ltd, Public Ltd, Branch — RDB enregistrement en ligne (6 heures record)', note:'#2 Doing Business Afrique sub-saharienne — modèle de réforme réglementaire pour le continent'},
+      {name:'Tanzania Companies Act 2002 rév.2019', equiv:'UK Companies Act 2006 (adaptation tanzanienne)', scope:'Private Ltd, Public Ltd, foreign company, EPZ companies — BRELA registration', note:''},
+      {name:'Uganda Companies Act 2012 rév.2022', equiv:'UK Companies Act 2006 (adaptation ougandaise)', scope:'Enregistrement sociétés, gouvernance, droits actionnaires, liquidation — URSB registry', note:'EACOP pipeline loi spécifique — Petroleum (Exploration, Dev. & Prod.) Act 2013'},
+    ]
+  },
+  southern_africa: {
+    label:'Commercial Codes — Afrique Australe', pays:'Afrique du Sud, Zimbabwe, Zambie, Mozambique, Botswana, Namibie',
+    zone:'Roman-Dutch + Common law (SA, ZW, ZM, BW, NA) + Civil law pt (MZ)', siege:'Codes nationaux',
+    codes:[
+      {name:'South Africa Companies Act 2008 (No.71/2008) rév.2021', equiv:'UK Companies Act 2006 + éléments Sarbanes-Oxley', scope:'Pty Ltd (Private), Ltd (Public), SOC (State Owned), NPC (Non-Profit) — King IV corporate governance', note:'BBBEE (Broad-Based Black Economic Empowerment) — quotas participation noire par secteur. Critique pour M&A en SA'},
+      {name:'South Africa National Credit Act 2005 (No.34/2005)', equiv:'Code consommation fr. (crédit)', scope:'Crédit consommation, hypothécaire, surendettement, NCR — National Credit Regulator', note:'Critique pour investisseurs fintech/banking entrant en Afrique du Sud'},
+      {name:'South Africa Financial Sector Regulation Act 2017 (Twin Peaks)', equiv:'Réforme fr. Solvabilité 2 + MiFID', scope:'FSCA (Conduct) + SARB Prudential Authority — supervision duale prudentielle/comportementale', note:'Twin Peaks = modèle de régulation financière le plus avancé d\'Afrique'},
+      {name:'Mozambique Código Comercial 2005', equiv:'Code de commerce fr. (héritage portugais)', scope:'Actes de commerce, sociétés, registre commercial, faillite', note:'LNG Rovuma TotalEnergies (20Mds USD) a généré législation sectorielle spécifique — Decree 2/2018'},
+      {name:'Zimbabwe Companies and Other Business Entities Act 2019', equiv:'UK Companies Act (adaptation)', scope:'Private Ltd, Public Ltd, companies limited by guarantee, foreign companies — ZIMRA + CIPCO', note:'ZiG (Zimbabwe Gold 2024) — réforme monétaire impacte contrats libellés en devise locale'},
+    ]
+  },
+  sectoriel: {
+    label:'Codes Sectoriels Panafricains — Clés pour Investisseurs', pays:'Panafricain',
+    zone:'Varie par pays — frameworks communs identifiés', siege:'',
+    codes:[
+      {name:'CIMA — Code des Assurances (Zone Franc Afrique)', equiv:'Code des assurances fr.', scope:'Assurance-vie, IARD, réassurance, intermédiation — 15 pays zone franc Afrique subsaharienne', note:'CIMA Libreville = agrément unique valable dans 15 pays. Marché assurance Afrique : 3% PIB (sous-pénétration massive)'},
+      {name:'OAPI — Accord de Bangui Révisé 1999', equiv:'Code propriété intellectuelle fr. (CPI)', scope:'Marques, brevets, dessins et modèles, droits d\'auteur — 17 États membres Afrique', note:'Dépôt unique OAPI Yaoundé = protection IP dans 17 pays simultanément. Équivalent EUIPO pour l\'Afrique francophone'},
+      {name:'Codes Miniers Africains (benchmark 2024)', equiv:'Code minier fr.', scope:'Permis exploration/exploitation, royalties État, local content, environmental bond, community levy', note:'Nationalisme minier 2020-2026 : hausse royalties (Mali 35%→65%, Niger uranium, Sénégal pétrole). Risk pour investisseurs extractifs'},
+      {name:'Codes Fonciers & Domanial Africains (benchmark)', equiv:'Code civil fr. art.544 + Code urbanisme', scope:'Propriété foncière, bail emphytéotique, concession rurale, réserves forestières, expropriation', note:'Insécurité foncière = obstacle #1 investissements agricoles en Afrique. Titre foncier rare hors capitales — vérification cadastre critique'},
+      {name:'Codes des Marchés Publics Africains (benchmark)', equiv:'Code marchés publics fr.', scope:'Appel d\'offres, maîtrise ouvrage publique, PPP, contrats de partenariat État-privé', note:'Directive UEMOA 01/2009 + CEMAC + codes nationaux — ARMP supervise anticorruption. PPP = vecteur principal infrastructure'},
+      {name:'Codes Pétroliers & Gaziers Africains — PSA dominant', equiv:'Code pétrolier fr.', scope:'PSA (Production Sharing Agreement), JOA, local content O&G (Nigeria: NCDMB, Sénégal: COSE)', note:'PSA = modèle contractuel dominant Afrique (vs concessif UK). GTA LNG, Rovuma, Albertine, Côte d\'Ivoire bloc CI-514 — PSA 2019-2024'},
+      {name:'Codes du Travail Africains (benchmark)', equiv:'Code du travail fr.', scope:'Contrat travail, licenciement, syndicats, sécurité sociale, travail des étrangers (permis)', note:'OHADA ne couvre pas droit du travail — chaque État a son propre Code. Permis travail = frein mobilité cadres expatriés. Tendance 2024 : localisation emploi renforcée'},
+      {name:'Droit Bancaire Africain (benchmark)', equiv:'Code monétaire et financier fr.', scope:'Agrément bancaire, microfinance, mobile money, fintech — supervisé COBAC (CEMAC) ou BCEAO (UEMOA)', note:'Révolution mobile money : taux bancarisation mobile >50% UEMOA. COBAC + BCEAO = deux systèmes bancaires les plus solides d\'Afrique sub-saharienne'},
+    ]
+  }
+};
+
+function buildCodeReference(query, countryCode) {
+  const q = String(query).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  // Determine which frameworks to highlight
+  const isOhada = q.includes('ohada')||q.includes('syscohada')||q.includes('droit uniform')||q.includes('acte uniform');
+  const isUemoa = q.includes('uemoa')||q.includes('bceao')||q.includes('brvm')||q.includes('crepmf')||q.includes('mobile money')||q.includes('wave')||q.includes('orange money');
+  const isCemac = q.includes('cemac')||q.includes('beac')||q.includes('cobac')||q.includes('cosumaf')||q.includes('bvmac');
+  const isMaghreb = q.includes('maroc')||q.includes('algerie')||q.includes('tunisie')||q.includes('egypte')||q.includes('maghreb')||q.includes('doc ')||q.includes('obligations et contrats');
+  const isWestCommon = q.includes('nigeria')||q.includes('ghana')||q.includes('cama')||q.includes('pia ')||q.includes('petroleum industry');
+  const isEast = q.includes('kenya')||q.includes('tanzanie')||q.includes('ouganda')||q.includes('rwanda')||q.includes('ethiopie')||q.includes('eac ');
+  const isSouth = q.includes('afrique du sud')||q.includes('zimbabwe')||q.includes('zambie')||q.includes('mozambique')||q.includes('bbbee')||q.includes('twin peaks');
+  const isSector = q.includes('cima')||q.includes('oapi')||q.includes('minier')||q.includes('foncier')||q.includes('marches publics')||q.includes('ppp')||q.includes('petrole')||q.includes('gaz')||q.includes('travail')||q.includes('bancaire')||q.includes('assurance')||q.includes('propriete intellectuelle');
+  const isCommerce = q.includes('code de commerce')||q.includes('droit commercial')||q.includes('acte de commerce')||q.includes('fond de commerce')||q.includes('effets de commerce');
+  const isSocietes = q.includes('droit des societes')||q.includes('code des societes')||q.includes('sarl')||q.includes('sa ')||q.includes('sas ')||q.includes('ltd')||q.includes('plc');
+  const isArbitrage = q.includes('arbitrage')||q.includes('ccja')||q.includes('icsid')||q.includes('cirdi')||q.includes('reglement litige')||q.includes('differend');
+  const isFaillite = q.includes('faillite')||q.includes('procedures collectives')||q.includes('redressement judiciaire')||q.includes('liquidation')||q.includes('insolvency');
+
+  // Find country's framework context
+  const lg = (typeof COUNTRY_LEGAL!=='undefined' && countryCode) ? COUNTRY_LEGAL[countryCode] : null;
+
+  // Select relevant frameworks to display
+  const toShow = [];
+  if(isOhada || isCommerce || isSocietes || isArbitrage || isFaillite || (!isUemoa&&!isCemac&&!isMaghreb&&!isWestCommon&&!isEast&&!isSouth&&!isSector && lg&&lg.ohada)) toShow.push('ohada');
+  if(isUemoa || (lg&&['BJ','BF','CI','GW','ML','NE','SN','TG'].includes(countryCode))) toShow.push('uemoa');
+  if(isCemac || (lg&&['CM','CF','TD','CG','GA','GQ'].includes(countryCode))) toShow.push('cemac');
+  if(isMaghreb || (lg&&['MA','DZ','TN','EG','LY'].includes(countryCode))) toShow.push('maghreb');
+  if(isWestCommon || (lg&&['NG','GH','SL','LR','GM'].includes(countryCode))) toShow.push('west_africa_common');
+  if(isEast || (lg&&['KE','TZ','UG','RW','ET'].includes(countryCode))) toShow.push('east_africa');
+  if(isSouth || (lg&&['ZA','ZW','ZM','MZ','BW','NA'].includes(countryCode))) toShow.push('southern_africa');
+  if(isSector) toShow.push('sectoriel');
+  // Default: show OHADA + sectoriel if nothing matched
+  if(toShow.length===0){ toShow.push('ohada'); toShow.push('sectoriel'); }
+
+  const lines = ['📚 CODES COMMERCIAUX & JURIDIQUES AFRICAINS — RÉFÉRENTIEL WASI','═'.repeat(55),''];
+  toShow.slice(0,3).forEach(fk=>{
+    const fw = AFRICAN_CODES[fk]; if(!fw) return;
+    lines.push('┌─ '+fw.label+' ─┐');
+    lines.push('  Pays : '+fw.pays);
+    lines.push('  Zone : '+fw.zone);
+    lines.push('');
+    fw.codes.forEach(c=>{
+      lines.push('  ⚖️ '+c.name);
+      lines.push('     ↔ Équivalent fr. : '+c.equiv);
+      lines.push('     📋 Champ : '+c.scope);
+      if(c.note) lines.push('     💡 '+c.note);
+      lines.push('');
+    });
+    lines.push('─'.repeat(50));
+    lines.push('');
+  });
+
+  if(lg && lg.ohada && !toShow.includes('ohada')){
+    lines.push('ℹ️  Ce pays est membre OHADA — les 10 Actes Uniformes s\'appliquent directement.');
+    lines.push('   Demandez "OHADA" pour le détail des 10 Actes Uniformes.');
+    lines.push('');
+  }
+  lines.push('💬 Demandes suggérées :');
+  lines.push('  "code de commerce Maroc" · "OHADA sociétés" · "CAMA Nigeria" · "Companies Act Kenya"');
+  lines.push('  "codes miniers Afrique" · "CIMA assurances" · "OAPI propriété intellectuelle"');
+  lines.push('  "arbitrage Afrique" · "droit faillite OHADA" · "marchés publics Afrique"');
+  return lines.join('\n');
 }
 
 /* ========== SECTOR INTELLIGENCE ========== */
@@ -7945,7 +8377,7 @@ function onPMESectorChange() {
         return '<span style="padding:2px 7px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;font-size:.62rem;color:var(--text-secondary);">'+f+'</span>';
       }).join('') +
     '</div>' +
-    '<button onclick="openSectorsForCountry(\''+(countryCode||'')+'\');document.querySelectorAll(\'.nav-btn\').forEach(function(b){b.classList.remove(\'active\')});document.querySelector(\'.nav-btn[onclick*=private]\').classList.add(\'active\');" ' +
+    '<button onclick="openSectorsForCountry(\''+(countryCode||'')+'\');" ' +
     'style="width:100%;padding:8px;background:rgba(46,204,113,.1);border:1px solid var(--green);color:var(--green);border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;">' +
     '🏭 Voir analyse complète — ' + s.name + '</button>';
 }

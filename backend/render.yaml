@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: wasi-ai-proxy
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false          # Set manually in Render dashboard — never commit
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-4-5
+      - key: WASI_ACCESS_TOKENS
+        value: WASI-DEMO-DM01,WASI-PROD-TK01
+      - key: ALLOWED_ORIGINS
+        value: https://atarawendesidkabore-hash.github.io,http://localhost:5500,http://127.0.0.1:5500
+      - key: PORT
+        value: 3000
+    healthCheckPath: /
+    autoDeploy: true
