@@ -4533,8 +4533,11 @@ async function callWASIChat(message, countryFocus, history) {
   ];
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(function(){ controller.abort(); }, 15000);
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
@@ -4543,6 +4546,7 @@ async function callWASIChat(message, countryFocus, history) {
       },
       body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1800, system:systemPrompt, messages:messages})
     });
+    clearTimeout(timeoutId);
     if (!res.ok) {
       const err = await res.json().catch(function(){ return {}; });
       if (res.status === 401) {
@@ -4555,7 +4559,7 @@ async function callWASIChat(message, countryFocus, history) {
     return (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n').trim() || 'Réponse indisponible.';
   } catch(e) {
     console.error('WASI AI error:', e.message);
-    return generateLocalResponse(message, countryFocus);
+    try { return generateLocalResponse(message, countryFocus); } catch(e2) { return 'WASI Intelligence — mode hors ligne. Posez une question sur un pays africain.'; }
   }
 }
 
