@@ -1572,14 +1572,14 @@ input, select, textarea { font-family: inherit; outline: none; }
       </div>
       <div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>
       <div class="chat-suggestions">
-        <button class="chat-sugg" onclick="sendSugg(this)">Agriculture &amp; Agro-industrie en Afrique</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Energie solaire et renouvelables</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Telecoms et Mobile Money</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Mines et industries extractives</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Verdict investissement Côte d'Ivoire 2026</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Cadre légal et fiscal du Sénégal</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Droit des sociétés OHADA — SARL vs SAS</button>
         <button class="chat-sugg" onclick="sendSugg(this)">Analyse du corridor Abidjan-Lagos</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Risque politique au Sahel</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Qu'est-ce que le WASI Stock Market ?</button>
-        <button class="chat-sugg" onclick="sendSugg(this)">Presentez WASI Ecosystem</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Microfinance et fintech en Afrique de l'Ouest</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Comparer Ghana et Nigeria sur l'attractivité IDE</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">Codes commerciaux Afrique — OHADA, CAMA, Companies Act</button>
+        <button class="chat-sugg" onclick="sendSugg(this)">ZLECAf : opportunités sectorielles pour investisseurs</button>
       </div>
       <div class="chat-input-bar">
         <input type="text" class="chat-input" id="chat-input" placeholder="Posez une question..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -3841,14 +3841,14 @@ function updateChatSuggestions(code) {
   if (!code) {
     // Restore default suggestions
     bar.innerHTML = [
-      'Agriculture &amp; Agro-industrie en Afrique',
-      'Energie solaire et renouvelables',
-      'Telecoms et Mobile Money',
-      'Mines et industries extractives',
+      'Verdict investissement Côte d\'Ivoire 2026',
+      'Cadre légal et fiscal du Sénégal',
+      'Droit des sociétés OHADA — SARL vs SAS',
       'Analyse du corridor Abidjan-Lagos',
-      'Risque politique au Sahel',
-      'Qu\'est-ce que le WASI Stock Market ?',
-      'Presentez WASI Ecosystem'
+      'Microfinance et fintech en Afrique de l\'Ouest',
+      'Comparer Ghana et Nigeria sur l\'attractivité IDE',
+      'Codes commerciaux Afrique — OHADA, CAMA, Companies Act',
+      'ZLECAf : opportunités sectorielles pour investisseurs'
     ].map(function(t){ return '<button class="chat-sugg" onclick="sendSugg(this)">'+t+'</button>'; }).join('');
     return;
   }
@@ -3865,7 +3865,8 @@ function updateChatSuggestions(code) {
     }).sort(function(a,b){ return b.sc - a.sc; }).slice(0,3).map(function(x){ return x.s; });
   }
   var suggs = topSecs.map(function(s){ return s.icon + ' ' + s.name + ' ' + c.name; });
-  suggs.push('Analyse complete ' + c.name + ' : opportunites et risques 2026');
+  suggs.push('Verdict investissement ' + c.name + ' 2026');
+  suggs.push('Cadre legal et fiscal ' + c.name);
   suggs.push('WACC et cout du capital ' + c.name);
   suggs.push('Corridor commercial depuis ' + c.name);
   suggs.push('Telecharger le brief de ' + c.name);
@@ -4997,6 +4998,130 @@ ${OHADA_ACTES.map((a,i)=>`  ${i+1}. ${a}`).join('\n')}
       const cc = focusedC ? focusedC.code : (focus||null);
       return buildCodeReference(message, cc);
     }
+  }
+
+  // ── MICROFINANCE & FINTECH handler ────────────────────────────────────────
+  if(msgN.includes('microfinance')||msgN.includes('imf ')||msgN.includes('sem ')||(msgN.includes('fintech')&&(msgN.includes('afrique')||msgN.includes('ouest')||msgN.includes('est')||msgN.includes('cedeao')))||msgN.includes('mobile money')||msgN.includes('wave ')||msgN.includes('orange money')||msgN.includes('m-pesa')||msgN.includes('mpesa')||msgN.includes('cirex')||msgN.includes('credit agricole afrique')||msgN.includes('inclusion financiere')||msgN.includes('taux de bancarisation')){
+    const mfCountry = focusedC ? `\n\n🏦 FOCUS ${focusedC.flag} ${focusedC.name.toUpperCase()} :\n  Zone monétaire : ${(typeof COUNTRY_LEGAL!=='undefined'&&COUNTRY_LEGAL[focusedC.code])?COUNTRY_LEGAL[focusedC.code].zone_monetaire:'N/A'}\n  Taux de bancarisation estimé : ${focusedC.score>=65?'40-60%':focusedC.score>=45?'20-40%':'<20%'}\n  Score WASI : ${focusedC.score}/100 — ${focusedC.score>=60?'Écosystème fintech en développement actif':'Marché à fort potentiel, infrastructure limitée'}` : '';
+    return `📱 MICROFINANCE & FINTECH EN AFRIQUE — ANALYSE WASI
+════════════════════════════════════════
+
+📊 CHIFFRES CLÉS 2024-2026 :
+  • 57% des adultes africains non-bancarisés (1,4 Md personnes)
+  • Mobile money : 835 Mds USD de transactions/an (+23% vs 2023)
+  • Afrique = 70% du volume mondial de mobile money
+  • 850+ fintechs actives sur le continent
+  • Levées de fonds fintech Afrique : 2,3 Mds USD (2024)
+
+🏆 LEADERS MOBILE MONEY PAR ZONE :
+  Zone UEMOA (XOF) :
+  • Wave (Sénégal, CI, BF, ML) — frais 1% vs 3-5% Orange/MTN
+  • Orange Money — 60M users Afrique
+  • MTN MoMo — 35M users Afrique de l'Ouest
+  • BCEAO Instruction 008-05-2015 = cadre réglementaire de référence
+
+  Zone EAC (Kenya/Tanzanie) :
+  • M-Pesa (Safaricom) — pionnier mondial, 50M users, 50% PIB Kenya
+  • Airtel Money, T-Pesa (Tanzanie)
+  • CBK (Kenya) + BoT (Tanzanie) = supervision stricte mais ouverte
+
+  Zone Nigeria :
+  • PalmPay, OPay, Moniepoint — agentbanking explosif
+  • CBN Tier licensing — PSB, MFB, PSSP distincts
+  • Flutterwave, Paystack (Stripe) — infrastructure B2B
+
+🏗️ CADRE RÉGLEMENTAIRE MICROFINANCE :
+  UEMOA :
+  • Loi portant réglementation des SFD (Systèmes Financiers Décentralisés)
+  • Licence SFD BCEAO — 3 niveaux selon taille bilan
+  • CIREX = chambre de règlement interprofessionnelle (WASI DEX connecté)
+
+  OHADA (17 pays) :
+  • SYSCOHADA = plan comptable des SFD
+  • Pas de loi OHADA spécifique microfinance — cadre national complète
+
+  Afrique de l'Est :
+  • Kenya Microfinance Act 2006 rév.2021
+  • Tanzania Microfinance Act 2018
+  • SACCO (Savings & Credit Cooperative) = modèle dominant EAC
+
+💰 OPPORTUNITÉS INVESTISSEUR :
+  1. Agent banking : pénétration rurale — ticket $500K-5M
+  2. Credit scoring alternatif (IA/données mobile) — IRR 25-40%
+  3. Assurance paramétrique agricole — gap $15Mds sous-servi
+  4. PayTech B2B : TPE digitaux, facturation, paie — sous-équipé
+  5. Infrastructure bancaire (BaaS) — licence + API-first
+
+⚠️ RISQUES :
+  • Réglementation en mutation rapide (chaque État cadre différent)
+  • Taux impayés microfinance : 8-15% (élevé vs 2-3% banque classique)
+  • Risque change XOF/XAF/GHS/NGN
+  • Concentrations : Wave capte 80%+ du marché UEMOA en 3 ans${mfCountry}
+
+💬 "verdict [pays]" · "cadre légal [pays]" · "secteur telecoms Afrique"`;
+  }
+
+  // ── ZLECAf / AfCFTA handler ────────────────────────────────────────────────
+  if(msgN.includes('zlecaf')||msgN.includes('afcfta')||msgN.includes('zone de libre echange')||msgN.includes('libre echange continental')||(msgN.includes('libre echange')&&msgN.includes('afrique'))||(msgN.includes('commerce')&&msgN.includes('continental'))){
+    return `🌍 ZLECAf — ZONE DE LIBRE-ÉCHANGE CONTINENTALE AFRICAINE
+════════════════════════════════════════
+
+📋 STATUT 2026 :
+  • Accord signé : 54/55 États UA (seul l'Érythrée absent)
+  • En vigueur : janvier 2021 | Phase opérationnelle : 2022-2030
+  • Secrétariat : Accra, Ghana | SG : Wamkele Mene (Afrique du Sud)
+  • Échanges intra-africains actuels : 15% (vs 65% Europe, 58% Asie)
+  • Objectif 2030 : doubler à 30% les échanges intra-africains
+
+💰 IMPACT MACROÉCONOMIQUE ESTIMÉ :
+  • Gains PIB continental : +450 Mds USD/an à horizon 2035 (Banque Mondiale)
+  • 30 millions de personnes sorties de l'extrême pauvreté
+  • 14 millions d'emplois formels créés
+  • Réduction tarifs : de 16,8% moy. → 0% sur 90% des lignes tarifaires
+
+🏭 SECTEURS LES PLUS IMPACTÉS PAR ZONE :
+
+  🌾 Agriculture & Agroalimentaire :
+  • Suppression droits de douane → +$15Mds/an échanges agri intra-Afrique
+  • Pays gagnants : CI (cacao), GH (or/cacao), ET (café), NG (arachide)
+  • Opportunité : transformation locale avant export — valeur ajoutée x3
+
+  🏗️ Industrie & Manufacturing :
+  • ZLECAf + ZES nationales → hub production continental
+  • Gagnants : ET (textile Hawassa), MA (automobile), ZA (agroalimentaire), EG (chimie)
+  • Règles d'origine : 35-60% valeur ajoutée locale selon secteur
+
+  💊 Pharma & Santé :
+  • Déclaration Abuja : 15% budget État → santé
+  • ZLECAf Pharma Initiative : 42% médicaments produits en Afrique d'ici 2030 (vs 3% aujourd'hui)
+  • Opportunité critique : faible compétition, demande structurelle forte
+
+  💻 Numérique & Services :
+  • Protocol digital ZLECAf : e-commerce, protection données, paiements
+  • Passeport numérique africain en discussion
+  • Fintech transfrontalière : ZLECAf + PAPSS (Pan-African Payment System)
+
+🔗 INFRASTRUCTURE CRITIQUE — CORRIDORS ZLECAf :
+  1. Corridor Abidjan-Lagos : 45 Mds USD/an | 5 pays
+  2. Corridor Nord Afrique : Casablanca-Le Caire | Route de la Soie africaine
+  3. Corridor Dar es Salaam-Lusaka : minerais DRC/ZM vers port TZ
+  4. Corridor Djibouti-Addis-Abeba : 95% commerce ET passe par DJ
+  5. LAPSSET (Kenya-Éthiopie-Soudan du Sud) : $24Mds infrastructure
+
+⚠️ OBSTACLES 2026 :
+  • Règles d'origine non finalisées pour 30% des lignes tarifaires
+  • NTB (Barrières Non-Tarifaires) = frein majeur (contrôles aux frontières)
+  • Disparité monétaire : 42 devises différentes → risque change
+  • PAPSS opérationnel mais adoption limitée (20% des paiements intra-Afrique)
+  • Sécurité : Sahel, Soudan, Est-DRC bloquent corridors terrestres
+
+💼 STRATÉGIE INVESTISSEUR ZLECAf :
+  1. Positionner dans des pays-hubs : CI, GH, MA, EG, KE, ET, ZA
+  2. Secteurs prioritaires : transformation agri, pharma, logistique, fintech
+  3. Structure : holding multi-pays + SPV locaux (SARL OHADA ou Ltd)
+  4. ZES nationales compatibles ZLECAf : Tanger Med (MA), Hawassa (ET), GDIZ (BJ), Jebel Ali-Djibouti
+
+💬 "secteurs [pays]" · "corridor Abidjan-Lagos" · "verdict [pays]" · "codes commerciaux Afrique"`;
   }
 
   // ── SECTOR DETECTION — before topic blocks; skip if it's a specific query ─

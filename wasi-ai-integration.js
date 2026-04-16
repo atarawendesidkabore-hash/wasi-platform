@@ -384,18 +384,18 @@
     const firstBotMessage = document.querySelector("#chat-messages .chat-msg.bot");
     if (firstBotMessage) {
       firstBotMessage.textContent =
-        "Bienvenue dans WASI Intelligence IA. La plateforme croise maintenant les signaux africains de WASI avec quatre codes francais embarques, des passerelles directes vers WASI DEX et CIREX Microfinance, et une synchronisation visible avec WASI CLI.";
+        "WASI Intelligence — 54 pays africains · Base législative complète (constitutions, IS/TVA, OHADA, codes commerciaux) · Secteurs, corridors, WACC, verdicts investissement. Posez votre question.";
     }
 
     const suggestionTexts = [
-      "Score IA du Burkina Faso",
-      "Article L. 121-1 du Code de commerce",
-      "Article 9 du Code civil",
+      "Verdict investissement Côte d'Ivoire 2026",
+      "Cadre légal et fiscal du Sénégal",
+      "Droit des sociétés OHADA — SARL vs SAS",
       "Analyse du corridor Abidjan-Lagos",
-      "Article 111-1 du Code penal",
-      "Article L1153-1 du Code du travail",
-      "Connexion WASI DEX et CIREX Microfinance",
-      "Comparer Côte d'Ivoire et Ghana sur le cadre microfinance",
+      "Microfinance et fintech en Afrique de l'Ouest",
+      "Comparer Ghana et Nigeria sur l'attractivité IDE",
+      "Codes commerciaux Afrique — CAMA, Companies Act, AUDCG",
+      "ZLECAf : opportunités sectorielles pour investisseurs",
     ];
 
     document.querySelectorAll(".chat-sugg").forEach((button, index) => {
