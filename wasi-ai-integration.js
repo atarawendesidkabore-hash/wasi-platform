@@ -26,13 +26,9 @@
       const stored = localStorage.getItem("wasi_anthropic_key") || "";
       if (stored) return stored;
     } catch (_) {}
-    const entered = (window.prompt(
-      "WASI Intelligence — Clé API requise\n\nEntrez votre clé Anthropic (sk-ant-...) :"
-    ) || "").trim();
-    if (entered) {
-      try { localStorage.setItem("wasi_anthropic_key", entered); } catch (_) {}
-    }
-    return entered;
+    // No key found — return empty string; callClaude will throw "no_key"
+    // and the catch block will route silently to the local AI engine.
+    return "";
   }
 
   async function validateToken(token) {
@@ -125,7 +121,7 @@
   // ── Proxy Claude API call (secure — key never in browser) ────────────────
   async function callClaude(userMessage, history, countryProfile) {
     const token = getWasiToken();
-    if (!token) throw new Error("Token WASI manquant.");
+    if (!token) throw new Error("no_key");
 
     // ── Platform knowledge ─────────────────────────────────────────────────
     const wasiKnowledge =
@@ -209,10 +205,13 @@
     const apiKey = localStorage.getItem("wasi_anthropic_key") || window.ANTHROPIC_API_KEY || "";
 
     // Direct Anthropic API call (works immediately, proxy optional for production)
-    if (!apiKey) throw new Error("Clé API Anthropic manquante. Rechargez la page et entrez votre clé sk-ant-...");
+    if (!apiKey) throw new Error("no_key");
 
+    const _ctrl = new AbortController();
+    const _tid  = setTimeout(function(){ _ctrl.abort(); }, 15000);
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
+      signal: _ctrl.signal,
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
@@ -221,6 +220,7 @@
       },
       body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens: 1800, system: systemPrompt, messages }),
     });
+    clearTimeout(_tid);
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
@@ -963,18 +963,27 @@
       window.chatHistory.push({ role: "assistant", content: reply });
       saveChatHistory();
     } catch (error) {
-      if (typing) {
-        typing.classList.remove("show");
-      }
+      if (typing) typing.classList.remove("show");
 
       // Fallback to local AI engine (no API key needed)
-      const localReply = typeof window.generateLocalResponse === "function"
-        ? window.generateLocalResponse(message, focusedCountry ? focusedCountry.name : "")
-        : "WASI AI hors ligne — vérifiez votre clé API Anthropic.";
-      appendRichBotMessage(localReply, [], focusedSignal);
-      window.chatHistory.push({ role: "user", content: message });
-      window.chatHistory.push({ role: "assistant", content: localReply });
-      saveChatHistory();
+      let localReply;
+      try {
+        if (typeof window.generateLocalResponse === "function") {
+          localReply = window.generateLocalResponse(message, window.currentCountry || "");
+        } else {
+          localReply = "WASI Intelligence — moteur local non disponible.";
+        }
+      } catch(e2) {
+        localReply = "WASI Intelligence — erreur inattendue. Reformulez votre question.";
+      }
+      try { appendRichBotMessage(localReply, [], focusedSignal); } catch(e3) {
+        if (typeof window.appendChatMsg === "function") window.appendChatMsg(localReply, "bot");
+      }
+      try {
+        window.chatHistory.push({ role: "user", content: message });
+        window.chatHistory.push({ role: "assistant", content: localReply });
+        saveChatHistory();
+      } catch(_) {}
     } finally {
       state.chatBusy = false;
       if (typeof window.scrollChat === "function") {
