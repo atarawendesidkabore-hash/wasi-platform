@@ -6700,6 +6700,7 @@ const COUNTRY_LEGAL = {
   'UG': { regime:'République présidentielle', constitution:'1995 rév.2017', is:'30%', tva:'18%', irg:'10-40%', ohada:false, legal_sys:'Common law (gb)', invest:'Uganda Investment Authority Act 2019', key:['Companies Act 2012 rév.2022','Mining Act 2003 rév.2021','Employment Act 2006','Petroleum (Exploration, Dev. & Prod.) Act 2013'], admin:'146 districts / 1382 sous-comtés', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'UGX (Shilling ougandais)', special:'EACOP (East Africa Crude Oil Pipeline) — pétrole Lac Albert; café + Nile sourcing' },
   'ZM': { regime:'République présidentielle', constitution:'2016 rév.2021', is:'30%', tva:'16%', irg:'0-37.5%', ohada:false, legal_sys:'Common law (gb)', invest:'Zambia Development Agency Act 2006 rév.2022 — ZDA', key:['Companies Act 2017','Mines and Minerals Development Act 2015 rév.2023','Employment Code Act 2019'], admin:'10 provinces / 116 districts', edu:'Degree-Masters-PhD (UK system)', zone_monetaire:'ZMW (Kwacha zambien)', special:'Cuivre = 70% exports (#2 Afrique après DRC) + cobalt; restructuration dette FMI 2023' },
   'ZW': { regime:'République présidentielle', constitution:'2013 rév.2021', is:'25%', tva:'15%', irg:'20-40%', ohada:false, legal_sys:'Roman-Dutch + Common law (mixte)', invest:'Zimbabwe Investment and Development Agency Act 2020 — ZIDA', key:['Companies and Other Business Entities Act 2019','Mines and Minerals Act 1961 rév.2022','Labour Act 1985 rév.2023','Indigenisation Act 2007 rév.2021'], admin:'10 provinces / 2 municipalities (Harare, Bulawayo)', edu:'Degree-Masters-PhD (southern African system)', zone_monetaire:'ZiG (Zimbabwe Gold, 2024)', special:'Lithium #1 Afrique (réserves) + platine + chrome; ZiG nouvelle monnaie 2024 pour stopper hyperinflation' },
+  'SC': { regime:'République présidentielle', constitution:'1993 rév.2011', is:'25%', tva:'15%', irg:'0-20%', ohada:false, legal_sys:'Civil law (fr) + Common law (gb) hybride', invest:'Investment Act 2005 — Seychelles Investment Board (SIB), exonérations IBC 10 ans', key:['Companies Ordinance 1972 rév.2021','Employment Act 1995 rév.2022','Fisheries Act 2014','Land (Restrictions on Transactions) Act 2014'], admin:'27 îles / 8 districts', edu:'Degree-Masters (UK system)', zone_monetaire:'SCR (Roupie seychelloise)', special:'Hub financier offshore Afrique Est — IBC (International Business Company) régime, tourisme = 60% PIB, thon = 2e export, #1 HDI Afrique subsaharienne' },
 };
 
 /* -------- OHADA common frameworks -------- */
@@ -7572,6 +7573,38 @@ const WASI_SECTORS = [
     indicateurs_cles:['Importations alimentaires Afrique : $50Mds/an','Part populations en insécurité alimentaire : 22% (FAO 2024)','Consommation engrais Afrique : 4M t/an (vs Asie 120M t)','Prix urée Afrique 2024 : $350-450/t FOB'],
     pays_cles:['MA','NG','ET','EG','KE','TZ','GH','SN','CI','ZM','MW','BJ'],
     wacc_range:'10-14%', croissance:'7.5% CAGR', tam:'$50Mds USD intrants + transformation'
+  },
+  {
+    id:'dette_souveraine', icon:'📈', name:'Marchés Obligataires & Dette Souveraine',
+    keywords:['obligation','eurobond','sukuk','bons tresor','dette souveraine','obligataire','yield','taux interet','spread','duration','fixed income','rating','moodys','fitch','s&p','emission souveraine','marche obligataire'],
+    desc:"$120Mds d'obligations souveraines africaines en circulation. Eurobonds : 22 pays ont émis depuis 2007. UEMOA : marché obligataire régional le plus actif (yield 6.5-8.5%). Sukuk islamiques en croissance : Maroc, Sénégal, CI, Niger. Spreads africains = prime de risque attractive pour investisseurs EM.",
+    opportunites:[
+      'Eurobonds souverains : rendement 8-12% en USD — NG, GH, KE, CI, SN actifs',
+      'Obligations UEMOA locales : BCEAO marché XOF — yield 6.5-8.5%, durée 3-10 ans',
+      'Sukuk islamiques : Côte d\'Ivoire ($300M 2023), Sénégal ($100M), Maroc — demande croissante',
+      'Green bonds africains : TICAD + COP financement — KE (green bond KES), ZA (Johannesburg)',
+      'Obligations municipales : Lagos, Nairobi, Le Caire — infrastructure urbaine',
+      'Obligations d\'entreprises locales : BRVM obligations CI/SN — diversification corporate',
+      'Fonds obligataires panafricains : diversification 10-15 pays, duration 5 ans, yield ~8%',
+      'Distressed debt africain : GH (restructuration 2023), ZM (2020-2023) — opportunité pour spécialistes',
+    ],
+    risques:[
+      'Risque de change : obligations locales XOF/XAF/KES exposées dépréciation vs USD',
+      'Refinancement : 60% des eurobonds africains arrivent à maturité 2024-2028 — wall of debt',
+      'Notation crédit : 15 pays africains en rating B/CCC — spread 500-1200 bps',
+      'Liquidité secondaire : peu d\'acheteurs → bid-ask spread large sur petites émissions',
+      'Risque restructuration : GH (2023), ZM (2020), ET, SN sous surveillance FMI',
+      'Coupure de l\'accès marché : hausse taux USD = fermeture fenêtre eurobond pour pays fragiles',
+    ],
+    acteurs:['JP Morgan (lead manager eurobonds africains)','Citi Africa','Standard Bank CIB','Afreximbank (garanties)','African Export-Import Bank','BOAD (marché UEMOA)','IFC (green bonds)','Nuveen / Franklin Templeton (acheteurs EM)'],
+    cadre_reglementaire:'CREPMF (marché obligataire BRVM/UEMOA). COSUMAF (CEMAC). Chaque pays : SYSCOHADA comptes émetteurs. Notation : Moody\'s, Fitch, S&P + GCR Ratings (Afrique). SEC Nigeria, CMA Kenya régulent marchés locaux. ICMA standards internationaux.',
+    modes_entree:['Achat primaire (participation émission souveraine) — dealer banks','Fonds obligataires africains (SFI, Franklin, Amundi)','Mandat gestion obligataire panafricain (>$50M AuM)','Desk trading fixed income EM (prop ou agency)','Prêteur bilatéral : participation syndication BAD/BOAD'],
+    financement:['BOAD lignes refinancement','Afreximbank garanties émissions','IFC mobilisation secteur privé','FMI/Banque Mondiale DSF (Debt Sustainability Framework)','Marchés internationaux : Reg S / Rule 144A (US investors)'],
+    corridors:['UEMOA : marché obligataire régional intégré 8 pays XOF','CEMAC : BEAC bons du trésor 6 pays XAF','EAC : harmonisation marchés KE/TZ/UG/RW en cours','Afrique Nord : EG/MA/TN eurobonds + marchés locaux profonds'],
+    zlecaf_impact:'Protocole services financiers ZLECAf : passeport obligataire africain. Bourse panafricaine (AELP) en discussion. Fonds obligataire ZLECAf : $20Mds pour financer infrastructures continentales. Eurobond continental UA envisagé.',
+    indicateurs_cles:['Eurobonds africains en circulation : $120Mds (2024)','Yield moyen eurobond Afrique : 9.5% (spread +650 bps vs UST)','Marché obligataire UEMOA : XOF 8,200Mds émis 2023','Nb pays africains notés : 32 / 54'],
+    pays_cles:['NG','ZA','EG','MA','KE','CI','SN','GH','TZ','CM','DZ','MU'],
+    wacc_range:'8-14%', croissance:'11% CAGR encours', tam:'$120Mds USD encours + $30Mds/an nouvelles émissions'
   }
 ];
 
