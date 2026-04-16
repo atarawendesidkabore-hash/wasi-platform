@@ -4400,10 +4400,16 @@ async function sendChat() {
 
   // Snapshot history BEFORE pushing — avoids duplicate user message to API
   const historySnapshot = chatHistory.slice(-10);
-  const reply = await callWASIChat(msg, currentCountry ? COUNTRIES.find(c => c.code === currentCountry)?.name : 'AFRIQUE', historySnapshot);
+  let reply;
+  try {
+    reply = await callWASIChat(msg, currentCountry ? COUNTRIES.find(c => c.code === currentCountry)?.name : 'AFRIQUE', historySnapshot);
+  } catch(e) {
+    console.error('WASI chat error:', e);
+    reply = generateLocalResponse(msg, currentCountry||'');
+  }
 
   typing.classList.remove('show');
-  appendChatMsg(reply, 'bot');
+  appendChatMsg(reply||'Erreur inattendue. Veuillez réessayer.', 'bot');
   // Push both turns AFTER the response is received
   chatHistory.push({role: 'user', content: msg});
   chatHistory.push({role: 'assistant', content: reply});
@@ -4984,7 +4990,7 @@ ${OHADA_ACTES.map((a,i)=>`  ${i+1}. ${a}`).join('\n')}
     const codeKw = ['code de commerce','droit commercial','code des societes','droit des societes','acte de commerce','fonds de commerce','effets de commerce','cama ','pia ','petroleum industry act','companies act','startup act','finance act','code civil','obligations et contrats','doc maroc','code des assurances','cima ','oapi ','propriete intellectuelle','code minier','code foncier','marches publics','code travail','droit du travail','code bancaire','droit bancaire','arbitrage commercial','faillite','procedures collectives','redressement judiciaire','liquidation judiciaire','uemoa','cemac','beac ','bceao ','cobac','cosumaf','brvm ','bvmac','crepmf','eac ','sadc ','comesa','syscohada','syscoa','plan comptable','codes africains','cadres juridiques','legislation commerciale','legal framework','commercial law'];
     const isCodeQuery = codeKw.some(kw=>msgN.includes(n_(kw)));
     if(isCodeQuery){
-      const cc = focusedC ? focusedC.code : (countryCode||null);
+      const cc = focusedC ? focusedC.code : (focus||null);
       return buildCodeReference(message, cc);
     }
   }
