@@ -6545,18 +6545,34 @@ ${(s.pays_cles||[]).map(code=>{
   return ct ? ct.flag+' '+ct.name : code;
 }).join(' | ')||'N/A'}
 
+━━━ MODÉLISATION FINANCIÈRE INDICATIVE ━━━
+• WACC sectoriel : ${s.wacc_range||'N/A'}
+• Croissance marché : ${s.croissance||'N/A'}
+• TAM (marché adressable) : ${s.tam||'N/A'}
+• IRR cible investisseur : ${s.wacc_range ? Math.round(parseInt(s.wacc_range.split('-')[1]||s.wacc_range.split('-')[0],10)*1.4)+'–'+Math.round(parseInt(s.wacc_range.split('-')[1]||s.wacc_range.split('-')[0],10)*1.8)+'%' : 'N/A'}
+• Ticket d\'entrée typique : ${s.modes_entree && s.modes_entree[0] ? s.modes_entree[0].includes('$') ? s.modes_entree[0].match(/\$[\d,Mds]+[\w\s]*/)?.[0]||'Voir modes d\'entrée' : 'Voir modes d\'entrée' : 'N/A'}
+• Horizon de rentabilité : ${s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 16 ? '7-12 ans' : s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 12 ? '4-7 ans' : '3-5 ans'}
+
+━━━ MATRICE RISQUE/RENDEMENT WASI ━━━
+• Risque global      : ${s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 16 ? '🔴 ÉLEVÉ' : s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 12 ? '🟡 MODÉRÉ' : '🟢 FAIBLE-MODÉRÉ'}
+• Liquidité sortie   : ${['finance','telecom','tech'].includes(s.id) ? '🟢 Bonne (acheteurs stratégiques + PE)' : ['mining','petrole_gaz'].includes(s.id) ? '🟡 Modérée (majors + fonds souverains)' : '🔴 Faible (actifs illiquides, horizon long)'}
+• Exposition FX      : ${['microfinance','diaspora_fintech'].includes(s.id) ? '🔴 Très élevée (multi-devises)' : ['energie','logistics','industrie'].includes(s.id) ? '🟡 Modérée (revenus locaux, dette USD)' : '🟡 Modérée'}
+• Score ESG WASI     : ${['eau','agriculture_climate','hydrogene','edu','health'].includes(s.id) ? '🟢 Fort impact positif SDG' : ['defense_securite','petrole_gaz'].includes(s.id) ? '🔴 Sensible — due diligence ESG critique' : '🟡 Neutre à positif selon structuration'}
+• Résilience cycle   : ${['agri','eau','sante','edu','agroalim'].includes(s.id) ? '🟢 Défensif — demande structurelle' : ['mining','petrole_gaz','energie'].includes(s.id) ? '🔴 Cyclique — sensible cours mondiaux' : '🟡 Semi-cyclique'}
+
 ━━━ RECOMMANDATION WASI ━━━
 ${s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 16
-  ? '🔴 Secteur à rendement élevé mais risque significatif. Structurer avec garanties institutionnelles (IFC, MIGA). Horizon 7-10 ans minimum.'
+  ? '🔴 Secteur à rendement élevé mais risque significatif. Structurer avec garanties institutionnelles (IFC, MIGA). Horizon 7-10 ans minimum. Partenariat local et couverture FX obligatoires.'
   : s.wacc_range && parseInt(s.wacc_range.split('-')[0],10) >= 12
-  ? '🟡 Secteur porteur. Partenariat local indispensable. Approche progressive, monitoring trimestriel WASI Index.'
-  : '🟢 Secteur prioritaire WASI. Conditions d\'entrée favorables. Privilégier les marchés côtiers (CI, SN, GH, BJ) pour un premier déploiement.'}
+  ? '🟡 Secteur porteur avec rendement équilibré. Partenariat local indispensable. Approche progressive : pilote 1 pays → régionalisation. Monitoring trimestriel WASI Index.'
+  : '🟢 Secteur prioritaire WASI — conditions d\'entrée favorables. Privilégier les marchés côtiers (CI, SN, GH, BJ) ou hubs EAC (KE, RW) pour le premier déploiement. Scalabilité rapide possible.'}
 
-Posez-moi des questions spécifiques :
-• "Opportunités ${s.name} en [pays]" — analyse pays+secteur
+💬 Questions suggérées :
+• "Opportunités ${s.name} en [pays]" — analyse croisée pays × secteur
 • "Acteurs dominants ${s.name}" — panorama concurrentiel
-• "Financer un projet ${s.name}" — structuration financière
-• "Risques ${s.name} Sahel" — géopolitique sectorielle`;
+• "Financer un projet ${s.name}" — structuration dette/equity
+• "Risques ${s.name} Sahel" — analyse géopolitique sectorielle
+• "Comparer ${s.name} avec [autre secteur]" — matrice comparative WASI`;
 }
 
 function buildDeepCountryAnalysis(c, d) {
@@ -7364,6 +7380,198 @@ const WASI_SECTORS = [
     indicateurs_cles:['Population sans eau potable : 750M (Afrique)','Marché eau Afrique : $20Mds (2024)','Prix crédit carbone africain : $5-50/tCO2 selon qualité','Investissement WASH nécessaire : $35Mds/an (vs $7Mds actuel)'],
     pays_cles:['MA','EG','KE','TZ','ET','NG','ZA','SN','CI','RW','MZ','ZM'],
     wacc_range:'10-14%', croissance:'7.8% CAGR', tam:'$25Mds USD'
+  },
+  {
+    id:'petrole_gaz', icon:'🛢️', name:'Pétrole, Gaz & LNG Offshore',
+    keywords:['petrole','gaz naturel','gnl','lng','fpso','offshore','hydrocarbure','raffinage','psa','bloc','petrochimie','butane','gpl','kerosene','diesel','brent','forage'],
+    desc:"Afrique produit 8.6M barils/jour (10% mondial). Réserves prouvées : 126 Mds barils. LNG en explosion : Mozambique (Coral Sul), Sénégal (GTA), Tanzanie. Transition énergétique pèse sur financement amont — fenêtre 2024-2035 pour monétiser les actifs.",
+    opportunites:[
+      'LNG Afrique de l\'Est : Mozambique Rovuma ($20Mds TotalEnergies), Tanzanie TPDC/Shell',
+      'GTA (Grand Tortue Ahmeyim) Sénégal-Mauritanie : opérationnel 2024 — premier LNG West Africa',
+      'Raffinage local : Dangote Refinery NG (650,000 bbl/j) — import substitution diesel',
+      'Pétrochimie : transformer gaz en engrais, plastiques, méthanol — valeur ajoutée x5',
+      'Services pétroliers locaux : forage, maintenance FPSO, well services — local content 40-60%',
+      'Trading LNG spot : Afrique du Nord (Algérie, Égypte) + LNG East Africa vers Asie',
+      'Carbon capture sur sites pétroliers : EU Taxonomy compliance pour financement vert',
+      'Exploration blocs deepwater : Golfe de Guinée, Afrique Est — prospectivité élevée',
+    ],
+    risques:[
+      'Stranded assets : IEA net-zero 2050 réduit financement new oil — coût capital +3-5%',
+      'Volatilité prix : Brent $65-95 range 2024 — sensibilité budget états petro-dépendants',
+      'PSA renégociation : Nigeria (PIA 2021), Sénégal, Guinée augmentent part État',
+      'Sécurité installations : Delta Niger (NG) piraterie, Mozambique (Cabo Delgado) insécurité',
+      'Financement ESG : banques européennes (BNP, HSBC) se retirent du financement pétrolier',
+      'Local content contraignant : Nigeria NCDMB impose 70-90% sur services — coûts opex +25%',
+    ],
+    acteurs:['TotalEnergies (présent dans 15+ pays africains)','ENI (NG/MZ/CI/EG)','Shell (NG — SPDC)','Azule Energy (AO, spin-off BP+ENI)','Woodside (SN Sangomar)','NNPC Nigeria','Sonangol Angola','PETROSEN Sénégal'],
+    cadre_reglementaire:'PSA (Production Sharing Agreement) = modèle dominant Afrique. PIA Nigeria 2021. Code pétrolier SN 2019. Loi pétrolière MZ 2014. ITIE (transparence paiements). API standards techniques. OPEC (Algérie, Gabon, NG, Congo, Guinée Équatoriale).',
+    modes_entree:['Partenaire opérateur bloc offshore (ticket $50M-500M)','Services pétroliers : pas de risque réservoir, marge 15-25%','Offtake LNG + financement projet (banques export)','Acquisition actifs stranded (acheteur opportuniste)','Midstream (pipelines, terminaux) : revenus régulés stables'],
+    financement:['Export credit agencies : UKEF, BNDES, KEXIM, Sinosure','Africa Export-Import Bank (Afreximbank)','Islamic finance (Murabaha, Istisna) — Golfe','Project finance (banques syndiquées, tenors 15-20 ans)','Obligations souveraines pétrolières (Eurobonds)'],
+    corridors:['Pipeline WAGP Nigeria-Ghana-Togo-Bénin','EAPP pipeline Éthiopie-Djibouti','Agadem-Sème pipeline Niger-Bénin (opérationnel 2024)','GTA pipeline sous-marin SN-MR'],
+    zlecaf_impact:'Protocole énergie ZLECAf : marché gaz continental. Interconnexion Afrique Centrale-Ouest via CAPP. Pétrochimie régionale : transformer gaz en intrants industriels pour ZLECAf.',
+    indicateurs_cles:['Brent ICE : $75-95/bbl (2024)','LNG spot Asia JKM : $10-15/MMBtu','Réserves pétrolières Afrique : 126 Mds barils','Production LNG Afrique prévue 2030 : 120 Mt/an (+80%)'],
+    pays_cles:['NG','AO','DZ','EG','GQ','GA','CG','SN','MR','MZ','TZ','LY'],
+    wacc_range:'14-20%', croissance:'3.1% CAGR amont / 12% LNG', tam:'$240Mds USD (production + services)'
+  },
+  {
+    id:'hydrogene', icon:'🔬', name:'Hydrogène Vert & Transition Énergétique',
+    keywords:['hydrogene','hydrogène vert','green hydrogen','ammoniaque','electrolyse','eolien','solaire','stockage energie','batterie','lithium','cobalt','transition','carbone','net zero','neutralite'],
+    desc:"Afrique = futur hub hydrogène vert mondial. Namibie (Hyphen H2 $10Mds), Maroc (MASEN), Égypte (Green Hydrogen Complex Suez). Potentiel : 5,600 TWh/an d\'électricité renouvelable = 2x demande mondiale. Demande EU via REPowerEU.",
+    opportunites:[
+      'Production H2 vert : coût de production prévu $1.5-2/kg en 2030 (compétitif vs fossile)',
+      'Ammoniaque verte pour engrais : remplace ammoniaque fossile — marché $60Mds/an',
+      'Export vers Europe : REPowerEU cible 10 Mt H2 importé/an — Afrique Nord+Namibie premiers',
+      'Stockage énergie pour mini-réseaux : H2 comme buffer saison sèche (solaire/éolien)',
+      'Décarbonation industries lourdes : acier, ciment, mines — clients captifs locaux',
+      'Méthanation : H2 + CO2 → méthane synthétique pour réseau gaz existant',
+      'Mobilité hydrogène : bus, camions mines — Afrique du Sud pilote transport H2',
+      'Formation & ingénierie H2 : compétences rares — premium salarial x2-3',
+    ],
+    risques:[
+      'Coût capex électrolyseurs : $1,200-1,800/kW aujourd\'hui — baisse rapide attendue',
+      'Infrastructure transport : H2 liquide ou pipeline — investissement colossal',
+      'Demande incertaine : Europe retarde décisions H2 import 2023-2024',
+      'Eau douce pour électrolyse : désertification Afrique Nord réduit disponibilité',
+      'Réglementation inexistante : pas de standard H2 africain — risque de fragmentation',
+      'Compétition géopolitique : Australie, Chili, Moyen-Orient aussi positionnés',
+    ],
+    acteurs:['MASEN Maroc (Green Hydrogen)','Hyphen Hydrogen Energy (NA)','H2-Industries','Engie Africa (Green H2)','TotalEnergies Renewables Africa','Scatec ASA','AFC (Africa Finance Corporation)','African Development Bank'],
+    cadre_reglementaire:'Réglementation H2 quasi-inexistante — en construction. EU Hydrogen Bank (financement import). Namibia Green Hydrogen Bill 2023. Maroc Green H2 Roadmap 2030. Accords bilatéraux EU-Afrique du Nord. IRENA partenariats.',
+    modes_entree:['Développeur IPP H2 : permis + PPA export (horizon 15+ ans)','Fournisseur électrolyseurs & équipements','EPC pour parcs éoliens/solaires alimentant H2','Investisseur infrastructure (pipeline, port H2 liquide)','Fonds impact énergie propre (rendement 8-12% + carbone)'],
+    financement:['EU Global Gateway (€150Mds Afrique)','KfW Deutsche Bank Green','AFD transition énergétique','IFC Climate Finance','Bonds verts H2 (taux 5-7% si garantis)','PIDG / InfraCredit'],
+    corridors:['Corridor H2 Maroc-Espagne : Medgaz pipeline reconverti','Corridor Namibie-Rotterdam : tankers NH3 liquide','Axe Égypte-Israël-Europe : Eastmed H2 pipeline','Corridor Mauritanie-Sénégal-Europe : câble HVDC + H2'],
+    zlecaf_impact:'H2 vert Afrique pour Afrique : décarboner les mines (DRC, ZM, ZA), cimenteries, fertilisants. ZLECAf Protocole Énergie : marché électricité + H2 unifié. Objectif UA : Afrique hub H2 mondial 2040.',
+    indicateurs_cles:['Coût H2 vert Afrique 2030 cible : $1.5-2/kg','Potentiel export H2 Afrique → Europe : 20 Mt/an (2035)','Investissements annoncés H2 Afrique : $35Mds (2023-2030)','LCOE solaire Afrique désertique : $0.02-0.03/kWh'],
+    pays_cles:['MA','NA','EG','ZA','MR','DZ','TN','KE','ET','MZ','NG','SN'],
+    wacc_range:'10-16%', croissance:'45% CAGR 2024-2030 (base faible)', tam:'$85Mds USD cible 2035'
+  },
+  {
+    id:'defense_securite', icon:'🛡️', name:'Défense, Sécurité & Souveraineté',
+    keywords:['defense','securite','armee','militaire','gendarmerie','police','renseignement','souverainete','frontiere','terrorisme','sahel','cybersecurite gouv','surveillance','drones securite','bss'],
+    desc:"Budget défense africain : $50Mds/an (+8%/an). Sahel : dépenses sécurité x3 depuis 2015. 54 pays cherchent à diversifier fournisseurs (hors France post-Mali/BF/NE). Marché civil sécurité : surveillance, biométrie, frontières — $15Mds/an.",
+    opportunites:[
+      'Cybersécurité gouvernementale : chaque État veut SOC souverain — $200M-2Mds/contrat',
+      'Surveillance frontières & littoral : drones, capteurs, C2 — Golfe de Guinée piraterie',
+      'Biométrie & identité : cartes nationales, passeports, registres civils — marché $5Mds',
+      'Formation forces de sécurité : académies, simulateurs, e-training tactique',
+      'Logistique militaire & maintenance : MRO (maintenance, repair, overhaul) équipements',
+      'Sécurité privée corporations : mines, sites pétroliers, ONG — G4S, Garda World modèles',
+      'Technologies dual-use : communications sécurisées, imagerie satellite, IA surveillance',
+      'PPP sécurité urbaine : vidéosurveillance villes (Safe City) — Huawei, Hikvision concurrencés',
+    ],
+    risques:[
+      'Sensibilité politique extrême : contrats dépendent des relations diplomatiques',
+      'Risque réputationnel : équipements utilisés contre opposition civile — ESG impact',
+      'Dépendance fournisseur unique : risque sanctions, embargo, interruption livraison',
+      'Corruption & commissions : secteur défense = risque FCPA/UK Bribery Act majeur',
+      'Instabilité régimes : coup d\'État = annulation contrats existants (Mali, BF, NE)',
+      'Réglementation export : licences EAR/ITAR USA, OSCE UE — délais 12-24 mois',
+    ],
+    acteurs:['Thales (présent 30+ pays africains)','Airbus Defence','Leonardo','MBDA','Safran','IAI Israel','NORINCO Chine','Embraer Défense','Paramount Group (ZA)'],
+    cadre_reglementaire:'Traité commerce des armes (TCA). Règlement UE double-usage. ITAR/EAR USA. Droit africain : CEEAC protocole sécurité, CEDEAO convention armes légères. Marchés publics défense = procédures spéciales non-OHADA.',
+    modes_entree:['Offset industrial : 30-40% valeur contrat réinvesti localement','JV avec champion national (accès contrats souverains)','Services (pas de matériel) : formation, conseil, cyber — capital léger','Intégrateur systèmes (SI) : assemblage local de composants importés','Franchise sécurité privée : licence + procédures + équipements'],
+    financement:['Crédits export souverains (DGA France, UKEF, Exim USA)','Financements bilatéraux gouvernement-à-gouvernement','Obligations défense nationale (sukuk sécurité Maroc, EG)','IFC (pour dual-use civil uniquement)','Fonds souverains du Golfe (UAE, KSA pour pays partenaires)'],
+    corridors:['G5 Sahel : BF-ML-MR-NE-TD — coopération sécurité régionale','Golfe de Guinée : surveillance maritime NG-GH-CI-CM','Corne d\'Afrique : ET-DJ-SO-KE — AMISOM sécurité régionale','EAC : brigade de réserve Force de l\'Afrique de l\'Est'],
+    zlecaf_impact:'Protocole paix & sécurité ZLECAf. Force africaine en attente (FAA). Commerce intra-africain sécurisé = condition préalable ZLECAf. Marché sécurité privée panafricaine : $25Mds/an potentiel.',
+    indicateurs_cles:['Budget défense Afrique : $50Mds/an (2024)','Croissance : +8%/an (Sahel +20%)','Marché sécurité privée : $15Mds Afrique','Nombre coups d\'État 2020-2024 : 9 (record historique)'],
+    pays_cles:['NG','EG','MA','DZ','ZA','KE','ET','TZ','GH','TN','CM','SN'],
+    wacc_range:'N/A (contrats souverains)', croissance:'8.2% CAGR', tam:'$65Mds USD'
+  },
+  {
+    id:'agriculture_climate', icon:'🌱', name:'Agriculture Climatique & Crédits Carbone',
+    keywords:['carbone','credit carbone','redd','redd+','reforestation','agroforesterie','compost','biochar','sol','sequestration','methane','emission','ges','verra','gold standard','voluntary carbon','acm'],
+    desc:"Forêts africaines = 25% du stock carbone mondial. REDD+ potentiel : 5Mds tCO2/an. Marché volontaire carbone Afrique : $150M actuels → $25Mds potentiel 2030. Agroforesterie : double revenu agriculteurs + séquestration. Déficit de crédits de qualité certifiée.",
+    opportunites:[
+      'REDD+ forestier : forêts Congo, Amazonie africaine — $5-50/tCO2 selon qualité',
+      'Agroforesterie carbone : café sous ombrage, karité, néré — crédit + revenu agriculteur',
+      'Cookstoves efficaces : chaque foyer = 3-5 tCO2 évitées/an — 500M foyers potentiels',
+      'Biogaz rural : déchets agricoles → énergie propre + crédits méthane (GWP x25)',
+      'Agriculture régénérative : sols africains = puits carbone sous-exploité',
+      'Prairie & savane : séquestration prairie — méthodologie ACM0003 Verra',
+      'Blue carbon : mangroves africaines 50,000 km² — séquestration côtière',
+      'Financement carbone PME agricoles : agrégation smallholders pour masse critique',
+    ],
+    risques:[
+      'Intégrité carbone : Verra scandales 2023 (90% crédits REDD+ surestimés) — réputation',
+      'Prix volatils : carbone volontaire $5-50/tCO2 — dépend de la qualité du projet',
+      'Permanence : feux de forêt, déforestation = invalidation crédits ex-post',
+      'Communautés locales : droits FPIC (consentement préalable éclairé) — risque conflits',
+      'MRV complexe : mesure, rapport, vérification — coût $0.5-3/tCO2 selon méthode',
+      'Réglementation Article 6 Paris : règles marchés carbone internationaux encore floues',
+    ],
+    acteurs:['Wildlife Works Carbon (Kenya)','South Pole Group','Terraformation','African Forest Initiative','ACX (African Carbon Exchange)','Rubicon Carbon','Carbon Tanzania','ClimateSeed'],
+    cadre_reglementaire:'Accord de Paris Article 6 : marchés carbone bilatéraux et multilatéraux. Verra VCS (Verified Carbon Standard). Gold Standard. Plan Vivo (communautés). CORSIA aviation. Article 6.4 : mécanisme ONU en cours. Chaque pays développe ses propres registres carbone.',
+    modes_entree:['Développeur projet carbone REDD+ (ticket $2-50M sur 30 ans)','Agrégateur smallholders : regrouper 10,000+ agriculteurs pour masse critique','Acheteur offtake : contrat forward achat crédits certifiés','Conseil & MRV : services aux porteurs de projets','Fonds carbone Afrique : diversification projets, rendement 8-15%'],
+    financement:['Fonds Vert pour le Climat (GCF)','BioCarbon Fund ISFL (Banque Mondiale)','CAFI (Central African Forest Initiative)','Bezos Earth Fund','AFD Forêts','Amazon Fund (applicable Afrique)'],
+    corridors:['Bassin Congo : 2e poumon vert mondial — DRC/CG/CM/CF','Ceinture verte Sahel : Grand Muraille Verte 8,000 km','Mangroves Afrique Ouest : SN/GM/GN/SL/LR','Forêts Afrique Est : KE/TZ/UG/RW'],
+    zlecaf_impact:'Marché carbone africain intégré : échanges crédits entre États. Article 6 ZLECAf : potentiel d\'un carbon market africain unique. Revenu additionnel États : $25Mds/an si plein potentiel REDD+.',
+    indicateurs_cles:['Crédits carbone africains émis 2023 : 150M tCO2 (15% marché mondial)','Prix carbone volontaire qualité : $15-50/tCO2','Déforestation Afrique : 3.9M ha/an (RDC : 1.4M ha/an)','Potentiel séquestration Afrique : 5 Mds tCO2/an'],
+    pays_cles:['CD','CG','CF','CM','GA','GN','TZ','KE','ET','UG','MA','MZ'],
+    wacc_range:'8-14%', croissance:'35% CAGR (marché volontaire)', tam:'$25Mds USD potentiel 2030'
+  },
+  {
+    id:'diaspora_fintech', icon:'💸', name:'Diaspora, Remittances & Cross-Border Finance',
+    keywords:['diaspora','remittance','transfert argent','western union','worldremit','sendwave','lemfi','wave','wise','paypal','virement international','transfert international','corridor paiement','forex africa'],
+    desc:"$100Mds de remittances vers Afrique en 2023 (+5.2%). Plus que l\'aide publique au développement (ODA $40Mds) + IDE ($45Mds) combinés. 40M Africains en diaspora. Frais moyens : 7.5% (ODD cible : <3%). Marché sous-disruption massive.",
+    opportunites:[
+      'Fintechs remittances corridor-specific : LemFi, Sendwave, Nala — frais 0-1% vs WU 8%',
+      'Diaspora bonds : obligations souveraines ciblant diasporas — KE ($600M), EG, SN',
+      'Investissement diaspora : plateforme co-investissement dans immobilier, PME au pays',
+      'Épargne & retraite transfrontalière : produits d\'épargne pour retour au pays',
+      'Assurance vie diaspora : protection familiale au pays — prime €20-50/mois',
+      'Change & trade forex : corridor Europe-Afrique — PAPSS + SWIFT GPI',
+      'KYC diaspora : identité numérique africain = accès services financiers distance',
+      'Matchmaking IDE diaspora : plateformes type African Business Angel Network',
+    ],
+    risques:[
+      'Compliance AML/KYC : réglementations anti-blanchiment renforcées — coût de mise en conformité',
+      'Compte de correspondance : de-risking bancaire réduit accès corridors certains pays',
+      'Volatilité FX : NGN -40% 2023, GHS -25% 2023 — erosion valeur transferts',
+      'Concurrence prix extrême : Wave impose 0% frais en UEMOA — guerre des prix',
+      'Réglementation cross-border : BCEAO, CBN, CBK ont des règles divergentes',
+      'Cyberfraude : SIM swap, phishing diaspora = pertes $500M+/an en Afrique',
+    ],
+    acteurs:['Western Union (réseau 500,000 points)','MoneyGram','WorldRemit','Sendwave (Zepz)','LemFi (Canada/UK vers NG/GH/KE)','Nala (EAC)','Wave (UEMOA)','PAPSS (Pan-African Payment & Settlement System)'],
+    cadre_reglementaire:'FATF recommandations AML. PAPSS opérationnel depuis 2022 (Afreximbank). SWIFT GPI pour correspondent banking. BCEAO : instruction transferts extérieurs. Chaque pays : réglementation change + limites transferts. CEDEAO : protocole paiements.',
+    modes_entree:['Licence EMI (Electronic Money Institution) dans 1 pays pivot','API partnership avec banque locale (BaaS)','Agent réseau : points de retrait capillarité','B2B corridor : paiements commerciaux import/export PME','Agrégateur corridors : plateforme comparaison + routing optimal'],
+    financement:['IFC Fintech','Flourish Ventures','Quona Capital (VC fintech inclusion)','Y Combinator (nombreuses fintechs remittance)','Partech Africa','Série A-B : fonds africains + internationaux'],
+    corridors:['Europe→Afrique Ouest : UK-NG, FR-CI/SN/CM, IT-SN — 60% des remittances','USA→Afrique : USA-NG, USA-GH, USA-KE — 20%','Intra-Afrique : CI→BF/ML/NE (migrants), ZA→ZW/MZ/ZM','Golfe→Afrique : UAE/KSA→EG/ET/NG — 15%'],
+    zlecaf_impact:'PAPSS ZLECAf : paiements intra-africains en devises locales (sans USD intermédiaire). Objectif : frais <1%, délai <24h pour 90% paiements intra-africains. Potentiel économie : $5Mds/an en frais bancaires.',
+    indicateurs_cles:['Remittances Afrique : $100Mds (2023)','Frais moyens corridor Afrique : 7.5% (ODD : <3%)','Nb bénéficiaires : 200M personnes','Part remittances dans PIB : Lesotho 15%, Gambie 25%, Comores 21%'],
+    pays_cles:['NG','GH','KE','EG','MA','SN','ET','CM','CI','TZ','ZA','MR'],
+    wacc_range:'12-16%', croissance:'6.8% CAGR', tam:'$100Mds USD flux annuels'
+  },
+  {
+    id:'souverainete_alim', icon:'🌽', name:'Souveraineté Alimentaire & Engrais',
+    keywords:['engrais','fertilisant','phosphate','azote','uree','ocp','intrant agricole','semence','cereale','ble','mais','sorgho','stock alimentaire','securite alimentaire','fao','grenier','import substitution alimentaire'],
+    desc:"Afrique importe $50Mds de nourriture/an (+50% post-Ukraine 2022). Dépendance blé/riz/engrais critique. OCP Maroc : #1 mondial phosphates — levier géopolitique africain. Souveraineté alimentaire = urgence politique post-Covid+Ukraine pour 54 gouvernements.",
+    opportunites:[
+      'Production engrais locaux : OCP Maroc ($6.5Mds invest Afrique), Dangote Fertiliser NG',
+      'Semences améliorées certifiées : marché $3Mds — productivité x2-3 possible',
+      'Stockage stratégique : silos, entrepôts frigorifiques — financement gouvernemental garanti',
+      'Irrigation & eau agricole : Sahel, Éthiopie, Mali — marché $10Mds infrastructure',
+      'Import-substitution blé : durum MA, sorgho SN, manioc NG — alternatives locales',
+      'Agri-input digitaux : commande engrais & semences via mobile — Sesi Technologies (GH)',
+      'Marchés de gros régionaux : bourses céréalières régionales (EAGC East Africa)',
+      'Aquaculture intensive : tilapia, crevettes — substitution proteines importées',
+    ],
+    risques:[
+      'Dépendance import engrais : 85% engrais Afrique importés (Russie, Biélorussie, Chine)',
+      'Prix volatils : urée $250→$900/t post-Ukraine (2022) — agriculteurs dévastés',
+      'Subventions engrais : états subventionnent (BF, GH, NG) → perturbation marché privé',
+      'Logistique last-mile : engrais disponible en capitale mais absent à 200km',
+      'Falsification intrants : 40% engrais en Afrique de l\'Ouest sous-dosés ou falsifiés',
+      'Sécheresses répétées : El Niño 2023-2024 — assurance récolte indispensable',
+    ],
+    acteurs:['OCP Group Maroc (#1 mondial phosphates)','Dangote Fertiliser Nigeria','Yara International (distribution)','AFAP (Africa Fertilizer and Agribusiness Partnership)','Sesi Technologies GH (agri-input tech)','Alliance Bioversity-CIAT (semences)','FAO / PAM'],
+    cadre_reglementaire:'Réglementation engrais : CEDEAO harmonisation qualité engrais (Abuja Declaration). Chaque pays : ministère agriculture, normes AFNOR/ISO engrais. COMESA : zone libre échange semences certifiées. Programmes nationaux semences améliorées. Foncier : bail emphytéotique pour fermes.',
+    modes_entree:['Usine engrais locale (ticket $50-500M, ZES + exonérations)','Distribution réseau agro-dealers (franchise agent rural)','Plateforme e-commerce agricole : intrants + crédit + conseil','Import-distribution en vrac (marges 15-25%)','PPP stock alimentaire : silos garantis par État'],
+    financement:['FAO/PAM financement sécurité alimentaire','BAD Programme Alimentation','BOAD (UEMOA)','Islamic Development Bank (IDB) agriculture halal','Fonds IFAD (FIDA en français)','Proparco agri-financement'],
+    corridors:['OCP→Afrique : Maroc livre engrais dans 40 pays africains (pipeline 2024)','EAGC corridor EAC : Kenya-Tanzanie-Ouganda-Rwanda-Burundi','UEMOA libre circulation produits agri : mais/riz/arachide sans droits','Corridor Mombasa-COMESA : trade céréales Afrique Est'],
+    zlecaf_impact:'ZLECAf Protocole Agriculture : suppression droits douane intrants agricoles. Échanges intra-africains agri : de $5Mds → $30Mds d\'ici 2035 visés. Banque africaine pour l\'alimentation (African Food Bank) : $10Mds capitalisé.',
+    indicateurs_cles:['Importations alimentaires Afrique : $50Mds/an','Part populations en insécurité alimentaire : 22% (FAO 2024)','Consommation engrais Afrique : 4M t/an (vs Asie 120M t)','Prix urée Afrique 2024 : $350-450/t FOB'],
+    pays_cles:['MA','NG','ET','EG','KE','TZ','GH','SN','CI','ZM','MW','BJ'],
+    wacc_range:'10-14%', croissance:'7.5% CAGR', tam:'$50Mds USD intrants + transformation'
   }
 ];
 
