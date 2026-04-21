@@ -2142,7 +2142,7 @@ input, select, textarea { font-family: inherit; outline: none; }
         <div class="sm-fixing-card">
           <h3>Derni&egrave;re s&eacute;ance de fixing</h3>
           <div class="sm-fixing-grid">
-            <div class="sm-fixing-stat"><div class="val">19 mars 2026</div><div class="lab">Date</div></div>
+            <div class="sm-fixing-stat"><div class="val" id="sm-fixing-date">—</div><div class="lab">Date</div></div>
             <div class="sm-fixing-stat"><div class="val">10h00-14h00 WAT</div><div class="lab">Horaires</div></div>
             <div class="sm-fixing-stat"><div class="val">847</div><div class="lab">Ordres ex&eacute;cut&eacute;s</div></div>
             <div class="sm-fixing-stat"><div class="val">229 700</div><div class="lab">Actions &eacute;chang&eacute;es</div></div>
@@ -8587,6 +8587,16 @@ function renderSMExchanges() {
 }
 
 function renderStockMarket() {
+  // Set dynamic "last fixing session" date — most recent Wednesday (BRVM fixes Wednesdays)
+  const dateEl = document.getElementById('sm-fixing-date');
+  if (dateEl) {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun, 1=Mon, ..., 3=Wed
+    const daysToLastWed = day >= 3 ? day - 3 : day + 4;
+    const lastWed = new Date(now);
+    lastWed.setDate(now.getDate() - daysToLastWed);
+    dateEl.textContent = lastWed.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  }
   const tbody = document.getElementById('sm-market-body');
   tbody.innerHTML = STOCK_MARKET_LISTINGS.map(s => {
     const cls = chgClass(s.change);

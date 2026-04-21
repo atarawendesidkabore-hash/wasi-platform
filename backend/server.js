@@ -8,6 +8,7 @@ require('dotenv').config();
 const express    = require('express');
 const cors       = require('cors');
 const rateLimit  = require('express-rate-limit');
+const crypto     = require('crypto');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -39,6 +40,29 @@ app.use(cors({
 
 app.use(express.json({ limit: '32kb' }));
 
+// ── Audit logging — structured, token-safe (hashed, never plaintext) ─────
+function auditLog(event) {
+  const entry = {
+    ts:       new Date().toISOString(),
+    event:    event.event,
+    // Token hash (first 8 chars of SHA-256) — identifies user without exposing token
+    tok:      event.token
+              ? crypto.createHash('sha256').update(event.token).digest('hex').slice(0, 8)
+              : 'anonymous',
+    endpoint: event.endpoint || '',
+    status:   event.status   || 0,
+    ms:       event.ms       || 0,
+    ip:       event.ip       || '',
+    // Message stats (no content — just metadata)
+    msg_count:  event.msg_count  || 0,
+    sys_len:    event.sys_len    || 0,
+    tokens_in:  event.tokens_in  || 0,
+    tokens_out: event.tokens_out || 0,
+  };
+  // Structured JSON log — parse with DataDog / Logtail / Papertrail
+  console.log(JSON.stringify(entry));
+}
+
 // ── Rate limiting — 30 requests per user per minute ──────────────────────
 const limiter = rateLimit({
   windowMs: 60 * 1000,
@@ -52,8 +76,12 @@ app.use('/api/', limiter);
 function requireToken(req, res, next) {
   const token = req.headers['x-wasi-token'] || req.body?.wasi_token;
   if (!token || !WASI_ACCESS_TOKENS.includes(token)) {
+    auditLog({ event: 'auth_fail', token, endpoint: req.path, status: 401,
+               ip: req.headers['x-forwarded-for'] || req.ip });
     return res.status(401).json({ error: 'Token WASI invalide ou manquant.' });
   }
+  // Attach token to request for downstream audit logging
+  req.wasiToken = token;
   next();
 }
 
@@ -70,6 +98,7 @@ app.get('/', (req, res) => {
 // ── Main proxy endpoint ───────────────────────────────────────────────────
 app.post('/api/chat', requireToken, async (req, res) => {
   const { messages, system, max_tokens } = req.body;
+  const t0 = Date.now();
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'messages[] requis.' });
@@ -99,7 +128,10 @@ app.post('/api/chat', requireToken, async (req, res) => {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      console.error('Anthropic error:', response.status, err);
+      auditLog({ event: 'chat_error', token: req.wasiToken, endpoint: '/api/chat',
+                 status: response.status, ms: Date.now()-t0,
+                 ip: req.headers['x-forwarded-for'] || req.ip,
+                 msg_count: cleanMessages.length, sys_len: (system||'').length });
       return res.status(response.status).json({
         error: err?.error?.message || 'Erreur API Anthropic ' + response.status
       });
@@ -112,10 +144,26 @@ app.post('/api/chat', requireToken, async (req, res) => {
       .join('\n')
       .trim() || 'Réponse indisponible.';
 
+    // Audit successful chat request (no message content — metadata only)
+    auditLog({
+      event:      'chat_ok',
+      token:      req.wasiToken,
+      endpoint:   '/api/chat',
+      status:     200,
+      ms:         Date.now() - t0,
+      ip:         req.headers['x-forwarded-for'] || req.ip,
+      msg_count:  cleanMessages.length,
+      sys_len:    (system || '').length,
+      tokens_in:  data.usage?.input_tokens  || 0,
+      tokens_out: data.usage?.output_tokens || 0,
+    });
+
     res.json({ reply, model: data.model, usage: data.usage });
 
   } catch (err) {
-    console.error('Proxy error:', err.message);
+    auditLog({ event: 'chat_exception', token: req.wasiToken, endpoint: '/api/chat',
+               status: 500, ms: Date.now()-t0,
+               ip: req.headers['x-forwarded-for'] || req.ip });
     res.status(500).json({ error: 'Erreur serveur proxy: ' + err.message });
   }
 });
@@ -123,9 +171,12 @@ app.post('/api/chat', requireToken, async (req, res) => {
 // ── Token validation endpoint (called on login) ───────────────────────────
 app.post('/api/auth', (req, res) => {
   const { token } = req.body;
+  const ip = req.headers['x-forwarded-for'] || req.ip;
   if (!token || !WASI_ACCESS_TOKENS.includes(token)) {
+    auditLog({ event: 'login_fail', token, endpoint: '/api/auth', status: 401, ip });
     return res.status(401).json({ valid: false, message: 'Token invalide.' });
   }
+  auditLog({ event: 'login_ok', token, endpoint: '/api/auth', status: 200, ip });
   res.json({ valid: true, message: 'Accès autorisé — WASI Intelligence.' });
 });
 

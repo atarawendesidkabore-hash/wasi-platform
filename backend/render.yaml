@@ -2,7 +2,7 @@ services:
   - type: web
     name: wasi-ai-proxy
     env: node
-    plan: free
+    plan: starter   # $7/mo — no cold-starts, always-on, required for commercial SLA
     buildCommand: npm install
     startCommand: node server.js
     envVars:
