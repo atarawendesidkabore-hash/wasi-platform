@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="WASI">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.anthropic.com https://wasi-intelligence-core.onrender.com https://wasi-web-api.onrender.com http://localhost:3000 http://localhost:3200 http://localhost:8010; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://wasi-ai-proxy.onrender.com https://wasi-intelligence-core.onrender.com https://wasi-web-api.onrender.com http://localhost:3000 http://localhost:3200 http://localhost:8010; img-src 'self' data:;">
 <link rel="manifest" href="manifest.json">
 <title>WASI — Whole African Strategic Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4380,13 +4380,10 @@ function renderComposite() {
 }
 
 /* ========== CHAT ========== */
-function getWasiApiKey() {
-  try { const u = new URLSearchParams(window.location.search).get('wasi_key'); if (u) { localStorage.setItem('wasi_anthropic_key', u); return u; } } catch(_) {}
-  try { const s = localStorage.getItem('wasi_anthropic_key'); if (s) return s; } catch(_) {}
-  const e = window.prompt('WASI AI — Clé API Anthropic requise\n\nEntrez votre clé sk-ant-... :') || '';
-  if (e) try { localStorage.setItem('wasi_anthropic_key', e); } catch(_) {}
-  return e;
-}
+// API key management removed — all Claude calls now go through the backend proxy
+// via wasi-ai-integration.js. No Anthropic key is stored or used in the browser.
+// Use ?wasi_token=YOUR_TOKEN or window.wasiSetToken('YOUR_TOKEN') to set access.
+function getWasiApiKey() { return ''; } // kept for legacy compatibility — safe no-op
 
 async function sendChat() {
   const input = document.getElementById('chat-input');
@@ -4399,18 +4396,18 @@ async function sendChat() {
   typing.classList.add('show');
   scrollChat();
 
-  // Snapshot history BEFORE pushing — avoids duplicate user message to API
-  const historySnapshot = chatHistory.slice(-10);
+  // NOTE: window.sendChat is overridden by wasi-ai-integration.js at boot.
+  // This fallback only runs if the integration script failed to load.
+  // In that case, use the local AI engine directly.
   let reply;
   try {
-    reply = await callWASIChat(msg, currentCountry ? COUNTRIES.find(c => c.code === currentCountry)?.name : 'AFRIQUE', historySnapshot);
-  } catch(e) {
-    console.error('WASI chat error:', e);
     reply = generateLocalResponse(msg, currentCountry||'');
+  } catch(e) {
+    reply = 'WASI Intelligence — erreur inattendue. Reformulez votre question.';
   }
 
   typing.classList.remove('show');
-  appendChatMsg(reply||'Erreur inattendue. Veuillez réessayer.', 'bot');
+  appendChatMsg(reply||'Réponse indisponible.', 'bot');
   // Push both turns AFTER the response is received
   chatHistory.push({role: 'user', content: msg});
   chatHistory.push({role: 'assistant', content: reply});
@@ -4452,117 +4449,10 @@ function scrollChat() {
   el.scrollTop = el.scrollHeight;
 }
 
-async function callWASIChat(message, countryFocus, history) {
-  const apiKey = getWasiApiKey();
-  if (!apiKey) return generateLocalResponse(message, countryFocus);
-
-  // ── Build rich system prompt with all WASI country data ──────────────────
-  var focusCode = currentCountry || '';
-  var focusC    = focusCode ? COUNTRIES.find(function(x){ return x.code === focusCode; }) : null;
-  var focusD    = focusCode ? (COUNTRY_DETAILS[focusCode] || {}) : {};
-  var focusR    = focusCode ? ((window.COUNTRY_RISKS||{})[focusCode] || {}) : {};
-
-  var countryData = COUNTRIES.map(function(c) {
-    var d = COUNTRY_DETAILS[c.code] || {};
-    var r = (window.COUNTRY_RISKS||{})[c.code] || {};
-    return c.flag+' '+c.name+' ('+c.code+'): Score='+c.score+'/100'+
-      (c.coup?' ⚠COUP':'')+
-      ', PIB='+c.gdp+', Croissance='+(d.growth||'N/A')+
-      ', Inflation='+(d.inflation||'N/A')+', Dette='+(d.dette_pib||'N/A')+
-      ', Président='+(d.president||'N/A')+', Devise='+(d.currency||'N/A')+
-      ', Ressources='+(d.resources||[]).join('/')+
-      ', Exports='+(d.exports||[]).join('/')+
-      ', Politique='+((d.indices||{}).politique||'?')+
-      '/Eco='+((d.indices||{}).economie||'?')+
-      '/Infra='+((d.indices||{}).infra||'?')+
-      '/Juridique='+((d.indices||{}).juridique||'?')+
-      '/Humain='+((d.indices||{}).humain||'?')+
-      '/Integration='+((d.indices||{}).integration||'?')+
-      (r.credit ? ', Crédit='+r.credit : '')+
-      (r.wacc   ? ', WACC='+r.wacc+'%' : '')+
-      (r.fxRisk ? ', FX='+r.fxRisk : '');
-  }).join('\n');
-
-  var legalCtxFocus = '';
-  if(focusC && typeof COUNTRY_LEGAL !== 'undefined' && COUNTRY_LEGAL[focusC.code]){
-    var lg = COUNTRY_LEGAL[focusC.code];
-    legalCtxFocus = '\nCADRE LÉGAL '+focusC.name+' : Régime='+lg.regime+' | Constitution='+lg.constitution+
-      ' | IS='+lg.is+' | TVA='+lg.tva+' | IRG='+lg.irg+
-      ' | OHADA='+(lg.ohada?'Oui':'Non')+' | Système='+lg.legal_sys+
-      ' | Invest='+lg.invest+' | ZoneMonétaire='+lg.zone_monetaire+
-      ' | Législations='+( lg.key||[]).join(', ')+
-      ' | '+lg.special;
-  }
-
-  var focusCtx = focusC ? (
-    '\n\n═══ PAYS EN FOCUS ACTIF : '+focusC.flag+' '+focusC.name+' ═══\n'+
-    'Score WASI : '+focusC.score+'/100'+(focusC.coup?' — RÉGIME MILITAIRE':'')+'\n'+
-    'PIB : '+focusC.gdp+' | Croissance : '+(focusD.growth||'N/A')+' | Inflation : '+(focusD.inflation||'N/A')+'\n'+
-    'Président : '+(focusD.president||'N/A')+' | Capitale : '+(focusD.capital||'N/A')+'\n'+
-    'Devise : '+(focusD.currency||'N/A')+' | Zone : '+(focusD.zone||'N/A')+'\n'+
-    'Ressources : '+(focusD.resources||[]).join(', ')+'\n'+
-    'Exports : '+(focusD.exports||[]).join(', ')+'\n'+
-    'Indices WASI — Politique:'+((focusD.indices||{}).politique||'?')+
-    ' Eco:'+((focusD.indices||{}).economie||'?')+
-    ' Infra:'+((focusD.indices||{}).infra||'?')+
-    ' Juridique:'+((focusD.indices||{}).juridique||'?')+
-    ' Humain:'+((focusD.indices||{}).humain||'?')+
-    ' Integration:'+((focusD.indices||{}).integration||'?')+'\n'+
-    (focusR.credit ? 'Signal Crédit WASI : '+focusR.credit+'\n' : '')+
-    (focusR.wacc   ? 'WACC : '+focusR.wacc+'% ('+focusR.waccNote+')\n' : '')+
-    (focusR.fxRisk ? 'Risque FX : '+focusR.fxRisk+' — '+focusR.fxNote+'\n' : '')+
-    (focusR.electionYear ? 'Prochaine élection : '+focusR.electionYear+'\n' : '')+
-    legalCtxFocus
-  ) : '';
-
-  var systemPrompt =
-    'Tu es WASI AI, l\'intelligence artificielle officielle de WASI (Whole African Strategic Intelligence), '+
-    'plateforme financière africaine fondée par Tarawendesida Thomas KABORE, FMVA, CEO à Ouagadougou.\n\n'+
-    'RÈGLES ABSOLUES :\n'+
-    '1. Utilise EXCLUSIVEMENT les données WASI ci-dessous pour les chiffres (PIB, score, croissance, inflation, president, ressources).\n'+
-    '2. Pour chaque pays mentionné : cite son Score WASI, PIB, croissance, président et ressources principales.\n'+
-    '3. Donne un verdict d\'investissement : FAVORABLE / PRUDENCE / ÉVITER + 3 secteurs porteurs + 2 risques majeurs.\n'+
-    '4. Réponds TOUJOURS en français. Style analytique, chiffré, paragraphes courts. Pas de markdown.\n'+
-    '5. Si une donnée manque dans ce prompt, dis-le clairement au lieu d\'inventer.\n\n'+
-    '═══ BASE DE DONNÉES WASI — 54 PAYS AFRICAINS ═══\n'+countryData+focusCtx;
-
-  var messages = [
-    ...(history||[]).slice(-10)
-      .filter(function(m){ return m.role==='user'||m.role==='assistant'; })
-      .map(function(m){ return {role:m.role, content:String(m.content)}; }),
-    {role:'user', content:message}
-  ];
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(function(){ controller.abort(); }, 15000);
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1800, system:systemPrompt, messages:messages})
-    });
-    clearTimeout(timeoutId);
-    if (!res.ok) {
-      const err = await res.json().catch(function(){ return {}; });
-      if (res.status === 401) {
-        try { localStorage.removeItem('wasi_anthropic_key'); } catch(_) {}
-        return 'Clé API invalide — rechargez la page et entrez une clé sk-ant-... valide.';
-      }
-      throw new Error(err.error && err.error.message ? err.error.message : 'Erreur API '+res.status);
-    }
-    const data = await res.json();
-    return (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n').trim() || 'Réponse indisponible.';
-  } catch(e) {
-    console.error('WASI AI error:', e.message);
-    try { return generateLocalResponse(message, countryFocus); } catch(e2) { return 'WASI Intelligence — mode hors ligne. Posez une question sur un pays africain.'; }
-  }
-}
+// callWASIChat removed — superseded by wasi-ai-integration.js sendChatWithWasiAi().
+// All Claude API calls now route through the backend proxy (wasi-ai-proxy.onrender.com).
+// The Anthropic API key is stored ONLY in Render environment variables, never in the browser.
+// Local AI fallback (generateLocalResponse) is still available with no token required.
 
 /* ═══════════════════════════════════════════════════════════════════
    WASI LOCAL AI ENGINE — full offline intelligence, no API key needed
