@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#C8922A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1535,9 +1535,9 @@ input, select, textarea { font-family: inherit; outline: none; }
   <div class="gate-box">
     <div class="gate-logo">W A S I</div>
     <div class="gate-sub">Whole African Strategic Intelligence</div>
-    <input type="text" id="gate-key" class="gate-input" placeholder="Clef d'acces WASI-XXXX-XX##" spellcheck="false" autocomplete="off">
-    <button class="gate-btn" onclick="validateGate()">ENTRER</button>
-    <div class="gate-hint">Demo: WASI-DEMO-DM01</div>
+    <input type="text" id="gate-key" class="gate-input" placeholder="Token d'accès WASI-…" spellcheck="false" autocomplete="off">
+    <button class="gate-btn" id="gate-btn" onclick="validateGate()">ENTRER</button>
+    <div class="gate-hint" id="gate-msg">Contactez <a href="mailto:support@wasi.africa" style="color:var(--accent)">support@wasi.africa</a> pour obtenir un accès</div>
   </div>
 </div>
 
@@ -3590,41 +3590,111 @@ function hideNotif() {
 }
 
 /* ========== ACCESS GATE ========== */
-function validateGate() {
-  const input = document.getElementById('gate-key');
-  const key = input.value.trim().toUpperCase();
-  // Accept WASI-DEMO-DM01 or pattern WASI-XXXX-XX##
-  const valid = key === 'WASI-DEMO-DM01' || /^WASI-[A-Z]{4}-[A-Z]{2}\d{2}$/.test(key);
-  if (!valid) {
+const WASI_PROXY_AUTH = 'https://wasi-ai-proxy.onrender.com/api/auth';
+const WASI_SESSION_KEY = 'wasi_session_token';
+
+// Restore a previously validated session on page load
+(function restoreSession() {
+  try {
+    const saved = localStorage.getItem(WASI_SESSION_KEY);
+    if (saved && /^WASI-/i.test(saved)) {
+      // Silently pre-fill the input; gate still shows until user presses Enter
+      // (avoids auto-granting access without user interaction)
+      const inp = document.getElementById('gate-key');
+      if (inp) inp.value = saved;
+    }
+  } catch(_) {}
+})();
+
+async function validateGate() {
+  const input   = document.getElementById('gate-key');
+  const btn     = document.getElementById('gate-btn');
+  const msgEl   = document.getElementById('gate-msg');
+  const key     = input.value.trim().toUpperCase();
+
+  // Basic format check — must start with WASI- and have at least 8 chars
+  if (!key || key.length < 8 || !key.startsWith('WASI-')) {
     input.classList.add('error');
-    setTimeout(() => input.classList.remove('error'), 500);
+    setTimeout(() => input.classList.remove('error'), 600);
     return;
   }
-  // Show app immediately, try API login in background
-  token = 'demo_' + crypto.randomUUID();
+
+  // ── Loading state ──────────────────────────────────────────────────────────
+  btn.textContent  = '…';
+  btn.disabled     = true;
+  input.disabled   = true;
+  if (msgEl) { msgEl.style.color = 'var(--text-dim)'; msgEl.textContent = 'Vérification en cours…'; }
+
+  let proxyReachable = true;
+
+  try {
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 9000); // 9s — Render cold-start can take 8s
+    const res  = await fetch(WASI_PROXY_AUTH, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ token: key }),
+      signal:  ctrl.signal
+    });
+    clearTimeout(tid);
+
+    if (res.status === 401) {
+      // Token explicitly rejected by backend
+      input.disabled  = false;
+      btn.textContent = 'ENTRER';
+      btn.disabled    = false;
+      input.classList.add('error');
+      setTimeout(() => input.classList.remove('error'), 700);
+      if (msgEl) { msgEl.style.color = '#f85149'; msgEl.textContent = 'Token invalide — vérifiez votre accès ou contactez support@wasi.africa'; }
+      return;
+    }
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (data.valid) {
+        // ✅ Backend-confirmed valid token
+        try { localStorage.setItem(WASI_SESSION_KEY, key); } catch(_) {}
+        // Pass token to the AI integration layer
+        if (typeof window.wasiSetToken === 'function') window.wasiSetToken(key);
+        else try { localStorage.setItem('wasi_access_token', key); } catch(_) {}
+        _openApp();
+        return;
+      }
+    }
+
+    // Any other non-OK status (500, 503 cold-start, etc.)
+    proxyReachable = false;
+
+  } catch(e) {
+    // Network error or AbortError (timeout) — proxy sleeping or user is offline
+    proxyReachable = false;
+  }
+
+  // ── Proxy unreachable → allow local-mode access ────────────────────────────
+  // We still require a valid-looking token format so the gate is not purely cosmetic
+  if (!proxyReachable) {
+    const looksValid = /^WASI-[A-Z0-9]{3,}-[A-Z0-9]{2,}$/.test(key);
+    if (looksValid) {
+      if (msgEl) { msgEl.style.color = 'var(--text-dim)'; msgEl.textContent = '⚡ Serveur en démarrage — mode local actif. L\'IA enrichie sera disponible dans 30 s.'; }
+      if (typeof window.wasiSetToken === 'function') window.wasiSetToken(''); // no token = local AI only
+      try { localStorage.setItem(WASI_SESSION_KEY, key); } catch(_) {}
+      _openApp();
+    } else {
+      input.disabled  = false;
+      btn.textContent = 'ENTRER';
+      btn.disabled    = false;
+      input.classList.add('error');
+      setTimeout(() => input.classList.remove('error'), 600);
+      if (msgEl) { msgEl.style.color = '#f85149'; msgEl.textContent = 'Format de token incorrect.'; }
+    }
+  }
+}
+
+function _openApp() {
+  token = 'session_' + Date.now();
   document.getElementById('access-gate').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   initApp();
-
-  // Try real API login in background (non-blocking)
-  try {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
-    fetch(API + '/auth/login', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username: 'demo', password: key}),
-      signal: controller.signal
-    }).then(res => res.ok ? res.json() : null).then(data => {
-      if (data && data.access_token) {
-        token = data.access_token;
-        if (data.user) {
-          document.getElementById('user-name').textContent = data.user.name || 'Operateur';
-          document.getElementById('user-tier').textContent = data.user.tier || 'DEMO';
-        }
-      }
-    }).catch(() => {});
-  } catch(e) {}
 }
 
 document.addEventListener('keydown', function(e) {
@@ -3646,11 +3716,14 @@ function shouldAutoEnterWasi() {
 function autoEnterGateIfRequested() {
   if (!shouldAutoEnterWasi()) return;
   document.title = 'WASI_INTELLIGENCE_EDGE_HOST';
-  const gate = document.getElementById('access-gate');
+  const gate  = document.getElementById('access-gate');
   const input = document.getElementById('gate-key');
   if (!gate || !input || gate.style.display === 'none') return;
-  input.value = 'WASI-DEMO-DM01';
-  validateGate();
+  // Auto-enter only if a token is already stored (Excel / embedded mode)
+  try {
+    const saved = localStorage.getItem(WASI_SESSION_KEY) || '';
+    if (saved) { input.value = saved; validateGate(); }
+  } catch(_) {}
 }
 
 /* ========== INIT ========== */
