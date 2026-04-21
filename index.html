@@ -4629,7 +4629,11 @@ function detectCountryInMessage(msg, excludeCode) {
   };
   const sortedAliases = Object.keys(aliases).sort((a,b)=>b.length-a.length);
   for(const alias of sortedAliases){
-    if(m.includes(n_(alias))){
+    const aN=n_(alias);
+    // Word-boundary check: alias must not be preceded/followed by a letter
+    // This prevents 'niger' matching inside 'nigeria', 'mali' inside 'somalia', etc.
+    const reA=new RegExp('(?<![a-z])'+aN.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![a-z])');
+    if(reA.test(m)){
       const code=aliases[alias];
       if(code===excludeCode) continue;
       const found=COUNTRIES.find(x=>x.code===code);
@@ -4639,8 +4643,10 @@ function detectCountryInMessage(msg, excludeCode) {
   const sorted=[...COUNTRIES].sort((a,b)=>b.name.length-a.name.length);
   for(const c of sorted){
     if(c.code===excludeCode) continue;
-    // Only match full country names — never 2-letter codes (causes false positives)
-    if(m.includes(n_(c.name))) return c;
+    // Word-boundary check for country names too
+    const cN=n_(c.name);
+    const reC=new RegExp('(?<![a-z])'+cN.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![a-z])');
+    if(reC.test(m)) return c;
   }
   return null;
 }
@@ -4651,7 +4657,7 @@ function buildComparison(c1, c2) {
   const idx1=d1.indices||{}, idx2=d2.indices||{};
   function win(a,b){ return a>b?'✅':'❌'; }
   const avg=Math.round(COUNTRIES.reduce((s,x)=>s+x.score,0)/COUNTRIES.length);
-  return `━━━ COMPARAISON WASI : ${c1.flag} ${c1.name.toUpperCase()} vs ${c2.flag} ${c2.name.toUpperCase()} ━━━
+  return `🆚 COMPARAISON WASI : ${c1.flag} ${c1.name.toUpperCase()} vs ${c2.flag} ${c2.name.toUpperCase()} ━━━
 
 📊 SCORE GLOBAL
 • ${c1.name} : ${c1.score}/100 ${win(c1.score,c2.score)}
@@ -4981,6 +4987,20 @@ function generateLocalResponse(message, focus) {
     if(lc) return buildLegalAnalysis(lc, typeof COUNTRY_LEGAL!=='undefined'?COUNTRY_LEGAL[lc.code]:null);
   }
 
+  // Corridor — must run BEFORE country detection; Abidjan(CI)+Lagos(NG) would otherwise fire comparison
+  if(msg.includes('corridor')){
+    if(msg.includes('abidjan')||msg.includes('lagos')||msg.includes('golfe de guinee')){
+      return `🛣️ CORRIDOR ABIDJAN — LAGOS\n════════════════════════════════════════\n\n📍 TRACÉ : Abidjan (CI) → Accra (GH) → Lomé (TG) → Cotonou (BJ) → Lagos (NG)\n📏 Distance : 1 028 km | 5 pays | ~75% du commerce intra-Afrique de l'Ouest\n\n🔑 DONNÉES CLÉS 2026 :\n  • Volume annuel : ~45 Mds USD de marchandises\n  • Temps de transit moyen : 4-7 jours (objectif 2 jours post-autoroute)\n  • Checkpoints : 69 postes de contrôle (objectif ZLECAf : 0)\n  • Coût transport : 7-12 USD/tonne/km (vs 2-3 USD en Asie)\n\n🏗️ PROJET AUTOROUTE ABIDJAN–LAGOS (PAAL) :\n  • Budget : 15,6 Mds USD | Financement : BAD + Banque Mondiale + UE + PPP\n  • Statut 2026 : Phase 2 — segments Abidjan-Accra et Cotonou-Lagos en chantier\n  • Livraison : 2028-2030 (segments) | 2032 (complet)\n  • Impact : -50% temps transit, +30% volumes\n\n💼 OPPORTUNITÉS INVESTISSEUR :\n  1. Logistique : entrepôts secs/frigorifiques le long du corridor — ticket $1-10M\n  2. Agri-transformation : silos, unités de conditionnement export\n  3. Transport multimodal : flotte camions + TMS digitaux\n  4. Fintech B2B : paiement transfrontalier XOF/GHS/NGN sans banque\n  5. ZES nationales : GDIZ (BJ), Tema (GH), Lekki (NG)\n\n⚠️ RISQUES :\n  • Corruption aux frontières (Nigeria-Bénin : taux de soudoiement 40% camions)\n  • Congestion Port Lagos : délai 7-14 jours vs 2-3 jours Port Abidjan\n  • Volatilité NGN : -70% sur 3 ans pèse sur les flux facturés en USD\n\n💬 "verdict CI" · "verdict Nigeria" · "ZLECAf opportunités" · "secteur logistique Afrique"`;
+    }
+    if(msg.includes('dakar')||msg.includes('bamako')||msg.includes('sahel')||msg.includes('senegal')&&msg.includes('mali')){
+      return `🛣️ CORRIDOR DAKAR — BAMAKO\n════════════════════════════════════════\n\n📍 TRACÉ : Dakar (SN) → Tambacounda → Kayes → Bamako (ML)\n📏 Distance : 1 250 km | 2 pays | Enclavement Mali\n\n🔑 DONNÉES CLÉS 2026 :\n  • Volume annuel : ~8 Mds USD de fret\n  • Part du commerce malien : ~40% des imports/exports\n  • Alternatives depuis 2023 : Corridor Lomé-Bamako (via BJ/TG) et Conakry-Bamako (GN)\n  • Chemin de fer Dakar-Bamako : 1 286 km, réhabilitation partielle en cours\n\n⚠️ CONTEXTE SÉCURITAIRE 2026 :\n  • Mali (AES) : tensions diplomatiques SN-ML → perturbations douanières ponctuelles\n  • Alternatives corridor : Lomé (TG), Cotonou (BJ), Conakry (GN) — surcoût +15-25%\n\n💼 OPPORTUNITÉS :\n  1. Transport multimodal Dakar-port + transit terrestre\n  2. Logistique Tambacounda / Kayes : hub pivot de redistribution\n  3. Agri : sésame, coton, arachide du Mali vers Port Dakar\n\n💬 "verdict Sénégal" · "verdict Mali" · "corridors Afrique"`;
+    }
+    if(msg.includes('mombasa')||msg.includes('kampala')||msg.includes('kigali')||(msg.includes('kenya')&&msg.includes('ouganda'))){
+      return `🛣️ CORRIDOR MOMBASA — KAMPALA — KIGALI\n════════════════════════════════════════\n\n📍 TRACÉ : Port Mombasa (KE) → Nairobi → Kampala (UG) → Kigali (RW)\n📏 Distance : 1 800 km | 3 pays | Standard Gauge Railway (SGR) Kenya\n\n🔑 DONNÉES CLÉS 2026 :\n  • Volume : ~20 Mds USD/an | Corridor le plus dynamique d'Afrique de l'Est\n  • SGR Mombasa-Nairobi : 472 km, fret x2 vitesse vs route\n  • Délai Mombasa → Kampala : 4 jours (vs 14 jours avant SGR)\n\n💼 OPPORTUNITÉS :\n  1. Logistique last-mile Kampala/Kigali\n  2. Agri-export RW/UG : café, thé, fleurs\n  3. Tech hub Nairobi → distribution digitale EAC\n\n💬 "verdict Kenya" · "verdict Rwanda" · "verdict Ouganda"`;
+    }
+    return `🛣️ CORRIDORS COMMERCIAUX AFRIQUE — VUE D'ENSEMBLE\n════════════════════════════════════════\n\n📊 TOP CORRIDORS PAR VOLUME :\n\n  1. 🥇 Abidjan–Lagos (CI-GH-TG-BJ-NG) : 45 Mds USD/an | 5 pays\n  2. 🥈 Mombasa–Kampala–Kigali (KE-UG-RW) : 20 Mds USD/an\n  3. 🥉 Durban–Johannesburg–Lusaka (ZA-ZM) : 18 Mds USD/an\n  4. Djibouti–Addis-Abeba (DJ-ET) : 16 Mds USD/an | 95% import ET\n  5. Dakar–Bamako (SN-ML) : 8 Mds USD/an | Sahel Ouest\n  6. Casablanca–Dakar (MA-MR-SN) : Route Atlantique\n  7. LAPSSET Kenya-Éthiopie-Soudan du Sud : $24 Mds investissement\n\n⚠️ OBSTACLES COMMUNS :\n  • 16 pays enclavés sur 54 → dépendance totale corridors\n  • Checkpoints corruption : 30-60% du coût transport\n  • Fragmentation monétaire : 42 devises → risque FX sur chaque transit\n\n💬 "corridor Abidjan-Lagos" · "corridor Dakar-Bamako" · "ZLECAf" · "secteur logistique"`;
+  }
+
   // ── END HIGH-PRIORITY HANDLERS ─────────────────────────────────────────────
 
   const focusedC = detectCountryInMessage(msg)||(window.currentCountry?COUNTRIES.find(x=>x.code===window.currentCountry):null);
@@ -5011,7 +5031,9 @@ function generateLocalResponse(message, focus) {
     if(msgN.includes('risque')&&!msgN.includes('sahel')&&!(typeof WASI_SECTORS!=='undefined'&&WASI_SECTORS.some(s=>s.keywords.some(kw=>msgN.includes(n_(kw)))))) return buildRiskAnalysis(focusedC,d,r);
     if(msgN.includes('legal')||msgN.includes('juridique')||msgN.includes('loi ')||msgN.includes('constitution')||msgN.includes('droit ')||msgN.includes('fiscal')||msgN.includes('impot')||msgN.includes(' is ')||msgN.includes('tva')||msgN.includes('irg')||msgN.includes('ohada')||msgN.includes('syscohada')||msgN.includes('code invest')||msgN.includes('legislation')||msgN.includes('code minier')||msgN.includes('code travail')||msgN.includes('regime polit')||msgN.includes('cadre legal')||msgN.includes('cadre reglementaire')||msgN.includes('code des impots')||msgN.includes('code fiscal')||msgN.includes('arbitrage')||msgN.includes('sarl')||msgN.includes('societe commerciale')) return buildLegalAnalysis(focusedC, typeof COUNTRY_LEGAL!=='undefined'?COUNTRY_LEGAL[focusedC.code]:null);
     // Specific sector inside country context
-    if(typeof WASI_SECTORS!=='undefined'){
+    // Skip sector drill-down if user has explicit verdict/investment-decision intent
+    const hasVerdictIntent = msgN.includes('verdict')||msgN.includes('faut-il')||msgN.includes('faut il')||msgN.includes('recommand')||msgN.includes('dois-je')||msgN.includes('rentable')||msgN.includes('investir en')||msgN.includes('investir au')||msgN.includes('faut investir');
+    if(typeof WASI_SECTORS!=='undefined' && !hasVerdictIntent){
       const secMatch=WASI_SECTORS.find(s=>s.keywords.some(kw=>msgN.includes(n_(kw))));
       if(secMatch) return buildLocalSectorDive(secMatch, focusedC.code);
     }
