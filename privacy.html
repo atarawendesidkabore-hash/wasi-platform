@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'none';">
+  <title>Politique de Confidentialité — WASI Intelligence</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      line-height: 1.7;
+      padding: 40px 20px 80px;
+    }
+    .container { max-width: 760px; margin: 0 auto; }
+    .logo { font-size: 1.1rem; letter-spacing: .2em; color: #f0c14b; font-weight: 700; margin-bottom: 6px; }
+    h1 { font-size: 1.6rem; color: #e6edf3; margin: 20px 0 6px; }
+    .meta { font-size: .82rem; color: #8b949e; margin-bottom: 36px; }
+    h2 { font-size: 1.05rem; color: #e6edf3; margin: 32px 0 10px; border-left: 3px solid #f0c14b; padding-left: 12px; }
+    p { margin-bottom: 12px; font-size: .9rem; }
+    ul { margin: 8px 0 14px 20px; font-size: .9rem; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: .85rem; }
+    th { background: #161b22; color: #e6edf3; text-align: left; padding: 8px 12px; border: 1px solid #30363d; }
+    td { padding: 8px 12px; border: 1px solid #21262d; vertical-align: top; }
+    tr:nth-child(even) td { background: #161b22; }
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { display: inline-block; margin-bottom: 28px; color: #58a6ff; font-size: .85rem; }
+    .highlight { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 14px 18px; margin: 14px 0; }
+    footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #21262d; font-size: .78rem; color: #6e7681; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">W A S I</div>
+  <a class="back" href="index.html">← Retour à WASI Intelligence</a>
+
+  <h1>Politique de Confidentialité</h1>
+  <p class="meta">Dernière mise à jour : 21 avril 2026 · Version 1.0</p>
+
+  <div class="highlight">
+    <strong>En résumé :</strong> WASI Intelligence ne collecte pas vos données personnelles sur ses serveurs. Votre historique de chat et votre token d'accès sont stockés localement dans votre navigateur (<code>localStorage</code>). Vous pouvez les supprimer à tout moment.
+  </div>
+
+  <h2>1. Responsable du traitement</h2>
+  <p>
+    <strong>WASI — Whole African Strategic Intelligence</strong><br>
+    Fondateur & CEO : Tarawendesida Thomas KABORE, FMVA<br>
+    Siège : Ouagadougou, Burkina Faso<br>
+    Contact : <a href="mailto:support@wasi.africa">support@wasi.africa</a>
+  </p>
+
+  <h2>2. Données collectées et finalités</h2>
+  <table>
+    <tr>
+      <th>Donnée</th>
+      <th>Stockage</th>
+      <th>Finalité</th>
+      <th>Durée</th>
+    </tr>
+    <tr>
+      <td>Token d'accès WASI (<code>wasi_access_token</code>)</td>
+      <td>localStorage navigateur</td>
+      <td>Authentification au service IA</td>
+      <td>Jusqu'à déconnexion / effacement</td>
+    </tr>
+    <tr>
+      <td>Historique de conversation (<code>wasi_chat_history_v2</code>)</td>
+      <td>localStorage navigateur</td>
+      <td>Continuité du contexte entre sessions</td>
+      <td>30 derniers messages (glissant)</td>
+    </tr>
+    <tr>
+      <td>Consentement RGPD (<code>wasi_gdpr_consent</code>)</td>
+      <td>localStorage navigateur</td>
+      <td>Mémorisation de votre choix</td>
+      <td>Jusqu'à effacement du stockage</td>
+    </tr>
+    <tr>
+      <td>Messages envoyés à l'IA</td>
+      <td>Transmis au proxy backend (Render.com, États-Unis)</td>
+      <td>Génération de réponses via l'API Claude (Anthropic)</td>
+      <td>Non conservés côté serveur</td>
+    </tr>
+  </table>
+
+  <p>WASI Intelligence <strong>ne collecte pas</strong> : nom, email, adresse IP persistée, données de paiement, cookies tiers, données de navigation.</p>
+
+  <h2>3. Base légale du traitement (RGPD art. 6)</h2>
+  <ul>
+    <li><strong>Intérêt légitime</strong> (art. 6.1.f) — stockage local pour la continuité de service</li>
+    <li><strong>Consentement</strong> (art. 6.1.a) — pour tout traitement au-delà du fonctionnement strict du service</li>
+    <li><strong>Exécution d'un contrat</strong> (art. 6.1.b) — traitement des messages pour fournir le service d'intelligence souscrit</li>
+  </ul>
+
+  <h2>4. Transferts de données</h2>
+  <p>
+    Vos messages sont transmis à notre proxy sécurisé hébergé sur <strong>Render.com</strong> (San Francisco, États-Unis), qui les transmet à l'API <strong>Anthropic Claude</strong> pour générer une réponse. Ces transferts sont couverts par les Clauses Contractuelles Types (CCT) de la Commission européenne.
+  </p>
+  <p>
+    La clé API Anthropic n'est <strong>jamais</strong> transmise à votre navigateur — elle réside exclusivement dans les variables d'environnement du serveur proxy.
+  </p>
+
+  <h2>5. Vos droits</h2>
+  <p>Conformément au RGPD (Règlement UE 2016/679) et au cadre de protection des données de la CEDEAO, vous disposez des droits suivants :</p>
+  <ul>
+    <li><strong>Accès</strong> — vos données sont dans votre <code>localStorage</code> ; vous pouvez les consulter via les outils développeur de votre navigateur</li>
+    <li><strong>Effacement</strong> — cliquez sur "Effacer l'historique" dans l'interface, ou effacez le localStorage depuis votre navigateur</li>
+    <li><strong>Portabilité</strong> — exportable via les outils développeur</li>
+    <li><strong>Opposition</strong> — refusez le consentement RGPD dans la bannière ; les données locales seront supprimées</li>
+    <li><strong>Réclamation</strong> — vous pouvez saisir l'autorité de protection des données de votre pays membre de l'UE ou la CNIL (France)</li>
+  </ul>
+  <p>Pour exercer vos droits : <a href="mailto:support@wasi.africa">support@wasi.africa</a></p>
+
+  <h2>6. Sécurité</h2>
+  <ul>
+    <li>Toutes les communications utilisent HTTPS (TLS 1.3)</li>
+    <li>La clé API est stockée exclusivement côté serveur (variables d'environnement Render)</li>
+    <li>Le proxy backend valide un token d'accès WASI avant chaque requête</li>
+    <li>Rate limiting : 30 requêtes par minute par token</li>
+    <li>CORS restreint au domaine GitHub Pages officiel</li>
+  </ul>
+
+  <h2>7. Cookies</h2>
+  <p>
+    WASI Intelligence n'utilise <strong>aucun cookie</strong>. Le stockage des données s'effectue exclusivement via l'API <code>localStorage</code> du navigateur, qui reste sur votre appareil et n'est pas transmis automatiquement au serveur.
+  </p>
+
+  <h2>8. Mineurs</h2>
+  <p>
+    WASI Intelligence est une plateforme d'intelligence économique professionnelle destinée aux personnes de 18 ans et plus. Nous ne collectons pas sciemment de données relatives à des mineurs.
+  </p>
+
+  <h2>9. Modifications</h2>
+  <p>
+    Toute modification substantielle de cette politique sera notifiée via une bannière sur la plateforme. La date de dernière mise à jour figure en haut de cette page.
+  </p>
+
+  <h2>10. Contact</h2>
+  <p>
+    Pour toute question relative à la confidentialité :<br>
+    📧 <a href="mailto:support@wasi.africa">support@wasi.africa</a><br>
+    🌍 WASI Intelligence — Ouagadougou, Burkina Faso
+  </p>
+
+  <footer>
+    © 2026 WASI — Whole African Strategic Intelligence. Tous droits réservés.<br>
+    Fondée par Tarawendesida Thomas KABORE, FMVA · Ouagadougou, Burkina Faso
+  </footer>
+</div>
+</body>
+</html>

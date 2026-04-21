@@ -1490,6 +1490,46 @@ input, select, textarea { font-family: inherit; outline: none; }
 </head>
 <body>
 
+<!-- ========== GDPR CONSENT BANNER ========== -->
+<div id="gdpr-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#0d1117;border-top:1px solid #30363d;padding:14px 20px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:.82rem;color:#c9d1d9;font-family:system-ui,sans-serif;">
+  <span style="flex:1;min-width:220px;">🍪 WASI utilise uniquement un stockage local (localStorage) pour votre historique de chat et votre token d'accès — aucun cookie tiers, aucun tracking publicitaire. <a href="privacy.html" target="_blank" style="color:#58a6ff;text-decoration:none;">Politique de confidentialité</a></span>
+  <div style="display:flex;gap:8px;flex-shrink:0;">
+    <button id="gdpr-accept" onclick="wasiGdprAccept()" style="background:#238636;color:#fff;border:none;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:.8rem;font-weight:600;">Accepter</button>
+    <button id="gdpr-decline" onclick="wasiGdprDecline()" style="background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:.8rem;">Refuser</button>
+  </div>
+</div>
+<script>
+(function(){
+  var GDPR_KEY = 'wasi_gdpr_consent';
+  var consent  = null;
+  try { consent = localStorage.getItem(GDPR_KEY); } catch(_) {}
+  if (!consent) {
+    // Show banner after a short delay so page renders first
+    setTimeout(function(){
+      var b = document.getElementById('gdpr-banner');
+      if (b) b.style.display = 'flex';
+    }, 800);
+  }
+  window.wasiGdprAccept = function() {
+    try { localStorage.setItem(GDPR_KEY, 'accepted'); } catch(_) {}
+    var b = document.getElementById('gdpr-banner');
+    if (b) b.style.display = 'none';
+  };
+  window.wasiGdprDecline = function() {
+    try { localStorage.setItem(GDPR_KEY, 'declined'); } catch(_) {}
+    // On decline: clear any stored tokens/history
+    try { localStorage.removeItem('wasi_access_token'); } catch(_) {}
+    try { localStorage.removeItem('wasi_chat_history_v2'); } catch(_) {}
+    var b = document.getElementById('gdpr-banner');
+    if (b) b.style.display = 'none';
+  };
+  // Expose consent status globally for analytics guards
+  window.wasiHasConsent = function() {
+    try { return localStorage.getItem(GDPR_KEY) === 'accepted'; } catch(_) { return false; }
+  };
+})();
+</script>
+
 <!-- ========== ACCESS GATE ========== -->
 <div id="access-gate">
   <div class="gate-box">
