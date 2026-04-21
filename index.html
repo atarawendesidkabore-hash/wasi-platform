@@ -1487,12 +1487,54 @@ input, select, textarea { font-family: inherit; outline: none; }
 .admin-err { color: var(--red); font-size: .8rem; margin-top: 8px; }
 </style>
 <link rel="stylesheet" href="./wasi-ai.css">
+<!-- ── Error monitoring — Sentry-ready hook ────────────────────────────── -->
+<script>
+(function(){
+  var _errs = [];
+  var MAX_ERRS = 50;
+
+  function _report(type, msg, src, line, col, err) {
+    if (_errs.length >= MAX_ERRS) return;
+    var entry = {
+      t: new Date().toISOString(),
+      type: type,
+      msg: String(msg||'').slice(0,300),
+      src: String(src||'').slice(0,200),
+      line: line, col: col,
+      ua: navigator.userAgent.slice(0,120),
+      url: location.href.slice(0,200)
+    };
+    _errs.push(entry);
+    // Forward to Sentry / DataDog if configured
+    if (typeof window.WASI_ERROR_HOOK === 'function') {
+      try { window.WASI_ERROR_HOOK(entry); } catch(_) {}
+    }
+    // In dev: log to console
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      console.warn('[WASI Error Monitor]', entry);
+    }
+  }
+
+  window.onerror = function(msg, src, line, col, err) {
+    _report('js_error', msg, src, line, col, err);
+    return false; // don't suppress default handling
+  };
+
+  window.addEventListener('unhandledrejection', function(e) {
+    _report('unhandled_promise', e.reason ? String(e.reason) : 'Promise rejected', '', 0, 0, null);
+  });
+
+  // Expose for debugging and external analytics
+  window.wasiGetErrors = function() { return _errs.slice(); };
+  window.wasiClearErrors = function() { _errs = []; };
+})();
+</script>
 </head>
 <body>
 
 <!-- ========== GDPR CONSENT BANNER ========== -->
 <div id="gdpr-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#0d1117;border-top:1px solid #30363d;padding:14px 20px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:.82rem;color:#c9d1d9;font-family:system-ui,sans-serif;">
-  <span style="flex:1;min-width:220px;">🍪 WASI utilise uniquement un stockage local (localStorage) pour votre historique de chat et votre token d'accès — aucun cookie tiers, aucun tracking publicitaire. <a href="privacy.html" target="_blank" style="color:#58a6ff;text-decoration:none;">Politique de confidentialité</a></span>
+  <span style="flex:1;min-width:220px;">🍪 WASI utilise uniquement un stockage local (localStorage) — aucun cookie tiers, aucun tracking. <a href="privacy.html" target="_blank" style="color:#58a6ff;text-decoration:none;">Confidentialité</a> · <a href="terms.html" target="_blank" style="color:#58a6ff;text-decoration:none;">CGU</a></span>
   <div style="display:flex;gap:8px;flex-shrink:0;">
     <button id="gdpr-accept" onclick="wasiGdprAccept()" style="background:#238636;color:#fff;border:none;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:.8rem;font-weight:600;">Accepter</button>
     <button id="gdpr-decline" onclick="wasiGdprDecline()" style="background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:.8rem;">Refuser</button>
@@ -3915,10 +3957,10 @@ function renderCountries() {
   el.innerHTML = filtered.map(c => {
     const sc = scoreClass(c.score);
     return `<div class="country-pill${currentCountry === c.code ? ' active' : ''}" onclick="selectCountry('${esc(c.code)}')">
-      <span class="flag">${c.flag}</span>
-      <span class="cname">${c.name}</span>
-      <span class="cscore ${sc}">${c.score}</span>
-      <span class="ctrend">${c.trend}</span>
+      <span class="flag">${esc(c.flag)}</span>
+      <span class="cname">${esc(c.name)}</span>
+      <span class="cscore ${sc}">${esc(String(c.score))}</span>
+      <span class="ctrend">${esc(c.trend)}</span>
       ${c.coup ? '<span class="coup-badge">COUP</span>' : ''}
     </div>`;
   }).join('');
@@ -3983,7 +4025,15 @@ function updateChatSuggestions(code) {
   suggs.push('WACC et cout du capital ' + c.name);
   suggs.push('Corridor commercial depuis ' + c.name);
   suggs.push('Telecharger le brief de ' + c.name);
-  bar.innerHTML = suggs.map(function(t){ return '<button class="chat-sugg" onclick="sendSugg(this)">'+t+'</button>'; }).join('');
+  // Use DOM creation (not innerHTML+string) to avoid XSS via sector/country names
+  bar.innerHTML = '';
+  suggs.forEach(function(t) {
+    var btn = document.createElement('button');
+    btn.className = 'chat-sugg';
+    btn.textContent = t;
+    btn.addEventListener('click', function(){ sendSugg(this); });
+    bar.appendChild(btn);
+  });
 }
 
 function renderDesktopCountryDetail(code) {
@@ -4411,9 +4461,9 @@ function renderComposite() {
   top5.forEach(c => {
     const col = c.score >= 65 ? 'var(--green)' : c.score >= 45 ? 'var(--orange)' : 'var(--red)';
     html += `<div class="comp-row">
-      <span class="clabel">${c.flag} ${c.name}</span>
-      <div class="comp-bar-wrap"><div class="comp-bar-fill" style="width:${c.score}%;background:${col}"></div></div>
-      <span class="cval" style="color:${col}">${c.score}</span>
+      <span class="clabel">${esc(c.flag)} ${esc(c.name)}</span>
+      <div class="comp-bar-wrap"><div class="comp-bar-fill" style="width:${esc(String(c.score))}%;background:${col}"></div></div>
+      <span class="cval" style="color:${col}">${esc(String(c.score))}</span>
     </div>`;
   });
   document.getElementById('comp-top5').innerHTML = html;
@@ -4422,7 +4472,7 @@ function renderComposite() {
   const coups = COUNTRIES.filter(c => c.coup);
   let chtml = '<div class="comp-section-title">Pays sous regime militaire</div><div class="coup-list">';
   coups.forEach(c => {
-    chtml += `<div class="coup-item"><span class="flag">${c.flag}</span><span class="cname">${c.name}</span><span class="cscore">${c.score}</span></div>`;
+    chtml += `<div class="coup-item"><span class="flag">${esc(c.flag)}</span><span class="cname">${esc(c.name)}</span><span class="cscore">${esc(String(c.score))}</span></div>`;
   });
   chtml += '</div>';
   document.getElementById('comp-coups').innerHTML = chtml;
