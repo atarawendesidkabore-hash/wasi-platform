@@ -1,8 +1,24 @@
 (function () {
-  // ── Proxy config — replace with your Render URL after deployment ─────────
-  const PROXY_URL   = (window.WASI_PROXY_URL || "https://wasi-ai-proxy.onrender.com") + "/api/chat";
-  const AUTH_URL    = (window.WASI_PROXY_URL || "https://wasi-ai-proxy.onrender.com") + "/api/auth";
-  const CLAUDE_MODEL = "claude-sonnet-4-6";
+  // ── Direct Claude API config — no proxy needed ────────────────────────────
+  const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+  const CLAUDE_MODEL  = "claude-sonnet-4-6";
+
+  // ── Anthropic API key management ─────────────────────────────────────────
+  // Key is stored in localStorage under 'wasi_claude_key'.
+  // Set it once via the Admin panel → it persists across sessions.
+  function getClaudeKey() {
+    if (window.WASI_CLAUDE_KEY) return window.WASI_CLAUDE_KEY;
+    try { return localStorage.getItem("wasi_claude_key") || ""; } catch (_) { return ""; }
+  }
+  function setClaudeKey(key) {
+    try {
+      if (key) localStorage.setItem("wasi_claude_key", key.trim());
+      else localStorage.removeItem("wasi_claude_key");
+    } catch (_) {}
+    window.WASI_CLAUDE_KEY = key ? key.trim() : "";
+  }
+  window.wasiSetClaudeKey = setClaudeKey;
+  window.wasiGetClaudeKey = getClaudeKey;
 
   const state = {
     booted: false,
@@ -47,17 +63,13 @@
   window.wasiSetToken = setWasiToken;
 
   async function validateToken(token) {
-    try {
-      const res = await fetch(AUTH_URL.replace('/chat', '').replace('/api/chat', '/api/auth'), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token })
-      });
-      const data = await res.json();
-      return data.valid === true;
-    } catch (_) {
-      return false; // Proxy unreachable — fall back to local AI
+    // No proxy — validate locally: any non-empty token opens the app.
+    // To restrict access, set WASI_VALID_TOKENS = ["token1","token2"] before this script loads.
+    if (!token) return false;
+    if (Array.isArray(window.WASI_VALID_TOKENS)) {
+      return window.WASI_VALID_TOKENS.includes(token.trim());
     }
+    return token.trim().length > 0;
   }
 
   // ── Chat persistence ─────────────────────────────────────────────────────
@@ -133,12 +145,10 @@
     return "BASE DE DONNÉES WASI — 54 PAYS AFRICAINS (données World Bank 2024) :\n" + lines.join("\n");
   }
 
-  // ── Secure Claude call — ALL traffic routes through the backend proxy ────
-  // The Anthropic API key NEVER touches the browser. The proxy (wasi-ai-proxy.onrender.com)
-  // holds the key in its server environment variables and validates the WASI access token.
+  // ── Direct Claude API call ────────────────────────────────────────────────
   async function callClaude(userMessage, history, countryProfile) {
-    const token = getWasiToken();
-    if (!token) throw new Error("no_key"); // → local AI fallback
+    const apiKey = getClaudeKey();
+    if (!apiKey) throw new Error("no_key"); // → local AI fallback
 
     // ── Platform knowledge ─────────────────────────────────────────────────
     const wasiKnowledge =
@@ -220,34 +230,41 @@
       { role: "user", content: userMessage },
     ];
 
-    // ── POST to backend proxy — API key stays on the server ─────────────
+    // ── POST directly to Anthropic API ───────────────────────────────────
     const _ctrl = new AbortController();
-    const _tid  = setTimeout(function(){ _ctrl.abort(); }, 20000); // 20s — proxy may cold-start
-    const resp = await fetch(PROXY_URL, {
+    const _tid  = setTimeout(function(){ _ctrl.abort(); }, 30000);
+    const resp = await fetch(ANTHROPIC_URL, {
       method: "POST",
       signal: _ctrl.signal,
       headers: {
-        "Content-Type": "application/json",
-        "x-wasi-token": token,          // WASI subscription token, NOT the Anthropic API key
+        "Content-Type":      "application/json",
+        "x-api-key":         apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
       },
-      body: JSON.stringify({ messages, system: systemPrompt, max_tokens: 1800 }),
+      body: JSON.stringify({
+        model:      CLAUDE_MODEL,
+        max_tokens: 1800,
+        system:     systemPrompt,
+        messages:   messages,
+      }),
     });
     clearTimeout(_tid);
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
       if (resp.status === 401) {
-        // Invalid or expired WASI token — clear it and fall back to local AI
-        setWasiToken("");
-        throw new Error("Token WASI invalide ou expiré. Contactez support@wasi.africa.");
+        throw new Error("Clé API Claude invalide. Vérifiez-la dans Admin → Clé API.");
       }
-      if (resp.status === 429) throw new Error("Limite de requêtes atteinte. Attendez 1 minute.");
-      if (resp.status === 503 || resp.status === 502) throw new Error("proxy_sleep"); // Render cold start
-      throw new Error(err?.error || `Erreur proxy ${resp.status}`);
+      if (resp.status === 429) throw new Error("Limite de requêtes Anthropic atteinte. Attendez 1 minute.");
+      throw new Error(err?.error?.message || `Erreur API Claude ${resp.status}`);
     }
 
     const data = await resp.json();
-    const reply = data.reply || "Je n'ai pas pu produire une réponse exploitable.";
+    const reply = (data.content || [])
+      .filter(function(b){ return b.type === "text"; })
+      .map(function(b){ return b.text; })
+      .join("\n").trim() || "Je n'ai pas pu produire une réponse exploitable.";
     return { reply, citations: [], countrySignal: null, source: { aiEnabled: true } };
   }
 
@@ -978,19 +995,21 @@
     } catch (error) {
       if (typing) typing.classList.remove("show");
 
-      // Detect proxy cold-start (Render free tier sleeps after 15 min inactivity)
-      const isColdStart = error.message === "proxy_sleep" || error.name === "AbortError";
-      const isNoToken   = error.message === "no_key";
+      const isNoKey     = error.message === "no_key";
+      const isTimeout   = error.name === "AbortError";
+      const isInvalidKey = error.message && error.message.includes("invalide");
 
-      // Fallback to local AI engine — always available, no token required
+      // Fallback to local AI engine — always available, no key required
       let localReply;
       try {
         if (typeof window.generateLocalResponse === "function") {
           localReply = window.generateLocalResponse(message, window.currentCountry || "");
-          if (isColdStart) {
-            localReply += "\n\n⚡ Note : Le serveur IA redémarre (Render free tier). Relancez votre question dans 30 secondes pour la réponse enrichie.";
-          } else if (isNoToken) {
-            localReply += "\n\n🔑 Mode local actif — entrez un token WASI (?wasi_token=...) pour activer l'IA Claude complète.";
+          if (isNoKey) {
+            localReply += "\n\n🔑 Mode local actif — configurez votre clé API Claude dans Admin → Clé API pour activer l'IA complète.";
+          } else if (isInvalidKey) {
+            localReply += "\n\n⚠️ Clé API Claude invalide — vérifiez-la dans Admin → Clé API.";
+          } else if (isTimeout) {
+            localReply += "\n\n⏱️ Délai dépassé — vérifiez votre connexion et réessayez.";
           }
         } else {
           localReply = "WASI Intelligence — moteur local non disponible.";

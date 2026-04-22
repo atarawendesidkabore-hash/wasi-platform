@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="WASI">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://wasi-ai-proxy.onrender.com https://wasi-intelligence-core.onrender.com https://wasi-web-api.onrender.com http://localhost:3000 http://localhost:3200 http://localhost:8010; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.anthropic.com https://api.worldbank.org http://localhost:3000 http://localhost:3200; img-src 'self' data:;">
 <link rel="manifest" href="manifest.json">
 <title>WASI — Whole African Strategic Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2539,11 +2539,35 @@ input, select, textarea { font-family: inherit; outline: none; }
           <button class="admin-tab" onclick="adminTab('users',this)">Utilisateurs</button>
           <button class="admin-tab" onclick="adminTab('audit',this)">Audit</button>
           <button class="admin-tab" onclick="adminTab('alerts',this)">Alertes</button>
+          <button class="admin-tab" onclick="adminTab('apikey',this)" style="color:var(--gold);">🔑 Clé API</button>
         </div>
         <div id="admin-tab-overview"></div>
         <div id="admin-tab-users" style="display:none;"></div>
         <div id="admin-tab-audit" style="display:none;"></div>
         <div id="admin-tab-alerts" style="display:none;"></div>
+        <div id="admin-tab-apikey" style="display:none;">
+          <div style="max-width:520px;margin-top:20px;">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:12px;">Configuration Clé API Claude</div>
+            <div style="font-size:.82rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">
+              Entrez votre clé API Anthropic (<code style="color:var(--gold);">sk-ant-...</code>). Elle sera stockée localement dans votre navigateur et utilisée pour les appels Claude directs.
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <input id="admin-api-key-input" type="password"
+                placeholder="sk-ant-api03-..."
+                style="flex:1;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:.8rem;"
+                oninput="document.getElementById('admin-api-key-status').textContent=''">
+              <button onclick="adminSaveApiKey()"
+                style="padding:10px 18px;background:rgba(200,146,42,.15);border:1px solid var(--gold-dim);color:var(--gold);border-radius:var(--radius);font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;">
+                Sauvegarder
+              </button>
+            </div>
+            <div id="admin-api-key-status" style="font-size:.78rem;margin-top:6px;"></div>
+            <div style="margin-top:16px;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);font-size:.75rem;color:var(--text-dim);">
+              Clé active : <span id="admin-api-key-preview" style="color:var(--text-secondary);font-family:var(--font-mono);">—</span>
+              <button onclick="adminClearApiKey()" style="margin-left:12px;background:none;border:none;color:var(--red);font-size:.72rem;cursor:pointer;padding:0;">Effacer</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -10522,11 +10546,41 @@ function adminLogout() {
 }
 
 function adminTab(tab, btn) {
-  ['overview','users','audit','alerts'].forEach(function(t) {
+  ['overview','users','audit','alerts','apikey'].forEach(function(t) {
     document.getElementById('admin-tab-' + t).style.display = t === tab ? '' : 'none';
   });
   document.querySelectorAll('#admin-tabs .admin-tab').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
+  if (tab === 'apikey') adminRefreshApiKeyPreview();
+}
+
+function adminRefreshApiKeyPreview() {
+  var key = (typeof window.wasiGetClaudeKey === 'function') ? window.wasiGetClaudeKey() : (localStorage.getItem('wasi_claude_key') || '');
+  var preview = document.getElementById('admin-api-key-preview');
+  if (preview) preview.textContent = key ? key.slice(0,12) + '...' + key.slice(-4) : '— non configurée';
+}
+
+function adminSaveApiKey() {
+  var input = document.getElementById('admin-api-key-input');
+  var status = document.getElementById('admin-api-key-status');
+  var key = (input ? input.value.trim() : '');
+  if (!key.startsWith('sk-ant-')) {
+    if (status) { status.textContent = '⚠️ Format invalide — la clé doit commencer par sk-ant-'; status.style.color = 'var(--red)'; }
+    return;
+  }
+  if (typeof window.wasiSetClaudeKey === 'function') window.wasiSetClaudeKey(key);
+  else localStorage.setItem('wasi_claude_key', key);
+  if (input) input.value = '';
+  if (status) { status.textContent = '✅ Clé sauvegardée — l\'IA Claude est maintenant active.'; status.style.color = 'var(--green)'; }
+  adminRefreshApiKeyPreview();
+}
+
+function adminClearApiKey() {
+  if (typeof window.wasiSetClaudeKey === 'function') window.wasiSetClaudeKey('');
+  else localStorage.removeItem('wasi_claude_key');
+  var status = document.getElementById('admin-api-key-status');
+  if (status) { status.textContent = 'Clé effacée — mode local actif.'; status.style.color = 'var(--text-secondary)'; }
+  adminRefreshApiKeyPreview();
 }
 
 async function adminRefresh() {
