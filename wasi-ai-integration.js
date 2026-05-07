@@ -27,13 +27,11 @@
     loadingSignals: false,
     chatBusy: false,
     patched: false,
-    proxyReady: false,
   };
 
   // ── WASI Access Token management ─────────────────────────────────────────
-  // The WASI access token is a platform-level credential (e.g. "WASI-DEMO-2026").
-  // It is NOT the Anthropic API key — that key lives exclusively on the backend proxy.
-  // Users receive a token when they subscribe. Demo token is provided on the landing page.
+  // The WASI access token is the gate credential (e.g. "WASI-DEMO-2026").
+  // It controls access to the platform — separate from the Anthropic API key.
   function getWasiToken() {
     // 1. Programmatically injected (highest priority)
     if (window.WASI_ACCESS_TOKEN) return window.WASI_ACCESS_TOKEN;
@@ -47,8 +45,6 @@
       const stored = localStorage.getItem("wasi_access_token") || "";
       if (stored) return stored;
     } catch (_) {}
-    // 4. Legacy: migrate old direct-API users gracefully
-    //    (raw Anthropic keys are no longer accepted here — the proxy handles that server-side)
     return "";
   }
 
@@ -378,15 +374,81 @@
   }
 
 
-  function formatAssistantText(value) {
-    return String(value || "")
-      .replace(/^#{1,6}\s+/gm, "")
-      .replace(/\*\*/g, "")
-      .replace(/\s*\[(?:country|doc)-[^\]]+\]/g, "")
-      .replace(/^\|.*\|$/gm, "")
-      .replace(/^-{3,}$/gm, "")
+  // ── Markdown → HTML renderer for chat bubbles ────────────────────────────
+  function renderMarkdownToHtml(raw) {
+    const text = String(raw || "")
+      .replace(/\s*\[(?:country|doc)-[^\]]+\]/g, "") // strip internal markers
       .replace(/\n{3,}/g, "\n\n")
       .trim();
+
+    // Inline formatter: escape HTML first, then apply markdown patterns
+    function inline(s) {
+      let h = s
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      // Bold
+      h = h.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+           .replace(/__(.+?)__/g, "<strong>$1</strong>");
+      // Italic
+      h = h.replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+      // Inline code
+      h = h.replace(/`([^`]+)`/g, '<code style="background:rgba(200,146,42,.13);padding:1px 5px;border-radius:3px;font-size:.82em;font-family:monospace;">$1</code>');
+      // VERDICT keywords
+      h = h.replace(/\b(FAVORABLE|PRUDENCE|ÉVITER|EVITER)\b/g, function(m) {
+        const color = m === "FAVORABLE" ? "#3fb950" : m === "PRUDENCE" ? "#f0c14b" : "#f85149";
+        return '<strong style="color:' + color + ';">' + m + '</strong>';
+      });
+      return h;
+    }
+
+    const lines  = text.split("\n");
+    const out    = [];
+    let inList   = false;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line    = lines[i];
+      const trimmed = line.trim();
+
+      // Horizontal rule ---
+      if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push('<hr style="border:none;border-top:1px solid rgba(255,255,255,.09);margin:8px 0;">');
+        continue;
+      }
+
+      // Headers ## / ###
+      const hm = trimmed.match(/^(#{1,3})\s+(.+)/);
+      if (hm) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        const sz = hm[1].length === 1 ? ".87rem" : hm[1].length === 2 ? ".82rem" : ".79rem";
+        out.push('<div style="font-weight:700;font-size:' + sz + ';color:var(--text-primary);margin:10px 0 3px;">' + inline(hm[2]) + '</div>');
+        continue;
+      }
+
+      // Bullet: - / • / *
+      const bm = trimmed.match(/^[-•*]\s+(.+)/);
+      if (bm) {
+        if (!inList) { out.push('<ul style="margin:4px 0;padding:0;list-style:none;">'); inList = true; }
+        out.push('<li style="display:flex;gap:6px;margin:2px 0;"><span style="color:var(--gold);flex-shrink:0;">▸</span><span>' + inline(bm[1]) + '</span></li>');
+        continue;
+      }
+
+      // Close list on non-bullet content
+      if (inList && trimmed !== "") { out.push("</ul>"); inList = false; }
+
+      // Empty line
+      if (trimmed === "") {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push('<div style="height:5px;"></div>');
+        continue;
+      }
+
+      // Regular line
+      out.push('<div style="line-height:1.58;">' + inline(trimmed) + '</div>');
+    }
+
+    if (inList) out.push("</ul>");
+    return out.join("");
   }
 
   function installHeaderUi() {
@@ -768,11 +830,10 @@
 
     const wrapper = document.createElement("div");
     wrapper.className = "chat-msg bot";
-    wrapper.innerHTML = `
-      <div>${escapeHtml(formatAssistantText(text)).replace(/\n/g, "<br>")}</div>
-      ${buildChatSignalMeta(signal)}
-      ${citationsHtml(citations)}
-    `;
+    wrapper.innerHTML =
+      '<div class="chat-msg-body">' + renderMarkdownToHtml(text) + '</div>' +
+      buildChatSignalMeta(signal) +
+      citationsHtml(citations);
     container.appendChild(wrapper);
     if (typeof window.scrollChat === "function") {
       window.scrollChat();
