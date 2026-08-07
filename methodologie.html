@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#C8922A">
+<title>WASI — Méthodologie de notation souveraine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0A0E1A;
+  --bg-secondary: #0D1220;
+  --bg-tertiary: #111827;
+  --bg-card: #141C2E;
+  --gold: #C8922A;
+  --gold-light: #D4A843;
+  --gold-dim: rgba(200,146,42,.3);
+  --green: #2ECC71;
+  --red: #E74C3C;
+  --orange: #F39C12;
+  --text-primary: #E8EDF5;
+  --text-secondary: #8A9BB5;
+  --text-dim: #4A5A72;
+  --border: #1E2D45;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Sora', system-ui, sans-serif;
+  --radius: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+}
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold-light); }
+.wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+.back { font-size: .8rem; font-family: var(--font-mono); letter-spacing: 1px; }
+h1 {
+  font-size: 1.7rem; margin: 24px 0 4px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.subtitle { color: var(--text-secondary); font-size: .95rem; margin-bottom: 8px; }
+.version {
+  display: inline-block; font-family: var(--font-mono); font-size: .7rem;
+  padding: 3px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-dim); letter-spacing: 1px; margin-bottom: 32px;
+}
+h2 {
+  font-size: 1.15rem; color: var(--gold); margin: 40px 0 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+h3 { font-size: .95rem; margin: 22px 0 8px; color: var(--text-primary); }
+p, li { color: var(--text-secondary); font-size: .92rem; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+li { margin: 4px 0; }
+strong { color: var(--text-primary); }
+code {
+  font-family: var(--font-mono); font-size: .82rem;
+  background: var(--bg-tertiary); padding: 1px 6px; border-radius: 4px;
+  color: var(--gold-light);
+}
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0;
+  font-size: .85rem;
+}
+th, td { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
+th {
+  background: var(--bg-tertiary); color: var(--gold); font-family: var(--font-mono);
+  font-size: .72rem; letter-spacing: 1px; text-transform: uppercase;
+}
+td { color: var(--text-secondary); }
+td:first-child { font-family: var(--font-mono); white-space: nowrap; }
+.formula {
+  background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  border-radius: var(--radius); padding: 14px 18px; margin: 16px 0;
+  font-family: var(--font-mono); font-size: .85rem; color: var(--text-primary);
+  overflow-x: auto;
+}
+.note {
+  background: rgba(243,156,18,.07); border: 1px solid rgba(243,156,18,.3);
+  border-radius: var(--radius); padding: 12px 16px; margin: 16px 0;
+  font-size: .85rem; color: var(--text-secondary);
+}
+.note strong { color: var(--orange); }
+.badge-band { font-family: var(--font-mono); font-weight: 600; }
+.band-high { color: var(--green); }
+.band-mid { color: var(--orange); }
+.band-low { color: var(--red); }
+footer {
+  margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);
+  font-size: .75rem; color: var(--text-dim);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./index.html">&larr; RETOUR &Agrave; LA PLATEFORME</a>
+  <h1>Méthodologie de notation souveraine WASI</h1>
+  <div class="subtitle">Comment les scores pays (0–100) sont construits, actualisés et interprétés.</div>
+  <span class="version">VERSION 1.0 &middot; AO&Ucirc;T 2026</span>
+
+  <h2>1. Vue d'ensemble</h2>
+  <p>Chaque pays africain couvert par WASI reçoit un <strong>score composite de 0 à 100</strong>, produit en trois couches&nbsp;:</p>
+  <div class="formula">Score final = borne<sub>0–100</sub>( Score de base + Ajustement macro + Ajustement stabilité )</div>
+  <ul>
+    <li><strong>Score de base</strong> — notation structurelle établie par l'équipe d'analyse WASI (profondeur de couverture, cadre juridique, intégration régionale, risque). Revue à chaque publication majeure de la plateforme.</li>
+    <li><strong>Ajustement macro</strong> — de <code>−5</code> à <code>+5</code> points, calculé automatiquement à partir des dernières données de la Banque mondiale (croissance, inflation, dette publique).</li>
+    <li><strong>Ajustement stabilité</strong> — pénalité ou bonus lié à la situation politique et institutionnelle.</li>
+  </ul>
+
+  <h2>2. Score de base</h2>
+  <p>Le score de base reflète l'évaluation structurelle du pays par WASI sur quatre dimensions&nbsp;: environnement juridique et réglementaire (cadre OHADA le cas échéant), profondeur et fiabilité des données de marché disponibles, intégration économique régionale (UEMOA, CEDEAO, CEMAC, EAC, SADC, UMA) et risque opérationnel. Il s'agit d'une notation d'expert, <strong>stable entre deux revues</strong>&nbsp;: elle ne bouge pas d'une semaine à l'autre.</p>
+
+  <h2>3. Ajustement macroéconomique (données Banque mondiale)</h2>
+  <p>Quatre indicateurs sont récupérés automatiquement depuis l'API Banque mondiale Open Data (valeur la plus récente disponible sur les 3 dernières années)&nbsp;:</p>
+  <table>
+    <tr><th>Indicateur</th><th>Code Banque mondiale</th></tr>
+    <tr><td>PIB (USD courants)</td><td>NY.GDP.MKTP.CD</td></tr>
+    <tr><td>Croissance du PIB (%)</td><td>NY.GDP.MKTP.KD.ZG</td></tr>
+    <tr><td>Inflation (prix à la consommation, %)</td><td>FP.CPI.TOTL.ZG</td></tr>
+    <tr><td>Dette publique (% du PIB)</td><td>GC.DOD.TOTL.GD.ZS</td></tr>
+  </table>
+  <p>L'ajustement macro est la somme des contributions suivantes, bornée à <code>±5</code>&nbsp;:</p>
+  <table>
+    <tr><th>Croissance</th><th>Points</th><th>Inflation</th><th>Points</th><th>Dette / PIB</th><th>Points</th></tr>
+    <tr><td>&ge; 7 %</td><td>+4</td><td>&le; 3 %</td><td>+1</td><td>&ge; 100 %</td><td>−3</td></tr>
+    <tr><td>5 – 7 %</td><td>+3</td><td>10 – 15 %</td><td>−1</td><td>80 – 100 %</td><td>−2</td></tr>
+    <tr><td>3 – 5 %</td><td>+2</td><td>15 – 30 %</td><td>−2</td><td>60 – 80 %</td><td>−1</td></tr>
+    <tr><td>1 – 3 %</td><td>+1</td><td>&ge; 30 %</td><td>−3</td><td>&lt; 60 %</td><td>0</td></tr>
+    <tr><td>&lt; 0 %</td><td>−3</td><td colspan="4"></td></tr>
+  </table>
+  <p>Pour les pays sans données Banque mondiale exploitables (Soudan du Sud, Érythrée, Somalie), des valeurs de repli documentées sont utilisées et signalées comme telles.</p>
+
+  <h2>4. Ajustement stabilité</h2>
+  <table>
+    <tr><th>Situation</th><th>Points</th></tr>
+    <tr><td>Transition politique non constitutionnelle en cours</td><td>−4</td></tr>
+    <tr><td>Score de base &ge; 70 (institutions consolidées)</td><td>+2</td></tr>
+    <tr><td>Score de base 50 – 69</td><td>+1</td></tr>
+    <tr><td>Score de base &lt; 50</td><td>0</td></tr>
+  </table>
+
+  <h2>5. Interprétation des scores</h2>
+  <table>
+    <tr><th>Score final</th><th>Bande</th><th>Lecture</th></tr>
+    <tr><td class="badge-band band-high">&ge; 70</td><td>Couverture nationale approfondie</td><td>Données riches, cadre juridique lisible, préparation légale élevée.</td></tr>
+    <tr><td class="badge-band band-mid">50 – 69</td><td>Couverture régionale BCEAO / UMOA / UEMOA</td><td>Données régionales fiables, vigilance sur certains indicateurs nationaux.</td></tr>
+    <tr><td class="badge-band band-low">&lt; 50</td><td>Couverture annuaire pays UA</td><td>Données limitées ou contexte à risque élevé — analyse au cas par cas.</td></tr>
+  </table>
+
+  <h2>6. Cadence d'actualisation</h2>
+  <ul>
+    <li><strong>Données macro</strong>&nbsp;: récupérées automatiquement chaque <strong>lundi et jeudi à 06h00 UTC</strong> (GitHub Actions). La date des données affichées est visible dans le bandeau «&nbsp;LIVE · BM&nbsp;» de la plateforme.</li>
+    <li><strong>Indicateurs sous-jacents</strong>&nbsp;: la Banque mondiale publie ces séries à fréquence <strong>annuelle</strong> — un score peut donc rester stable plusieurs semaines, c'est un comportement attendu.</li>
+    <li><strong>Score de base</strong>&nbsp;: revu par l'équipe WASI lors des revues de plateforme (journal des révisions ci-dessous).</li>
+  </ul>
+
+  <h2>7. Limites connues</h2>
+  <ul>
+    <li>Les indicateurs macro sont annuels&nbsp;: l'ajustement ne capte pas les chocs intra-annuels (dévaluations, flambées de prix ponctuelles).</li>
+    <li>Le score de base comporte une part de jugement d'expert&nbsp;; il est documenté mais non issu d'un modèle statistique.</li>
+    <li>La dette publique (GC.DOD.TOTL.GD.ZS) est manquante pour de nombreux pays africains&nbsp;; sa contribution est alors neutre.</li>
+    <li>Les scores WASI sont un outil d'aide à la décision. <strong>Ils ne constituent ni une notation de crédit réglementée, ni un conseil en investissement.</strong></li>
+  </ul>
+
+  <h2>8. Journal des révisions</h2>
+  <table>
+    <tr><th>Date</th><th>Révision</th></tr>
+    <tr><td>2026-08</td><td>Version 1.0 — publication de la méthodologie&nbsp;; ajout du refresh de rattrapage du jeudi&nbsp;; fiabilisation du pipeline Banque mondiale (relances automatiques).</td></tr>
+    <tr><td>2026-04</td><td>Intégration des données Banque mondiale en direct (ajustement macro ±5).</td></tr>
+  </table>
+
+  <div class="note"><strong>Question sur un score&nbsp;?</strong> Écrivez à <a href="mailto:kabore.tara@gmail.com?subject=Question%20m%C3%A9thodologie%20WASI">kabore.tara@gmail.com</a> — chaque demande documentée alimente le journal des révisions.</div>
+
+  <footer>WASI — Whole African Strategic Intelligence &middot; Méthodologie publique &middot; Sources&nbsp;: Banque mondiale Open Data.</footer>
+</div>
+</body>
+</html>

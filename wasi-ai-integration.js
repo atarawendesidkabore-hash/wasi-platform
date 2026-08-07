@@ -1,7 +1,24 @@
 (function () {
-  // ── Direct Claude API config — no proxy needed ────────────────────────────
+  // ── Claude AI config ──────────────────────────────────────────────────────
+  // Preferred path: WASI proxy (backend/server.js on Render) — users only need
+  // their WASI access token, the Anthropic key stays server-side.
+  // Fallback path: direct Anthropic API with a user-supplied key (BYOK).
   const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
   const CLAUDE_MODEL  = "claude-sonnet-4-6";
+
+  function getProxyUrl() {
+    if (typeof window.WASI_PROXY_URL === "string") return window.WASI_PROXY_URL.replace(/\/$/, "");
+    try { return (localStorage.getItem("wasi_proxy_url") || "").replace(/\/$/, ""); } catch (_) { return ""; }
+  }
+  function setProxyUrl(url) {
+    try {
+      if (url) localStorage.setItem("wasi_proxy_url", url.trim());
+      else localStorage.removeItem("wasi_proxy_url");
+    } catch (_) {}
+    window.WASI_PROXY_URL = url ? url.trim() : "";
+  }
+  window.wasiSetProxyUrl = setProxyUrl;
+  window.wasiGetProxyUrl = getProxyUrl;
 
   // ── Anthropic API key management ─────────────────────────────────────────
   // Key is stored in localStorage under 'wasi_claude_key'.
@@ -141,10 +158,11 @@
     return "BASE DE DONNÉES WASI — 54 PAYS AFRICAINS (données World Bank 2024) :\n" + lines.join("\n");
   }
 
-  // ── Direct Claude API call ────────────────────────────────────────────────
+  // ── Claude API call — proxy first, direct BYOK fallback ──────────────────
   async function callClaude(userMessage, history, countryProfile) {
-    const apiKey = getClaudeKey();
-    if (!apiKey) throw new Error("no_key"); // → local AI fallback
+    const proxyUrl = getProxyUrl();
+    const apiKey   = getClaudeKey();
+    if (!proxyUrl && !apiKey) throw new Error("no_key"); // → local AI fallback
 
     // ── Platform knowledge ─────────────────────────────────────────────────
     const wasiKnowledge =
@@ -226,7 +244,44 @@
       { role: "user", content: userMessage },
     ];
 
-    // ── POST directly to Anthropic API ───────────────────────────────────
+    // ── 1. Preferred: WASI proxy (Anthropic key stays server-side) ────────
+    if (proxyUrl) {
+      try {
+        const _pctrl = new AbortController();
+        const _ptid  = setTimeout(function(){ _pctrl.abort(); }, 35000);
+        const presp = await fetch(proxyUrl + "/api/chat", {
+          method: "POST",
+          signal: _pctrl.signal,
+          headers: {
+            "Content-Type": "application/json",
+            "x-wasi-token": getWasiToken() || "WASI-DEMO-2026",
+          },
+          body: JSON.stringify({ messages: messages, system: systemPrompt, max_tokens: 1800 }),
+        });
+        clearTimeout(_ptid);
+        if (presp.ok) {
+          const pdata = await presp.json();
+          if (pdata.reply) {
+            return { reply: pdata.reply, citations: [], countrySignal: null, source: { aiEnabled: true } };
+          }
+        } else if (presp.status === 401) {
+          throw new Error("Token WASI invalide — vérifiez votre code d'accès.");
+        } else if (presp.status === 429) {
+          throw new Error("Limite de requêtes atteinte. Attendez 1 minute.");
+        }
+        // Other proxy errors → fall through to direct API if a key exists
+        if (!apiKey) {
+          const perr = await presp.json().catch(function(){ return {}; });
+          throw new Error(perr.error || ("Erreur proxy WASI " + presp.status));
+        }
+      } catch (proxyErr) {
+        // Proxy unreachable or errored: only continue if BYOK fallback exists
+        if (!apiKey) throw proxyErr;
+      }
+    }
+
+    // ── 2. Fallback: direct Anthropic API with user-supplied key (BYOK) ───
+    if (!apiKey) throw new Error("no_key");
     const _ctrl = new AbortController();
     const _tid  = setTimeout(function(){ _ctrl.abort(); }, 30000);
     const resp = await fetch(ANTHROPIC_URL, {
@@ -615,7 +670,7 @@
 
   function buildCompositeCard() {
     const host = document.getElementById("right-composite");
-    if (!host) {
+    if (!host || !Array.isArray(window.COUNTRIES)) {
       return;
     }
 
@@ -858,6 +913,40 @@
     }
   }
 
+  // ── Score history loader — drives the ↑ ↓ → trend arrows ─────────────────
+  // data/country-history.json is rebuilt by CI from the git history of the
+  // weekly World Bank snapshots.
+  async function loadScoreHistory() {
+    try {
+      const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, "");
+      const res  = await fetch(base + "/data/country-history.json?v=" + Date.now());
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function applyHistoryTrends(hist) {
+    if (!hist || !hist.countries || !Array.isArray(window.COUNTRIES)) return;
+    window.COUNTRIES.forEach(function (country) {
+      const series = hist.countries[country.code];
+      if (!series || !Array.isArray(series.scoreAdj)) return;
+      const vals = series.scoreAdj.filter(function (v) { return v != null; });
+      if (vals.length < 2) return;
+      const last = vals[vals.length - 1];
+      // Compare against the most recent *different* prior value, so long flat
+      // stretches don't hide the direction of the last real move.
+      let prev = null;
+      for (let i = vals.length - 2; i >= 0; i--) {
+        if (vals[i] !== last) { prev = vals[i]; break; }
+      }
+      country.trend = prev == null ? "→" : last > prev ? "↑" : "↓";
+      country.scoreAdjHistory = series.scoreAdj;
+      country.historyDates = hist.dates;
+    });
+  }
+
   function mergeWorldBankData(wb) {
     if (!wb || !wb.countries || !Array.isArray(window.COUNTRIES)) return;
 
@@ -884,6 +973,9 @@
 
     const fetchDate = wb.fetchedAt ? new Date(wb.fetchedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }) : "N/A";
     state.worldBankFetchedAt = fetchDate;
+    state.worldBankAgeDays = wb.fetchedAt
+      ? Math.floor((Date.now() - new Date(wb.fetchedAt).getTime()) / 86400000)
+      : null;
     state.worldBankLoaded = true;
   }
 
@@ -943,11 +1035,14 @@
     try {
       ensureBaseScores();
 
-      // 1. Fetch live World Bank data
-      const wb = await loadWorldBankData();
+      // 1. Fetch live World Bank data + score history in parallel
+      const [wb, hist] = await Promise.all([loadWorldBankData(), loadScoreHistory()]);
       if (wb) {
         mergeWorldBankData(wb);
         updateStatus("Intégration données BM " + (state.worldBankFetchedAt || "") + "...", "loading");
+      }
+      if (hist) {
+        applyHistoryTrends(hist);
       }
 
       // 2. Compute signals (live if WB loaded, local fallback otherwise)
@@ -964,10 +1059,23 @@
         : "WASI AI · signaux locaux actifs";
       updateStatus(label, "ready");
 
-      // Show live data badge in topbar
+      // Show data-health badge in topbar: green when fresh, orange when stale
       if (state.worldBankLoaded) {
         const badge = document.getElementById("wb-data-badge");
-        if (badge) badge.style.display = "inline-block";
+        if (badge) {
+          badge.style.display = "inline-block";
+          const stale = state.worldBankAgeDays != null && state.worldBankAgeDays > 10;
+          if (stale) {
+            badge.textContent = "⚠ BM " + (state.worldBankFetchedAt || "?") + " · données anciennes";
+            badge.style.color = "#F39C12";
+            badge.style.background = "rgba(243,156,18,.08)";
+            badge.style.borderColor = "rgba(243,156,18,.4)";
+          } else {
+            badge.textContent = "● LIVE · BM " + (state.worldBankFetchedAt || "");
+          }
+          badge.title = "Données Banque mondiale récupérées le " + (state.worldBankFetchedAt || "?") +
+            " · actualisation automatique lundi & jeudi 06:00 UTC · voir Méthodologie";
+        }
       }
     } catch (error) {
       updateStatus("Erreur calcul signaux", "error");
@@ -1101,8 +1209,14 @@
 
     const originalInitApp = window.initApp;
     window.initApp = function patchedInitApp() {
-      if (typeof originalInitApp === "function") {
-        originalInitApp();
+      // A failure inside the app's own init must never block the WASI AI /
+      // live-data boot — that would freeze scores on their hardcoded values.
+      try {
+        if (typeof originalInitApp === "function") {
+          originalInitApp();
+        }
+      } catch (err) {
+        console.error("initApp error (continuing with WASI AI boot):", err);
       }
       bootWasiAi();
     };

@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="WASI">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.anthropic.com https://api.worldbank.org http://localhost:3000 http://localhost:3200; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.anthropic.com https://api.worldbank.org https://wasi-ai-proxy.onrender.com http://localhost:3000 http://localhost:3200; img-src 'self' data:;">
 <link rel="manifest" href="manifest.json">
 <title>WASI — Whole African Strategic Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1607,6 +1607,8 @@ input, select, textarea { font-family: inherit; outline: none; }
       <span id="wb-data-badge" style="display:none;padding:3px 8px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.3);border-radius:4px;color:#00E676;font-size:.68rem;letter-spacing:.5px;">● LIVE · BM 2024</span>
       <span class="topbar-user">Bienvenue, <strong id="user-name">Operateur</strong></span>
       <span class="topbar-tier" id="user-tier">DEMO</span>
+      <a href="./methodologie.html" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:.75rem;">M&eacute;thodologie</a>
+      <a id="pro-cta" href="mailto:kabore.tara@gmail.com?subject=WASI%20Pro%20%E2%80%94%20Manifestation%20d'int%C3%A9r%C3%AAt&body=Bonjour%2C%0A%0AJe%20suis%20int%C3%A9ress%C3%A9(e)%20par%20%3A%0A%5B%20%5D%20Rapports%20pays%20approfondis%20(PDF)%0A%5B%20%5D%20Licence%20des%20indices%20AFEX%20(CIREX%2C%20BUREX%2C%20GHAEX%2C%20NGAEX...)%0A%5B%20%5D%20Acc%C3%A8s%20API%20aux%20scores%20et%20donn%C3%A9es%20WASI%0A%5B%20%5D%20Autre%20%3A%20%0A%0AOrganisation%20%3A%20%0APays%20%3A%20" onclick="try{localStorage.setItem('wasi_pro_clicks',(parseInt(localStorage.getItem('wasi_pro_clicks')||'0',10)+1));}catch(e){}" style="padding:6px 12px;border:1px solid var(--gold);border-radius:var(--radius);background:linear-gradient(135deg,rgba(200,146,42,.2),rgba(212,168,67,.1));color:var(--gold-light);font-size:.75rem;font-weight:600;">Acc&egrave;s Pro</a>
       <a href="./wasi-core-console.html" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);background:rgba(200,146,42,.12);color:var(--gold);font-size:.75rem;">Noyau WASI</a>
     </div>
   </div>
@@ -2994,6 +2996,14 @@ const COUNTRY_RISKS = {
     ]},
 };
 
+// Expose data globals on window — wasi-ai-integration.js (live World Bank
+// merge, score history, AI context) reads them via window.*, and const/let
+// declarations do not create window properties.
+window.COUNTRIES = COUNTRIES;
+window.COUNTRY_DETAILS = COUNTRY_DETAILS;
+window.COUNTRY_RISKS = COUNTRY_RISKS;
+window.chatHistory = chatHistory;
+
 /* -- WACC & Credit computation for countries without explicit data -- */
 function getCountryRisk(code) {
   if (COUNTRY_RISKS[code]) return COUNTRY_RISKS[code];
@@ -3762,8 +3772,8 @@ function initApp() {
   renderSMEmetteurs();
   renderSMPortfolio();
   // Compta & Banking: empty by default, loaded when documents are uploaded
-  // Restore chat history from previous session
-  restoreChatHistory();
+  // Restore chat history from previous session (provided by wasi-ai-integration.js)
+  if (typeof restoreChatHistory === 'function') restoreChatHistory();
   showNotif('Bienvenue sur la plateforme WASI. Mode demo actif.', 'success');
 }
 

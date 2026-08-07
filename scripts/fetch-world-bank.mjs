@@ -85,6 +85,33 @@ async function fetchIndicator(indicatorCode, iso3Codes, retries = 3) {
   return map;
 }
 
+// ── IMF WEO cross-check (secondary source) ─────────────────────────────────
+// Real GDP growth from the IMF DataMapper API — used to sanity-check the
+// World Bank growth figure. Non-fatal: on failure the cross-check is skipped.
+async function fetchImfGrowth() {
+  try {
+    const res = await fetch('https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH');
+    if (!res.ok) throw new Error(`IMF API ${res.status}`);
+    const json = await res.json();
+    const series = json?.values?.NGDP_RPCH || {};
+    const maxYear = new Date().getFullYear();
+    const map = {};
+    for (const [iso3, years] of Object.entries(series)) {
+      let best = null;
+      for (const [y, v] of Object.entries(years)) {
+        const yr = parseInt(y, 10);
+        if (v == null || yr > maxYear) continue;
+        if (best == null || yr > best.year) best = { year: yr, value: v };
+      }
+      if (best) map[iso3] = best;
+    }
+    return map;
+  } catch (err) {
+    console.log(`⚠️  IMF cross-check unavailable (${err.message}) — continuing with World Bank only.`);
+    return null;
+  }
+}
+
 // ── Formatting helpers ──────────────────────────────────────────────────────
 function fmtGDP(usd) {
   if (usd == null) return null;
@@ -127,12 +154,13 @@ async function main() {
   console.log(`\nWASI World Bank Fetcher — ${new Date().toISOString()}`);
   console.log(`Fetching data for ${iso3List.length} countries...\n`);
 
-  // Fetch all 4 indicators in parallel
-  const [gdpMap, growthMap, inflMap, debtMap] = await Promise.all([
+  // Fetch all 4 indicators + IMF cross-check in parallel
+  const [gdpMap, growthMap, inflMap, debtMap, imfGrowthMap] = await Promise.all([
     fetchIndicator(INDICATORS.gdp,       iso3List),
     fetchIndicator(INDICATORS.growth,    iso3List),
     fetchIndicator(INDICATORS.inflation, iso3List),
     fetchIndicator(INDICATORS.debt,      iso3List),
+    fetchImfGrowth(),
   ]);
 
   const fetchedAt = new Date().toISOString();
@@ -148,6 +176,9 @@ async function main() {
     const inflation = inflMap[iso3]?.value    ?? fb.inflation ?? null;
     const debt_gdp  = debtMap[iso3]?.value   ?? fb.debt_gdp  ?? null;
 
+    const imf = imfGrowthMap?.[iso3] || null;
+    const divergent = imf != null && growth != null && Math.abs(imf.value - growth) > 2;
+
     const entry = {
       iso3,
       gdp_usd,
@@ -157,6 +188,9 @@ async function main() {
       growth_year:  growthMap[iso3]?.year || null,
       inflation:    r1(inflation),
       debt_gdp:     r1(debt_gdp),
+      imf_growth:      imf ? r1(imf.value) : null,
+      imf_growth_year: imf ? imf.year : null,
+      growth_divergent: divergent,
       scoreAdj:     computeScoreAdj({ growth, inflation, debt: debt_gdp }),
       source:       'World Bank Open Data',
       fetchedAt,
@@ -173,7 +207,8 @@ async function main() {
       ` | Growth: ${entry.growth != null ? entry.growth + '%' : 'N/A'}` +
       ` | Inflation: ${entry.inflation != null ? entry.inflation + '%' : 'N/A'}` +
       ` | Debt: ${entry.debt_gdp != null ? entry.debt_gdp + '%' : 'N/A'}` +
-      ` | ScoreAdj: ${entry.scoreAdj >= 0 ? '+' : ''}${entry.scoreAdj}`
+      ` | ScoreAdj: ${entry.scoreAdj >= 0 ? '+' : ''}${entry.scoreAdj}` +
+      (divergent ? ` | ⚠️ IMF divergence (FMI: ${entry.imf_growth}%)` : '')
     );
   }
 
