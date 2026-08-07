@@ -52,12 +52,23 @@ const INDICATORS = {
   debt:      'GC.DOD.TOTL.GD.ZS', // Central government debt % GDP
 };
 
-async function fetchIndicator(indicatorCode, iso3Codes) {
+async function fetchIndicator(indicatorCode, iso3Codes, retries = 3) {
   const batch = iso3Codes.join(';');
   // mrv=3 → most recent 3 years, so we get the latest non-null value
   const url = `${WB_BASE}/country/${batch}/indicator/${indicatorCode}?format=json&mrv=3&per_page=600`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`World Bank API ${res.status} for ${indicatorCode}`);
+  let res;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      res = await fetch(url);
+      if (res.ok) break;
+      throw new Error(`World Bank API ${res.status} for ${indicatorCode}`);
+    } catch (err) {
+      if (attempt > retries) throw err;
+      const delay = attempt * 15000;
+      console.log(`⚠️  ${indicatorCode} attempt ${attempt} failed (${err.message}), retrying in ${delay / 1000}s...`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
   const [, data] = await res.json();
 
   // Build map: iso3 → {value, year} using the most recent non-null entry
