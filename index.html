@@ -1076,6 +1076,7 @@ input, select, textarea { font-family: inherit; outline: none; }
   /* Transfer summary */
   .tf-summary { padding: 12px; }
   .tf-row { font-size: 0.8rem; }
+  #tf-grid { grid-template-columns: 1fr !important; }
 
   /* Credit gauge */
   .credit-gauge { width: 150px; height: 150px; }
@@ -1746,6 +1747,7 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
       <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
       <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
       <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
+      <button class="dex-tab" onclick="switchDexTab('transfer',this)">Transfert WASI</button>
       <button class="dex-tab" onclick="switchDexTab('port',this)">Portefeuille</button>
     </div>
     <div class="dex-body">
@@ -2094,6 +2096,67 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
             </thead>
             <tbody id="fx-body"></tbody>
           </table>
+        </div>
+        <!-- WASI Transfer panel -->
+        <div class="dex-panel" id="panel-transfer">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;" id="tf-grid">
+            <div class="bcard" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;">
+              <div style="color:var(--gold);font-weight:600;margin-bottom:4px;text-transform:uppercase;font-size:.82rem;">Transfert WASI</div>
+              <div style="color:var(--text-dim);font-size:.7rem;margin-bottom:14px;">Transferts intra-Afrique &amp; diaspora &middot; frais 0.8&ndash;1.5% vs 7.8% moyenne corridor (Banque mondiale)</div>
+              <div style="display:grid;grid-template-columns:1fr 110px;gap:8px;margin-bottom:10px;">
+                <div>
+                  <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Vous envoyez</label>
+                  <input type="number" id="tf-amount" min="0" placeholder="100 000" value="100000" oninput="calcTransfer()" style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:.95rem;">
+                </div>
+                <div>
+                  <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Devise</label>
+                  <select id="tf-from-cur" onchange="calcTransfer()" style="width:100%;padding:10px 8px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:.85rem;"></select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 110px;gap:8px;margin-bottom:10px;">
+                <div>
+                  <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">B&eacute;n&eacute;ficiaire re&ccedil;oit</label>
+                  <input type="text" id="tf-received" readonly style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius);color:var(--green);font-family:var(--font-mono);font-size:.95rem;font-weight:700;">
+                </div>
+                <div>
+                  <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Devise</label>
+                  <select id="tf-to-cur" onchange="calcTransfer()" style="width:100%;padding:10px 8px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:.85rem;"></select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+                <div>
+                  <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Nom du b&eacute;n&eacute;ficiaire</label>
+                  <input type="text" id="tf-name" placeholder="Awa Traor&eacute;" style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-size:.85rem;">
+                </div>
+                <div>
+                  <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">T&eacute;l&eacute;phone / IBAN</label>
+                  <input type="text" id="tf-phone" placeholder="+226 70 00 00 00" style="width:100%;box-sizing:border-box;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-family:var(--font-mono);font-size:.85rem;">
+                </div>
+              </div>
+              <div style="margin-bottom:14px;">
+                <label style="font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">M&eacute;thode de r&eacute;ception</label>
+                <select id="tf-method" onchange="calcTransfer()" style="width:100%;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-size:.85rem;">
+                  <option value="momo">&#128241; Mobile Money (Orange, Wave, MTN) &mdash; frais 1.25% &middot; &lt; 5 min</option>
+                  <option value="wallet">&#128176; Wallet WASI &mdash; frais 0.8% &middot; instantan&eacute;</option>
+                  <option value="bank">&#127974; Compte bancaire &mdash; frais 1.5% &middot; &lt; 24h</option>
+                </select>
+              </div>
+              <button onclick="sendTransfer()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#000;font-weight:700;font-size:.9rem;border-radius:var(--radius);letter-spacing:.5px;">Envoyer le transfert (d&eacute;mo)</button>
+            </div>
+            <div>
+              <div class="tf-summary" style="background:var(--bg-card);border:1px solid var(--gold-dim);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px;">
+                <div style="color:var(--gold);font-weight:600;margin-bottom:10px;text-transform:uppercase;font-size:.75rem;">R&eacute;capitulatif</div>
+                <div id="tf-summary-body" style="font-size:.8rem;color:var(--text-secondary);line-height:2;"></div>
+              </div>
+              <div class="bcard" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                  <span style="color:var(--gold);font-weight:600;text-transform:uppercase;font-size:.75rem;">Historique</span>
+                  <button onclick="clearTransferHistory()" style="background:none;border:none;color:var(--text-dim);font-size:.68rem;cursor:pointer;">Effacer</button>
+                </div>
+                <div id="tf-history" style="font-size:.75rem;"></div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- Portfolio panel -->
         <div class="dex-panel" id="panel-port">
@@ -3809,6 +3872,7 @@ function initApp() {
   populateOrderTickers();
   calcOrder();
   calcSwap();
+  initTransfer();
   // Compta loaded when documents are uploaded
   renderStockMarket();
   renderSMExchanges();
@@ -3853,6 +3917,123 @@ function switchDexTab(tab, btn) {
   document.getElementById('panel-' + tab).classList.add('active');
   document.querySelectorAll('#dex-tabs .dex-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+}
+
+/* ========== WASI TRANSFER ==========
+   Simulated intra-Africa & diaspora money transfer. Rates come from the
+   same FX_RATES table as the Change (FX) tab (mid = (buy+sell)/2, all
+   quoted against XOF), so both tabs always agree. */
+const TF_METHODS = {
+  momo:   { label: 'Mobile Money', fee: 0.0125, eta: '< 5 minutes' },
+  wallet: { label: 'Wallet WASI',  fee: 0.008,  eta: 'Instantané' },
+  bank:   { label: 'Compte bancaire', fee: 0.015, eta: '< 24 heures' },
+};
+const TF_MARKET_FEE = 0.078; // World Bank avg. remittance cost to Sub-Saharan Africa
+
+function tfRates() {
+  // cur → XOF per unit. Only '<CUR>/XOF' pairs are direct; XOF itself = 1.
+  var map = { XOF: 1 };
+  (FX_RATES || []).forEach(function(f) {
+    var m = f.pair.match(/^([A-Z]{3})\/XOF$/);
+    if (m) map[m[1]] = (f.buy + f.sell) / 2;
+  });
+  return map;
+}
+
+function initTransfer() {
+  var from = document.getElementById('tf-from-cur');
+  var to   = document.getElementById('tf-to-cur');
+  if (!from || !to) return;
+  var rates = tfRates();
+  var codes = Object.keys(rates).sort();
+  var opts = codes.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join('');
+  from.innerHTML = opts; to.innerHTML = opts;
+  from.value = 'XOF'; to.value = codes.indexOf('NGN') !== -1 ? 'NGN' : codes[0];
+  calcTransfer();
+  renderTransferHistory();
+}
+
+function calcTransfer() {
+  var out = document.getElementById('tf-summary-body');
+  if (!out) return;
+  var rates  = tfRates();
+  var amount = parseFloat(document.getElementById('tf-amount').value) || 0;
+  var fromC  = document.getElementById('tf-from-cur').value;
+  var toC    = document.getElementById('tf-to-cur').value;
+  var method = TF_METHODS[document.getElementById('tf-method').value] || TF_METHODS.momo;
+  var rate   = (rates[fromC] || 1) / (rates[toC] || 1);
+  var fee    = amount * method.fee;
+  var received = (amount - fee) * rate;
+  var marketCost = amount * TF_MARKET_FEE;
+  var saved  = marketCost - fee;
+
+  var fmtA = function(v, c) {
+    return (v >= 100 ? Math.round(v).toLocaleString('fr-FR') : v.toFixed(2)) + ' ' + c;
+  };
+  document.getElementById('tf-received').value = amount > 0 ? fmtA(received, toC) : '';
+
+  var row = function(l, v, col) {
+    return '<div class="tf-row" style="display:flex;justify-content:space-between;gap:10px;">'+
+      '<span style="color:var(--text-dim);">'+l+'</span>'+
+      '<span style="font-family:var(--font-mono);color:'+(col||'var(--text-primary)')+';text-align:right;">'+v+'</span></div>';
+  };
+  out.innerHTML = amount > 0 ?
+    row('Taux appliqué', '1 ' + fromC + ' = ' + (rate >= 100 ? Math.round(rate).toLocaleString('fr-FR') : rate.toFixed(4)) + ' ' + toC) +
+    row('Frais WASI (' + (method.fee*100).toFixed(2).replace('.00','') + '%)', fmtA(fee, fromC), 'var(--gold)') +
+    row('Total débité', fmtA(amount, fromC)) +
+    row('Bénéficiaire reçoit', fmtA(received, toC), 'var(--green)') +
+    row('Délai — ' + method.label, method.eta) +
+    row('Économie vs corridor moyen (7.8%)', '−' + fmtA(saved, fromC), 'var(--green)')
+    : '<div style="color:var(--text-dim);">Saisissez un montant pour voir le récapitulatif.</div>';
+}
+
+function sendTransfer() {
+  var amount = parseFloat(document.getElementById('tf-amount').value) || 0;
+  var name = document.getElementById('tf-name').value.trim();
+  if (amount <= 0) { showNotif('Montant invalide.', 'error'); return; }
+  if (!name)       { showNotif('Indiquez le nom du bénéficiaire.', 'error'); return; }
+  var fromC = document.getElementById('tf-from-cur').value;
+  var toC   = document.getElementById('tf-to-cur').value;
+  var mKey  = document.getElementById('tf-method').value;
+  var method = TF_METHODS[mKey] || TF_METHODS.momo;
+  var rates = tfRates();
+  var received = (amount - amount*method.fee) * ((rates[fromC]||1)/(rates[toC]||1));
+
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('wasi_transfers') || '[]'); } catch(_) {}
+  hist.unshift({
+    date: new Date().toISOString(), name: name, method: method.label,
+    amount: amount, fromC: fromC, toC: toC, received: received,
+    ref: 'WT-' + Date.now().toString(36).toUpperCase()
+  });
+  try { localStorage.setItem('wasi_transfers', JSON.stringify(hist.slice(0, 30))); } catch(_) {}
+  renderTransferHistory();
+  showNotif('Transfert démo envoyé à ' + name + ' — ' + method.eta.toLowerCase() + ' (' + method.label + ').', 'success');
+}
+
+function renderTransferHistory() {
+  var el = document.getElementById('tf-history');
+  if (!el) return;
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('wasi_transfers') || '[]'); } catch(_) {}
+  if (!hist.length) {
+    el.innerHTML = '<div style="color:var(--text-dim);">Aucun transfert pour le moment. Votre premier transfert apparaîtra ici.</div>';
+    return;
+  }
+  el.innerHTML = hist.slice(0, 8).map(function(t) {
+    var d = new Date(t.date);
+    return '<div style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">' +
+      '<div><div style="color:var(--text-primary);font-weight:600;">' + t.name + '</div>' +
+      '<div style="color:var(--text-dim);font-size:.65rem;">' + d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) + ' · ' + t.method + ' · ' + t.ref + '</div></div>' +
+      '<div style="text-align:right;font-family:var(--font-mono);">' +
+      '<div style="color:var(--red);">−' + Math.round(t.amount).toLocaleString('fr-FR') + ' ' + t.fromC + '</div>' +
+      '<div style="color:var(--green);font-size:.68rem;">+' + (t.received >= 100 ? Math.round(t.received).toLocaleString('fr-FR') : t.received.toFixed(2)) + ' ' + t.toC + '</div></div></div>';
+  }).join('');
+}
+
+function clearTransferHistory() {
+  try { localStorage.removeItem('wasi_transfers'); } catch(_) {}
+  renderTransferHistory();
 }
 
 /* ========== TICKER ========== */
