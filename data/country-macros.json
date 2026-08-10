@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-07T14:17:55.761Z",
+  "fetchedAt": "2026-08-10T07:07:11.391Z",
   "source": "World Bank Open Data API",
   "countries": {
     "NG": {
@@ -11,12 +11,12 @@
       "growth_year": "2025",
       "inflation": 23,
       "debt_gdp": null,
-      "imf_growth": 4.1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "CI": {
       "iso3": "CIV",
@@ -27,12 +27,12 @@
       "growth_year": "2025",
       "inflation": 0.1,
       "debt_gdp": null,
-      "imf_growth": 6.2,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "GH": {
       "iso3": "GHA",
@@ -43,12 +43,12 @@
       "growth_year": "2025",
       "inflation": 14.2,
       "debt_gdp": null,
-      "imf_growth": 4.8,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SN": {
       "iso3": "SEN",
@@ -59,12 +59,12 @@
       "growth_year": "2025",
       "inflation": 1.5,
       "debt_gdp": null,
-      "imf_growth": 2.2,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "BF": {
       "iso3": "BFA",
@@ -75,12 +75,12 @@
       "growth_year": "2025",
       "inflation": -0.6,
       "debt_gdp": 64.2,
-      "imf_growth": 4.9,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "ML": {
       "iso3": "MLI",
@@ -91,12 +91,12 @@
       "growth_year": "2025",
       "inflation": 3.3,
       "debt_gdp": null,
-      "imf_growth": 5.5,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "GN": {
       "iso3": "GIN",
@@ -107,12 +107,12 @@
       "growth_year": "2025",
       "inflation": 3.5,
       "debt_gdp": null,
-      "imf_growth": 8.7,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "BJ": {
       "iso3": "BEN",
@@ -123,12 +123,12 @@
       "growth_year": "2025",
       "inflation": 1.1,
       "debt_gdp": null,
-      "imf_growth": 7,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "TG": {
       "iso3": "TGO",
@@ -139,12 +139,12 @@
       "growth_year": "2025",
       "inflation": 0.4,
       "debt_gdp": null,
-      "imf_growth": 5,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "NE": {
       "iso3": "NER",
@@ -155,12 +155,12 @@
       "growth_year": "2025",
       "inflation": -4.5,
       "debt_gdp": null,
-      "imf_growth": 6.7,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "MR": {
       "iso3": "MRT",
@@ -171,12 +171,12 @@
       "growth_year": "2025",
       "inflation": 1.5,
       "debt_gdp": null,
-      "imf_growth": 4.4,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "GW": {
       "iso3": "GNB",
@@ -187,12 +187,12 @@
       "growth_year": "2025",
       "inflation": 0.9,
       "debt_gdp": null,
-      "imf_growth": 4.9,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SL": {
       "iso3": "SLE",
@@ -203,12 +203,12 @@
       "growth_year": "2025",
       "inflation": 7.5,
       "debt_gdp": null,
-      "imf_growth": 4.5,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "LR": {
       "iso3": "LBR",
@@ -219,12 +219,12 @@
       "growth_year": "2025",
       "inflation": 8.3,
       "debt_gdp": null,
-      "imf_growth": 5.1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "GM": {
       "iso3": "GMB",
@@ -235,12 +235,12 @@
       "growth_year": "2025",
       "inflation": 11.6,
       "debt_gdp": null,
-      "imf_growth": 5.1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "CV": {
       "iso3": "CPV",
@@ -251,12 +251,12 @@
       "growth_year": "2025",
       "inflation": 2.3,
       "debt_gdp": null,
-      "imf_growth": 4.8,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "CM": {
       "iso3": "CMR",
@@ -267,12 +267,12 @@
       "growth_year": "2025",
       "inflation": 3.4,
       "debt_gdp": null,
-      "imf_growth": 3.3,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "GA": {
       "iso3": "GAB",
@@ -283,12 +283,12 @@
       "growth_year": "2025",
       "inflation": 1.8,
       "debt_gdp": null,
-      "imf_growth": 2.7,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "CG": {
       "iso3": "COG",
@@ -299,12 +299,12 @@
       "growth_year": "2025",
       "inflation": 2.4,
       "debt_gdp": null,
-      "imf_growth": 2.8,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "CD": {
       "iso3": "COD",
@@ -315,12 +315,12 @@
       "growth_year": "2025",
       "inflation": null,
       "debt_gdp": 14.9,
-      "imf_growth": 5.9,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "CF": {
       "iso3": "CAF",
@@ -331,12 +331,12 @@
       "growth_year": "2025",
       "inflation": 1,
       "debt_gdp": null,
-      "imf_growth": 2.6,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "TD": {
       "iso3": "TCD",
@@ -347,12 +347,12 @@
       "growth_year": "2025",
       "inflation": -3.9,
       "debt_gdp": null,
-      "imf_growth": 5.2,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "GQ": {
       "iso3": "GNQ",
@@ -363,12 +363,12 @@
       "growth_year": "2025",
       "inflation": 2.9,
       "debt_gdp": null,
-      "imf_growth": -2.7,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "KE": {
       "iso3": "KEN",
@@ -379,12 +379,12 @@
       "growth_year": "2025",
       "inflation": 4.1,
       "debt_gdp": null,
-      "imf_growth": 4.5,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "TZ": {
       "iso3": "TZA",
@@ -395,12 +395,12 @@
       "growth_year": "2025",
       "inflation": 3.3,
       "debt_gdp": null,
-      "imf_growth": 5.9,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "UG": {
       "iso3": "UGA",
@@ -411,12 +411,12 @@
       "growth_year": "2025",
       "inflation": 3.6,
       "debt_gdp": 54.4,
-      "imf_growth": 7.5,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "RW": {
       "iso3": "RWA",
@@ -427,12 +427,12 @@
       "growth_year": "2025",
       "inflation": 5.9,
       "debt_gdp": null,
-      "imf_growth": 7.2,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "BI": {
       "iso3": "BDI",
@@ -443,12 +443,12 @@
       "growth_year": "2025",
       "inflation": 34.1,
       "debt_gdp": null,
-      "imf_growth": 3.8,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SS": {
       "iso3": "SSD",
@@ -459,12 +459,12 @@
       "growth_year": null,
       "inflation": 91.4,
       "debt_gdp": null,
-      "imf_growth": 4.1,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": -5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "ET": {
       "iso3": "ETH",
@@ -475,12 +475,12 @@
       "growth_year": "2025",
       "inflation": 13.2,
       "debt_gdp": null,
-      "imf_growth": 9.2,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "DJ": {
       "iso3": "DJI",
@@ -491,12 +491,12 @@
       "growth_year": "2025",
       "inflation": -0.3,
       "debt_gdp": null,
-      "imf_growth": 6,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "ER": {
       "iso3": "ERI",
@@ -507,12 +507,12 @@
       "growth_year": null,
       "inflation": 20,
       "debt_gdp": null,
-      "imf_growth": 3.8,
-      "imf_growth_year": 2019,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SO": {
       "iso3": "SOM",
@@ -523,12 +523,12 @@
       "growth_year": "2025",
       "inflation": 14.5,
       "debt_gdp": 12.7,
-      "imf_growth": 2.6,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SD": {
       "iso3": "SDN",
@@ -539,12 +539,12 @@
       "growth_year": "2025",
       "inflation": null,
       "debt_gdp": null,
-      "imf_growth": 0.7,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "ZA": {
       "iso3": "ZAF",
@@ -555,12 +555,12 @@
       "growth_year": "2025",
       "inflation": 3.2,
       "debt_gdp": 82.8,
-      "imf_growth": 1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "MZ": {
       "iso3": "MOZ",
@@ -571,12 +571,12 @@
       "growth_year": "2025",
       "inflation": 4.4,
       "debt_gdp": 71.8,
-      "imf_growth": 0.5,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": -4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "ZW": {
       "iso3": "ZWE",
@@ -587,12 +587,12 @@
       "growth_year": "2025",
       "inflation": null,
       "debt_gdp": null,
-      "imf_growth": 5,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "ZM": {
       "iso3": "ZMB",
@@ -603,12 +603,12 @@
       "growth_year": "2025",
       "inflation": 13.9,
       "debt_gdp": null,
-      "imf_growth": 4.3,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "BW": {
       "iso3": "BWA",
@@ -619,12 +619,12 @@
       "growth_year": "2025",
       "inflation": 2.7,
       "debt_gdp": 19.7,
-      "imf_growth": 4.7,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "NA": {
       "iso3": "NAM",
@@ -635,12 +635,12 @@
       "growth_year": "2025",
       "inflation": 3.5,
       "debt_gdp": null,
-      "imf_growth": 2.4,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "MW": {
       "iso3": "MWI",
@@ -651,12 +651,12 @@
       "growth_year": "2025",
       "inflation": 28.4,
       "debt_gdp": 61.8,
-      "imf_growth": 2.2,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "AO": {
       "iso3": "AGO",
@@ -667,12 +667,12 @@
       "growth_year": "2025",
       "inflation": 20.2,
       "debt_gdp": null,
-      "imf_growth": 2.3,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "MG": {
       "iso3": "MDG",
@@ -683,12 +683,12 @@
       "growth_year": "2025",
       "inflation": 8.1,
       "debt_gdp": null,
-      "imf_growth": 3.6,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "MU": {
       "iso3": "MUS",
@@ -699,12 +699,12 @@
       "growth_year": "2025",
       "inflation": 3.7,
       "debt_gdp": null,
-      "imf_growth": 3.4,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SC": {
       "iso3": "SYC",
@@ -715,12 +715,12 @@
       "growth_year": "2025",
       "inflation": 0.3,
       "debt_gdp": null,
-      "imf_growth": 1.5,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "SZ": {
       "iso3": "SWZ",
@@ -731,12 +731,12 @@
       "growth_year": "2025",
       "inflation": null,
       "debt_gdp": null,
-      "imf_growth": 4,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "LS": {
       "iso3": "LSO",
@@ -747,12 +747,12 @@
       "growth_year": "2025",
       "inflation": 4.3,
       "debt_gdp": null,
-      "imf_growth": 1.1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "KM": {
       "iso3": "COM",
@@ -763,12 +763,12 @@
       "growth_year": "2025",
       "inflation": 3.2,
       "debt_gdp": null,
-      "imf_growth": 4.1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "MA": {
       "iso3": "MAR",
@@ -779,12 +779,12 @@
       "growth_year": "2025",
       "inflation": 0.7,
       "debt_gdp": null,
-      "imf_growth": 4.9,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "TN": {
       "iso3": "TUN",
@@ -795,12 +795,12 @@
       "growth_year": "2025",
       "inflation": 5.2,
       "debt_gdp": null,
-      "imf_growth": 2.1,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "EG": {
       "iso3": "EGY",
@@ -811,12 +811,12 @@
       "growth_year": "2025",
       "inflation": 14.1,
       "debt_gdp": null,
-      "imf_growth": 4.2,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "DZ": {
       "iso3": "DZA",
@@ -827,12 +827,12 @@
       "growth_year": "2025",
       "inflation": 1.4,
       "debt_gdp": null,
-      "imf_growth": 3.8,
-      "imf_growth_year": 2026,
+      "imf_growth": null,
+      "imf_growth_year": null,
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     },
     "LY": {
       "iso3": "LBY",
@@ -843,12 +843,12 @@
       "growth_year": "2025",
       "inflation": 1.8,
       "debt_gdp": null,
-      "imf_growth": 6.7,
-      "imf_growth_year": 2026,
-      "growth_divergent": true,
+      "imf_growth": null,
+      "imf_growth_year": null,
+      "growth_divergent": false,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-07T14:17:55.761Z"
+      "fetchedAt": "2026-08-10T07:07:11.391Z"
     }
   }
 }
