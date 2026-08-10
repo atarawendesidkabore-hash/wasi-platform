@@ -1484,6 +1484,42 @@ input, select, textarea { font-family: inherit; outline: none; }
 .admin-btn-gold { background: rgba(200,146,42,.15); border-color: var(--gold-dim); color: var(--gold); }
 .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .admin-header h2 { color: var(--gold); font-size: 1.2rem; margin: 0; }
+
+/* ========== ADMIN IDENTITY — Console Opérateur ==========
+   The customer side is navy + gold (terminal / private bank).
+   The admin side is the engine room: steel-cyan accent, hazard-striped
+   restricted-zone banner. The two contexts must never be confusable. */
+:root {
+  --admin: #38B6D9;
+  --admin-dim: rgba(56,182,217,.35);
+  --admin-bg: rgba(56,182,217,.10);
+}
+#screen-admin .admin-banner {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 22px; padding: 10px 16px;
+  border: 1px solid var(--admin-dim); border-radius: var(--radius);
+  background:
+    repeating-linear-gradient(135deg,
+      transparent 0 14px,
+      rgba(56,182,217,.06) 14px 28px);
+  color: var(--admin);
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: 2px;
+}
+#screen-admin .admin-banner .admin-banner-sub {
+  color: var(--text-dim); letter-spacing: .5px; margin-left: auto; text-align: right;
+}
+#screen-admin .admin-login { border-color: var(--admin-dim); }
+#screen-admin .admin-login h2 { color: var(--admin); }
+#screen-admin .admin-login button { background: var(--admin); color: #05222D; }
+#screen-admin .admin-header h2 { color: var(--admin); }
+#screen-admin .admin-tab.active { background: var(--admin-bg); color: var(--admin); border-color: var(--admin-dim); }
+#screen-admin .admin-btn-gold { background: var(--admin-bg); border-color: var(--admin-dim); color: var(--admin); }
+body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
+#admin-gear {
+  padding: 6px 10px; border: 1px solid transparent; border-radius: var(--radius);
+  background: none; color: var(--text-dim); font-size: .9rem; line-height: 1;
+}
+#admin-gear:hover { color: var(--admin); border-color: var(--admin-dim); }
 .admin-err { color: var(--red); font-size: .8rem; margin-top: 8px; }
 </style>
 <link rel="stylesheet" href="./wasi-ai.css">
@@ -1601,12 +1637,12 @@ input, select, textarea { font-family: inherit; outline: none; }
       <button onclick="showScreen('dex',this)">DEX</button>
       <button onclick="showScreen('stock',this)">Stock Market</button>
       <button onclick="showScreen('compta',this)">Comptabilite</button>
-      <button onclick="showScreen('admin',this)" style="color:var(--gold);">Admin</button>
     </div>
     <div class="topbar-right">
       <span id="wb-data-badge" style="display:none;padding:3px 8px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.3);border-radius:4px;color:#00E676;font-size:.68rem;letter-spacing:.5px;">● LIVE · BM 2024</span>
       <span class="topbar-user">Bienvenue, <strong id="user-name">Operateur</strong></span>
       <span class="topbar-tier" id="user-tier">DEMO</span>
+      <button id="admin-gear" onclick="showScreen('admin')" title="Console op&eacute;rateur">&#9881;</button>
       <a href="./methodologie.html" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:.75rem;">M&eacute;thodologie</a>
       <a id="pro-cta" href="mailto:kabore.tara@gmail.com?subject=WASI%20Pro%20%E2%80%94%20Manifestation%20d'int%C3%A9r%C3%AAt&body=Bonjour%2C%0A%0AJe%20suis%20int%C3%A9ress%C3%A9(e)%20par%20%3A%0A%5B%20%5D%20Rapports%20pays%20approfondis%20(PDF)%0A%5B%20%5D%20Licence%20des%20indices%20AFEX%20(CIREX%2C%20BUREX%2C%20GHAEX%2C%20NGAEX...)%0A%5B%20%5D%20Acc%C3%A8s%20API%20aux%20scores%20et%20donn%C3%A9es%20WASI%0A%5B%20%5D%20Autre%20%3A%20%0A%0AOrganisation%20%3A%20%0APays%20%3A%20" onclick="try{localStorage.setItem('wasi_pro_clicks',(parseInt(localStorage.getItem('wasi_pro_clicks')||'0',10)+1));}catch(e){}" style="padding:6px 12px;border:1px solid var(--gold);border-radius:var(--radius);background:linear-gradient(135deg,rgba(200,146,42,.2),rgba(212,168,67,.1));color:var(--gold-light);font-size:.75rem;font-weight:600;">Acc&egrave;s Pro</a>
       <a href="./wasi-core-console.html" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);background:rgba(200,146,42,.12);color:var(--gold);font-size:.75rem;">Noyau WASI</a>
@@ -2514,20 +2550,23 @@ input, select, textarea { font-family: inherit; outline: none; }
 
   <!-- ===== ADMIN SCREEN ===== -->
   <div id="screen-admin" class="screen">
+    <div class="admin-banner">
+      <span>&#9881;&nbsp;CONSOLE OP&Eacute;RATEUR</span>
+      <span class="admin-banner-sub">Zone restreinte &middot; actions journalis&eacute;es</span>
+    </div>
     <div id="admin-content">
       <div class="admin-login" id="admin-login-form">
-        <h2>Admin Console</h2>
-        <p>Connexion manager requise</p>
-        <input type="text" id="admin-user" placeholder="Username ou email">
-        <input type="password" id="admin-pass" placeholder="Mot de passe WASI">
+        <h2>Console Op&eacute;rateur</h2>
+        <p>Acc&egrave;s r&eacute;serv&eacute; &agrave; l'&eacute;quipe WASI.</p>
+        <input type="text" id="admin-user" placeholder="Identifiant op&eacute;rateur">
+        <input type="password" id="admin-pass" placeholder="Mot de passe">
         <div class="admin-err" id="admin-login-err"></div>
-      <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:10px;">Exemple: <strong style="color:var(--gold);">wasi-admin</strong> / <strong style="color:var(--gold);">WasiCore!2026</strong></div>
         <button onclick="adminLogin()">Se connecter</button>
       </div>
       <div id="admin-dashboard" style="display:none;">
         <div class="admin-header">
           <div>
-            <h2>Admin Dashboard</h2>
+            <h2>Console Op&eacute;rateur</h2>
             <span style="color:var(--text-dim);font-size:.75rem;" id="admin-who"></span>
           </div>
           <div style="display:flex;gap:8px;">
@@ -3704,6 +3743,8 @@ function _openApp() {
   document.getElementById('access-gate').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   initApp();
+  // Deep link for operators: opening the site with #admin lands on the console
+  if (window.location.hash === '#admin') showScreen('admin');
 }
 
 document.addEventListener('keydown', function(e) {
@@ -3783,6 +3824,8 @@ function showScreen(id, btn) {
   document.getElementById('screen-' + id).classList.add('active');
   document.querySelectorAll('#main-nav button').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+  // Admin is backstage: swap the chrome so the two contexts are unmistakable
+  document.body.classList.toggle('admin-mode', id === 'admin');
 }
 
 function showBankScreen(id, btn) {
@@ -10473,7 +10516,7 @@ async function adminLogin() {
     document.getElementById('admin-who').textContent = 'Connecte: ' + (adminUser.username || user) + ' (' + (adminUser.tier || 'free') + ')';
     adminRefresh();
   } catch(e) {
-    document.getElementById('admin-login-err').textContent = 'Identifiants incorrects. Essayez: wasi-admin / WasiCore!2026';
+    document.getElementById('admin-login-err').textContent = 'Identifiants incorrects.';
   }
 }
 
