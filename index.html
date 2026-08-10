@@ -10739,6 +10739,15 @@ if ('serviceWorker' in navigator) {
 autoEnterGateIfRequested();
 
 </script>
+<script>
+// Default AI proxy for all visitors (backend/server.js deployed on Render).
+// A user-saved override in localStorage (wasiSetProxyUrl) takes precedence.
+// If the proxy is unreachable, the app degrades gracefully: BYOK key if
+// present, otherwise the local response engine — chat never hard-fails.
+if (!localStorage.getItem('wasi_proxy_url')) {
+  window.WASI_PROXY_URL = 'https://wasi-ai-proxy.onrender.com';
+}
+</script>
 <script src="./wasi-ai-integration.js"></script>
 <script src="./wasi-live-data.js"></script>
 </body>

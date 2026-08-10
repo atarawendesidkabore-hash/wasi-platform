@@ -42,16 +42,28 @@ node scripts/fetch-world-bank.mjs && node scripts/build-score-history.mjs && git
 
 ## 3. Assistant IA (Claude)
 
-Deux modes, dans cet ordre de priorité :
+Trois modes, dans cet ordre de priorité :
 
-1. **Proxy WASI** (recommandé — la clé Anthropic reste côté serveur) :
-   - Code : `backend/server.js` (Express, à déployer sur Render — `backend/render.yaml`).
-   - Variables Render : `ANTHROPIC_API_KEY`, `WASI_ACCESS_TOKENS` (liste de tokens séparés par virgules), `ALLOWED_ORIGINS`.
-   - Activer côté client : dans la console du navigateur `wasiSetProxyUrl("https://wasi-ai-proxy.onrender.com")` — ou définir `window.WASI_PROXY_URL` dans `index.html` pour l'activer pour tous les visiteurs.
-   - Les utilisateurs n'ont alors besoin que d'un **token WASI** (ex. `WASI-DEMO-2026`), plus jamais d'une clé API.
-2. **Repli BYOK** : clé Anthropic personnelle saisie dans Admin → Clé API (localStorage). Fonctionne sans proxy mais réservé à un usage interne.
+1. **Proxy WASI** (recommandé — la clé Anthropic reste côté serveur) : `index.html` pointe déjà par défaut sur `https://wasi-ai-proxy.onrender.com`. Les utilisateurs n'ont besoin que d'un **token WASI** (ex. `WASI-DEMO-2026`), jamais d'une clé API.
+2. **Repli BYOK** : clé Anthropic personnelle saisie dans Admin → Clé API (localStorage). Usage interne uniquement.
+3. **Repli local** : sans proxy ni clé, le chat répond via le moteur local (scores, WACC, risques) — jamais d'écran d'erreur.
 
-Si ni proxy ni clé : l'app bascule sur les signaux locaux (pas de chat IA).
+### Mise en service du proxy (à faire une fois)
+
+*Vérifié en local le 2026-08-10 : toute la chaîne UI → proxy → Anthropic fonctionne ; seule la clé API était révoquée.*
+
+1. **Créer une clé API valide** : https://console.anthropic.com → API Keys → Create Key.
+   La clé trouvée dans `WASI\.env` est **révoquée** (HTTP 401) — mettre à jour la ligne `ANTHROPIC_API_KEY=` de `WASI\.env` ET de `wasi-platform\backend\.env` (jamais commitées, `.gitignore` le garantit).
+2. **Tester en local** :
+   ```bash
+   cd wasi-platform/backend && npm install && node server.js
+   ```
+   Puis dans l'app locale (console navigateur) : `wasiSetProxyUrl("http://localhost:3000")` — le chat doit répondre via Claude.
+3. **Déployer sur Render** : https://dashboard.render.com → New → Web Service → connecter le repo GitHub `wasi-platform`, root directory `backend` (le blueprint `backend/render.yaml` préremplit tout). Nom du service : **wasi-ai-proxy** (doit correspondre à l'URL par défaut et à la CSP).
+   Variables d'environnement à saisir dans le dashboard Render : `ANTHROPIC_API_KEY` (la nouvelle clé), `WASI_ACCESS_TOKENS` (ex. `WASI-DEMO-2026,WASI-CLIENT1-26`), `ALLOWED_ORIGINS=https://atarawendesidkabore-hash.github.io`.
+4. **Vérifier** : `https://wasi-ai-proxy.onrender.com/` doit répondre `{"status":"online"}` ; le chat du site live bascule alors automatiquement sur Claude — aucun changement de code nécessaire.
+
+Notes : plan gratuit Render = mise en veille après 15 min d'inactivité (première réponse lente ~30 s) ; passer au plan Starter pour un service permanent. Chaque token WASI distribué est un identifiant client — les révoquer en les retirant de `WASI_ACCESS_TOKENS`. Journal d'audit (tokens hachés, jamais en clair) visible dans les logs Render.
 
 ## 4. Déploiement du site
 
