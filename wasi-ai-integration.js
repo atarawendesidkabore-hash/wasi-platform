@@ -1053,6 +1053,7 @@
       state.source  = { aiEnabled: true, legalCodes: [], apps: [], sourceAgeHours: 0 };
 
       applySignalsToCountries();
+      state.lastSignalsLoadAt = Date.now();
 
       const label = state.worldBankLoaded
         ? `WASI AI · Données World Bank ${state.worldBankFetchedAt || "2024"}`
@@ -1241,6 +1242,32 @@
     state.patched = true;
   }
 
+  // ── In-session auto-refresh ───────────────────────────────────────────────
+  // The data files change on the server twice a week (GitHub Actions), but a
+  // long-lived tab would never re-fetch them. Refresh every 6h, and instantly
+  // when the user returns to a tab whose data is older than 6h — background
+  // tabs throttle timers, so the visibility listener is the reliable path.
+  const REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
+
+  function isDataStale() {
+    return !state.lastSignalsLoadAt || (Date.now() - state.lastSignalsLoadAt) >= REFRESH_INTERVAL_MS;
+  }
+
+  function installAutoRefresh() {
+    if (state.autoRefreshInstalled) return;
+    state.autoRefreshInstalled = true;
+
+    setInterval(function () {
+      if (isDataStale()) loadCountrySignals();
+    }, 60 * 60 * 1000); // hourly check against the 6h threshold
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible" && isDataStale()) {
+        loadCountrySignals();
+      }
+    });
+  }
+
   function bootWasiAi() {
     installHeaderUi();
     upgradeWelcomeCopy();
@@ -1249,6 +1276,7 @@
       state.booted = true;
       loadSourceStatus();
       loadCountrySignals();
+      installAutoRefresh();
       // Restore chat history after a tick so the DOM is ready
       setTimeout(loadChatHistory, 200);
       return;
