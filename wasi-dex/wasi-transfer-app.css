@@ -17,6 +17,14 @@
     box-sizing: border-box;
 }
 
+/* The `hidden` attribute is only a UA-stylesheet `display: none`, so ANY
+   author display rule silently defeats it. Several components here set
+   display (.checkout-sheet, .step-panel), which left the checkout sheet
+   permanently on screen and impossible to close. Enforce it once, globally. */
+[hidden] {
+    display: none !important;
+}
+
 html,
 body {
     margin: 0;
@@ -457,12 +465,6 @@ body {
 .step-panel {
     display: grid;
     gap: 8px;
-}
-
-/* An explicit display value beats the UA rule for [hidden], so without this
-   every checkout step renders at once instead of one step at a time. */
-.step-panel[hidden] {
-    display: none;
 }
 
 .summary-card {

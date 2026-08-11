@@ -487,6 +487,20 @@ input, select, textarea { font-family: inherit; outline: none; }
   border-radius: var(--radius);
   transition: all .2s;
 }
+/* Splits the strip into "Bourses" (existing exchanges) and "Produits WASI"
+   so the tools aren't lost behind 17 exchange tabs. */
+.dex-group-label {
+  align-self: center;
+  padding: 0 8px 0 2px;
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-left: 2px solid var(--gold-dim);
+  white-space: nowrap;
+}
+.dex-group-label:first-child { border-left: none; }
 .dex-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
 .dex-tab.active { color: var(--gold); background: rgba(200,146,42,.12); }
 
@@ -1682,8 +1696,8 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
     <div class="topbar-brand">WASI</div>
     <div class="topbar-nav" id="main-nav">
       <button class="active" onclick="showScreen('intel',this)">Intelligence</button>
-      <button onclick="showScreen('dex',this)">DEX</button>
-      <button onclick="showScreen('stock',this)">Stock Market</button>
+      <button onclick="showScreen('dex',this)" title="Cours des bourses africaines existantes, change, crypto, transferts">DEX &mdash; March&eacute;s</button>
+      <button onclick="showScreen('stock',this)" title="La bourse priv&eacute;e de WASI : PME cot&eacute;es, s&eacute;ances de fixing, candidatures">Bourse WASI</button>
       <button onclick="showScreen('compta',this)">Comptabilite</button>
     </div>
     <div class="topbar-right">
@@ -1773,7 +1787,20 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
 
   <!-- ===== DEX SCREEN ===== -->
   <div id="screen-dex" class="screen">
+    <!-- Orientation header: says what this screen is, and where the other
+         market screen lives — the two were easy to confuse without it. -->
+    <div class="sm-header">
+      <div>
+        <div class="sm-header-title">WASI DEX &mdash; March&eacute;s cot&eacute;s, change &amp; transferts</div>
+        <div class="sm-header-sub">Cours des bourses <strong>d&eacute;j&agrave; existantes</strong> en Afrique &middot; ETF &middot; crypto &middot; FX &middot; transferts d'argent</div>
+      </div>
+      <div class="sm-header-stats">
+        <span>17</span> bourses suivies
+        <button onclick="goScreen('stock')" style="padding:6px 12px;border:1px solid var(--gold-dim);border-radius:var(--radius);background:rgba(200,146,42,.1);color:var(--gold);font-size:.72rem;font-weight:600;">Coter une PME ? &rarr; Bourse WASI</button>
+      </div>
+    </div>
     <div class="dex-tabs" id="dex-tabs">
+      <span class="dex-group-label">Bourses</span>
       <button class="dex-tab active" onclick="switchDexTab('brvm',this)">BRVM (UEMOA)</button>
       <button class="dex-tab" onclick="switchDexTab('ngx',this)">NGX (Nigeria)</button>
       <button class="dex-tab" onclick="switchDexTab('gse',this)">GSE (Ghana)</button>
@@ -1791,11 +1818,12 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
       <button class="dex-tab" onclick="switchDexTab('bvmt',this)">BVMT (Tunisie)</button>
       <button class="dex-tab" onclick="switchDexTab('bvmac',this)">BVMAC (CEMAC)</button>
       <button class="dex-tab" onclick="switchDexTab('nsx',this)">NSX (Namibie)</button>
+      <span class="dex-group-label">Produits WASI</span>
       <button class="dex-tab" onclick="switchDexTab('etf',this)">ETF WASI</button>
       <button class="dex-tab" onclick="switchDexTab('crypto',this)">Crypto Swap</button>
       <button class="dex-tab" onclick="switchDexTab('fx',this)">Change (FX)</button>
       <button class="dex-tab" onclick="switchDexTab('transfer',this)">Transfert WASI</button>
-      <button class="dex-tab" onclick="switchDexTab('port',this)">Portefeuille</button>
+      <button class="dex-tab" onclick="switchDexTab('port',this)">Portefeuille DEX</button>
     </div>
     <div id="market-live-badge" style="padding:4px 14px;font-size:.68rem;font-family:var(--font-mono);color:var(--text-dim);border-bottom:1px solid var(--border);">&#9679; Donn&eacute;es de r&eacute;f&eacute;rence &mdash; chargement des cours du jour...</div>
     <div class="dex-body">
@@ -2255,11 +2283,12 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
   <div id="screen-stock" class="screen">
     <div class="sm-header">
       <div>
-        <div class="sm-header-title">WASI STOCK MARKET &mdash; Bourse Priv&eacute;e de l'Afrique</div>
-        <div class="sm-header-sub">PROCHAINE S&Eacute;ANCE : MERCREDI 10h00 WAT</div>
+        <div class="sm-header-title">BOURSE WASI &mdash; Bourse priv&eacute;e de l'Afrique</div>
+        <div class="sm-header-sub">Notre <strong>propre</strong> march&eacute; : PME africaines cot&eacute;es par s&eacute;ances de fixing &middot; prochaine s&eacute;ance mercredi 10h00 WAT</div>
       </div>
       <div class="sm-header-stats">
-        <span>8</span> PME + <span>29</span> bourses &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
+        <span>8</span> PME cot&eacute;es &nbsp;|&nbsp; <span>1,200</span> investisseurs &nbsp;|&nbsp; <span>2.4 Mds</span> XOF volume
+        <button onclick="goScreen('dex')" style="padding:6px 12px;border:1px solid var(--gold-dim);border-radius:var(--radius);background:rgba(200,146,42,.1);color:var(--gold);font-size:.72rem;font-weight:600;">Cours des bourses existantes &rarr; DEX</button>
       </div>
     </div>
     <div class="sm-tabs" id="sm-tabs">
@@ -2293,8 +2322,8 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
       <!-- ÉMETTEURS tab -->
       <div class="sm-panel" id="sm-panel-bourses">
         <div style="margin-bottom:16px;">
-          <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">29 Bourses Africaines</div>
-          <div style="font-size:.78rem;color:var(--text-secondary);margin-top:4px;">Vue continentale de tous les marches boursiers africains disponibles sur WASI</div>
+          <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">29 Bourses Africaines &mdash; annuaire</div>
+          <div style="font-size:.78rem;color:var(--text-secondary);margin-top:4px;">Fiches de r&eacute;f&eacute;rence sur les 29 march&eacute;s du continent. Pour les <strong>cours en direct</strong> des 17 bourses couvertes, allez dans <button onclick="goScreen('dex')" style="padding:2px 8px;border:1px solid var(--gold-dim);border-radius:var(--radius);background:rgba(200,146,42,.1);color:var(--gold);font-size:.72rem;font-weight:600;">DEX &mdash; March&eacute;s</button></div>
         </div>
         <div id="sm-exchanges-grid" style="display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));"></div>
       </div>
@@ -3971,6 +4000,15 @@ function initApp() {
 }
 
 /* ========== SCREEN NAVIGATION ========== */
+/* Navigate to a screen from anywhere (cross-links between DEX and Bourse
+   WASI) while keeping the top nav highlight in sync. */
+function goScreen(id) {
+  var order = ['intel', 'dex', 'stock', 'compta'];
+  var btn = document.querySelectorAll('#main-nav button')[order.indexOf(id)];
+  showScreen(id, btn);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function showScreen(id, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
