@@ -1750,6 +1750,7 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
       <button class="dex-tab" onclick="switchDexTab('transfer',this)">Transfert WASI</button>
       <button class="dex-tab" onclick="switchDexTab('port',this)">Portefeuille</button>
     </div>
+    <div id="market-live-badge" style="padding:4px 14px;font-size:.68rem;font-family:var(--font-mono);color:var(--text-dim);border-bottom:1px solid var(--border);">&#9679; Donn&eacute;es de r&eacute;f&eacute;rence &mdash; chargement des cours du jour...</div>
     <div class="dex-body">
       <div class="dex-main">
         <!-- BRVM panel -->
@@ -3873,6 +3874,7 @@ function initApp() {
   calcOrder();
   calcSwap();
   initTransfer();
+  loadMarketLive();
   // Compta loaded when documents are uploaded
   renderStockMarket();
   renderSMExchanges();
@@ -3917,6 +3919,79 @@ function switchDexTab(tab, btn) {
   document.getElementById('panel-' + tab).classList.add('active');
   document.querySelectorAll('#dex-tabs .dex-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+}
+
+/* ========== LIVE MARKET DATA ==========
+   data/market-live.json is refreshed every weekday at 18:15 UTC by CI
+   (FX via er-api, crypto via CoinGecko, BRVM scraped from brvm.org,
+   JSE/EGX via Yahoo Finance). Exchanges without a free feed keep their
+   reference data — the badge says which is which. */
+async function loadMarketLive() {
+  try {
+    var res = await fetch('data/market-live.json?v=' + Date.now());
+    if (!res.ok) return;
+    var m = await res.json();
+    var live = [];
+
+    if (m.fx && m.fx.pairs) {
+      var nFx = 0;
+      FX_RATES.forEach(function(f) {
+        var mid = m.fx.pairs[f.pair];
+        if (!mid) return;
+        var dp = mid < 0.01 ? 5 : mid < 1 ? 4 : 2;
+        f.buy = +(mid * 0.9975).toFixed(dp);
+        f.sell = +(mid * 1.0025).toFixed(dp);
+        f.spread = (f.sell - f.buy).toFixed(dp);
+        f.change = '—'; // er-api gives no daily variation — don't fake one
+        nFx++;
+      });
+      if (nFx) live.push('FX (' + nFx + ' paires)');
+    }
+
+    if (m.crypto && m.crypto.quotes) {
+      CRYPTO_PRICES.forEach(function(c) {
+        var q = m.crypto.quotes[c.token];
+        if (!q) return;
+        c.usd = q.usd;
+        if (q.change != null) c.change = q.change;
+        if (q.cap) c.cap = q.cap;
+      });
+      live.push('Crypto');
+    }
+
+    var stockArrays = { BRVM: BRVM_STOCKS, JSE: JSE_STOCKS, EGX: EGX_STOCKS, NSE: NSE_STOCKS };
+    Object.keys(stockArrays).forEach(function(ex) {
+      var src = m.stocks && m.stocks[ex];
+      if (!src || !src.quotes) return;
+      var n = 0;
+      stockArrays[ex].forEach(function(s) {
+        var q = src.quotes[s.ticker];
+        if (!q || q.price == null) return;
+        s.price = q.price;
+        if (q.change != null) s.change = q.change;
+        n++;
+      });
+      if (n) live.push(ex + (ex === 'BRVM' ? ' (officiel)' : ''));
+    });
+
+    // Re-render everything price-driven, including the transfer calculator
+    ['renderTicker','renderFX','renderCrypto','renderBRVM','renderJSE','renderEGX','renderNSE','calcTransfer']
+      .forEach(function(fn) { try { if (typeof window[fn] === 'function') window[fn](); } catch(_) {} });
+
+    var badge = document.getElementById('market-live-badge');
+    if (badge && live.length) {
+      var d = m.fetchedAt ? new Date(m.fetchedAt) : null;
+      var when = d ? d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '?';
+      var ageDays = d ? Math.floor((Date.now() - d.getTime()) / 86400000) : null;
+      var stale = ageDays != null && ageDays > 4; // > weekend + jour férié
+      badge.innerHTML =
+        '<span style="color:' + (stale ? 'var(--orange)' : 'var(--green)') + ';">●</span> Cours au ' + when +
+        (stale ? ' ⚠ anciens' : '') +
+        ' · Live : ' + live.join(', ') +
+        ' · Autres bourses : données de référence';
+      badge.title = 'Sources : brvm.org, Yahoo Finance, open.er-api.com, CoinGecko — actualisation automatique chaque jour ouvré 18:15 UTC';
+    }
+  } catch (_) { /* offline or file missing — reference data stays */ }
 }
 
 /* ========== WASI TRANSFER ==========

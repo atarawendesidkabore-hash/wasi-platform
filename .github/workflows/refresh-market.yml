@@ -1,0 +1,39 @@
+name: Refresh WASI Market Data
+
+on:
+  schedule:
+    # Every weekday at 18:15 UTC — after BRVM (15:00 GMT), JSE (15:00 GMT+2)
+    # and EGX close, so the day's official closing prices are captured.
+    - cron: '15 18 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch market data (FX, crypto, BRVM, JSE, EGX)
+        run: node scripts/fetch-market-data.mjs
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "WASI Data Bot"
+          git config user.email "data-bot@wasi-platform.io"
+          git add data/market-live.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit — market data is up to date."
+          else
+            git commit -m "data: market refresh $(date -u +%Y-%m-%d)"
+            git push
+            echo "Market data updated and pushed."
+          fi

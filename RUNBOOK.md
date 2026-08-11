@@ -12,6 +12,15 @@ Toute modification passe par ce dépôt. Un `git push` sur `main` redéploie aut
 
 > ⚠️ Le dossier vit dans OneDrive : ne jamais éditer le même dépôt depuis deux machines en même temps (risque de conflits de synchronisation OneDrive sur `.git`).
 
+## 2bis. Pipeline cours de marché (quotidien)
+
+`.github/workflows/refresh-market.yml` s'exécute **chaque jour ouvré à 18h15 UTC** (après clôture BRVM/JSE/EGX) : `scripts/fetch-market-data.mjs` → `data/market-live.json`.
+
+- **Live** : FX (open.er-api.com, ~165 paires vs XOF — alimente aussi le Transfert WASI), crypto (CoinGecko), **BRVM cours officiels** (scrape brvm.org), JSE et EGX (Yahoo Finance).
+- **Référence** : NGX, GSE, NSE Kenya et autres bourses sans flux gratuit — libellées comme telles dans le badge du DEX.
+- **Badge DEX** : « Cours au \<date\> · Live : ... » — passe orange si les données ont plus de 4 jours.
+- **Panne probable** : le scrape BRVM casse si brvm.org change sa mise en page (le script échoue proprement, les autres sources continuent).
+
 ## 2. Pipeline de données (scores pays)
 
 ### Fonctionnement
