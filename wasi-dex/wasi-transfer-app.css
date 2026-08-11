@@ -393,6 +393,63 @@ body {
     background: rgba(48, 214, 167, 0.12);
 }
 
+/* Steps already validated stay marked, so progress reads at a glance. */
+.progress-pill.done {
+    border-color: rgba(48, 214, 167, 0.45);
+    color: var(--accent);
+}
+
+.progress-pill.done::before {
+    content: "✓ ";
+}
+
+/* Inline validation, instead of a browser alert() interrupting the flow. */
+.sheet-error {
+    min-height: 1.1em;
+    margin: 10px 0 2px;
+    color: #ff6b6b;
+    font-size: 0.78rem;
+}
+
+.receipt-card {
+    border: 1px solid rgba(48, 214, 167, 0.45);
+    border-radius: 14px;
+    padding: 16px;
+    background: rgba(48, 214, 167, 0.06);
+    display: grid;
+    gap: 4px;
+}
+
+.receipt-check {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #04231a;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: grid;
+    place-items: center;
+}
+
+.receipt-title {
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.receipt-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+}
+
+.receipt-note {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin-top: 10px;
+}
+
 .sheet-body {
     min-height: 230px;
 }

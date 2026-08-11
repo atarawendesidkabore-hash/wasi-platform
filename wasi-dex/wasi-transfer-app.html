@@ -171,10 +171,25 @@
                         saisies.</label>
                 </div>
             </div>
+
+            <div class="step-panel" id="step-done" hidden>
+                <div class="receipt-card">
+                    <div class="receipt-check">✓</div>
+                    <div class="receipt-title">Transfert confirmé</div>
+                    <div class="receipt-amount" id="receipt-amount">-</div>
+                    <div class="break-row"><span>Bénéficiaire</span><span id="receipt-name">-</span></div>
+                    <div class="break-row"><span>Canal</span><span id="receipt-channel">-</span></div>
+                    <div class="break-row"><span>Paiement</span><span id="receipt-method">-</span></div>
+                    <div class="break-row"><span>Référence</span><span id="receipt-ref">-</span></div>
+                </div>
+                <p class="receipt-note">Mode démonstration — aucun fonds n'a été déplacé.</p>
+            </div>
         </div>
 
+        <div class="sheet-error" id="sheet-error" role="alert"></div>
+
         <footer class="sheet-actions">
-            <button class="ghost-btn" id="sheet-prev" type="button">Retour</button>
+            <button class="ghost-btn" id="sheet-prev" type="button">Annuler</button>
             <button class="primary-btn" id="sheet-next" type="button">Suivant</button>
         </footer>
     </section>

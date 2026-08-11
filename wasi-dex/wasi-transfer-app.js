@@ -29,6 +29,13 @@ const els = {
     stepKyc: document.getElementById("step-kyc"),
     stepBeneficiary: document.getElementById("step-beneficiary"),
     stepPayment: document.getElementById("step-payment"),
+    stepDone: document.getElementById("step-done"),
+    sheetError: document.getElementById("sheet-error"),
+    receiptAmount: document.getElementById("receipt-amount"),
+    receiptName: document.getElementById("receipt-name"),
+    receiptChannel: document.getElementById("receipt-channel"),
+    receiptMethod: document.getElementById("receipt-method"),
+    receiptRef: document.getElementById("receipt-ref"),
     checkoutSummary: document.getElementById("checkout-summary"),
     kycFullname: document.getElementById("kyc-fullname"),
     kycId: document.getElementById("kyc-id"),
@@ -46,6 +53,7 @@ const els = {
 const CHECKOUT_STEPS = CORE ? CORE.CHECKOUT_STEPS : [];
 
 let checkoutStep = 0;
+let checkoutDone = false;
 
 init();
 
@@ -98,10 +106,15 @@ function bindEvents() {
 
 function openCheckout() {
     checkoutStep = 0;
+    checkoutDone = false;
     els.overlay.hidden = false;
     els.sheet.hidden = false;
     document.body.style.overflow = "hidden";
     renderCheckoutStep();
+}
+
+function setSheetError(message) {
+    els.sheetError.textContent = message || "";
 }
 
 function closeCheckout() {
@@ -111,7 +124,7 @@ function closeCheckout() {
 }
 
 function onPrevStep() {
-    if (checkoutStep <= 0) {
+    if (checkoutDone || checkoutStep <= 0) {
         closeCheckout();
         return;
     }
@@ -120,6 +133,13 @@ function onPrevStep() {
 }
 
 function onNextStep() {
+    // After confirmation the primary button starts a fresh transfer.
+    if (checkoutDone) {
+        resetCheckoutFields();
+        openCheckout();
+        return;
+    }
+
     if (!validateCurrentStep()) return;
 
     if (checkoutStep < CHECKOUT_STEPS.length - 1) {
@@ -128,59 +148,108 @@ function onNextStep() {
         return;
     }
 
+    confirmTransfer();
+}
+
+/* Records the transfer and shows an in-sheet receipt (no alert()).
+   History is written to the same 'wasi_transfers' key the DEX panel reads,
+   so a customer sees one history across both surfaces. */
+function confirmTransfer() {
     const q = computeQuote();
     if (!q) return;
-    const receipt = `Transfert confirmé: ${formatAmount(q.receiveAmount, q.receiveCurrency)} ${q.receiveCurrency} vers ${els.bfName.value.trim()}. Méthode: ${paymentMethodLabel(els.payMethod.value)}.`;
-    window.alert(receipt);
-    closeCheckout();
+
+    const name = els.bfName.value.trim();
+    const channel = CORE.channelLabel(els.bfChannel.value);
+    const method = CORE.payMethodLabel(els.payMethod.value);
+    const ref = "WT-" + Date.now().toString(36).toUpperCase();
+
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem("wasi_transfers") || "[]"); } catch (_) { hist = []; }
+    hist.unshift({
+        date: new Date().toISOString(),
+        name: name,
+        method: channel + " · " + q.tier.label,
+        amount: q.sendAmount,
+        fromC: q.sendCurrency,
+        toC: q.receiveCurrency,
+        received: q.receiveAmount,
+        ref: ref
+    });
+    try { localStorage.setItem("wasi_transfers", JSON.stringify(hist.slice(0, 30))); } catch (_) { /* quota */ }
+
+    els.receiptAmount.textContent = `${formatAmount(q.receiveAmount, q.receiveCurrency)} ${q.receiveCurrency}`;
+    els.receiptName.textContent = name;
+    els.receiptChannel.textContent = channel;
+    els.receiptMethod.textContent = method;
+    els.receiptRef.textContent = ref;
+
+    checkoutDone = true;
+    renderCheckoutStep();
+}
+
+function resetCheckoutFields() {
+    [els.kycFullname, els.kycId, els.bfName, els.bfPhone].forEach((el) => { el.value = ""; });
+    els.kycCountry.value = "";
+    els.bfChannel.value = "";
+    els.confirmRisk.checked = false;
 }
 
 function validateCurrentStep() {
     if (checkoutStep === 0) {
-        return ensureValue(els.kycFullname, "Nom complet requis")
-            && ensureValue(els.kycId, "Numéro de pièce requis")
-            && ensureValue(els.kycCountry, "Pays requis");
+        return ensureValue(els.kycFullname, "Renseignez votre nom complet.")
+            && ensureValue(els.kycId, "Renseignez votre numéro de pièce d'identité.")
+            && ensureValue(els.kycCountry, "Choisissez votre pays de résidence.");
     }
     if (checkoutStep === 1) {
-        return ensureValue(els.bfName, "Nom bénéficiaire requis")
-            && ensureValue(els.bfPhone, "Téléphone bénéficiaire requis")
-            && ensureValue(els.bfChannel, "Canal de réception requis");
+        return ensureValue(els.bfName, "Renseignez le nom du bénéficiaire.")
+            && ensureValue(els.bfPhone, "Renseignez le téléphone du bénéficiaire.")
+            && ensureValue(els.bfChannel, "Choisissez le canal de réception.");
     }
     if (checkoutStep === 2) {
         if (!els.confirmRisk.checked) {
-            window.alert("Veuillez confirmer l'origine des fonds.");
+            setSheetError("Confirmez l'origine des fonds pour continuer.");
             return false;
         }
     }
+    setSheetError("");
     return true;
 }
 
 function ensureValue(el, message) {
-    if (String(el.value || "").trim()) return true;
+    if (String(el.value || "").trim()) {
+        setSheetError("");
+        return true;
+    }
+    setSheetError(message);
     el.focus();
-    window.alert(message);
     return false;
 }
 
 function renderCheckoutProgress() {
     els.stepProgress.innerHTML = CHECKOUT_STEPS.map((step, idx) => {
-        return `<div class="progress-pill${idx === checkoutStep ? " active" : ""}">${escapeHtml(step.key.toUpperCase())}</div>`;
+        const state = checkoutDone || idx < checkoutStep ? " done" : idx === checkoutStep ? " active" : "";
+        return `<div class="progress-pill${state}">${escapeHtml(step.key.toUpperCase())}</div>`;
     }).join("");
 }
 
 function renderCheckoutStep() {
-    const step = CHECKOUT_STEPS[checkoutStep];
-    els.sheetTitle.textContent = step.title;
+    els.sheetTitle.textContent = checkoutDone
+        ? "Transfert confirmé"
+        : CHECKOUT_STEPS[checkoutStep].title;
 
-    els.stepKyc.hidden = checkoutStep !== 0;
-    els.stepBeneficiary.hidden = checkoutStep !== 1;
-    els.stepPayment.hidden = checkoutStep !== 2;
+    els.stepKyc.hidden = checkoutDone || checkoutStep !== 0;
+    els.stepBeneficiary.hidden = checkoutDone || checkoutStep !== 1;
+    els.stepPayment.hidden = checkoutDone || checkoutStep !== 2;
+    els.stepDone.hidden = !checkoutDone;
 
-    els.sheetPrev.textContent = checkoutStep === 0 ? "Annuler" : "Retour";
-    els.sheetNext.textContent = checkoutStep === CHECKOUT_STEPS.length - 1 ? "Confirmer" : "Suivant";
+    els.sheetPrev.textContent = checkoutDone ? "Fermer" : checkoutStep === 0 ? "Annuler" : "Précédent";
+    els.sheetNext.textContent = checkoutDone
+        ? "Nouveau transfert"
+        : checkoutStep === CHECKOUT_STEPS.length - 1 ? "Confirmer" : "Suivant";
 
+    setSheetError("");
     renderCheckoutProgress();
-    renderCheckoutSummary();
+    if (!checkoutDone) renderCheckoutSummary();
 }
 
 function renderCheckoutSummary() {
@@ -198,14 +267,8 @@ function renderCheckoutSummary() {
         <div class="summary-line"><span>Palier</span><span>${escapeHtml(q.tier.label)} (${feeAndFx})</span></div>
         <div class="summary-line"><span>Coût total</span><span>${toPct(q.effectivePct)}</span></div>
         <div class="summary-line"><span>Bénéficiaire</span><span>${escapeHtml(els.bfName.value || "Non renseigné")}</span></div>
+        <div class="summary-line"><span>Canal</span><span>${escapeHtml(CORE.channelLabel(els.bfChannel.value) || "Non renseigné")}</span></div>
     `;
-}
-
-function paymentMethodLabel(value) {
-    if (value === "card") return "Carte bancaire";
-    if (value === "bank_transfer") return "Virement bancaire";
-    if (value === "wallet") return "Wallet WASI";
-    return value;
 }
 
 function getTier(amount) {
