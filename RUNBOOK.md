@@ -95,6 +95,20 @@ Les taux du jour proviennent de `data/market-live.json` (voir ci-dessous) ; l'EU
 - **Badge DEX** : « Cours au \<date\> · Live : ... » — passe orange si les données ont plus de 4 jours.
 - **Panne probable** : le scrape BRVM casse si brvm.org change sa mise en page (le script échoue proprement, les autres sources continuent).
 
+## 2sexies. Les 5 composantes du score, et leur cadence
+
+| Composante | Borne | Source | Cadence |
+|---|---|---|---|
+| Score de base | — | Notation d'expert WASI | revues de plateforme |
+| Macro | ±5 | Banque mondiale (`country-macros.json`) | **quotidien 06h00 UTC** |
+| Stabilité | −4…+2 | Drapeau `coup` + niveau du score de base | avec le score de base |
+| Veille législative | ±2 | Google News RSS (`legal-news.json`) | **quotidien 05h30 UTC** |
+| Diversification export | ±3 | UN Comtrade HHI (`afex-profiles.json`) | hebdomadaire dim. 04h00 UTC |
+
+Le score lui-même est **recalculé côté client** à chaque chargement (et toutes les 6 h dans un onglet ouvert) à partir de ces fichiers : il suffit qu'un fichier change pour que le score suive, sans redéploiement.
+
+**Alignement DEX ↔ score** : la composante export et les indices AFEX du DEX lisent **le même `data/afex-profiles.json`**. La jointure se fait par `iso3` → `iso2` via `country-macros.json` (qui porte les deux codes), afin qu'aucune table de correspondance ne puisse dériver. Une jointure manquée est journalisée en `console.warn` — jamais silencieuse. État vérifié : **46 pays joints sur 53**, les 7 manquants étant exactement les non-déclarants Comtrade (Tchad, Guinée équatoriale, Soudan du Sud, Éthiopie, Érythrée, Somalie, Soudan), dont la composante export vaut 0.
+
 ## 2. Pipeline de données (scores pays)
 
 ### Fonctionnement

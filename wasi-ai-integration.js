@@ -808,11 +808,22 @@
         '<span style="color:var(--text-dim);">' + label + (note ? ' <span style="opacity:.7;">' + note + '</span>' : '') + '</span>' +
         '<span style="font-family:var(--font-mono);color:' + col + ';">' + (value >= 0 ? "+" : "") + value + '</span></div>';
     };
+    const classLabel = { tres_concentre: "très concentré", concentre: "concentré", diversifie: "diversifié" };
+    const exportNote = signal.exportHhi != null
+      ? '±3 · HHI ' + signal.exportHhi + (signal.exportClass ? ' ' + (classLabel[signal.exportClass] || "") : "")
+      : '±3 · données absentes';
+
     return '<div style="margin:8px 0;padding:8px 10px;background:rgba(0,0,0,.18);border-radius:6px;">' +
       '<div style="font-size:.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;">Décomposition de l\'ajustement</div>' +
       row('Macro (Banque mondiale)', signal.macroAdj || 0, '±5') +
       row('Stabilité institutionnelle', signal.stabilityAdj || 0) +
       row('Veille législative', signal.legalAdj || 0, '±2') +
+      row('Diversification export', signal.exportAdj || 0, exportNote) +
+      (signal.exportLead
+        ? '<div style="font-size:.62rem;color:var(--text-dim);margin-top:3px;">Premier poste&nbsp;: ' +
+          escapeHtml(signal.exportLead.name) + ' — ' + signal.exportTop1 + '% des exports' +
+          (signal.afexCode ? ' · indice ' + escapeHtml(signal.afexCode) : '') + '</div>'
+        : '') +
       '</div>';
   }
 
@@ -962,6 +973,90 @@
     }
   }
 
+  // ── Export concentration (AFEX) ──────────────────────────────────────────
+  // data/afex-profiles.json is the same file the DEX reads, so the two
+  // surfaces cannot disagree about a country's export basket.
+  async function loadAfexProfiles() {
+    try {
+      const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, "");
+      const res = await fetch(base + "/data/afex-profiles.json?v=" + Date.now());
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /**
+   * HHI → score points, calibrated on the observed African distribution
+   * (n=47: min 764, p25 1145, median 2226, p75 4629, max 9243) rather than
+   * antitrust thresholds. Absolute thresholds would mark nearly every
+   * African basket "highly concentrated" and simply subtract points from the
+   * whole continent; this measures diversification RELATIVE TO PEERS, which
+   * is what an investor comparing African markets actually wants.
+   */
+  function computeExportAdj(hhi) {
+    if (typeof hhi !== "number" || !isFinite(hhi)) return 0;
+    if (hhi < 1000) return 3;
+    if (hhi < 1600) return 2;
+    if (hhi < 2400) return 1;
+    if (hhi < 3600) return 0;
+    if (hhi < 5500) return -1;
+    if (hhi < 7500) return -2;
+    return -3;
+  }
+
+  /**
+   * Joins AFEX profiles (keyed by fund code, carrying iso3) onto COUNTRIES
+   * (keyed by iso2). The iso3 → iso2 map is derived from the World Bank
+   * payload, which already pairs both codes, so no separate lookup table can
+   * drift. Returns a diagnostic so a broken join is loud, not silent.
+   */
+  function mergeAfexExport(afex, wb) {
+    if (!afex || !afex.countries || !Array.isArray(window.COUNTRIES)) return null;
+
+    const iso3ToIso2 = {};
+    if (wb && wb.countries) {
+      Object.keys(wb.countries).forEach(function (iso2) {
+        const iso3 = wb.countries[iso2] && wb.countries[iso2].iso3;
+        if (iso3) iso3ToIso2[iso3] = iso2;
+      });
+    }
+
+    const byIso2 = {};
+    window.COUNTRIES.forEach(function (c) { byIso2[c.code] = c; });
+
+    const matched = [];
+    const unmatched = [];
+
+    Object.keys(afex.countries).forEach(function (fundCode) {
+      const p = afex.countries[fundCode];
+      const iso2 = iso3ToIso2[p.iso3];
+      const country = iso2 ? byIso2[iso2] : null;
+      if (!country) { unmatched.push(fundCode + "/" + p.iso3); return; }
+
+      const hhi = p.concentration ? p.concentration.hhi : null;
+      country.afexCode = fundCode;
+      country.exportHhi = hhi;
+      country.exportTop1 = p.concentration ? p.concentration.top1_pct : null;
+      country.exportClass = p.concentration ? p.concentration.classification : null;
+      country.exportLead = p.constituents && p.constituents[0] ? p.constituents[0] : null;
+      country.exportYears = p.years_count;
+      country.exportAdj = computeExportAdj(hhi);
+      matched.push(iso2);
+    });
+
+    state.afexLoaded = true;
+    state.afexMatched = matched.length;
+    state.afexUnmatched = unmatched;
+    if (unmatched.length) {
+      // Loud on purpose: a silent join failure would quietly zero a score
+      // component for those countries.
+      console.warn("AFEX join: no COUNTRIES entry for " + unmatched.join(", "));
+    }
+    return { matched: matched.length, unmatched: unmatched };
+  }
+
   // ── Legislative & regulatory news watch ──────────────────────────────────
   // data/legal-news.json is refreshed daily by CI. Each country carries a
   // bounded legalAdj (−2..+2) derived from law-making and regulatory
@@ -1059,13 +1154,14 @@
   }
 
   // Enhanced signal: base score + World Bank macro (±5) + stability
-  // + legislative/regulatory news watch (±2, corroborated headlines only)
+  // + legislative/regulatory news watch (±2) + export diversification (±3)
   function computeLiveSignal(country) {
     const base    = typeof country.baseScore === "number" ? country.baseScore : country.score;
     const macroAdj = typeof country.macroAdj === "number" ? country.macroAdj : 0;
     const stabilityAdj = country.coup ? -4 : base >= 70 ? 2 : base >= 50 ? 1 : 0;
     const legalAdj = typeof country.legalAdj === "number" ? country.legalAdj : 0;
-    const totalAdj = macroAdj + stabilityAdj + legalAdj;
+    const exportAdj = typeof country.exportAdj === "number" ? country.exportAdj : 0;
+    const totalAdj = macroAdj + stabilityAdj + legalAdj + exportAdj;
     const finalScore = Math.min(100, Math.max(0, Math.round(base + totalAdj)));
 
     const growthStr   = country.liveGrowth    != null ? country.liveGrowth + "%" : "N/A";
@@ -1083,6 +1179,12 @@
       macroAdj,
       stabilityAdj,
       legalAdj,
+      exportAdj,
+      exportHhi: country.exportHhi ?? null,
+      exportTop1: country.exportTop1 ?? null,
+      exportLead: country.exportLead || null,
+      exportClass: country.exportClass || null,
+      afexCode: country.afexCode || null,
       legalEvidence: country.legalEvidence || [],
       aiAdjustment: totalAdj,
       finalScore,
@@ -1118,10 +1220,10 @@
     try {
       ensureBaseScores();
 
-      // 1. Fetch live World Bank data, score history and the legislative
-      //    news watch in parallel
-      const [wb, hist, legal] = await Promise.all([
-        loadWorldBankData(), loadScoreHistory(), loadLegalNews(),
+      // 1. Fetch every score input in parallel: World Bank macro, score
+      //    history, the legislative news watch and the AFEX export profiles
+      const [wb, hist, legal, afex] = await Promise.all([
+        loadWorldBankData(), loadScoreHistory(), loadLegalNews(), loadAfexProfiles(),
       ]);
       if (wb) {
         mergeWorldBankData(wb);
@@ -1132,6 +1234,10 @@
       }
       if (legal) {
         mergeLegalNews(legal);
+      }
+      // Needs wb for the iso3 → iso2 join, so it runs after the merge above.
+      if (afex) {
+        mergeAfexExport(afex, wb);
       }
 
       // 2. Compute signals (live if WB loaded, local fallback otherwise)

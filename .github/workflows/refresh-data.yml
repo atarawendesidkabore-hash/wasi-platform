@@ -2,9 +2,11 @@ name: Refresh WASI Country Macros
 
 on:
   schedule:
-    # Every Monday at 06:00 UTC, with a Thursday catch-up in case Monday's run fails
-    - cron: '0 6 * * 1'
-    - cron: '0 6 * * 4'
+    # Daily at 06:00 UTC. The underlying World Bank indicators are annual, so
+    # most days produce no diff and nothing is committed — but running daily
+    # means a country score is never stale by more than 24h, and a failed run
+    # self-heals the next morning instead of waiting for the next week.
+    - cron: '0 6 * * *'
   # Allow manual trigger from GitHub Actions tab
   workflow_dispatch:
 

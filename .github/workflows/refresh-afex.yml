@@ -1,0 +1,51 @@
+name: Refresh AFEX Export Profiles
+
+on:
+  schedule:
+    # Weekly, Sunday 04:00 UTC. UN Comtrade publishes annually, so a daily
+    # sweep of 54 countries x 10 years would hammer a free endpoint for a
+    # diff that appears a few times a year. The score still recomputes daily
+    # from this file — only the file itself needs less frequent rebuilding.
+    - cron: '0 4 * * 0'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Keeps the cache between runs so a rebuild costs few requests and a
+      # rate-limited run can resume next week instead of starting over.
+      - name: Restore Comtrade cache
+        uses: actions/cache@v4
+        with:
+          path: data/.afex-cache
+          key: afex-comtrade-${{ github.run_id }}
+          restore-keys: |
+            afex-comtrade-
+
+      - name: Build AFEX export profiles
+        run: node scripts/build-afex-profiles.mjs
+
+      - name: Commit and push if profiles changed
+        run: |
+          git config user.name "WASI Data Bot"
+          git config user.email "data-bot@wasi-platform.io"
+          git add data/afex-profiles.json
+          if git diff --cached --quiet; then
+            echo "No change in AFEX profiles."
+          else
+            git commit -m "data: AFEX export profiles $(date -u +%Y-%m-%d)"
+            git push
+            echo "AFEX profiles updated and pushed."
+          fi

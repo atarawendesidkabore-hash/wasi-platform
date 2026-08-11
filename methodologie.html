@@ -106,12 +106,13 @@ footer {
 
   <h2>1. Vue d'ensemble</h2>
   <p>Chaque pays africain couvert par WASI reçoit un <strong>score composite de 0 à 100</strong>, produit en trois couches&nbsp;:</p>
-  <div class="formula">Score final = borne<sub>0–100</sub>( Score de base + Ajustement macro + Ajustement stabilité + Veille législative )</div>
+  <div class="formula">Score final = borne<sub>0–100</sub>( Score de base + Ajustement macro + Ajustement stabilité + Veille législative + Diversification export )</div>
   <ul>
     <li><strong>Score de base</strong> — notation structurelle établie par l'équipe d'analyse WASI (profondeur de couverture, cadre juridique, intégration régionale, risque). Revue à chaque publication majeure de la plateforme.</li>
     <li><strong>Ajustement macro</strong> — de <code>−5</code> à <code>+5</code> points, calculé automatiquement à partir des dernières données de la Banque mondiale (croissance, inflation, dette publique).</li>
     <li><strong>Ajustement stabilité</strong> — pénalité ou bonus lié à la situation politique et institutionnelle.</li>
     <li><strong>Veille législative</strong> — de <code>−2</code> à <code>+2</code> points, issue du balayage quotidien de l'activité législative et réglementaire du pays (section 3bis).</li>
+    <li><strong>Diversification export</strong> — de <code>−3</code> à <code>+3</code> points, selon la concentration du panier d'exportation du pays, calculée sur les statistiques douanières officielles (section 3ter).</li>
   </ul>
   <p>La fiche de chaque pays affiche la <strong>décomposition</strong> de son ajustement, composante par composante, ainsi que les titres de presse qui ont produit la part législative.</p>
 
@@ -162,6 +163,27 @@ footer {
 
   <div class="note"><strong>Limite assumée :</strong> le classement repose sur un lexique de mots-clés (<code>lexicon_v1</code>), pas sur une compréhension du texte. Les titres ambigus sont comptés <strong>zéro</strong> plutôt que devinés. C'est pourquoi l'influence est plafonnée à ±2 et que <strong>les titres ayant produit l'ajustement sont affichés dans la fiche pays</strong> — vous pouvez vérifier notre lecture, et nous signaler une erreur.</div>
 
+  <h2>3ter. Diversification des exportations (±3)</h2>
+  <p>Une économie qui dépend d'un seul produit est vulnérable à un choc de prix sur ce produit. Cette composante mesure la concentration du panier d'exportation via l'<strong>indice de Herfindahl-Hirschman (HHI)</strong>, calculé sur la part moyenne de chaque chapitre douanier (HS2) dans les exportations du pays, à partir des statistiques <strong>UN Comtrade</strong> sur 10 ans. C'est la même donnée qui alimente les indices AFEX du module DEX&nbsp;: les deux surfaces lisent le même fichier et ne peuvent donc pas se contredire.</p>
+
+  <h3>Barème, calibré sur l'Afrique</h3>
+  <p>Les seuils antitrust habituels (1&nbsp;500 / 2&nbsp;500) classeraient presque tous les paniers africains comme «&nbsp;très concentrés&nbsp;» et retireraient des points à l'ensemble du continent — sans rien dire d'utile à l'investisseur. Le barème est donc calibré sur la <strong>distribution africaine observée</strong> (47 pays&nbsp;: minimum 764, médiane 2&nbsp;226, maximum 9&nbsp;243)&nbsp;: il mesure la diversification <strong>relative aux pairs</strong>.</p>
+
+  <table>
+    <tr><th>HHI</th><th>Lecture</th><th>Points</th></tr>
+    <tr><td>&lt; 1 000</td><td>Très diversifié (Égypte 764, Maurice 779, Maroc 787, Sénégal 822)</td><td class="band-high">+3</td></tr>
+    <tr><td>1 000 – 1 600</td><td>Diversifié</td><td class="band-high">+2</td></tr>
+    <tr><td>1 600 – 2 400</td><td>Modérément diversifié</td><td class="band-high">+1</td></tr>
+    <tr><td>2 400 – 3 600</td><td>Typique du continent (autour de la médiane)</td><td>0</td></tr>
+    <tr><td>3 600 – 5 500</td><td>Concentré</td><td class="band-mid">−1</td></tr>
+    <tr><td>5 500 – 7 500</td><td>Très concentré</td><td class="band-mid">−2</td></tr>
+    <tr><td>&ge; 7 500</td><td>Mono-exportateur (Nigeria 8 338, Libye 8 495, Algérie 9 243)</td><td class="band-low">−3</td></tr>
+  </table>
+
+  <p>La fiche pays affiche le HHI, sa classe et le premier poste d'exportation avec son poids — par exemple, pour le Nigeria&nbsp;: «&nbsp;Mineral Fuels, Oil and Gas — 91,26&nbsp;% des exports&nbsp;».</p>
+
+  <div class="note"><strong>Limites&nbsp;:</strong> les pondérations sont calculées en <strong>valeur</strong> (USD) et non en tonnage, le poids net n'étant pas déclaré par la plupart des pays africains à Comtrade. Sept pays ne déclarent pas leurs exportations (Soudan, Tchad, Guinée équatoriale, Érythrée, Éthiopie, Somalie, Soudan du Sud)&nbsp;: leur composante export vaut <strong>0</strong>, jamais une valeur estimée.</div>
+
   <h2>4. Ajustement stabilité</h2>
   <table>
     <tr><th>Situation</th><th>Points</th></tr>
@@ -181,9 +203,11 @@ footer {
 
   <h2>6. Cadence d'actualisation</h2>
   <ul>
-    <li><strong>Veille législative</strong>&nbsp;: balayage <strong>quotidien à 05h30 UTC</strong>. C'est la composante la plus réactive du score.</li>
-    <li><strong>Données macro</strong>&nbsp;: récupérées automatiquement chaque <strong>lundi et jeudi à 06h00 UTC</strong> (GitHub Actions). La date des données affichées est visible dans le bandeau «&nbsp;LIVE · BM&nbsp;» de la plateforme.</li>
-    <li><strong>Cours de marché</strong>&nbsp;: chaque jour ouvré à 18h15 UTC, après clôture (BRVM, JSE, EGX, FX, crypto).</li>
+    <li><strong>Le score est recalculé à chaque ouverture de la plateforme</strong>, et rafraîchi automatiquement toutes les 6 heures dans un onglet resté ouvert. Toutes ses sources sont réactualisées quotidiennement&nbsp;:</li>
+    <li style="margin-left:16px;"><strong>Veille législative</strong>&nbsp;: <strong>chaque jour à 05h30 UTC</strong>. Composante la plus réactive.</li>
+    <li style="margin-left:16px;"><strong>Données macro Banque mondiale</strong>&nbsp;: <strong>chaque jour à 06h00 UTC</strong>. Les indicateurs sous-jacents étant annuels, la plupart des jours ne produisent aucun changement — mais aucune donnée n'a jamais plus de 24 h de retard, et un échec se répare le lendemain.</li>
+    <li style="margin-left:16px;"><strong>Cours de marché</strong>&nbsp;: chaque jour ouvré à 18h15 UTC, après clôture (BRVM, JSE, EGX, FX, crypto).</li>
+    <li style="margin-left:16px;"><strong>Profils export AFEX</strong>&nbsp;: reconstruits chaque <strong>dimanche à 04h00 UTC</strong>. Les statistiques douanières Comtrade sont publiées annuellement&nbsp;; un balayage quotidien de 54 pays sur 10 ans solliciterait inutilement une API gratuite.</li>
     <li><strong>Indicateurs sous-jacents</strong>&nbsp;: la Banque mondiale publie ces séries à fréquence <strong>annuelle</strong> — un score peut donc rester stable plusieurs semaines, c'est un comportement attendu.</li>
     <li><strong>Score de base</strong>&nbsp;: revu par l'équipe WASI lors des revues de plateforme (journal des révisions ci-dessous).</li>
   </ul>
@@ -199,6 +223,7 @@ footer {
   <h2>8. Journal des révisions</h2>
   <table>
     <tr><th>Date</th><th>Révision</th></tr>
+    <tr><td>2026-08</td><td>Version 1.2 — ajout de la <strong>diversification des exportations (±3)</strong> comme cinquième composante, calculée sur les statistiques Comtrade partagées avec les indices AFEX&nbsp;; passage de toutes les sources du score à une actualisation quotidienne.</td></tr>
     <tr><td>2026-08</td><td>Version 1.1 — ajout de la <strong>veille législative quotidienne (±2)</strong> comme quatrième composante du score, avec affichage des titres justificatifs dans chaque fiche pays.</td></tr>
     <tr><td>2026-08</td><td>Version 1.0 — publication de la méthodologie&nbsp;; ajout du refresh de rattrapage du jeudi&nbsp;; fiabilisation du pipeline Banque mondiale (relances automatiques).</td></tr>
     <tr><td>2026-04</td><td>Intégration des données Banque mondiale en direct (ajustement macro ±5).</td></tr>
