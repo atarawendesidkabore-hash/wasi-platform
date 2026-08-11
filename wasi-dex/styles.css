@@ -675,6 +675,55 @@ a:hover {
   font-weight: 600;
 }
 
+/* AFEX index weights — derived from official export statistics */
+.afex-weights {
+  display: grid;
+  gap: 5px;
+}
+
+.afex-w-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 62px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+
+.afex-w-name {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afex-w-bar {
+  height: 6px;
+  background: var(--surface3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.afex-w-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #30d6a7, #77ffd4);
+}
+
+.afex-w-val {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: #30d6a7;
+}
+
+@media (max-width: 560px) {
+  .afex-w-row { grid-template-columns: 1fr 54px; }
+  .afex-w-bar { display: none; }
+}
+
 .drawer-links {
   display: flex;
   gap: 8px;

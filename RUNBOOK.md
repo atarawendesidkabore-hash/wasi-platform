@@ -12,6 +12,30 @@ Toute modification passe par ce dépôt. Un `git push` sur `main` redéploie aut
 
 > ⚠️ Le dossier vit dans OneDrive : ne jamais éditer le même dépôt depuis deux machines en même temps (risque de conflits de synchronisation OneDrive sur `.git`).
 
+## 2quater. AFEX — profils pays « Starter » → « Detailed »
+
+`scripts/build-afex-profiles.mjs` calcule les **pondérations réelles** de chaque indice pays à partir des statistiques officielles d'exportation (UN Comtrade, endpoint public) et écrit `data/afex-profiles.json`. Le DEX (`wasi-dex/app.js`) charge ce fichier et **promeut automatiquement** un pays en `Detailed` quand les données le justifient (≥ 5 ans de données, ≥ 3 lignes de produits).
+
+```bash
+node scripts/build-afex-profiles.mjs                 # les 54 pays (~45 min)
+node scripts/build-afex-profiles.mjs BUREX ZMBEX     # seulement ces codes
+node scripts/build-afex-profiles.mjs --years=2014-2023
+```
+
+Les réponses sont mises en cache dans `data/.afex-cache/` (non versionné) : une exécution interrompue ou limitée en débit se relance sans tout retélécharger.
+
+### ⚠️ Base de pondération : valeur, pas tonnage
+
+La méthodologie publiée annonce « moyenne glissante 20 ans du **tonnage** d'exportation ». **Ce calcul n'est pas réalisable** avec les données disponibles :
+
+- UN Comtrade ne reçoit **aucun poids net** de la plupart des déclarants africains (Burkina Faso 2022 : 0 ligne sur 86 avec `netWgt`).
+- Les données miroir (imports déclarés par les partenaires) ne sont pas exposées sur l'endpoint public.
+- FAOSTAT exige désormais une clé d'API (401).
+
+Les pondérations sont donc calculées sur la **valeur d'exportation en USD**, et chaque profil porte `weighting_basis: "export_value_usd"` ainsi que le taux de couverture tonnage constaté. **À corriger dans les documents investisseurs** avant toute diffusion, ou à sourcer auprès des instituts nationaux de statistique si le tonnage est exigé.
+
+Contrôle de cohérence : NGAEX ressort à ~93 % pétrole/gaz en valeur, contre « ~86 % en tonnage » annoncé dans la note existante — ordres de grandeur compatibles.
+
 ## 2ter. WASI Transfer — un seul moteur de tarification
 
 Le produit Transfert existe sur **deux surfaces** :

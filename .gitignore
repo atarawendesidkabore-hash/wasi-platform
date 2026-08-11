@@ -1,0 +1,10 @@
+# Cached UN Comtrade responses for scripts/build-afex-profiles.mjs.
+# Local build artefact only — the derived output (data/afex-profiles.json)
+# is committed instead.
+data/.afex-cache/
+
+# Secrets — the AI proxy's environment
+backend/.env
+.env
+
+node_modules/

@@ -371,7 +371,11 @@ function initializeFxRates() {
 // Derived stats
 const allCommodities = new Set(instruments.flatMap((i) => i.commodities));
 const allCurrencies = new Set(instruments.map((i) => i.currency));
-const detailedCount = instruments.filter((i) => i.detail === "detailed_prototype_ready").length;
+// A function, not a const: loading data/afex-profiles.json promotes countries
+// to Detailed after this file is evaluated, so the count must be recomputed.
+function getDetailedCount() {
+  return instruments.filter((i) => i.detail === "detailed_prototype_ready").length;
+}
 
 // State
 let filterSubfamily = null;
@@ -493,8 +497,8 @@ function renderSidebar() {
   // Profile
   document.getElementById("profile-nav").innerHTML = `
     <button class="nav-btn ${!filterProfile ? "active" : ""}" data-profile="">All<span class="nav-count">${instruments.length}</span></button>
-    <button class="nav-btn ${filterProfile === "detailed" ? "active" : ""}" data-profile="detailed">Detailed<span class="nav-count">${detailedCount}</span></button>
-    <button class="nav-btn ${filterProfile === "starter" ? "active" : ""}" data-profile="starter">Starter<span class="nav-count">${instruments.length - detailedCount}</span></button>
+    <button class="nav-btn ${filterProfile === "detailed" ? "active" : ""}" data-profile="detailed">Detailed<span class="nav-count">${getDetailedCount()}</span></button>
+    <button class="nav-btn ${filterProfile === "starter" ? "active" : ""}" data-profile="starter">Starter<span class="nav-count">${instruments.length - getDetailedCount()}</span></button>
   `;
   document.getElementById("profile-nav").querySelectorAll(".nav-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -670,10 +674,13 @@ function openDrawer(code) {
     <div class="drawer-section">
       <div class="drawer-section-title">Methodology</div>
       <div class="drawer-field"><span>Model</span><strong>${MODEL_LABELS[i.model]}</strong></div>
-      <div class="drawer-field"><span>Weighting</span><strong>Trailing 20-year avg export tonnage</strong></div>
+      <div class="drawer-field"><span>Weighting</span><strong>${i.profile
+        ? "Trailing " + i.profile.years_count + "-year avg export value (USD)"
+        : "Trailing 20-year avg export tonnage (target)"}</strong></div>
       <div class="drawer-field"><span>Reconstitution</span><strong>Annual</strong></div>
       <div class="drawer-field"><span>Rebalancing</span><strong>Quarterly</strong></div>
     </div>
+    ${renderProfileSections(i)}
     <div class="drawer-section">
       <div class="drawer-section-title">Currency</div>
       <div class="drawer-field"><span>Base currency</span><strong>${i.currency}</strong></div>
@@ -699,6 +706,52 @@ function openDrawer(code) {
     </div>
   `;
   drawer.classList.remove("hidden");
+}
+
+/* Index weights + concentration, the substance behind a Detailed profile.
+   Renders nothing when no profile has been built for the country yet. */
+function renderProfileSections(i) {
+  const p = i.profile;
+  if (!p) return "";
+
+  const conc = p.concentration || {};
+  const concLabel = { tres_concentre: "Très concentré", concentre: "Concentré", diversifie: "Diversifié" }[conc.classification] || "—";
+  const concColor = conc.classification === "tres_concentre" ? "#ff6b6b"
+    : conc.classification === "concentre" ? "#f0a94c" : "#30d6a7";
+
+  const usd = (v) => {
+    if (!v) return "—";
+    if (v >= 1e9) return "$" + (v / 1e9).toFixed(1) + "B";
+    if (v >= 1e6) return "$" + Math.round(v / 1e6) + "M";
+    return "$" + Math.round(v / 1e3) + "K";
+  };
+
+  const rows = (p.constituents || []).map((c) => `
+    <div class="afex-w-row">
+      <span class="afex-w-name">${c.name}</span>
+      <span class="afex-w-bar"><span class="afex-w-fill" style="width:${Math.min(100, c.weight)}%"></span></span>
+      <span class="afex-w-val">${c.weight.toFixed(2)}%</span>
+    </div>`).join("");
+
+  return `
+    <div class="drawer-section">
+      <div class="drawer-section-title">Index Weights (${p.constituents.length}) — ${p.years_covered[0]}–${p.latest_year}</div>
+      <div class="afex-weights">${rows}</div>
+      <div style="font-size:.76rem;color:var(--muted);margin-top:8px;line-height:1.5;">
+        Weights are the trailing average share of annual export value, renormalised across the retained constituents.
+        Basis: <strong>export value (USD)</strong> — Comtrade net weight is unreported for this reporter
+        (${p.tonnage_coverage_pct}% coverage), so tonnage weighting is not computable.
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Concentration</div>
+      <div class="drawer-field"><span>Largest chapter</span><strong>${conc.top1_pct}% of exports</strong></div>
+      <div class="drawer-field"><span>Top 5 chapters</span><strong>${conc.top5_pct}%</strong></div>
+      <div class="drawer-field"><span>HHI</span><strong style="color:${concColor}">${conc.hhi} — ${concLabel}</strong></div>
+      <div class="drawer-field"><span>Latest annual exports</span><strong>${usd(p.latest_total_export_usd)} (${p.latest_year})</strong></div>
+      <div class="drawer-field"><span>Years of data</span><strong>${p.years_count}</strong></div>
+      <div class="drawer-field"><span>Source</span><strong>${p.source}</strong></div>
+    </div>`;
 }
 
 function closeDrawer() {
@@ -1013,8 +1066,45 @@ function formatRole(role) {
   return role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// ── AFEX profiles — derived index weights from official trade statistics ────
+// data/afex-profiles.json is produced by scripts/build-afex-profiles.mjs from
+// UN Comtrade export values. A country is promoted from Starter to Detailed
+// only when the data supports it (see promotion_rule in the file), so the
+// badge in the table reflects real evidence rather than an editorial note.
+let AFEX_PROFILES = {};
+let AFEX_PROFILES_META = null;
+
+async function loadAfexProfiles() {
+  try {
+    const res = await fetch("../data/afex-profiles.json?v=" + Date.now());
+    if (!res.ok) return;
+    const json = await res.json();
+    if (!json || !json.countries) return;
+
+    AFEX_PROFILES = json.countries;
+    AFEX_PROFILES_META = json;
+
+    instruments.forEach((entry) => {
+      const p = AFEX_PROFILES[entry.code];
+      if (!p) return;
+      entry.profile = p;
+      // Data-driven promotion; never demote a hand-built prototype.
+      if (p.detail_level === "detailed_prototype_ready") {
+        entry.detail = "detailed_prototype_ready";
+      }
+    });
+
+    renderAll();
+  } catch (err) {
+    // Offline or absent file is fine — the hand-maintained profiles stand.
+    // Anything else is a real bug and must not disappear silently.
+    console.warn("AFEX profiles not applied:", err);
+  }
+}
+
 // Initial render
 renderAll();
+loadAfexProfiles();
 initializeFxRates();
 
 // ── TRANSFER — Quote Simulator ──────────────────────────────────────────────
