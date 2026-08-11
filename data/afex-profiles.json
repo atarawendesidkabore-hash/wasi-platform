@@ -1,0 +1,4335 @@
+{
+ "generatedAt": "2026-08-11T10:35:52.923Z",
+ "source": "UN Comtrade (public preview API)",
+ "weighting_basis": "export_value_usd",
+ "year_range": "2014-2023",
+ "promotion_rule": "detailed when >= 5 years of data and >= 3 constituents",
+ "countries": {
+  "BUREX": {
+   "code": "BUREX",
+   "country": "Burkina Faso",
+   "iso3": "BFA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 4458757137,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 69.02,
+    "top5_pct": 91.97,
+    "hhi": 4945,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 71.69,
+     "export_share": 69.02
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 11.79,
+     "export_share": 11.35
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 5.12,
+     "export_share": 4.93
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 4.28,
+     "export_share": 4.12
+    },
+    {
+     "hs2": "79",
+     "name": "Zinc",
+     "weight": 2.65,
+     "export_share": 2.56
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 1.14,
+     "export_share": 1.1
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.14,
+     "export_share": 1.09
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 0.77,
+     "export_share": 0.74
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 0.74,
+     "export_share": 0.72
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 0.67,
+     "export_share": 0.64
+    }
+   ]
+  },
+  "CIREX": {
+   "code": "CIREX",
+   "country": "Cote d'Ivoire",
+   "iso3": "CIV",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 18350163618,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 37.99,
+    "top5_pct": 77.67,
+    "hhi": 1900,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 43.03,
+     "export_share": 37.99
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 16.67,
+     "export_share": 14.72
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 10.04,
+     "export_share": 8.86
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 9.72,
+     "export_share": 8.58
+    },
+    {
+     "hs2": "40",
+     "name": "Rubber",
+     "weight": 8.52,
+     "export_share": 7.52
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 3.66,
+     "export_share": 3.23
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 2.67,
+     "export_share": 2.36
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 2.28,
+     "export_share": 2.01
+    },
+    {
+     "hs2": "33",
+     "name": "Essential Oils and Cosmetics",
+     "weight": 1.97,
+     "export_share": 1.74
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 1.45,
+     "export_share": 1.28
+    }
+   ]
+  },
+  "GHAEX": {
+   "code": "GHAEX",
+   "country": "Ghana",
+   "iso3": "GHA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 9,
+   "latest_year": 2023,
+   "latest_total_export_usd": 16874662286,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 37.24,
+    "top5_pct": 85.34,
+    "hhi": 2372,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 40.8,
+     "export_share": 37.24
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 28.33,
+     "export_share": 25.85
+    },
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 18.69,
+     "export_share": 17.06
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 3.85,
+     "export_share": 3.52
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 1.83,
+     "export_share": 1.67
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 1.67,
+     "export_share": 1.52
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 1.59,
+     "export_share": 1.45
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 1.48,
+     "export_share": 1.35
+    },
+    {
+     "hs2": "16",
+     "name": "Prepared Meat and Fish",
+     "weight": 0.95,
+     "export_share": 0.87
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 0.81,
+     "export_share": 0.74
+    }
+   ]
+  },
+  "NGAEX": {
+   "code": "NGAEX",
+   "country": "Nigeria",
+   "iso3": "NGA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 65129007548,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 91.26,
+    "top5_pct": 96.51,
+    "hhi": 8338,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 93.27,
+     "export_share": 91.26
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 2.85,
+     "export_share": 2.79
+    },
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 0.96,
+     "export_share": 0.94
+    },
+    {
+     "hs2": "31",
+     "name": "Fertilizers",
+     "weight": 0.87,
+     "export_share": 0.85
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 0.7,
+     "export_share": 0.68
+    },
+    {
+     "hs2": "83",
+     "name": "Miscellaneous Metal Articles",
+     "weight": 0.4,
+     "export_share": 0.39
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 0.3,
+     "export_share": 0.3
+    },
+    {
+     "hs2": "41",
+     "name": "Raw Hides and Leather",
+     "weight": 0.22,
+     "export_share": 0.22
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 0.22,
+     "export_share": 0.21
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 0.22,
+     "export_share": 0.21
+    }
+   ]
+  },
+  "SENEX": {
+   "code": "SENEX",
+   "country": "Senegal",
+   "iso3": "SEN",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 5316892834,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 16.3,
+    "top5_pct": 57.68,
+    "hhi": 822,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 21.85,
+     "export_share": 16.3
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 19.97,
+     "export_share": 14.89
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 16.01,
+     "export_share": 11.94
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 10.39,
+     "export_share": 7.75
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 9.1,
+     "export_share": 6.79
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 5.79,
+     "export_share": 4.32
+    },
+    {
+     "hs2": "21",
+     "name": "Food Preparations",
+     "weight": 5.25,
+     "export_share": 3.92
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 4.5,
+     "export_share": 3.36
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 3.63,
+     "export_share": 2.71
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 3.51,
+     "export_share": 2.62
+    }
+   ]
+  },
+  "ZMBEX": {
+   "code": "ZMBEX",
+   "country": "Zambia",
+   "iso3": "ZMB",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 10431183716,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 72.24,
+    "top5_pct": 80.48,
+    "hhi": 5253,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "74",
+     "name": "Copper",
+     "weight": 82.71,
+     "export_share": 72.24
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 3.25,
+     "export_share": 2.84
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 2.33,
+     "export_share": 2.04
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 1.94,
+     "export_share": 1.69
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 1.92,
+     "export_share": 1.67
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 1.89,
+     "export_share": 1.65
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.56,
+     "export_share": 1.36
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 1.52,
+     "export_share": 1.33
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 1.51,
+     "export_share": 1.32
+    },
+    {
+     "hs2": "10",
+     "name": "Cereals",
+     "weight": 1.38,
+     "export_share": 1.2
+    }
+   ]
+  },
+  "ALGEX": {
+   "code": "ALGEX",
+   "country": "Algeria",
+   "iso3": "DZA",
+   "detail_level": "starter_profile",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017
+   ],
+   "years_count": 4,
+   "latest_year": 2017,
+   "latest_total_export_usd": 35191117416,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 96.12,
+    "top5_pct": 99.15,
+    "hhi": 9243,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 96.49,
+     "export_share": 96.12
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 1.19,
+     "export_share": 1.19
+    },
+    {
+     "hs2": "31",
+     "name": "Fertilizers",
+     "weight": 1.04,
+     "export_share": 1.04
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 0.56,
+     "export_share": 0.56
+    },
+    {
+     "hs2": "29",
+     "name": "Organic Chemicals",
+     "weight": 0.24,
+     "export_share": 0.24
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 0.21,
+     "export_share": 0.21
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 0.11,
+     "export_share": 0.11
+    },
+    {
+     "hs2": "70",
+     "name": "Glass",
+     "weight": 0.05,
+     "export_share": 0.05
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.05,
+     "export_share": 0.05
+    },
+    {
+     "hs2": "41",
+     "name": "Raw Hides and Leather",
+     "weight": 0.04,
+     "export_share": 0.04
+    }
+   ]
+  },
+  "EGYEX": {
+   "code": "EGYEX",
+   "country": "Egypt",
+   "iso3": "EGY",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 42553243151,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 23.19,
+    "top5_pct": 45.65,
+    "hhi": 764,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 37.27,
+     "export_share": 23.19
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 9.94,
+     "export_share": 6.18
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 9.53,
+     "export_share": 5.93
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 9.17,
+     "export_share": 5.71
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 7.45,
+     "export_share": 4.64
+    },
+    {
+     "hs2": "31",
+     "name": "Fertilizers",
+     "weight": 7.16,
+     "export_share": 4.46
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 6.08,
+     "export_share": 3.78
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 5.63,
+     "export_share": 3.5
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 4.78,
+     "export_share": 2.98
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 2.99,
+     "export_share": 1.86
+    }
+   ]
+  },
+  "LBYEX": {
+   "code": "LBYEX",
+   "country": "Libya",
+   "iso3": "LBY",
+   "detail_level": "starter_profile",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2016,
+    2017,
+    2018,
+    2019
+   ],
+   "years_count": 4,
+   "latest_year": 2019,
+   "latest_total_export_usd": 29285909088,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 91.98,
+    "top5_pct": 99.13,
+    "hhi": 8495,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 92.25,
+     "export_share": 91.98
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 5.89,
+     "export_share": 5.87
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 0.71,
+     "export_share": 0.71
+    },
+    {
+     "hs2": "74",
+     "name": "Copper",
+     "weight": 0.35,
+     "export_share": 0.35
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 0.23,
+     "export_share": 0.23
+    },
+    {
+     "hs2": "31",
+     "name": "Fertilizers",
+     "weight": 0.17,
+     "export_share": 0.17
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 0.15,
+     "export_share": 0.15
+    },
+    {
+     "hs2": "29",
+     "name": "Organic Chemicals",
+     "weight": 0.11,
+     "export_share": 0.11
+    },
+    {
+     "hs2": "99",
+     "name": "HS 99 — Other Goods",
+     "weight": 0.07,
+     "export_share": 0.07
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 0.07,
+     "export_share": 0.07
+    }
+   ]
+  },
+  "MAREX": {
+   "code": "MAREX",
+   "country": "Morocco",
+   "iso3": "MAR",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 42462806870,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 16.29,
+    "top5_pct": 55.01,
+    "hhi": 787,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 21.85,
+     "export_share": 16.29
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 18.23,
+     "export_share": 13.59
+    },
+    {
+     "hs2": "31",
+     "name": "Fertilizers",
+     "weight": 15.56,
+     "export_share": 11.6
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 11.05,
+     "export_share": 8.24
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 7.08,
+     "export_share": 5.28
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 6.08,
+     "export_share": 4.53
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 5.7,
+     "export_share": 4.25
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 5.46,
+     "export_share": 4.07
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 5.32,
+     "export_share": 3.97
+    },
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 3.66,
+     "export_share": 2.73
+    }
+   ]
+  },
+  "TUNEX": {
+   "code": "TUNEX",
+   "country": "Tunisia",
+   "iso3": "TUN",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 20039655623,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 26.46,
+    "top5_pct": 53.22,
+    "hhi": 1001,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 37.81,
+     "export_share": 26.46
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 15.52,
+     "export_share": 10.86
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 9.96,
+     "export_share": 6.97
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 7.16,
+     "export_share": 5.01
+    },
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 5.59,
+     "export_share": 3.92
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 5.49,
+     "export_share": 3.84
+    },
+    {
+     "hs2": "90",
+     "name": "Optical and Medical Instruments",
+     "weight": 5.22,
+     "export_share": 3.65
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 4.74,
+     "export_share": 3.32
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 4.55,
+     "export_share": 3.19
+    },
+    {
+     "hs2": "64",
+     "name": "Footwear",
+     "weight": 3.96,
+     "export_share": 2.77
+    }
+   ]
+  },
+  "BENEX": {
+   "code": "BENEX",
+   "country": "Benin",
+   "iso3": "BEN",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 1052210914,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 50.63,
+    "top5_pct": 74.41,
+    "hhi": 2778,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 57.53,
+     "export_share": 50.63
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 11.58,
+     "export_share": 10.19
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 5.96,
+     "export_share": 5.25
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 4.84,
+     "export_share": 4.26
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 4.64,
+     "export_share": 4.08
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 3.89,
+     "export_share": 3.43
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 3.62,
+     "export_share": 3.18
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 2.98,
+     "export_share": 2.62
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 2.66,
+     "export_share": 2.34
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 2.29,
+     "export_share": 2.01
+    }
+   ]
+  },
+  "CABEX": {
+   "code": "CABEX",
+   "country": "Cabo Verde",
+   "iso3": "CPV",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 281684067,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 35.44,
+    "top5_pct": 86.7,
+    "hhi": 2205,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "16",
+     "name": "Prepared Meat and Fish",
+     "weight": 37.19,
+     "export_share": 35.44
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 22.41,
+     "export_share": 21.36
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 21.69,
+     "export_share": 20.67
+    },
+    {
+     "hs2": "86",
+     "name": "Railway Equipment",
+     "weight": 5.58,
+     "export_share": 5.32
+    },
+    {
+     "hs2": "64",
+     "name": "Footwear",
+     "weight": 4.11,
+     "export_share": 3.91
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 3.12,
+     "export_share": 2.97
+    },
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 3.11,
+     "export_share": 2.96
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 0.99,
+     "export_share": 0.94
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.91,
+     "export_share": 0.87
+    },
+    {
+     "hs2": "22",
+     "name": "Beverages and Spirits",
+     "weight": 0.9,
+     "export_share": 0.86
+    }
+   ]
+  },
+  "GMBEX": {
+   "code": "GMBEX",
+   "country": "The Gambia",
+   "iso3": "GMB",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 83449802,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 22.71,
+    "top5_pct": 61.06,
+    "hhi": 1067,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 28.62,
+     "export_share": 22.71
+    },
+    {
+     "hs2": "54",
+     "name": "Man-made Filaments",
+     "weight": 21.72,
+     "export_share": 17.23
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 11.25,
+     "export_share": 8.93
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 7.91,
+     "export_share": 6.27
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 7.46,
+     "export_share": 5.92
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 7.41,
+     "export_share": 5.88
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 4.58,
+     "export_share": 3.63
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 4.16,
+     "export_share": 3.3
+    },
+    {
+     "hs2": "04",
+     "name": "Dairy Produce",
+     "weight": 3.51,
+     "export_share": 2.78
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 3.39,
+     "export_share": 2.69
+    }
+   ]
+  },
+  "GUIEX": {
+   "code": "GUIEX",
+   "country": "Guinea",
+   "iso3": "GIN",
+   "detail_level": "starter_profile",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016
+   ],
+   "years_count": 3,
+   "latest_year": 2016,
+   "latest_total_export_usd": 2394528521,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 52.29,
+    "top5_pct": 92.3,
+    "hhi": 3741,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 53.95,
+     "export_share": 52.29
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 32.02,
+     "export_share": 31.03
+    },
+    {
+     "hs2": "49",
+     "name": "HS 49 — Other Goods",
+     "weight": 5.93,
+     "export_share": 5.75
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 1.8,
+     "export_share": 1.74
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 1.55,
+     "export_share": 1.5
+    },
+    {
+     "hs2": "40",
+     "name": "Rubber",
+     "weight": 1.44,
+     "export_share": 1.39
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 1.08,
+     "export_share": 1.05
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 0.96,
+     "export_share": 0.93
+    },
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 0.65,
+     "export_share": 0.63
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.64,
+     "export_share": 0.62
+    }
+   ]
+  },
+  "GNBEX": {
+   "code": "GNBEX",
+   "country": "Guinea-Bissau",
+   "iso3": "GNB",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018
+   ],
+   "years_count": 5,
+   "latest_year": 2018,
+   "latest_total_export_usd": 244798758,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 91.27,
+    "top5_pct": 100,
+    "hhi": 8405,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 91.27,
+     "export_share": 91.27
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 8.72,
+     "export_share": 8.72
+    },
+    {
+     "hs2": "10",
+     "name": "Cereals",
+     "weight": 0.01,
+     "export_share": 0.01
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 0,
+     "export_share": 0
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 0,
+     "export_share": 0
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0,
+     "export_share": 0
+    },
+    {
+     "hs2": "67",
+     "name": "HS 67 — Other Goods",
+     "weight": 0,
+     "export_share": 0
+    },
+    {
+     "hs2": "21",
+     "name": "Food Preparations",
+     "weight": 0,
+     "export_share": 0
+    },
+    {
+     "hs2": "33",
+     "name": "Essential Oils and Cosmetics",
+     "weight": 0,
+     "export_share": 0
+    },
+    {
+     "hs2": "82",
+     "name": "Tools and Cutlery",
+     "weight": 0,
+     "export_share": 0
+    }
+   ]
+  },
+  "LIBEX": {
+   "code": "LIBEX",
+   "country": "Liberia",
+   "iso3": "LBR",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 7,
+   "latest_year": 2023,
+   "latest_total_export_usd": 153702571,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 45.93,
+    "top5_pct": 81.8,
+    "hhi": 2525,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "40",
+     "name": "Rubber",
+     "weight": 48.98,
+     "export_share": 45.93
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 15.81,
+     "export_share": 14.83
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 9.37,
+     "export_share": 8.78
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 8.47,
+     "export_share": 7.94
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 4.61,
+     "export_share": 4.32
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 4.24,
+     "export_share": 3.98
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 3.02,
+     "export_share": 2.83
+    },
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 2.65,
+     "export_share": 2.48
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 1.54,
+     "export_share": 1.45
+    },
+    {
+     "hs2": "34",
+     "name": "Soaps and Waxes",
+     "weight": 1.31,
+     "export_share": 1.23
+    }
+   ]
+  },
+  "MALIEX": {
+   "code": "MALIEX",
+   "country": "Mali",
+   "iso3": "MLI",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 8,
+   "latest_year": 2023,
+   "latest_total_export_usd": 4006273817,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 75.18,
+    "top5_pct": 92.74,
+    "hhi": 5773,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 78.45,
+     "export_share": 75.18
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 9.39,
+     "export_share": 9
+    },
+    {
+     "hs2": "01",
+     "name": "Live Animals",
+     "weight": 5.89,
+     "export_share": 5.65
+    },
+    {
+     "hs2": "31",
+     "name": "Fertilizers",
+     "weight": 1.94,
+     "export_share": 1.86
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.1,
+     "export_share": 1.05
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 0.85,
+     "export_share": 0.82
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 0.7,
+     "export_share": 0.67
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 0.61,
+     "export_share": 0.58
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 0.58,
+     "export_share": 0.56
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 0.48,
+     "export_share": 0.46
+    }
+   ]
+  },
+  "MRTEX": {
+   "code": "MRTEX",
+   "country": "Mauritania",
+   "iso3": "MRT",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 4065189554,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 43.96,
+    "top5_pct": 97.38,
+    "hhi": 3144,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 44.25,
+     "export_share": 43.96
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 29.83,
+     "export_share": 29.64
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 17.62,
+     "export_share": 17.5
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 4.98,
+     "export_share": 4.95
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 1.34,
+     "export_share": 1.33
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 0.9,
+     "export_share": 0.89
+    },
+    {
+     "hs2": "16",
+     "name": "Prepared Meat and Fish",
+     "weight": 0.33,
+     "export_share": 0.33
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 0.31,
+     "export_share": 0.31
+    },
+    {
+     "hs2": "73",
+     "name": "Iron and Steel Articles",
+     "weight": 0.25,
+     "export_share": 0.25
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.19,
+     "export_share": 0.19
+    }
+   ]
+  },
+  "NEREX": {
+   "code": "NEREX",
+   "country": "Niger",
+   "iso3": "NER",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 467426222,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 36.68,
+    "top5_pct": 83.43,
+    "hhi": 2226,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 40.34,
+     "export_share": 36.68
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 28.9,
+     "export_share": 26.29
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 12.04,
+     "export_share": 10.95
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 7.35,
+     "export_share": 6.68
+    },
+    {
+     "hs2": "01",
+     "name": "Live Animals",
+     "weight": 3.1,
+     "export_share": 2.82
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 2.66,
+     "export_share": 2.42
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 1.81,
+     "export_share": 1.64
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.67,
+     "export_share": 1.52
+    },
+    {
+     "hs2": "88",
+     "name": "Aircraft",
+     "weight": 1.11,
+     "export_share": 1.01
+    },
+    {
+     "hs2": "90",
+     "name": "Optical and Medical Instruments",
+     "weight": 1.02,
+     "export_share": 0.92
+    }
+   ]
+  },
+  "SLEX": {
+   "code": "SLEX",
+   "country": "Sierra Leone",
+   "iso3": "SLE",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018
+   ],
+   "years_count": 5,
+   "latest_year": 2018,
+   "latest_total_export_usd": 205368284,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 21.62,
+    "top5_pct": 64.25,
+    "hhi": 1177,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 25.35,
+     "export_share": 21.62
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 24.64,
+     "export_share": 21.02
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 8.67,
+     "export_share": 7.4
+    },
+    {
+     "hs2": "16",
+     "name": "Prepared Meat and Fish",
+     "weight": 8.35,
+     "export_share": 7.12
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 8.31,
+     "export_share": 7.09
+    },
+    {
+     "hs2": "04",
+     "name": "Dairy Produce",
+     "weight": 7.23,
+     "export_share": 6.17
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 5.61,
+     "export_share": 4.79
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 4.71,
+     "export_share": 4.02
+    },
+    {
+     "hs2": "11",
+     "name": "Milling Products",
+     "weight": 4.61,
+     "export_share": 3.93
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 2.52,
+     "export_share": 2.15
+    }
+   ]
+  },
+  "TOGEX": {
+   "code": "TOGEX",
+   "country": "Togo",
+   "iso3": "TGO",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 1455558435,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 19.88,
+    "top5_pct": 55.71,
+    "hhi": 848,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 26.06,
+     "export_share": 19.88
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 13.77,
+     "export_share": 10.51
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 12.67,
+     "export_share": 9.67
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 12.29,
+     "export_share": 9.37
+    },
+    {
+     "hs2": "33",
+     "name": "Essential Oils and Cosmetics",
+     "weight": 8.24,
+     "export_share": 6.28
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 7.53,
+     "export_share": 5.75
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 6.5,
+     "export_share": 4.96
+    },
+    {
+     "hs2": "22",
+     "name": "Beverages and Spirits",
+     "weight": 5.35,
+     "export_share": 4.08
+    },
+    {
+     "hs2": "67",
+     "name": "HS 67 — Other Goods",
+     "weight": 4.11,
+     "export_share": 3.14
+    },
+    {
+     "hs2": "04",
+     "name": "Dairy Produce",
+     "weight": 3.48,
+     "export_share": 2.66
+    }
+   ]
+  },
+  "CAMEX": {
+   "code": "CAMEX",
+   "country": "Cameroon",
+   "iso3": "CMR",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 4967511896,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 47.09,
+    "top5_pct": 86.94,
+    "hhi": 2774,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 50.56,
+     "export_share": 47.09
+    },
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 19.68,
+     "export_share": 18.33
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 14.12,
+     "export_share": 13.15
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 5.59,
+     "export_share": 5.21
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 3.4,
+     "export_share": 3.16
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 1.66,
+     "export_share": 1.55
+    },
+    {
+     "hs2": "40",
+     "name": "Rubber",
+     "weight": 1.62,
+     "export_share": 1.51
+    },
+    {
+     "hs2": "34",
+     "name": "Soaps and Waxes",
+     "weight": 1.47,
+     "export_share": 1.37
+    },
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 1.09,
+     "export_share": 1.02
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.8,
+     "export_share": 0.74
+    }
+   ]
+  },
+  "CAFEX": {
+   "code": "CAFEX",
+   "country": "Central African Republic",
+   "iso3": "CAF",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 113284670,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 27.74,
+    "top5_pct": 89.76,
+    "hhi": 2170,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 28.32,
+     "export_share": 27.74
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 28.15,
+     "export_share": 27.58
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 23.99,
+     "export_share": 23.5
+    },
+    {
+     "hs2": "88",
+     "name": "Aircraft",
+     "weight": 7.79,
+     "export_share": 7.63
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 3.37,
+     "export_share": 3.31
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 3.04,
+     "export_share": 2.98
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 2.12,
+     "export_share": 2.08
+    },
+    {
+     "hs2": "86",
+     "name": "Railway Equipment",
+     "weight": 1.99,
+     "export_share": 1.95
+    },
+    {
+     "hs2": "93",
+     "name": "HS 93 — Other Goods",
+     "weight": 0.63,
+     "export_share": 0.62
+    },
+    {
+     "hs2": "94",
+     "name": "Furniture",
+     "weight": 0.6,
+     "export_share": 0.59
+    }
+   ]
+  },
+  "COGEX": {
+   "code": "COGEX",
+   "country": "Republic of the Congo",
+   "iso3": "COG",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 9465032955,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 61.12,
+    "top5_pct": 97.18,
+    "hhi": 4629,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 61.71,
+     "export_share": 61.12
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 29.82,
+     "export_share": 29.53
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 4.43,
+     "export_share": 4.38
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.12,
+     "export_share": 1.11
+    },
+    {
+     "hs2": "74",
+     "name": "Copper",
+     "weight": 1.05,
+     "export_share": 1.04
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 0.62,
+     "export_share": 0.61
+    },
+    {
+     "hs2": "73",
+     "name": "Iron and Steel Articles",
+     "weight": 0.42,
+     "export_share": 0.41
+    },
+    {
+     "hs2": "90",
+     "name": "Optical and Medical Instruments",
+     "weight": 0.32,
+     "export_share": 0.31
+    },
+    {
+     "hs2": "88",
+     "name": "Aircraft",
+     "weight": 0.31,
+     "export_share": 0.31
+    },
+    {
+     "hs2": "79",
+     "name": "Zinc",
+     "weight": 0.22,
+     "export_share": 0.22
+    }
+   ]
+  },
+  "DRCEX": {
+   "code": "DRCEX",
+   "country": "DR Congo",
+   "iso3": "COD",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 9,
+   "latest_year": 2023,
+   "latest_total_export_usd": 27726829373,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 58.37,
+    "top5_pct": 97.12,
+    "hhi": 4252,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "74",
+     "name": "Copper",
+     "weight": 58.87,
+     "export_share": 58.37
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 27.86,
+     "export_share": 27.63
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 8.86,
+     "export_share": 8.78
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 1.2,
+     "export_share": 1.19
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 1.15,
+     "export_share": 1.15
+    },
+    {
+     "hs2": "81",
+     "name": "Other Base Metals",
+     "weight": 0.88,
+     "export_share": 0.87
+    },
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 0.45,
+     "export_share": 0.45
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 0.34,
+     "export_share": 0.34
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 0.22,
+     "export_share": 0.22
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.15,
+     "export_share": 0.15
+    }
+   ]
+  },
+  "GABEX": {
+   "code": "GABEX",
+   "country": "Gabon",
+   "iso3": "GAB",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 12694967529,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 52.73,
+    "top5_pct": 96.38,
+    "hhi": 3645,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 53.61,
+     "export_share": 52.73
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 28.27,
+     "export_share": 27.8
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 7.09,
+     "export_share": 6.97
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 5.78,
+     "export_share": 5.68
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 3.26,
+     "export_share": 3.2
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 0.45,
+     "export_share": 0.44
+    },
+    {
+     "hs2": "88",
+     "name": "Aircraft",
+     "weight": 0.44,
+     "export_share": 0.43
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 0.44,
+     "export_share": 0.43
+    },
+    {
+     "hs2": "73",
+     "name": "Iron and Steel Articles",
+     "weight": 0.38,
+     "export_share": 0.37
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 0.29,
+     "export_share": 0.28
+    }
+   ]
+  },
+  "STPEX": {
+   "code": "STPEX",
+   "country": "Sao Tome and Principe",
+   "iso3": "STP",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 16554569,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 70.28,
+    "top5_pct": 90.35,
+    "hhi": 5169,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "18",
+     "name": "Cocoa and Cocoa Preparations",
+     "weight": 73.1,
+     "export_share": 70.28
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 15.11,
+     "export_share": 14.53
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 2.3,
+     "export_share": 2.21
+    },
+    {
+     "hs2": "88",
+     "name": "Aircraft",
+     "weight": 1.73,
+     "export_share": 1.67
+    },
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 1.73,
+     "export_share": 1.66
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 1.34,
+     "export_share": 1.29
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 1.31,
+     "export_share": 1.26
+    },
+    {
+     "hs2": "90",
+     "name": "Optical and Medical Instruments",
+     "weight": 1.3,
+     "export_share": 1.25
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.15,
+     "export_share": 1.11
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 0.92,
+     "export_share": 0.89
+    }
+   ]
+  },
+  "BDIEX": {
+   "code": "BDIEX",
+   "country": "Burundi",
+   "iso3": "BDI",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 217474261,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 38.39,
+    "top5_pct": 77.14,
+    "hhi": 2197,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 42.51,
+     "export_share": 38.39
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 27.39,
+     "export_share": 24.74
+    },
+    {
+     "hs2": "11",
+     "name": "Milling Products",
+     "weight": 5.27,
+     "export_share": 4.76
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 5.2,
+     "export_share": 4.7
+    },
+    {
+     "hs2": "22",
+     "name": "Beverages and Spirits",
+     "weight": 5.03,
+     "export_share": 4.55
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 4.29,
+     "export_share": 3.88
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 3.09,
+     "export_share": 2.79
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 2.5,
+     "export_share": 2.25
+    },
+    {
+     "hs2": "70",
+     "name": "Glass",
+     "weight": 2.47,
+     "export_share": 2.23
+    },
+    {
+     "hs2": "34",
+     "name": "Soaps and Waxes",
+     "weight": 2.24,
+     "export_share": 2.02
+    }
+   ]
+  },
+  "COMREX": {
+   "code": "COMREX",
+   "country": "Comoros",
+   "iso3": "COM",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 28529798,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 67.74,
+    "top5_pct": 92.33,
+    "hhi": 4874,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 69.03,
+     "export_share": 67.74
+    },
+    {
+     "hs2": "33",
+     "name": "Essential Oils and Cosmetics",
+     "weight": 16.1,
+     "export_share": 15.8
+    },
+    {
+     "hs2": "96",
+     "name": "HS 96 — Other Goods",
+     "weight": 3.83,
+     "export_share": 3.76
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 3,
+     "export_share": 2.94
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 2.12,
+     "export_share": 2.08
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 1.75,
+     "export_share": 1.71
+    },
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 1.58,
+     "export_share": 1.55
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 1.24,
+     "export_share": 1.22
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 0.76,
+     "export_share": 0.74
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 0.6,
+     "export_share": 0.59
+    }
+   ]
+  },
+  "DJIEX": {
+   "code": "DJIEX",
+   "country": "Djibouti",
+   "iso3": "DJI",
+   "detail_level": "starter_profile",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 3,
+   "latest_year": 2023,
+   "latest_total_export_usd": 4784715682,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 22.19,
+    "top5_pct": 66.4,
+    "hhi": 1145,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 26.64,
+     "export_share": 22.19
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 22.23,
+     "export_share": 18.51
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 14.07,
+     "export_share": 11.72
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 8.9,
+     "export_share": 7.41
+    },
+    {
+     "hs2": "10",
+     "name": "Cereals",
+     "weight": 7.88,
+     "export_share": 6.57
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 6.66,
+     "export_share": 5.54
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 3.77,
+     "export_share": 3.14
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 3.71,
+     "export_share": 3.09
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 3.42,
+     "export_share": 2.85
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 2.72,
+     "export_share": 2.27
+    }
+   ]
+  },
+  "KENEX": {
+   "code": "KENEX",
+   "country": "Kenya",
+   "iso3": "KEN",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 9,
+   "latest_year": 2023,
+   "latest_total_export_usd": 7158109333,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 24.62,
+    "top5_pct": 48.92,
+    "hhi": 866,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 39.45,
+     "export_share": 24.62
+    },
+    {
+     "hs2": "06",
+     "name": "Live Plants and Cut Flowers",
+     "weight": 16.45,
+     "export_share": 10.27
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 10.74,
+     "export_share": 6.7
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 6.36,
+     "export_share": 3.97
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 5.38,
+     "export_share": 3.36
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 5.33,
+     "export_share": 3.33
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 5.19,
+     "export_share": 3.24
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 4.08,
+     "export_share": 2.55
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 3.53,
+     "export_share": 2.2
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 3.49,
+     "export_share": 2.18
+    }
+   ]
+  },
+  "RWAEX": {
+   "code": "RWAEX",
+   "country": "Rwanda",
+   "iso3": "RWA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+   ],
+   "years_count": 9,
+   "latest_year": 2022,
+   "latest_total_export_usd": 2019269802,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 19.79,
+    "top5_pct": 67.13,
+    "hhi": 1087,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 24.97,
+     "export_share": 19.79
+    },
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 20.45,
+     "export_share": 16.2
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 18.35,
+     "export_share": 14.54
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 15.85,
+     "export_share": 12.56
+    },
+    {
+     "hs2": "11",
+     "name": "Milling Products",
+     "weight": 5.11,
+     "export_share": 4.05
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 4.26,
+     "export_share": 3.37
+    },
+    {
+     "hs2": "10",
+     "name": "Cereals",
+     "weight": 3.85,
+     "export_share": 3.05
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 3.47,
+     "export_share": 2.75
+    },
+    {
+     "hs2": "19",
+     "name": "Cereal Preparations",
+     "weight": 1.88,
+     "export_share": 1.49
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 1.82,
+     "export_share": 1.44
+    }
+   ]
+  },
+  "TZAEX": {
+   "code": "TZAEX",
+   "country": "Tanzania",
+   "iso3": "TZA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 7274328788,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 35.47,
+    "top5_pct": 53.59,
+    "hhi": 1420,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 51.62,
+     "export_share": 35.47
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 8.26,
+     "export_share": 5.67
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 6.33,
+     "export_share": 4.35
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 6.21,
+     "export_share": 4.27
+    },
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 5.57,
+     "export_share": 3.83
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 5.56,
+     "export_share": 3.82
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 5.24,
+     "export_share": 3.6
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 4.56,
+     "export_share": 3.13
+    },
+    {
+     "hs2": "10",
+     "name": "Cereals",
+     "weight": 3.44,
+     "export_share": 2.36
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 3.22,
+     "export_share": 2.21
+    }
+   ]
+  },
+  "UGAEX": {
+   "code": "UGAEX",
+   "country": "Uganda",
+   "iso3": "UGA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 6305023286,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 19.52,
+    "top5_pct": 51.72,
+    "hhi": 876,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 29.86,
+     "export_share": 19.52
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 28.62,
+     "export_share": 18.71
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 7.69,
+     "export_share": 5.03
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 6.62,
+     "export_share": 4.33
+    },
+    {
+     "hs2": "10",
+     "name": "Cereals",
+     "weight": 6.33,
+     "export_share": 4.14
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 4.49,
+     "export_share": 2.93
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 4.26,
+     "export_share": 2.79
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 4.23,
+     "export_share": 2.77
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 4.12,
+     "export_share": 2.7
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 3.77,
+     "export_share": 2.46
+    }
+   ]
+  },
+  "ANGEX": {
+   "code": "ANGEX",
+   "country": "Angola",
+   "iso3": "AGO",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 38731586575,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 89.31,
+    "top5_pct": 98.9,
+    "hhi": 8019,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 89.75,
+     "export_share": 89.31
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 5.51,
+     "export_share": 5.49
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 3.46,
+     "export_share": 3.44
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.49,
+     "export_share": 0.49
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 0.17,
+     "export_share": 0.17
+    },
+    {
+     "hs2": "73",
+     "name": "Iron and Steel Articles",
+     "weight": 0.15,
+     "export_share": 0.15
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 0.14,
+     "export_share": 0.14
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 0.14,
+     "export_share": 0.13
+    },
+    {
+     "hs2": "90",
+     "name": "Optical and Medical Instruments",
+     "weight": 0.12,
+     "export_share": 0.12
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 0.08,
+     "export_share": 0.08
+    }
+   ]
+  },
+  "BOTEX": {
+   "code": "BOTEX",
+   "country": "Botswana",
+   "iso3": "BWA",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 5502716524,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 87.8,
+    "top5_pct": 93.87,
+    "hhi": 7721,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 90.71,
+     "export_share": 87.8
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 2.12,
+     "export_share": 2.05
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 1.83,
+     "export_share": 1.77
+    },
+    {
+     "hs2": "75",
+     "name": "Nickel",
+     "weight": 1.29,
+     "export_share": 1.25
+    },
+    {
+     "hs2": "02",
+     "name": "Meat",
+     "weight": 1.02,
+     "export_share": 0.99
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 0.84,
+     "export_share": 0.81
+    },
+    {
+     "hs2": "28",
+     "name": "Inorganic Chemicals",
+     "weight": 0.71,
+     "export_share": 0.69
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 0.58,
+     "export_share": 0.57
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 0.46,
+     "export_share": 0.45
+    },
+    {
+     "hs2": "01",
+     "name": "Live Animals",
+     "weight": 0.43,
+     "export_share": 0.42
+    }
+   ]
+  },
+  "ESWEX": {
+   "code": "ESWEX",
+   "country": "Eswatini",
+   "iso3": "SWZ",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 2095601709,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 30.86,
+    "top5_pct": 79.59,
+    "hhi": 1754,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "33",
+     "name": "Essential Oils and Cosmetics",
+     "weight": 34.59,
+     "export_share": 30.86
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 25.31,
+     "export_share": 22.58
+    },
+    {
+     "hs2": "38",
+     "name": "Miscellaneous Chemical Products",
+     "weight": 15.35,
+     "export_share": 13.69
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 7.83,
+     "export_share": 6.98
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 6.14,
+     "export_share": 5.48
+    },
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 3.06,
+     "export_share": 2.73
+    },
+    {
+     "hs2": "22",
+     "name": "Beverages and Spirits",
+     "weight": 2.34,
+     "export_share": 2.09
+    },
+    {
+     "hs2": "20",
+     "name": "Prepared Vegetables and Fruit",
+     "weight": 2.15,
+     "export_share": 1.92
+    },
+    {
+     "hs2": "29",
+     "name": "Organic Chemicals",
+     "weight": 1.62,
+     "export_share": 1.45
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 1.61,
+     "export_share": 1.43
+    }
+   ]
+  },
+  "LESEX": {
+   "code": "LESEX",
+   "country": "Lesotho",
+   "iso3": "LSO",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 829902339,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 28.4,
+    "top5_pct": 80.46,
+    "hhi": 1701,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 30.5,
+     "export_share": 28.4
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 21.91,
+     "export_share": 20.4
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 19.88,
+     "export_share": 18.51
+    },
+    {
+     "hs2": "22",
+     "name": "Beverages and Spirits",
+     "weight": 8.87,
+     "export_share": 8.26
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 5.24,
+     "export_share": 4.88
+    },
+    {
+     "hs2": "51",
+     "name": "Wool and Animal Hair",
+     "weight": 4.89,
+     "export_share": 4.56
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 3.62,
+     "export_share": 3.37
+    },
+    {
+     "hs2": "63",
+     "name": "Textile Articles",
+     "weight": 1.94,
+     "export_share": 1.81
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.92,
+     "export_share": 1.79
+    },
+    {
+     "hs2": "64",
+     "name": "Footwear",
+     "weight": 1.23,
+     "export_share": 1.15
+    }
+   ]
+  },
+  "MDGEX": {
+   "code": "MDGEX",
+   "country": "Madagascar",
+   "iso3": "MDG",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 3282849544,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 24.27,
+    "top5_pct": 66.18,
+    "hhi": 1206,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 29.38,
+     "export_share": 24.27
+    },
+    {
+     "hs2": "75",
+     "name": "Nickel",
+     "weight": 22.89,
+     "export_share": 18.91
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 11.56,
+     "export_share": 9.55
+    },
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 10.21,
+     "export_share": 8.44
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 6.08,
+     "export_share": 5.02
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 5.39,
+     "export_share": 4.45
+    },
+    {
+     "hs2": "81",
+     "name": "Other Base Metals",
+     "weight": 5.21,
+     "export_share": 4.3
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 3.96,
+     "export_share": 3.27
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 2.87,
+     "export_share": 2.37
+    },
+    {
+     "hs2": "33",
+     "name": "Essential Oils and Cosmetics",
+     "weight": 2.46,
+     "export_share": 2.03
+    }
+   ]
+  },
+  "MWIEX": {
+   "code": "MWIEX",
+   "country": "Malawi",
+   "iso3": "MWI",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 965509352,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 51.27,
+    "top5_pct": 78.96,
+    "hhi": 2854,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 57.56,
+     "export_share": 51.27
+    },
+    {
+     "hs2": "09",
+     "name": "Coffee, Tea and Spices",
+     "weight": 9.3,
+     "export_share": 8.29
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 8.11,
+     "export_share": 7.22
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 7.79,
+     "export_share": 6.94
+    },
+    {
+     "hs2": "07",
+     "name": "Vegetables",
+     "weight": 5.89,
+     "export_share": 5.25
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 3.39,
+     "export_share": 3.02
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 2.72,
+     "export_share": 2.42
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 2.71,
+     "export_share": 2.41
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 1.28,
+     "export_share": 1.14
+    },
+    {
+     "hs2": "44",
+     "name": "Wood and Timber",
+     "weight": 1.24,
+     "export_share": 1.11
+    }
+   ]
+  },
+  "MUSEX": {
+   "code": "MUSEX",
+   "country": "Mauritius",
+   "iso3": "MUS",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 1854239182,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 13.8,
+    "top5_pct": 56.88,
+    "hhi": 779,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "61",
+     "name": "Knitted Apparel",
+     "weight": 18.74,
+     "export_share": 13.8
+    },
+    {
+     "hs2": "16",
+     "name": "Prepared Meat and Fish",
+     "weight": 18.03,
+     "export_share": 13.27
+    },
+    {
+     "hs2": "62",
+     "name": "Woven Apparel",
+     "weight": 17.87,
+     "export_share": 13.16
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 14.27,
+     "export_share": 10.5
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 8.35,
+     "export_share": 6.15
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 7.51,
+     "export_share": 5.53
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 5.9,
+     "export_share": 4.35
+    },
+    {
+     "hs2": "60",
+     "name": "HS 60 — Other Goods",
+     "weight": 3.39,
+     "export_share": 2.5
+    },
+    {
+     "hs2": "90",
+     "name": "Optical and Medical Instruments",
+     "weight": 3.19,
+     "export_share": 2.35
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 2.76,
+     "export_share": 2.03
+    }
+   ]
+  },
+  "MOZEX": {
+   "code": "MOZEX",
+   "country": "Mozambique",
+   "iso3": "MOZ",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 8275973000,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 40.77,
+    "top5_pct": 78.31,
+    "hhi": 2367,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 46.39,
+     "export_share": 40.77
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 28.3,
+     "export_share": 24.87
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 6.53,
+     "export_share": 5.74
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 5.15,
+     "export_share": 4.52
+    },
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 2.73,
+     "export_share": 2.4
+    },
+    {
+     "hs2": "38",
+     "name": "Miscellaneous Chemical Products",
+     "weight": 2.72,
+     "export_share": 2.39
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 2.29,
+     "export_share": 2.01
+    },
+    {
+     "hs2": "22",
+     "name": "Beverages and Spirits",
+     "weight": 2.11,
+     "export_share": 1.86
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 2.07,
+     "export_share": 1.82
+    },
+    {
+     "hs2": "12",
+     "name": "Oil Seeds and Oleaginous Fruits",
+     "weight": 1.71,
+     "export_share": 1.5
+    }
+   ]
+  },
+  "NAMEX": {
+   "code": "NAMEX",
+   "country": "Namibia",
+   "iso3": "NAM",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 5526025508,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 34.08,
+    "top5_pct": 74.26,
+    "hhi": 1680,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 40.25,
+     "export_share": 34.08
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 18.12,
+     "export_share": 15.34
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 15.08,
+     "export_share": 12.77
+    },
+    {
+     "hs2": "74",
+     "name": "Copper",
+     "weight": 10.14,
+     "export_share": 8.59
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 4.13,
+     "export_share": 3.49
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 3.1,
+     "export_share": 2.63
+    },
+    {
+     "hs2": "79",
+     "name": "Zinc",
+     "weight": 2.87,
+     "export_share": 2.43
+    },
+    {
+     "hs2": "01",
+     "name": "Live Animals",
+     "weight": 2.49,
+     "export_share": 2.11
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 1.95,
+     "export_share": 1.65
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 1.87,
+     "export_share": 1.58
+    }
+   ]
+  },
+  "SEYEX": {
+   "code": "SEYEX",
+   "country": "Seychelles",
+   "iso3": "SYC",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 548099877,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 39.01,
+    "top5_pct": 92.34,
+    "hhi": 2580,
+    "classification": "tres_concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "16",
+     "name": "Prepared Meat and Fish",
+     "weight": 39.8,
+     "export_share": 39.01
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 24.12,
+     "export_share": 23.64
+    },
+    {
+     "hs2": "89",
+     "name": "Ships and Boats",
+     "weight": 21.44,
+     "export_share": 21.01
+    },
+    {
+     "hs2": "03",
+     "name": "Fish and Seafood",
+     "weight": 6.99,
+     "export_share": 6.85
+    },
+    {
+     "hs2": "23",
+     "name": "Animal Feed and Residues",
+     "weight": 1.86,
+     "export_share": 1.82
+    },
+    {
+     "hs2": "88",
+     "name": "Aircraft",
+     "weight": 1.63,
+     "export_share": 1.6
+    },
+    {
+     "hs2": "99",
+     "name": "HS 99 — Other Goods",
+     "weight": 1.55,
+     "export_share": 1.52
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 1.12,
+     "export_share": 1.1
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 0.79,
+     "export_share": 0.77
+    },
+    {
+     "hs2": "15",
+     "name": "Animal and Vegetable Fats",
+     "weight": 0.71,
+     "export_share": 0.7
+    }
+   ]
+  },
+  "ZAFEX": {
+   "code": "ZAFEX",
+   "country": "South Africa",
+   "iso3": "ZAF",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 110607523885,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 19.03,
+    "top5_pct": 59.51,
+    "hhi": 876,
+    "classification": "diversifie"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 25.39,
+     "export_share": 19.03
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 17.48,
+     "export_share": 13.1
+    },
+    {
+     "hs2": "87",
+     "name": "Vehicles",
+     "weight": 14.37,
+     "export_share": 10.77
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 13.87,
+     "export_share": 10.4
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 8.29,
+     "export_share": 6.21
+    },
+    {
+     "hs2": "84",
+     "name": "Machinery",
+     "weight": 8.27,
+     "export_share": 6.2
+    },
+    {
+     "hs2": "08",
+     "name": "Edible Fruit and Nuts",
+     "weight": 5.04,
+     "export_share": 3.78
+    },
+    {
+     "hs2": "85",
+     "name": "Electrical Machinery",
+     "weight": 2.7,
+     "export_share": 2.02
+    },
+    {
+     "hs2": "76",
+     "name": "Aluminium",
+     "weight": 2.61,
+     "export_share": 1.96
+    },
+    {
+     "hs2": "39",
+     "name": "Plastics",
+     "weight": 1.98,
+     "export_share": 1.48
+    }
+   ]
+  },
+  "ZIMEX": {
+   "code": "ZIMEX",
+   "country": "Zimbabwe",
+   "iso3": "ZWE",
+   "detail_level": "detailed_prototype_ready",
+   "weighting_basis": "export_value_usd",
+   "weighting_note": "Trailing average of annual export-value shares (HS2). Tonnage weighting is not computable: UN Comtrade net weight is unreported for these reporters.",
+   "source": "UN Comtrade (public preview API)",
+   "years_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "years_count": 10,
+   "latest_year": 2023,
+   "latest_total_export_usd": 7225585953,
+   "tonnage_coverage_pct": 0,
+   "concentration": {
+    "top1_pct": 31.23,
+    "top5_pct": 86,
+    "hhi": 1857,
+    "classification": "concentre"
+   },
+   "constituents": [
+    {
+     "hs2": "71",
+     "name": "Precious Stones and Metals",
+     "weight": 33.36,
+     "export_share": 31.23
+    },
+    {
+     "hs2": "24",
+     "name": "Tobacco",
+     "weight": 22.08,
+     "export_share": 20.67
+    },
+    {
+     "hs2": "75",
+     "name": "Nickel",
+     "weight": 15.98,
+     "export_share": 14.96
+    },
+    {
+     "hs2": "26",
+     "name": "Metal Ores, Slag and Ash",
+     "weight": 14.51,
+     "export_share": 13.59
+    },
+    {
+     "hs2": "72",
+     "name": "Iron and Steel",
+     "weight": 5.91,
+     "export_share": 5.54
+    },
+    {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 2.72,
+     "export_share": 2.54
+    },
+    {
+     "hs2": "17",
+     "name": "Sugar and Confectionery",
+     "weight": 1.72,
+     "export_share": 1.61
+    },
+    {
+     "hs2": "27",
+     "name": "Mineral Fuels, Oil and Gas",
+     "weight": 1.59,
+     "export_share": 1.49
+    },
+    {
+     "hs2": "52",
+     "name": "Cotton",
+     "weight": 1.26,
+     "export_share": 1.18
+    },
+    {
+     "hs2": "41",
+     "name": "Raw Hides and Leather",
+     "weight": 0.87,
+     "export_share": 0.81
+    }
+   ]
+  }
+ }
+}
