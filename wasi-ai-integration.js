@@ -1057,6 +1057,165 @@
     return { matched: matched.length, unmatched: unmatched };
   }
 
+  // ── Cartographie des risques ─────────────────────────────────────────────
+  // 20 countries carry an expert-written risk matrix; the other 33 rendered
+  // "Données de risques en cours de mise à jour". Rather than invent matrices
+  // for them, each risk below is DERIVED from an indicator we already hold
+  // (World Bank macros, AFEX export concentration, the legislative watch,
+  // the coup flag, currency regime), and carries the figure that triggered
+  // it. Probability and impact are on the platform's existing 1–5 scale.
+  //
+  // Because it is derived, it refreshes with the data every day.
+
+  function num(v) {
+    if (typeof v === "number") return v;
+    if (typeof v !== "string") return null;
+    const m = v.replace(",", ".").match(/-?\d+(\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  }
+
+  // XOF and XAF are pegged to the euro; that materially lowers FX risk.
+  const PEGGED = /XOF|XAF|Franc CFA/i;
+
+  function deriveRiskCartography(country) {
+    const d = (window.COUNTRY_DETAILS || {})[country.code] || {};
+    const out = [];
+    const add = function (nom, cat, prob, impact, source) {
+      out.push({ nom: nom, cat: cat, prob: prob, impact: impact, source: source, derived: true });
+    };
+
+    // ── Macro: inflation ──────────────────────────────────────────────────
+    const infl = country.liveInflation != null ? country.liveInflation : num(d.inflation);
+    if (infl != null) {
+      if (infl >= 30)      add("Inflation hors de contrôle (" + infl + "%)", "Macro", 5, 4, "Banque mondiale");
+      else if (infl >= 15) add("Inflation élevée (" + infl + "%)", "Macro", 4, 3, "Banque mondiale");
+      else if (infl >= 10) add("Pression inflationniste (" + infl + "%)", "Macro", 3, 3, "Banque mondiale");
+    }
+
+    // ── Macro: sovereign debt ─────────────────────────────────────────────
+    const debt = country.liveDebt != null ? country.liveDebt : num(d.dette_pib);
+    if (debt != null) {
+      if (debt >= 90)      add("Dette souveraine critique (" + debt + "% PIB)", "Macro", 4, 5, "Banque mondiale");
+      else if (debt >= 70) add("Dette souveraine élevée (" + debt + "% PIB)", "Macro", 3, 4, "Banque mondiale");
+      else if (debt >= 55) add("Dette à surveiller (" + debt + "% PIB)", "Macro", 2, 3, "Banque mondiale");
+    }
+
+    // ── Macro: contraction ────────────────────────────────────────────────
+    const growth = country.liveGrowth != null ? country.liveGrowth : num(d.growth);
+    if (growth != null) {
+      if (growth < 0)      add("Récession (croissance " + growth + "%)", "Macro", 4, 4, "Banque mondiale");
+      else if (growth < 2) add("Croissance atone (" + growth + "%)", "Macro", 3, 3, "Banque mondiale");
+    }
+
+    // ── Macro: currency regime ────────────────────────────────────────────
+    const cur = d.currency || "";
+    if (!PEGGED.test(cur)) {
+      const fxProb = infl != null && infl >= 15 ? 4 : infl != null && infl >= 8 ? 3 : 2;
+      add("Risque de change — devise flottante" + (cur ? " (" + cur.replace(/\s*\([^)]*\)/, "") + ")" : ""),
+          "Macro", fxProb, 4, "Régime monétaire");
+    }
+
+    // ── Marché: export concentration (AFEX) ───────────────────────────────
+    if (typeof country.exportHhi === "number") {
+      const lead = country.exportLead ? country.exportLead.name : "un seul poste";
+      const top1 = country.exportTop1;
+      if (country.exportHhi >= 7500) {
+        add("Mono-exportateur : " + lead + " = " + top1 + "% des exports", "Marché", 5, 5, "UN Comtrade (HHI " + country.exportHhi + ")");
+        add("Choc de prix sur " + lead, "Marché", 4, 5, "UN Comtrade");
+      } else if (country.exportHhi >= 5500) {
+        add("Panier d'exportation très concentré (" + lead + " " + top1 + "%)", "Marché", 4, 4, "UN Comtrade (HHI " + country.exportHhi + ")");
+      } else if (country.exportHhi >= 3600) {
+        add("Concentration des exportations (" + lead + " " + top1 + "%)", "Marché", 3, 4, "UN Comtrade (HHI " + country.exportHhi + ")");
+      } else if (country.exportHhi >= 2400) {
+        add("Concentration modérée (" + lead + " " + top1 + "%)", "Marché", 3, 3, "UN Comtrade (HHI " + country.exportHhi + ")");
+      } else {
+        // Even a diversified basket carries world-price exposure: no African
+        // exporter is insulated. Stated at low severity so the matrix is
+        // never empty for a well-performing country.
+        add("Exposition aux cours mondiaux (premier poste : " + lead + " " + top1 + "%)",
+            "Marché", 2, 3, "UN Comtrade (HHI " + country.exportHhi + " — diversifié)");
+      }
+    } else {
+      add("Statistiques douanières non déclarées à l'ONU", "Conformité", 3, 3, "UN Comtrade — pays non déclarant");
+    }
+
+    // ── Politique: constitutional order ───────────────────────────────────
+    if (country.coup) {
+      add("Régime de transition non constitutionnel", "Politique", 5, 4, "Statut institutionnel WASI");
+      add("Risque de sanctions ou suspension d'aide", "Politique", 3, 4, "Statut institutionnel WASI");
+    }
+
+    // ── Conformité: legislative watch ─────────────────────────────────────
+    if (typeof country.legalAdj === "number" && country.legalAdj < 0) {
+      const ev = (country.legalEvidence || []).find(function (e) { return e.polarity === "negative"; });
+      add("Environnement réglementaire dégradé" + (ev ? " — " + ev.title.slice(0, 60) : ""),
+          "Conformité", country.legalAdj <= -2 ? 4 : 3, 3, "Veille législative du jour");
+    }
+
+    // ── Conformité: accounting framework ──────────────────────────────────
+    const zone = (d.zone || "").toUpperCase();
+    const isOhada = /UEMOA|CEMAC|OHADA/.test(zone);
+    if (!isOhada) {
+      add("Cadre comptable hors OHADA — due diligence locale requise", "Conformité", 3, 2, "Zone " + (zone || "UA"));
+    }
+
+    // ── Sécurité: institutional weakness proxy ────────────────────────────
+    const pol = (d.indices || {}).politique;
+    if (typeof pol === "number" && pol <= 30 && !country.coup) {
+      add("Fragilité institutionnelle (indice politique " + pol + "/100)", "Sécurité", 3, 4, "Indice WASI");
+    }
+
+    return out;
+  }
+
+  /** Ensures every country has a risk cartography, expert or derived. */
+  function applyRiskCartography() {
+    if (!Array.isArray(window.COUNTRIES)) return null;
+    window.COUNTRY_RISKS = window.COUNTRY_RISKS || {};
+    let filled = 0, enriched = 0;
+
+    window.COUNTRIES.forEach(function (country) {
+      const derived = deriveRiskCartography(country);
+      const existing = window.COUNTRY_RISKS[country.code];
+
+      if (existing) {
+        // Keep the expert matrix — it holds local knowledge a formula cannot
+        // reach ("insécurité Nord-Est", "réforme des subventions") — and add
+        // the derived indicator risks alongside it. Re-running must not
+        // duplicate, so anything already present by name is skipped.
+        const curated = (Array.isArray(existing.curatedRisques) ? existing.curatedRisques
+          : Array.isArray(existing.risques) ? existing.risques : []).filter(function (r) { return !r.derived; });
+        existing.curatedRisques = curated; // remembered so repeat calls stay idempotent
+        const names = curated.map(function (r) { return String(r.nom).toLowerCase().trim(); });
+        const additions = derived.filter(function (r) {
+          return names.indexOf(String(r.nom).toLowerCase().trim()) === -1;
+        });
+        existing.risques = curated.concat(additions);
+        existing.riskSource = curated.length ? "expert_plus_derive" : "derive";
+        enriched++;
+      } else {
+        // Same credit/WACC fallback logic the app already uses, plus the
+        // derived matrix so the panel is never empty.
+        const s = country.score || 50;
+        window.COUNTRY_RISKS[country.code] = {
+          credit: s >= 85 ? "AA" : s >= 75 ? "A" : s >= 65 ? "BBB" : s >= 55 ? "BB" : s >= 45 ? "B" : s >= 35 ? "B-" : s >= 25 ? "CCC" : "CC",
+          fxRisk: country.coup ? "Élevé" : s >= 65 ? "Faible" : s >= 45 ? "Modéré" : "Élevé",
+          fxNote: PEGGED.test(((window.COUNTRY_DETAILS || {})[country.code] || {}).currency || "") ? "Parité fixe EUR (BCEAO/BEAC)" : "Devise flottante",
+          wacc: Math.max(9, Math.min(40, country.coup ? Math.round(28 + (100 - s) * 0.15) : Math.round(9 + (100 - s) * 0.15))),
+          waccNote: "Rf 4.5% + CRP estimé",
+          risques: derived,
+          riskSource: "derive",
+          electionYear: null,
+        };
+        filled++;
+      }
+    });
+
+    state.riskCartographyFilled = filled;
+    state.riskCartographyEnriched = enriched;
+    return { filled: filled, enriched: enriched };
+  }
+
   // ── Legislative & regulatory news watch ──────────────────────────────────
   // data/legal-news.json is refreshed daily by CI. Each country carries a
   // bounded legalAdj (−2..+2) derived from law-making and regulatory
@@ -1239,6 +1398,8 @@
       if (afex) {
         mergeAfexExport(afex, wb);
       }
+      // Runs last: the risk cartography is derived from everything above.
+      applyRiskCartography();
 
       // 2. Compute signals (live if WB loaded, local fallback otherwise)
       const signals = window.COUNTRIES.map((c) =>

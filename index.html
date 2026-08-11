@@ -1584,7 +1584,7 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
 .tf-bd-row.gain span:last-child { color: var(--green); }
 .admin-err { color: var(--red); font-size: .8rem; margin-top: 8px; }
 </style>
-<link rel="stylesheet" href="./wasi-ai.css?v=20260811a">
+<link rel="stylesheet" href="./wasi-ai.css?v=20260811b">
 <!-- ── Error monitoring — Sentry-ready hook ────────────────────────────── -->
 <script>
 (function(){
@@ -1629,7 +1629,7 @@ body.admin-mode .topbar { border-bottom: 2px solid var(--admin); }
 </script>
 </head>
 <body>
-<script src="./wasi-network.js?v=20260811a"></script>
+<script src="./wasi-network.js?v=20260811b"></script>
 
 <!-- ========== GDPR CONSENT BANNER ========== -->
 <div id="gdpr-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#0d1117;border-top:1px solid #30363d;padding:14px 20px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:.82rem;color:#c9d1d9;font-family:system-ui,sans-serif;">
@@ -3278,7 +3278,11 @@ function buildRiskMatrix(risques) {
     var col2 = cats[r.cat]||'#888';
     html += '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.72rem;">';
     html += '<span style="min-width:24px;text-align:center;font-weight:700;color:'+col+';">'+score+'</span>';
-    html += '<span style="flex:1;color:var(--text-primary);">'+r.nom+'</span>';
+    html += '<span style="flex:1;color:var(--text-primary);">'+r.nom;
+    // Provenance: a derived risk names the indicator that triggered it, so a
+    // reader can check the reasoning instead of trusting the dot.
+    if (r.source) html += '<span style="display:block;font-size:.6rem;color:var(--text-dim);">'+r.source+'</span>';
+    html += '</span>';
     html += '<span style="padding:1px 6px;border-radius:10px;font-size:.6rem;background:rgba(0,0,0,.3);border:1px solid '+col2+';color:'+col2+';">'+r.cat+'</span>';
     html += '<span style="font-size:.62rem;color:'+col+';">'+label+'</span>';
     html += '</div>';
@@ -11393,8 +11397,8 @@ if (!localStorage.getItem('wasi_proxy_url')) {
   window.WASI_PROXY_URL = 'https://wasi-ai-proxy.onrender.com';
 }
 </script>
-<script src="./wasi-transfer-core.js?v=20260811a"></script>
-<script src="./wasi-ai-integration.js?v=20260811a"></script>
-<script src="./wasi-live-data.js?v=20260811a"></script>
+<script src="./wasi-transfer-core.js?v=20260811b"></script>
+<script src="./wasi-ai-integration.js?v=20260811b"></script>
+<script src="./wasi-live-data.js?v=20260811b"></script>
 </body>
 </html>
