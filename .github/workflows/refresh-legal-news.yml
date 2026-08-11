@@ -1,0 +1,39 @@
+name: Refresh WASI Legal News Watch
+
+on:
+  schedule:
+    # Every day at 05:30 UTC — before the market/macro refreshes, so the
+    # score components land together for the day.
+    - cron: '30 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sweep legislative & regulatory news (53 countries)
+        run: node scripts/fetch-legal-news.mjs
+
+      - name: Commit and push if the watch changed
+        run: |
+          git config user.name "WASI Data Bot"
+          git config user.email "data-bot@wasi-platform.io"
+          git add data/legal-news.json
+          if git diff --cached --quiet; then
+            echo "No change in the legal news watch."
+          else
+            git commit -m "data: legal news watch $(date -u +%Y-%m-%d)"
+            git push
+            echo "Legal news watch updated and pushed."
+          fi

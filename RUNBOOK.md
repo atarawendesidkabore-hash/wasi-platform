@@ -12,6 +12,34 @@ Toute modification passe par ce dépôt. Un `git push` sur `main` redéploie aut
 
 > ⚠️ Le dossier vit dans OneDrive : ne jamais éditer le même dépôt depuis deux machines en même temps (risque de conflits de synchronisation OneDrive sur `.git`).
 
+## 2quinquies. Veille législative quotidienne (→ score pays)
+
+`.github/workflows/refresh-legal-news.yml` s'exécute **chaque jour à 05h30 UTC** : `scripts/fetch-legal-news.mjs` → `data/legal-news.json`. C'est la **quatrième composante du score pays** (`legalAdj`, borné à ±2), aux côtés du macro Banque mondiale (±5) et de la stabilité.
+
+```bash
+node scripts/fetch-legal-news.mjs            # les 53 pays (~1 min)
+node scripts/fetch-legal-news.mjs GH BF CI   # seulement ces codes ISO2
+```
+
+Source : Google News RSS, requête par pays restreinte au vocabulaire législatif (français pour les pays francophones, anglais sinon). Aucune clé requise.
+
+### Garde-fous (ne pas les retirer sans y réfléchir)
+
+Chacun corrige une erreur observée en test :
+
+| Garde-fou | Erreur qu'il corrige |
+|---|---|
+| **Verbe + sujet économique** requis pour un signal positif | « Parliament passes anti-LGBTQ+ bill » notait **+1** sur le seul mot « passes ». Or cette loi a coûté à Ghana des financements Banque mondiale. |
+| **Régressions de droits = négatif** | Même cas : criminalisation, presse, coupures Internet sont des risques d'investissement réels (suspensions de bailleurs). |
+| **Législateur étranger écarté** | « US House passes bill to halt Nigeria aid » notait **+** pour le Nigeria. |
+| **Deux titres concordants minimum** | Un titre isolé ne doit jamais déplacer un score souverain. |
+| **Déduplication par histoire** (mot-clé + semaine) | Une seule affaire ghanéenne générait 40 titres → net −24. Le volume de presse n'est pas le nombre d'événements. |
+| **Plafond ±2** | Un lexique de mots-clés ne mérite pas plus d'influence que ça. |
+
+⚠️ Le classement est un **lexique** (`lexicon_v1`), pas une compréhension. Les titres ambigus valent **zéro**. Les titres justificatifs sont affichés dans la fiche pays : si un ajustement paraît faux, c'est vérifiable — et corrigeable en enrichissant les listes dans le script.
+
+Amélioration prévue : reclasser les titres via Claude (proxy IA) pour remplacer le lexique, une fois le proxy en service et créditée.
+
 ## 2quater. AFEX — profils pays « Starter » → « Detailed »
 
 `scripts/build-afex-profiles.mjs` calcule les **pondérations réelles** de chaque indice pays à partir des statistiques officielles d'exportation (UN Comtrade, endpoint public) et écrit `data/afex-profiles.json`. Le DEX (`wasi-dex/app.js`) charge ce fichier et **promeut automatiquement** un pays en `Detailed` quand les données le justifient (≥ 5 ans de données, ≥ 3 lignes de produits).

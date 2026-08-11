@@ -788,6 +788,8 @@
           </div>
         </div>
         <div class="wasi-ai-summary">${escapeHtml(signal.summary)}</div>
+        ${adjustmentBreakdownHtml(signal)}
+        ${legalNewsHtml(signal)}
         <div class="wasi-ai-tags">
           ${(signal.frameworks || []).map((item) => `<span class="wasi-ai-tag">${escapeHtml(item)}</span>`).join("")}
           <span class="wasi-ai-tag">Couverture: ${escapeHtml(signal.coverageLabel)}</span>
@@ -795,6 +797,53 @@
         ${sourceListHtml(signal)}
       </div>
     `;
+  }
+
+  /* Shows what the ±adjustment is actually made of, so a score movement can
+     always be traced to a component rather than appearing as a black box. */
+  function adjustmentBreakdownHtml(signal) {
+    const row = function (label, value, note) {
+      const col = value > 0 ? "var(--green)" : value < 0 ? "var(--red)" : "var(--text-dim)";
+      return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:.7rem;padding:2px 0;">' +
+        '<span style="color:var(--text-dim);">' + label + (note ? ' <span style="opacity:.7;">' + note + '</span>' : '') + '</span>' +
+        '<span style="font-family:var(--font-mono);color:' + col + ';">' + (value >= 0 ? "+" : "") + value + '</span></div>';
+    };
+    return '<div style="margin:8px 0;padding:8px 10px;background:rgba(0,0,0,.18);border-radius:6px;">' +
+      '<div style="font-size:.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;">Décomposition de l\'ajustement</div>' +
+      row('Macro (Banque mondiale)', signal.macroAdj || 0, '±5') +
+      row('Stabilité institutionnelle', signal.stabilityAdj || 0) +
+      row('Veille législative', signal.legalAdj || 0, '±2') +
+      '</div>';
+  }
+
+  /* The headlines behind the legislative adjustment. Without these the ±2 is
+     an assertion; with them the user can check it. */
+  function legalNewsHtml(signal) {
+    const items = signal.legalEvidence || [];
+    if (!items.length) return "";
+    const adj = signal.legalAdj || 0;
+    const badge = adj > 0
+      ? '<span style="color:var(--green);">+' + adj + '</span>'
+      : adj < 0 ? '<span style="color:var(--red);">' + adj + '</span>'
+      : '<span style="color:var(--text-dim);">0 · non corroboré</span>';
+
+    return '<div style="margin:8px 0;padding:8px 10px;background:rgba(0,0,0,.18);border-radius:6px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">' +
+        '<span style="font-size:.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);">Veille législative</span>' +
+        '<span style="font-family:var(--font-mono);font-size:.7rem;">' + badge + '</span>' +
+      '</div>' +
+      items.slice(0, 4).map(function (it) {
+        const col = it.polarity === "positive" ? "var(--green)" : "var(--red)";
+        const dot = it.polarity === "positive" ? "▲" : "▼";
+        return '<div style="font-size:.68rem;line-height:1.45;margin-bottom:4px;">' +
+          '<span style="color:' + col + ';">' + dot + '</span> ' +
+          (it.url ? '<a href="' + escapeHtml(it.url) + '" target="_blank" rel="noopener" style="color:var(--text-secondary);">' + escapeHtml(it.title) + '</a>'
+                  : '<span style="color:var(--text-secondary);">' + escapeHtml(it.title) + '</span>') +
+          '<span style="color:var(--text-dim);"> · ' + escapeHtml(it.source || "") + ' · ' + escapeHtml(it.date || "") + '</span>' +
+          '</div>';
+      }).join("") +
+      '<div style="font-size:.6rem;color:var(--text-dim);margin-top:4px;">Classement par mots-clés (lexicon v1) · deux titres concordants minimum · voir M&eacute;thodologie</div>' +
+      '</div>';
   }
 
   function decorateDesktopCountryDetail(code) {
@@ -913,6 +962,36 @@
     }
   }
 
+  // ── Legislative & regulatory news watch ──────────────────────────────────
+  // data/legal-news.json is refreshed daily by CI. Each country carries a
+  // bounded legalAdj (−2..+2) derived from law-making and regulatory
+  // headlines, plus the headlines themselves as evidence.
+  async function loadLegalNews() {
+    try {
+      const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, "");
+      const res = await fetch(base + "/data/legal-news.json?v=" + Date.now());
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function mergeLegalNews(news) {
+    if (!news || !news.countries || !Array.isArray(window.COUNTRIES)) return;
+    window.COUNTRIES.forEach(function (country) {
+      const n = news.countries[country.code];
+      if (!n) return;
+      country.legalAdj = typeof n.legalAdj === "number" ? n.legalAdj : 0;
+      country.legalEvidence = n.evidence || [];
+      country.legalNetSignal = n.net_signal;
+    });
+    state.legalNewsLoaded = true;
+    state.legalNewsFetchedAt = news.generatedAt
+      ? new Date(news.generatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })
+      : null;
+  }
+
   // ── Score history loader — drives the ↑ ↓ → trend arrows ─────────────────
   // data/country-history.json is rebuilt by CI from the git history of the
   // weekly World Bank snapshots.
@@ -979,12 +1058,14 @@
     state.worldBankLoaded = true;
   }
 
-  // Enhanced signal that incorporates live World Bank macro adjustment
+  // Enhanced signal: base score + World Bank macro (±5) + stability
+  // + legislative/regulatory news watch (±2, corroborated headlines only)
   function computeLiveSignal(country) {
     const base    = typeof country.baseScore === "number" ? country.baseScore : country.score;
     const macroAdj = typeof country.macroAdj === "number" ? country.macroAdj : 0;
     const stabilityAdj = country.coup ? -4 : base >= 70 ? 2 : base >= 50 ? 1 : 0;
-    const totalAdj = macroAdj + stabilityAdj;
+    const legalAdj = typeof country.legalAdj === "number" ? country.legalAdj : 0;
+    const totalAdj = macroAdj + stabilityAdj + legalAdj;
     const finalScore = Math.min(100, Math.max(0, Math.round(base + totalAdj)));
 
     const growthStr   = country.liveGrowth    != null ? country.liveGrowth + "%" : "N/A";
@@ -1001,6 +1082,8 @@
       baseScore: base,
       macroAdj,
       stabilityAdj,
+      legalAdj,
+      legalEvidence: country.legalEvidence || [],
       aiAdjustment: totalAdj,
       finalScore,
       legalReadiness: finalScore >= 65 ? "Élevée" : finalScore >= 45 ? "Moyenne" : "Limitée",
@@ -1035,14 +1118,20 @@
     try {
       ensureBaseScores();
 
-      // 1. Fetch live World Bank data + score history in parallel
-      const [wb, hist] = await Promise.all([loadWorldBankData(), loadScoreHistory()]);
+      // 1. Fetch live World Bank data, score history and the legislative
+      //    news watch in parallel
+      const [wb, hist, legal] = await Promise.all([
+        loadWorldBankData(), loadScoreHistory(), loadLegalNews(),
+      ]);
       if (wb) {
         mergeWorldBankData(wb);
         updateStatus("Intégration données BM " + (state.worldBankFetchedAt || "") + "...", "loading");
       }
       if (hist) {
         applyHistoryTrends(hist);
+      }
+      if (legal) {
+        mergeLegalNews(legal);
       }
 
       // 2. Compute signals (live if WB loaded, local fallback otherwise)

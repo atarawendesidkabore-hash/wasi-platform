@@ -106,12 +106,14 @@ footer {
 
   <h2>1. Vue d'ensemble</h2>
   <p>Chaque pays africain couvert par WASI reçoit un <strong>score composite de 0 à 100</strong>, produit en trois couches&nbsp;:</p>
-  <div class="formula">Score final = borne<sub>0–100</sub>( Score de base + Ajustement macro + Ajustement stabilité )</div>
+  <div class="formula">Score final = borne<sub>0–100</sub>( Score de base + Ajustement macro + Ajustement stabilité + Veille législative )</div>
   <ul>
     <li><strong>Score de base</strong> — notation structurelle établie par l'équipe d'analyse WASI (profondeur de couverture, cadre juridique, intégration régionale, risque). Revue à chaque publication majeure de la plateforme.</li>
     <li><strong>Ajustement macro</strong> — de <code>−5</code> à <code>+5</code> points, calculé automatiquement à partir des dernières données de la Banque mondiale (croissance, inflation, dette publique).</li>
     <li><strong>Ajustement stabilité</strong> — pénalité ou bonus lié à la situation politique et institutionnelle.</li>
+    <li><strong>Veille législative</strong> — de <code>−2</code> à <code>+2</code> points, issue du balayage quotidien de l'activité législative et réglementaire du pays (section 3bis).</li>
   </ul>
+  <p>La fiche de chaque pays affiche la <strong>décomposition</strong> de son ajustement, composante par composante, ainsi que les titres de presse qui ont produit la part législative.</p>
 
   <h2>2. Score de base</h2>
   <p>Le score de base reflète l'évaluation structurelle du pays par WASI sur quatre dimensions&nbsp;: environnement juridique et réglementaire (cadre OHADA le cas échéant), profondeur et fiabilité des données de marché disponibles, intégration économique régionale (UEMOA, CEDEAO, CEMAC, EAC, SADC, UMA) et risque opérationnel. Il s'agit d'une notation d'expert, <strong>stable entre deux revues</strong>&nbsp;: elle ne bouge pas d'une semaine à l'autre.</p>
@@ -136,6 +138,30 @@ footer {
   </table>
   <p>Pour les pays sans données Banque mondiale exploitables (Soudan du Sud, Érythrée, Somalie), des valeurs de repli documentées sont utilisées et signalées comme telles.</p>
 
+  <h2>3bis. Veille législative et réglementaire (±2)</h2>
+  <p>Chaque jour, WASI balaie l'actualité de chaque pays restreinte à l'activité <strong>législative et réglementaire</strong> (lois adoptées, décrets, ordonnances, codes des investissements, nationalisations, états d'urgence). Chaque titre est classé, et l'ajustement qui en résulte est <strong>borné à ±2 points</strong>.</p>
+
+  <h3>Comment un titre est classé</h3>
+  <ul>
+    <li><strong>Un verbe législatif ne suffit pas.</strong> « Le parlement adopte… » n'est un signal positif que si le <em>sujet</em> est économiquement pertinent (code des investissements, loi de finances, fiscalité, douanes, mines, énergie, PPP…). Un parlement peut adopter un code des investissements ou un texte répressif avec le même verbe.</li>
+    <li><strong>Les régressions en matière de droits comptent comme négatives</strong> (criminalisation, atteintes à la liberté de la presse, coupures d'Internet). Au-delà de leur coût humain, ce sont des risques d'investissement concrets : suspensions de bailleurs, exposition réputationnelle.</li>
+    <li><strong>Un législateur étranger n'est pas le pays.</strong> « Le Congrès américain vote la suspension de l'aide au Nigeria » n'est pas une activité législative nigériane : ces titres sont écartés.</li>
+    <li><strong>Deux titres concordants minimum.</strong> Un seul titre ne peut jamais déplacer un score souverain.</li>
+    <li><strong>Une histoire = un signal.</strong> Un même événement est repris par des dizaines de médias ; les titres partageant le même mot-clé dans la même semaine sont regroupés, afin que le <em>volume de presse</em> ne pilote pas le score.</li>
+    <li><strong>Pondération par l'ancienneté</strong> : 100 % ≤ 7 jours, 70 % ≤ 21 jours, 45 % ≤ 45 jours, 25 % ≤ 90 jours, nul au-delà.</li>
+  </ul>
+
+  <table>
+    <tr><th>Signal net</th><th>Ajustement</th></tr>
+    <tr><td>&ge; +3,5</td><td>+2</td></tr>
+    <tr><td>+1,5 à +3,5</td><td>+1</td></tr>
+    <tr><td>−1,5 à +1,5</td><td>0</td></tr>
+    <tr><td>−3,5 à −1,5</td><td>−1</td></tr>
+    <tr><td>&le; −3,5</td><td>−2</td></tr>
+  </table>
+
+  <div class="note"><strong>Limite assumée :</strong> le classement repose sur un lexique de mots-clés (<code>lexicon_v1</code>), pas sur une compréhension du texte. Les titres ambigus sont comptés <strong>zéro</strong> plutôt que devinés. C'est pourquoi l'influence est plafonnée à ±2 et que <strong>les titres ayant produit l'ajustement sont affichés dans la fiche pays</strong> — vous pouvez vérifier notre lecture, et nous signaler une erreur.</div>
+
   <h2>4. Ajustement stabilité</h2>
   <table>
     <tr><th>Situation</th><th>Points</th></tr>
@@ -155,7 +181,9 @@ footer {
 
   <h2>6. Cadence d'actualisation</h2>
   <ul>
+    <li><strong>Veille législative</strong>&nbsp;: balayage <strong>quotidien à 05h30 UTC</strong>. C'est la composante la plus réactive du score.</li>
     <li><strong>Données macro</strong>&nbsp;: récupérées automatiquement chaque <strong>lundi et jeudi à 06h00 UTC</strong> (GitHub Actions). La date des données affichées est visible dans le bandeau «&nbsp;LIVE · BM&nbsp;» de la plateforme.</li>
+    <li><strong>Cours de marché</strong>&nbsp;: chaque jour ouvré à 18h15 UTC, après clôture (BRVM, JSE, EGX, FX, crypto).</li>
     <li><strong>Indicateurs sous-jacents</strong>&nbsp;: la Banque mondiale publie ces séries à fréquence <strong>annuelle</strong> — un score peut donc rester stable plusieurs semaines, c'est un comportement attendu.</li>
     <li><strong>Score de base</strong>&nbsp;: revu par l'équipe WASI lors des revues de plateforme (journal des révisions ci-dessous).</li>
   </ul>
@@ -171,6 +199,7 @@ footer {
   <h2>8. Journal des révisions</h2>
   <table>
     <tr><th>Date</th><th>Révision</th></tr>
+    <tr><td>2026-08</td><td>Version 1.1 — ajout de la <strong>veille législative quotidienne (±2)</strong> comme quatrième composante du score, avec affichage des titres justificatifs dans chaque fiche pays.</td></tr>
     <tr><td>2026-08</td><td>Version 1.0 — publication de la méthodologie&nbsp;; ajout du refresh de rattrapage du jeudi&nbsp;; fiabilisation du pipeline Banque mondiale (relances automatiques).</td></tr>
     <tr><td>2026-04</td><td>Intégration des données Banque mondiale en direct (ajustement macro ±5).</td></tr>
   </table>
