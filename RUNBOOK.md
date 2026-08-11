@@ -162,6 +162,18 @@ Trois modes, dans cet ordre de priorité :
 
 Notes : plan gratuit Render = mise en veille après 15 min d'inactivité (première réponse lente ~30 s) ; passer au plan Starter pour un service permanent. Chaque token WASI distribué est un identifiant client — les révoquer en les retirant de `WASI_ACCESS_TOKENS`. Journal d'audit (tokens hachés, jamais en clair) visible dans les logs Render.
 
+## 4bis. ⚠️ Cache navigateur — à faire à CHAQUE déploiement de code
+
+Les fichiers JS/CSS sont référencés avec un jeton de version, par ex. `./app.js?v=20260811a`. **Sans cela, les visiteurs continuent d'exécuter l'ancien code après un déploiement** — c'est exactement ce qui s'est produit : la correction du panneau de transfert était en ligne mais invisible sans `Ctrl+Shift+R`, et le DEX affichait encore « Detailed 4 » alors que le fichier déployé en contenait 43.
+
+Après toute modification d'un `.js` ou `.css`, incrémenter le jeton dans les trois pages :
+
+```bash
+node -e "const fs=require('fs');const v=new Date().toISOString().slice(0,10).replace(/-/g,'')+'a';['index.html','wasi-dex/index.html','wasi-dex/wasi-transfer-app.html'].forEach(f=>{let c=fs.readFileSync(f,'utf8');c=c.replace(/\?v=\d{8}[a-z]/g,'?v='+v);fs.writeFileSync(f,c);});console.log('version -> '+v)"
+```
+
+Les fichiers de **données** (`data/*.json`) portent déjà `?v=` + horodatage à l'exécution : ils n'ont jamais besoin d'être versionnés à la main.
+
 ## 4. Déploiement du site
 
 - `git push` sur `main` → GitHub Pages se redéploie tout seul. Aucune étape de build.
