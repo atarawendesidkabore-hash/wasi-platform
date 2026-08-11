@@ -12,6 +12,28 @@ Toute modification passe par ce dépôt. Un `git push` sur `main` redéploie aut
 
 > ⚠️ Le dossier vit dans OneDrive : ne jamais éditer le même dépôt depuis deux machines en même temps (risque de conflits de synchronisation OneDrive sur `.git`).
 
+## 2ter. WASI Transfer — un seul moteur de tarification
+
+Le produit Transfert existe sur **deux surfaces** :
+
+1. **WASI Transfer Mobile** — `wasi-dex/wasi-transfer-app.html` (app dédiée, écran mobile).
+2. **DEX → onglet « Transfert WASI »** — dans `index.html`.
+
+Les deux chargent **`wasi-transfer-core.js`**, unique source de vérité : paliers tarifaires, taux, formule de calcul et formatage des nombres.
+
+| Palier | Montant envoyé | Frais | Marge FX | Coût total |
+|---|---|---|---|---|
+| Starter | 0 – 199 | 1,00 % … 1,20 % | 0,40 % | **1,60 %** |
+| Growth | 200 – 999 | 1,00 % | 0,40 % | **1,40 %** |
+| Pro | 1 000 + | 0,80 % | 0,40 % | **1,20 %** |
+
+Formule (ne pas « simplifier ») : `frais = envoi × feePct` → `livré = (envoi − frais) × taux × (1 − fxPct)`.
+Contrôle : 200 EUR → XOF doit toujours donner **129 360 XOF** (palier Growth).
+
+> ⚠️ **Toute modification de tarif ou de taux se fait dans `wasi-transfer-core.js` uniquement.** Ne jamais redéclarer de paliers ou de taux dans `index.html` ou `wasi-transfer-app.js` — les deux surfaces afficheraient alors des prix différents au même client.
+
+Les taux du jour proviennent de `data/market-live.json` (voir ci-dessous) ; l'EUR reste à la parité fixe BCEAO 655,957. Sans ce fichier, les taux de référence du core s'appliquent.
+
 ## 2bis. Pipeline cours de marché (quotidien)
 
 `.github/workflows/refresh-market.yml` s'exécute **chaque jour ouvré à 18h15 UTC** (après clôture BRVM/JSE/EGX) : `scripts/fetch-market-data.mjs` → `data/market-live.json`.

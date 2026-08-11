@@ -1,26 +1,14 @@
-const SEND_RATES_XOF = {
-    EUR: 655.957,
-    USD: 615.0,
-    GBP: 782.0,
-    CAD: 455.0
-};
+/* Pricing tiers, FX rates and the quote formula live in the shared core
+   (../wasi-transfer-core.js). The DEX panel in index.html loads the same
+   module, so both surfaces always quote a customer identical numbers.
+   Never re-declare tiers or rates here. */
+const CORE = window.WasiTransferCore;
+if (!CORE) {
+    console.error("wasi-transfer-core.js est introuvable — la tarification ne peut pas démarrer.");
+}
 
-const RECEIVE_RATES_XOF = {
-    XOF: 1,
-    XAF: 1,
-    NGN: 0.389,
-    GHS: 39.7,
-    KES: 4.77,
-    ZAR: 33.8
-};
-
-const PRICING_TIERS = [
-    { min: 0, max: 199, feePct: 0.012, fxPct: 0.004, label: "Starter" },
-    { min: 200, max: 999, feePct: 0.01, fxPct: 0.004, label: "Growth" },
-    { min: 1000, max: Number.POSITIVE_INFINITY, feePct: 0.008, fxPct: 0.004, label: "Pro" }
-];
-
-const WAVE_BENCHMARK = 0.02;
+const PRICING_TIERS = CORE ? CORE.PRICING_TIERS : [];
+const WAVE_BENCHMARK = CORE ? CORE.WAVE_BENCHMARK : 0.02;
 
 const els = {
     amount: document.getElementById("send-amount"),
@@ -55,22 +43,24 @@ const els = {
     continueBtn: document.getElementById("continue-btn")
 };
 
-const CHECKOUT_STEPS = [
-    { key: "kyc", title: "Étape 1 · Vérification identité" },
-    { key: "beneficiary", title: "Étape 2 · Bénéficiaire" },
-    { key: "payment", title: "Étape 3 · Paiement" }
-];
+const CHECKOUT_STEPS = CORE ? CORE.CHECKOUT_STEPS : [];
 
 let checkoutStep = 0;
 
 init();
 
 function init() {
+    if (!CORE) return;
     renderPricingGrid();
     renderCheckoutProgress();
     bindEvents();
     updateQuote();
     renderCheckoutStep();
+    // Overlay today's FX (same data/market-live.json the platform uses) and
+    // re-price once it lands. Falls back silently to reference rates.
+    CORE.loadLiveRates("../").then(function (n) {
+        if (n) updateQuote();
+    });
 }
 
 function bindEvents() {
@@ -219,44 +209,15 @@ function paymentMethodLabel(value) {
 }
 
 function getTier(amount) {
-    const value = Number.isFinite(amount) ? amount : 0;
-    return PRICING_TIERS.find((tier) => value >= tier.min && value <= tier.max) || PRICING_TIERS[0];
+    return CORE.getTier(amount);
 }
 
 function computeQuote() {
-    const sendAmount = Number.parseFloat(els.amount.value);
-    const sendCurrency = els.sendCurrency.value;
-    const receiveCurrency = els.receiveCurrency.value;
-
-    if (!Number.isFinite(sendAmount) || sendAmount <= 0) return null;
-    const sendRateXof = SEND_RATES_XOF[sendCurrency];
-    const receiveRateXof = RECEIVE_RATES_XOF[receiveCurrency];
-    if (!sendRateXof || !receiveRateXof) return null;
-
-    const tier = getTier(sendAmount);
-    const feeAmount = sendAmount * tier.feePct;
-    const netAmount = sendAmount - feeAmount;
-
-    const grossXof = sendAmount * sendRateXof;
-    const deliveredXof = netAmount * sendRateXof * (1 - tier.fxPct);
-    const receiveAmount = deliveredXof / receiveRateXof;
-
-    const midRate = sendRateXof / receiveRateXof;
-    const appliedRate = midRate * (1 - tier.fxPct);
-    const effectivePct = tier.feePct + tier.fxPct;
-
-    return {
-        sendAmount,
-        sendCurrency,
-        receiveCurrency,
-        tier,
-        feeAmount,
-        receiveAmount,
-        midRate,
-        appliedRate,
-        effectivePct,
-        waveReceive: (grossXof * (1 - WAVE_BENCHMARK)) / receiveRateXof
-    };
+    return CORE.quote({
+        sendAmount: Number.parseFloat(els.amount.value),
+        sendCurrency: els.sendCurrency.value,
+        receiveCurrency: els.receiveCurrency.value
+    });
 }
 
 function updateQuote() {
@@ -316,20 +277,18 @@ function row(label, value, negative = false, total = false) {
     return `<div class="${classes.join(" ")}"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`;
 }
 
+/* Formatters delegate to the shared core so the DEX panel and this app
+   render every amount, rate and percentage identically. */
 function formatAmount(value, currency) {
-    if (currency === "XOF" || currency === "XAF") {
-        return Math.round(value).toLocaleString("fr-FR");
-    }
-    return value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return CORE.formatAmount(value, currency);
 }
 
 function formatRate(value) {
-    if (value >= 1) return value.toFixed(4);
-    return value.toFixed(6);
+    return CORE.formatRate(value);
 }
 
 function toPct(value) {
-    return `${(value * 100).toFixed(2).replace(".", ",")}%`;
+    return CORE.toPct(value);
 }
 
 function escapeHtml(value) {

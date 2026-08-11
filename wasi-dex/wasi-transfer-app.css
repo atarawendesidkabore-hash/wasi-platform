@@ -402,6 +402,12 @@ body {
     gap: 8px;
 }
 
+/* An explicit display value beats the UA rule for [hidden], so without this
+   every checkout step renders at once instead of one step at a time. */
+.step-panel[hidden] {
+    display: none;
+}
+
 .summary-card {
     border: 1px solid var(--line);
     border-radius: 12px;
