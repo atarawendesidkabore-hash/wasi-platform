@@ -139,7 +139,24 @@ Le harnais d'équivalence n'est pas versionné (il dépend de `node_modules` de 
 - **Dates de la demo relatives.** Les credits de demonstration utilisent `seedDueDate(offset)`. Les dates figees pourrissaient : les credits etaient dus en mars 2026, donc des que le PAR a suivi les vrais jours de retard, tout le portefeuille ressortait a 140 jours de retard et le PAR30 affichait 100 %.
 - **Portefeuille de demo a 3 credits.** Un seul credit en retard represente plus de 5 % de l'encours : la carte d'engagement s'affiche donc en depassement. C'est arithmetiquement juste ; pour demontrer un PAR30 sous 5 %, il faut un portefeuille de demonstration plus large.
 
-### ⚠️ Creation de credit bloquee hors poste de dev
+### Creation de credit : panne du filtre juridique = revue humaine
+
+Le formulaire passe par un controle juridique IA servi par `microfinance-app/server.mjs`. Ce serveur **ne demarre pas depuis ce depot** (il importe `../archives-bf-ai/lib/search-utils.mjs`, present dans le depot `WASI`) et **n'existe pas sur GitHub Pages**.
+
+Avant, une panne du filtre **jetait le dossier** : le bloc `catch` affichait « REVIEW » mais retournait `null`, donc l'agent perdait sa saisie et aucun credit ne pouvait etre enregistre tant que le serveur etait indisponible.
+
+Desormais une panne technique **n'est pas un refus** : elle est routee vers la revue humaine qui existait deja.
+
+1. La carte indique explicitement que le filtre juridique **n'a pas ete execute**.
+2. L'agent verifie les sources officielles, puis clique « Valider le pret apres revue manuelle » (confirmation obligatoire).
+3. Le credit est enregistre avec `approvalMode: "manual-review"` et `complianceDecision: "REVIEW_FILTRE_INDISPONIBLE"`.
+4. La fiche du credit porte le badge **« Filtre juridique IA non execute »**.
+
+> Rien n'est approuve automatiquement. Pour lister les credits engages sans filtre : filtrer sur `complianceDecision === "REVIEW_FILTRE_INDISPONIBLE"`.
+
+**Reste ouvert** : les **remboursements** restent bloques en cas de panne (`decision !== "APPROVED"` -> sortie), car aucun parcours de revue manuelle n'existe pour eux. C'est plus genant que pour un credit : le client a deja remis l'argent.
+
+## ⚠️ Creation de credit bloquee hors poste de dev
 
 Le formulaire passe par un controle juridique IA servi par `microfinance-app/server.mjs`. Ce serveur **ne demarre pas depuis ce depot** : il importe `../archives-bf-ai/lib/search-utils.mjs`, absent de `wasi-platform` (present dans le depot `WASI`), et requiert `express`, `@anthropic-ai/sdk` et des credits Anthropic. Sur GitHub Pages il n'y a aucun serveur : le controle echoue et **aucun credit ne peut etre enregistre en ligne**. Les vues lecture (portefeuille, PAR, scores) fonctionnent normalement.
 

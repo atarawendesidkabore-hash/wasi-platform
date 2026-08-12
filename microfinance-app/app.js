@@ -461,7 +461,12 @@ function bindActions() {
     if (!confirmed) return;
 
     const { draft, compliance } = pendingManualLoanApproval;
-    createLoanFromDraft(draft, { approvalMode: "manual-review", complianceDecision: compliance.decision });
+    // Distinguish "the AI reviewed it and asked for a human" from "the AI never
+    // ran". An auditor must be able to list every loan booked without the filter.
+    createLoanFromDraft(draft, {
+      approvalMode: "manual-review",
+      complianceDecision: compliance.technicalFailure ? "REVIEW_FILTRE_INDISPONIBLE" : compliance.decision
+    });
     clearPendingManualLoanApproval();
     persistAndRefresh(els.loanForm);
     renderComplianceResult(els.loanComplianceCard, buildManualLoanApprovalPayload(compliance));
@@ -511,7 +516,11 @@ function buildPendingManualLoanReviewPayload(compliance) {
     ].slice(0, 4),
     scopeNote: `${
       String(compliance?.scopeNote || "").trim() || "Le dossier demande une revue humaine."
-    } La validation manuelle portera sur le dernier dossier contrôlé.`,
+    } ${
+      compliance?.technicalFailure
+        ? "ATTENTION : le filtre juridique IA n'a pas été exécuté sur ce dossier. Votre validation en tient lieu et sera tracée comme telle."
+        : "La validation manuelle portera sur le dernier dossier contrôlé."
+    }`,
     manualReviewAllowed: true,
     manualReviewLabel: "Valider le prêt après revue manuelle"
   };
@@ -775,6 +784,11 @@ function renderLoans() {
           ? `
             <div class="record-row">
               <span class="pill review">Validation manuelle</span>
+              ${
+                loan.complianceDecision === "REVIEW_FILTRE_INDISPONIBLE"
+                  ? `<span class="pill late">Filtre juridique IA non exécuté</span>`
+                  : ""
+              }
               <span class="muted">Revue confirmée le ${prettyDateTime(loan.manualReviewValidatedAt)}</span>
             </div>
           `
@@ -1390,18 +1404,32 @@ async function runComplianceCheck({ operationType, operationData, button, idleLa
     renderComplianceResult(resultCard, payload);
     return payload;
   } catch (error) {
-    renderComplianceResult(resultCard, {
+    // The legal filter could not run (server unreachable, no AI credits, or a
+    // malformed response). This block used to RENDER decision "REVIEW" but
+    // return null, so the caller discarded the file: the officer lost the form
+    // and no loan could ever be recorded when the service was down.
+    //
+    // A technical outage is not a refusal. Return a REVIEW verdict so the
+    // operation flows into the human-review path that already exists — the
+    // officer still has to check the sources and confirm, and the loan is
+    // stamped so every file approved without the filter is auditable.
+    const payload = {
       decision: "REVIEW",
-      summary: error.message,
-      risks: ["L'opération n'a pas été enregistrée car le contrôle juridique n'a pas pu se terminer."],
+      technicalFailure: true,
+      summary: `Le filtre juridique IA n'a pas pu s'exécuter (${error.message}). Ce dossier n'a donc PAS été contrôlé automatiquement.`,
+      risks: [
+        "Aucun contrôle juridique automatique n'a été appliqué à cette opération.",
+        "La responsabilité de la conformité repose entièrement sur la revue humaine ci-dessous."
+      ],
       requiredActions: [
-        "Réessayez lorsque le serveur IA de CIREX sera à nouveau accessible.",
-        "Si le serveur reste indisponible, vérifiez manuellement les sources officielles avant de traiter l'opération."
+        "Vérifiez manuellement les sources officielles applicables (BCEAO, loi sur la microfinance, plafond de taux) avant d'enregistrer.",
+        "Réessayez plus tard : le contrôle automatique reprendra dès que le serveur IA de CIREX sera accessible."
       ],
       scopeNote: `Pays de l'institution retenu pour ce contrôle : ${institutionCountry}.`,
       citations: []
-    });
-    return null;
+    };
+    renderComplianceResult(resultCard, payload);
+    return payload;
   } finally {
     setActionButtonState(button, false, idleLabel, loadingLabel);
   }
