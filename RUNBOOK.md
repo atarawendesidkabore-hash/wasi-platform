@@ -95,6 +95,34 @@ Les taux du jour proviennent de `data/market-live.json` (voir ci-dessous) ; l'EU
 - **Badge DEX** : « Cours au \<date\> · Live : ... » — passe orange si les données ont plus de 4 jours.
 - **Panne probable** : le scrape BRVM casse si brvm.org change sa mise en page (le script échoue proprement, les autres sources continuent).
 
+## 1bis. Moteurs métier et tests
+
+Le dépôt reste **sans dépendance et sans étape de build**. Les tests utilisent le lanceur intégré de Node :
+
+```bash
+npm test
+```
+
+| Module | Rôle | Tests |
+|---|---|---|
+| `lib/africredit/credit-scoring.js` | Score de crédit WASI (7 facteurs pondérés + vetos) | ✅ |
+| `lib/africredit/par-calculator.js` | PAR30/60/90, OSS, synthèse de portefeuille | ✅ |
+| `lib/africredit/expert-scoring-engine.js` | Proposition de décision (7 composantes, veto dette souveraine) | ✅ |
+| `lib/banking-engine.js` | Comptes, dépôts, retraits, virements (bigint en centimes XOF) | ✅ |
+
+`.github/workflows/tests.yml` exécute la suite à chaque push et pull request.
+
+### Provenance : récolté depuis l'app React
+
+Ces moteurs ont été **portés depuis `wasi-frontend` (`src/africredit`, `src/banking`)**, où ils étaient écrits en TypeScript avec `decimal.js`. Le portage est **numériquement identique à l'original**, vérifié par un harnais d'équivalence de **30 197 comparaisons, 0 divergence**.
+
+⚠️ **Deux pièges rencontrés lors du portage — ne pas les réintroduire :**
+
+1. **`round2` doit reproduire `decimal.js` ROUND_HALF_UP**, qui arrondit la *représentation la plus courte* du double. `Math.round(value * 100)` donne `1.005 → 1.00` au lieu de `1.01`. Inversement, « nettoyer » le bruit binaire avec `toPrecision` rendait chaque score concerné **un centime trop haut**.
+2. **Multiplier avant de diviser** pour le ratio de garantie : `22M / 50M * 100` en flottant donne `44.000000000000006`, pas `44`, ce qui décale l'arrondi final d'un centime. `decimal.js` calculait exact.
+
+Le harnais d'équivalence n'est pas versionné (il dépend de `node_modules` de l'app React). Pour le rejouer, bundler les originaux avec esbuild et comparer aux modules de `lib/`.
+
 ## 2sexies. Les 5 composantes du score, et leur cadence
 
 | Composante | Borne | Source | Cadence |

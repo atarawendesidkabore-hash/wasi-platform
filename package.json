@@ -1,0 +1,19 @@
+{
+  "name": "wasi-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WASI — Whole African Strategic Intelligence. Static platform plus the data pipelines and business engines behind it.",
+  "type": "module",
+  "//": "Deliberately dependency-free: the site is static and needs no build step. Tests use Node's built-in runner.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test tests/africredit.test.mjs tests/banking-engine.test.mjs",
+    "data:macros": "node scripts/fetch-world-bank.mjs",
+    "data:history": "node scripts/build-score-history.mjs",
+    "data:market": "node scripts/fetch-market-data.mjs",
+    "data:legal": "node scripts/fetch-legal-news.mjs",
+    "data:afex": "node scripts/build-afex-profiles.mjs"
+  }
+}

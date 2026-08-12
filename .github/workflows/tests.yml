@@ -1,0 +1,30 @@
+name: Tests
+
+# The platform ships no dependencies and has no build step, so the suite runs
+# on Node's built-in test runner with nothing to install.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run tests (AfriCredit + banking engine)
+        run: npm test
+
+      - name: Check data scripts parse
+        run: |
+          for f in scripts/*.mjs; do
+            node --check "$f"
+          done
