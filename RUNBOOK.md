@@ -154,7 +154,11 @@ Desormais une panne technique **n'est pas un refus** : elle est routee vers la r
 
 > Rien n'est approuve automatiquement. Pour lister les credits engages sans filtre : filtrer sur `complianceDecision === "REVIEW_FILTRE_INDISPONIBLE"`.
 
-**Reste ouvert** : les **remboursements** restent bloques en cas de panne (`decision !== "APPROVED"` -> sortie), car aucun parcours de revue manuelle n'existe pour eux. C'est plus genant que pour un credit : le client a deja remis l'argent.
+Les **remboursements** suivent desormais exactement le meme parcours (bouton « Valider le remboursement apres revue manuelle », marqueur `REVIEW_FILTRE_INDISPONIBLE`, badge sur la fiche). C'etait le cas le plus urgent : le client a deja remis les fonds, refuser de les enregistrer creait un ecart de caisse.
+
+Les deux chemins (automatique et revue manuelle) passent par une seule fonction d'ecriture (`recordRepaymentFromDraft`), pour qu'ils ne puissent pas diverger dans la mise a jour du credit.
+
+> ⚠️ **Limite connue — le PAR ne redescend pas apres un remboursement.** Un remboursement reduit l'encours et repasse le statut a « Current », mais **n'avance pas `nextDueDate`**. Le PAR se calculant desormais sur les jours de retard reels, le credit reste compte en retard jusqu'a modification de l'echeance. L'application n'a pas d'echeancier : il faut soit un vrai plan de remboursement, soit avancer l'echeance d'une periode a chaque paiement. A trancher avant de communiquer un PAR a un investisseur.
 
 ## ⚠️ Creation de credit bloquee hors poste de dev
 

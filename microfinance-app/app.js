@@ -119,6 +119,7 @@ const viewMeta = {
 
 const aiHistory = [];
 let pendingManualLoanApproval = null;
+let pendingManualRepaymentApproval = null;
 
 const els = {
   marketTicker: document.getElementById("wasi-market-ticker-track"),
@@ -403,28 +404,53 @@ function bindForms() {
       resultCard: els.repaymentComplianceCard
     });
 
-    if (!compliance || compliance.decision !== "APPROVED") {
+    if (!compliance) {
+      clearPendingManualRepaymentApproval();
       return;
     }
 
-    state.repayments.unshift({
-      id: nextId("RP", state.repayments, 4000),
-      loanId: draft.loanId,
-      amount: draft.amount,
-      paymentDate: draft.paymentDate,
-      note: draft.note
-    });
-    const loan = state.loans.find((entry) => entry.id === draft.loanId);
-    if (loan) {
-      loan.outstanding = Math.max(0, loan.outstanding - draft.amount);
-      loan.status = "Current";
-      if (loan.outstanding < loan.principal * 0.35) loan.riskFlag = "Low";
+    // A client has already handed over cash. If the legal filter could not run
+    // we must not refuse to record it: route to human review, like a loan.
+    if (compliance.decision === "REVIEW") {
+      queueManualRepaymentApproval(draft, compliance);
+      renderComplianceResult(
+        els.repaymentComplianceCard,
+        buildPendingManualRepaymentReviewPayload(compliance)
+      );
+      return;
     }
+
+    if (compliance.decision !== "APPROVED") {
+      clearPendingManualRepaymentApproval();
+      return;
+    }
+
+    recordRepaymentFromDraft(draft, { approvalMode: "auto", complianceDecision: compliance.decision });
+    clearPendingManualRepaymentApproval();
     persistAndRefresh(event.currentTarget);
     renderComplianceResult(els.repaymentComplianceCard, {
       ...compliance,
       summary: `${compliance.summary} Le remboursement a bien été enregistré dans CIREX.`,
     });
+  });
+
+  els.repaymentComplianceCard.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-manual-approve]");
+    if (!button || !pendingManualRepaymentApproval) return;
+
+    const confirmed = window.confirm(
+      "Confirmez-vous que la revue manuelle est terminée et que vous souhaitez enregistrer ce remboursement dans CIREX ?"
+    );
+    if (!confirmed) return;
+
+    const { draft, compliance } = pendingManualRepaymentApproval;
+    recordRepaymentFromDraft(draft, {
+      approvalMode: "manual-review",
+      complianceDecision: compliance.technicalFailure ? "REVIEW_FILTRE_INDISPONIBLE" : compliance.decision
+    });
+    clearPendingManualRepaymentApproval();
+    persistAndRefresh(els.repaymentForm);
+    renderComplianceResult(els.repaymentComplianceCard, buildManualRepaymentApprovalPayload(compliance));
   });
 }
 
@@ -432,6 +458,7 @@ function bindActions() {
   els.resetBtn.addEventListener("click", () => {
     state = JSON.parse(JSON.stringify(seedState));
     clearPendingManualLoanApproval();
+    clearPendingManualRepaymentApproval();
     saveState();
     renderAll();
     renderComplianceIdleStates();
@@ -452,7 +479,7 @@ function bindActions() {
   });
 
   els.loanComplianceCard.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-manual-loan-approve]");
+    const button = event.target.closest("[data-manual-approve]");
     if (!button || !pendingManualLoanApproval) return;
 
     const confirmed = window.confirm(
@@ -481,6 +508,80 @@ function queueManualLoanApproval(draft, compliance) {
   pendingManualLoanApproval = {
     draft: JSON.parse(JSON.stringify(draft)),
     compliance: JSON.parse(JSON.stringify(compliance))
+  };
+}
+
+function clearPendingManualRepaymentApproval() {
+  pendingManualRepaymentApproval = null;
+}
+
+function queueManualRepaymentApproval(draft, compliance) {
+  pendingManualRepaymentApproval = {
+    draft: JSON.parse(JSON.stringify(draft)),
+    compliance: JSON.parse(JSON.stringify(compliance))
+  };
+}
+
+/**
+ * Single place a repayment is written, so the automatic and manual-review
+ * paths cannot drift apart in how they update the loan.
+ */
+function recordRepaymentFromDraft(draft, { approvalMode = "auto", complianceDecision = "APPROVED" } = {}) {
+  state.repayments.unshift({
+    id: nextId("RP", state.repayments, 4000),
+    loanId: draft.loanId,
+    amount: draft.amount,
+    paymentDate: draft.paymentDate,
+    note: draft.note,
+    approvalMode,
+    complianceDecision,
+    manualReviewValidatedAt: approvalMode === "manual-review" ? new Date().toISOString() : null
+  });
+
+  const loan = state.loans.find((entry) => entry.id === draft.loanId);
+  if (loan) {
+    loan.outstanding = Math.max(0, loan.outstanding - draft.amount);
+    loan.status = "Current";
+    if (loan.outstanding < loan.principal * 0.35) loan.riskFlag = "Low";
+  }
+}
+
+function buildPendingManualRepaymentReviewPayload(compliance) {
+  const requiredActions = Array.isArray(compliance?.requiredActions)
+    ? compliance.requiredActions.filter(Boolean)
+    : [];
+
+  return {
+    ...compliance,
+    requiredActions: [
+      ...requiredActions,
+      "Après votre revue humaine, utilisez le bouton ci-dessous pour enregistrer le remboursement dans CIREX."
+    ].slice(0, 4),
+    scopeNote: `${
+      String(compliance?.scopeNote || "").trim() || "Le remboursement demande une revue humaine."
+    } ${
+      compliance?.technicalFailure
+        ? "ATTENTION : le filtre juridique IA n'a pas été exécuté. Le client ayant déjà remis les fonds, enregistrez le remboursement après vérification manuelle."
+        : "La validation manuelle portera sur le dernier remboursement contrôlé."
+    }`,
+    manualReviewAllowed: true,
+    manualReviewLabel: "Valider le remboursement après revue manuelle"
+  };
+}
+
+function buildManualRepaymentApprovalPayload(compliance) {
+  return {
+    ...compliance,
+    decision: "APPROVED",
+    summary: "Le remboursement a été enregistré dans CIREX après revue manuelle confirmée.",
+    scopeNote:
+      "Validation manuelle consignée. Conservez le reçu et les références réglementaires ayant motivé cette décision.",
+    requiredActions: [
+      "Archivez la note de revue manuelle avec le reçu de remboursement.",
+      "Rejouez le contrôle automatique sur ce dossier dès que le serveur IA sera accessible."
+    ],
+    manualReviewAllowed: false,
+    checkedAt: new Date().toISOString()
   };
 }
 
@@ -815,6 +916,21 @@ function renderRepayments() {
           <span>${repayment.loanId}</span>
           <span>${money(repayment.amount)}</span>
         </div>
+        ${
+          repayment.approvalMode === "manual-review"
+            ? `
+              <div class="record-row">
+                <span class="pill review">Validation manuelle</span>
+                ${
+                  repayment.complianceDecision === "REVIEW_FILTRE_INDISPONIBLE"
+                    ? `<span class="pill late">Filtre juridique IA non exécuté</span>`
+                    : ""
+                }
+                <span class="muted">Revue confirmée le ${prettyDateTime(repayment.manualReviewValidatedAt)}</span>
+              </div>
+            `
+            : ""
+        }
         <div class="record-actions">
           <button class="ghost-btn" data-print-repayment="${repayment.id}">Imprimer le reçu</button>
         </div>
@@ -1477,7 +1593,7 @@ function renderComplianceActions(payload) {
 
   return `
     <div class="compliance-actions">
-      <button class="secondary-btn" type="button" data-manual-loan-approve="true">
+      <button class="secondary-btn" type="button" data-manual-approve="true">
         ${escapeHtml(payload.manualReviewLabel || "Valider le prêt après revue manuelle")}
       </button>
     </div>
