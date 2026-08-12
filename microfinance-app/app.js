@@ -1,3 +1,28 @@
+/**
+ * CIREX Microfinance — portfolio and client scoring.
+ *
+ * PAR and client credit scores are computed by the shared AfriCredit engines
+ * in ../lib/africredit, which the platform test suite covers (`npm test`).
+ * The app must not re-implement that arithmetic: the investor projections
+ * commit to PAR30 < 5%, so the number has to be computed, not asserted.
+ */
+import { generatePortfolioSummary } from "../lib/africredit/par-calculator.js";
+import { calculateCreditScore } from "../lib/africredit/credit-scoring.js";
+
+/** PAR30 ceiling committed to in the investor projections. */
+const PAR30_COVENANT_PCT = 5;
+
+/**
+ * Seed fixture dates are relative to today. Hardcoded ones rot: the original
+ * demo loans were due in March 2026, so once real days-past-due drove PAR the
+ * whole fixture read as 140+ days late and PAR30 showed 100%.
+ */
+function seedDueDate(offsetDays) {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() + offsetDays);
+  return d.toISOString().slice(0, 10);
+}
+
 const STORAGE_KEY = "cirex_microfinance_state_v2";
 const API_BASE = window.location.protocol === "file:" ? "http://localhost:3100" : "";
 const SOURCE_STATUS_POLL_MS = 5 * 60 * 1000;
@@ -52,9 +77,9 @@ const seedState = {
     { id: "CL-1003", name: "Mariam Traore", sector: "Transformation d'huile de palme", region: "Yamoussoukro", phone: "+225 0703030303", branchId: "BR-01", officerId: "OF-01", notes: "Cliente en développement." }
   ],
   loans: [
-    { id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, outstanding: 640000, interestRate: 5.5, termMonths: 8, nextDueDate: "2026-03-25", status: "Current", riskFlag: "Low" },
-    { id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, outstanding: 930000, interestRate: 6, termMonths: 10, nextDueDate: "2026-03-21", status: "Watch", riskFlag: "Medium" },
-    { id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, outstanding: 410000, interestRate: 5.8, termMonths: 6, nextDueDate: "2026-03-18", status: "Late", riskFlag: "High" }
+    { id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, outstanding: 640000, interestRate: 5.5, termMonths: 8, nextDueDate: seedDueDate(12), guarantee: 320000, status: "Current", riskFlag: "Low" },
+    { id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, outstanding: 930000, interestRate: 6, termMonths: 10, nextDueDate: seedDueDate(-8), guarantee: 250000, status: "Watch", riskFlag: "Medium" },
+    { id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, outstanding: 410000, interestRate: 5.8, termMonths: 6, nextDueDate: seedDueDate(-41), guarantee: 90000, status: "Late", riskFlag: "High" }
   ],
   repayments: [
     { id: "RP-4001", loanId: "LN-2001", amount: 120000, paymentDate: "2026-03-10", note: "Encaissement en espèces" },
@@ -196,6 +221,10 @@ function normalizeState(saved) {
     const linkedClient = stateCopy.clients.find((client) => client.id === loan.clientId);
     return {
       ...loan,
+      // Loans saved before the guarantee field existed have no collateral on
+      // record. Default to 0 rather than inventing one: the client score then
+      // reports "garantie non renseignee" instead of a fabricated figure.
+      guarantee: Number(loan.guarantee) || 0,
       branchId: loan.branchId || linkedClient?.branchId || stateCopy.branches[0].id,
       officerId: loan.officerId || linkedClient?.officerId || stateCopy.officers[0].id
     };
@@ -458,6 +487,7 @@ function createLoanFromDraft(draft, { approvalMode = "auto", complianceDecision 
     officerId: draft.officerId,
     purpose: draft.purpose,
     principal: draft.principal,
+    guarantee: draft.guarantee || 0,
     outstanding: draft.principal,
     interestRate: draft.interestRate,
     termMonths: draft.termMonths,
@@ -603,6 +633,9 @@ function populateSelects() {
 
 function renderOverview() {
   const outstanding = sum(state.loans.map((loan) => loan.outstanding));
+  // PAR comes from the tested engine, driven by real days past due rather than
+  // the manually set status flag.
+  const par = portfolioSummary();
   const lateAmount = sum(state.loans.filter((loan) => loan.status === "Late").map((loan) => loan.outstanding));
   const watchAmount = sum(state.loans.filter((loan) => loan.status === "Watch").map((loan) => loan.outstanding));
   const totalCollected = sum(state.repayments.map((repayment) => repayment.amount));
@@ -614,7 +647,9 @@ function renderOverview() {
     { label: "Clients", value: String(state.clients.length), note: "Emprunteurs enregistrés" },
     { label: "Encours", value: money(outstanding), note: "Montant restant dû" },
     { label: "Retards", value: String(state.loans.filter((loan) => loan.status === "Late").length), note: "Suivi immédiat requis" },
-    { label: "PAR 30", value: pct(outstanding ? (lateAmount / outstanding) * 100 : 0), note: "Part des retards dans le portefeuille" }
+    { label: "PAR 30", value: pct(par.par30), note: "Moteur AfriCredit · plafond investisseur " + PAR30_COVENANT_PCT + " %" },
+    { label: "PAR 60", value: pct(par.par60), note: "Impayés de plus de 60 jours" },
+    { label: "PAR 90", value: pct(par.par90), note: "Impayés de plus de 90 jours" }
   ];
   els.statsGrid.innerHTML = stats.map((item) => `
     <article class="stat-card">
@@ -646,7 +681,14 @@ function renderOverview() {
     </div>
   `;
 
+  const covenantOk = par.par30 <= PAR30_COVENANT_PCT;
   const riskCards = [
+    {
+      title: "Engagement PAR30 < " + PAR30_COVENANT_PCT + " %",
+      body: pct(par.par30) + " mesuré sur " + money(Number(par.activeExposureCentimes) / 100) + " d'encours vivant — "
+        + (covenantOk ? "engagement respecté" : "engagement DÉPASSÉ, action requise")
+        + ". Calculé par le moteur AfriCredit sur les jours de retard réels."
+    },
     { title: "Exposition en retard", body: `${money(lateAmount)} se trouvent actuellement dans le seau de retard.` },
     { title: "Exposition sous surveillance", body: `${money(watchAmount)} sont actuellement sous surveillance.` },
     { title: "Score moyen client", body: `${averageScore().toFixed(0)} / 100 sur l'ensemble des clients.` }
@@ -662,8 +704,14 @@ function renderOverview() {
     getOfficerMetrics().map((item) => [item.officer.name, getBranch(item.officer.branchId)?.name || "-", money(item.outstanding), String(item.riskLoans)])
   );
   els.scoreTable.innerHTML = renderTable(
-    ["Client", "Score", "Niveau de risque", "Marge d'épargne"],
-    getClientScores().slice(0, 6).map((item) => [item.client.name, String(item.score), item.levelLabel, money(item.savingsBalance)])
+    ["Client", "Score", "Note", "Niveau de risque", "Retard max"],
+    getClientScores().slice(0, 6).map((item) => [
+      item.client.name,
+      item.status === "INCOMPLET" ? "-" : String(item.score),
+      item.grade,
+      item.levelLabel,
+      item.maxDpd > 0 ? item.maxDpd + " j" : "-"
+    ])
   );
 }
 
@@ -792,6 +840,51 @@ function getOfficerMetrics() {
   }).sort((a, b) => b.outstanding - a.outstanding);
 }
 
+/* -- AfriCredit bridge ----------------------------------------------------
+   The app records a status flag and a due date; AfriCredit needs days past
+   due and money in centimes. These adapters do only that conversion, so the
+   scoring arithmetic stays in the tested library. */
+
+/** Days a loan is past its due date; 0 when not overdue. */
+function loanDaysPastDue(loan, today = new Date()) {
+  if (!loan.nextDueDate) return 0;
+  const due = new Date(loan.nextDueDate + "T00:00:00Z");
+  if (Number.isNaN(due.getTime())) return 0;
+  const days = Math.floor((today.getTime() - due.getTime()) / 86400000);
+  return days > 0 ? days : 0;
+}
+
+/** Maps app loans onto the AfriCredit Loan shape (bigint centimes). */
+function toAfriCreditLoans(loans, today = new Date()) {
+  return loans.map((loan) => ({
+    id: loan.id,
+    disbursedAmount: BigInt(Math.round((loan.principal || 0) * 100)),
+    outstandingBalance: BigInt(Math.round((loan.outstanding || 0) * 100)),
+    daysPastDue: loanDaysPastDue(loan, today),
+    status: (loan.outstanding || 0) <= 0 ? "REPAID" : "ACTIVE"
+  }));
+}
+
+/** Portfolio summary (PAR30/60/90) from the tested engine. */
+function portfolioSummary() {
+  return generatePortfolioSummary(toAfriCreditLoans(state.loans));
+}
+
+/** Sector risk band derived from the client's declared sector. */
+function sectorRiskFor(client) {
+  const sector = String(client && client.sector ? client.sector : "").toLowerCase();
+  if (/transformation|industrie|usine/.test(sector)) return "HIGH";
+  if (/cacao|anacarde|palme|agricole|producteur|intrant/.test(sector)) return "MEDIUM";
+  if (/commerce|service|boutique|transport/.test(sector)) return "LOW";
+  return "MEDIUM";
+}
+
+/** Record completeness, used as the governance proxy and shown in the UI. */
+function governanceScoreFor(client) {
+  const fields = client ? [client.phone, client.branchId, client.officerId, client.notes] : [];
+  return fields.filter((value) => String(value || "").trim().length > 0).length * 25;
+}
+
 function getClientScores() {
   return state.clients.map((client) => scoreClient(client.id)).sort((a, b) => a.score - b.score);
 }
@@ -805,24 +898,59 @@ function scoreClient(clientId) {
   const client = getClient(clientId);
   const loans = state.loans.filter((loan) => loan.clientId === clientId);
   const savingsBalance = 0;
-  let score = 100;
 
-  loans.forEach((loan) => {
-    if (loan.status === "Late") score -= 35;
-    if (loan.status === "Watch") score -= 18;
-    if (loan.riskFlag === "High") score -= 15;
-    if (loan.riskFlag === "Medium") score -= 8;
-    if (loan.outstanding > loan.principal * 0.85) score -= 8;
-  });
+  const principal = sum(loans.map((loan) => loan.principal || 0));
+  const outstanding = sum(loans.map((loan) => loan.outstanding || 0));
+  const guarantee = sum(loans.map((loan) => loan.guarantee || 0));
+  const maxDpd = loans.reduce((worst, loan) => Math.max(worst, loanDaysPastDue(loan)), 0);
+  const repaymentCount = state.repayments.filter((repayment) =>
+    loans.some((loan) => loan.id === repayment.loanId)).length;
 
-  score = Math.max(0, Math.min(100, Math.round(score)));
+  // Every factor is derived from recorded data and surfaced in the UI, so a
+  // credit officer can see what drove the score.
+  const factors = {
+    paymentHistory: Math.max(0, Math.min(100, 100 - Math.min(90, maxDpd))),
+    debtRatio: principal > 0 ? Math.max(0, Math.min(100, (outstanding / principal) * 100)) : 0,
+    sectorRisk: sectorRiskFor(client),
+    governanceScore: governanceScoreFor(client),
+    collateralValue: guarantee,
+    cashFlowStability: maxDpd >= 30 ? "VOLATILE" : sectorRiskFor(client) === "MEDIUM" ? "VARIABLE" : "STABLE",
+    countryRisk: "CI"
+  };
+
+  // Collateral is a required engine input. Rather than invent one, say so.
+  if (!(guarantee > 0)) {
+    return {
+      client,
+      score: 0,
+      grade: "N/A",
+      status: "INCOMPLET",
+      levelLabel: "Garantie non renseignée",
+      levelClass: "negative",
+      pillClass: "score-low",
+      reason: "Aucune garantie enregistrée sur les crédits de ce client : le score AfriCredit ne peut pas être calculé.",
+      savingsBalance,
+      factors,
+      maxDpd,
+      repaymentCount,
+      engine: "africredit"
+    };
+  }
+
+  const assessment = calculateCreditScore(factors);
+  const score = assessment.score;
 
   let levelLabel = "Sain";
   let levelClass = "positive";
   let pillClass = "score-good";
   let reason = "Le comportement de remboursement reste satisfaisant.";
 
-  if (score < 50) {
+  if (assessment.status === "VETOED") {
+    levelLabel = "Veto";
+    levelClass = "negative";
+    pillClass = "score-low";
+    reason = "Veto AfriCredit : " + assessment.vetoReason + ".";
+  } else if (score < 50) {
     levelLabel = "Alerte élevée";
     levelClass = "negative";
     pillClass = "score-low";
@@ -831,10 +959,25 @@ function scoreClient(clientId) {
     levelLabel = "À surveiller";
     levelClass = "warning";
     pillClass = "score-mid";
-    reason = "Le dossier n'est pas critique, mais il mérite une attention régulière.";
+    reason = "Le dossier tient mais mérite un contrôle régulier.";
   }
 
-  return { client, score, levelLabel, levelClass, pillClass, savingsBalance, reason };
+  return {
+    client,
+    score,
+    grade: assessment.grade,
+    status: assessment.status,
+    vetoReason: assessment.vetoReason,
+    levelLabel,
+    levelClass,
+    pillClass,
+    reason,
+    savingsBalance,
+    factors,
+    maxDpd,
+    repaymentCount,
+    engine: "africredit"
+  };
 }
 
 function getClient(clientId) {
@@ -1181,6 +1324,7 @@ function buildLoanDraft(form) {
     officerName: officer?.name || officerId,
     purpose: String(form.get("purpose") || "").trim(),
     principal: Number(form.get("principal")),
+    guarantee: Number(form.get("guarantee") || 0),
     interestRate: Number(form.get("interestRate")),
     termMonths: Number(form.get("termMonths")),
     nextDueDate: String(form.get("nextDueDate") || ""),

@@ -123,6 +123,26 @@ Ces moteurs ont été **portés depuis `wasi-frontend` (`src/africredit`, `src/b
 
 Le harnais d'équivalence n'est pas versionné (il dépend de `node_modules` de l'app React). Pour le rejouer, bundler les originaux avec esbuild et comparer aux modules de `lib/`.
 
+## 1ter. Microfinance — PAR et scores calcules par AfriCredit
+
+`microfinance-app/app.js` est charge en **module** (`<script type="module">`) et importe les moteurs de `lib/africredit`. Il ne recalcule plus ces metriques lui-meme.
+
+| Avant | Maintenant |
+|---|---|
+| « PAR 30 » = encours des credits dont le *statut* etait « Late », divise par l'encours total | **PAR 30 / 60 / 90** calcules par `generatePortfolioSummary` sur les **jours de retard reels** (deduits de `nextDueDate`) |
+| Score client = 100 moins des penalites ad hoc | **`calculateCreditScore`** (7 facteurs ponderes + vetos), avec note AAA..D |
+| Aucun suivi de l'engagement investisseur | Carte dediee : `PAR30 < 5 %` respecte ou **DEPASSE** |
+
+### Points d'attention
+
+- **Garantie obligatoire.** Le moteur exige un collateral > 0. Le formulaire de credit a donc un champ « Garantie XOF », et `normalizeState` met les anciens credits a 0 : le score affiche alors « garantie non renseignee » au lieu d'un chiffre invente.
+- **Dates de la demo relatives.** Les credits de demonstration utilisent `seedDueDate(offset)`. Les dates figees pourrissaient : les credits etaient dus en mars 2026, donc des que le PAR a suivi les vrais jours de retard, tout le portefeuille ressortait a 140 jours de retard et le PAR30 affichait 100 %.
+- **Portefeuille de demo a 3 credits.** Un seul credit en retard represente plus de 5 % de l'encours : la carte d'engagement s'affiche donc en depassement. C'est arithmetiquement juste ; pour demontrer un PAR30 sous 5 %, il faut un portefeuille de demonstration plus large.
+
+### ⚠️ Creation de credit bloquee hors poste de dev
+
+Le formulaire passe par un controle juridique IA servi par `microfinance-app/server.mjs`. Ce serveur **ne demarre pas depuis ce depot** : il importe `../archives-bf-ai/lib/search-utils.mjs`, absent de `wasi-platform` (present dans le depot `WASI`), et requiert `express`, `@anthropic-ai/sdk` et des credits Anthropic. Sur GitHub Pages il n'y a aucun serveur : le controle echoue et **aucun credit ne peut etre enregistre en ligne**. Les vues lecture (portefeuille, PAR, scores) fonctionnent normalement.
+
 ## 2sexies. Les 5 composantes du score, et leur cadence
 
 | Composante | Borne | Source | Cadence |
