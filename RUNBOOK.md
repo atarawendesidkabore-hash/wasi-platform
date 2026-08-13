@@ -138,7 +138,19 @@ Le harnais d'équivalence n'est pas versionné (il dépend de `node_modules` de 
 
 - **Garantie obligatoire.** Le moteur exige un collateral > 0. Le formulaire de credit a donc un champ « Garantie XOF », et `normalizeState` met les anciens credits a 0 : le score affiche alors « garantie non renseignee » au lieu d'un chiffre invente.
 - **Dates de la demo relatives.** Les credits de demonstration utilisent `seedDueDate(offset)`. Les dates figees pourrissaient : les credits etaient dus en mars 2026, donc des que le PAR a suivi les vrais jours de retard, tout le portefeuille ressortait a 140 jours de retard et le PAR30 affichait 100 %.
-- **Portefeuille de demo a 3 credits.** Un seul credit en retard represente plus de 5 % de l'encours : la carte d'engagement s'affiche donc en depassement. C'est arithmetiquement juste ; pour demontrer un PAR30 sous 5 %, il faut un portefeuille de demonstration plus large.
+- **Portefeuille de demo a 26 credits.** Avec 3 credits seulement, un seul impaye pesait plus de 5 % de l'encours et la carte d'engagement s'affichait toujours en depassement. Le portefeuille compte desormais 3 agences, 5 agents, 22 clients (dont ~60 % de femmes, conformement a l'engagement investisseur) et 26 credits, pour **13 443 253 F CFA d'encours et un PAR30 de 3,24 %** — engagement respecte. Chaque credit est genere par `seedLoan()`, qui construit son echeancier reel et solde ses `settled` premieres echeances : les arrieres sont donc exacts et relatifs a la date du jour.
+
+- **`debtRatio` = charge de la dette / revenu, pas l'encours / le principal.** Le moteur AfriCredit refuse au-dela de 80 % : c'est un ratio de **service de la dette**. L'app lui passait `outstanding / principal`, c'est-a-dire le taux d'utilisation du credit — 100 % le jour du deblocage et 0 % a l'echeance. Resultat : **tout nouvel emprunteur etait vetoe** (score 0, note D) et un emprunteur presque rembourse paraissait irreprochable. La fiche client porte donc maintenant un **revenu mensuel net** obligatoire ; sans lui, aucun score n'est calcule (« revenu non renseigne ») plutot qu'un ratio de 0 % qui serait la valeur la plus flatteuse possible.
+
+- **Retards severes : le veto est desormais atteignable.** L'app plafonnait son `paymentHistory` a exactement 10 alors que le veto se declenche **en dessous** de 10 : un emprunteur a 200 jours de retard etait note 52,44 / BB au lieu d'etre refuse. L'echelle est maintenant calee sur le seuil PAR90 (0 j → 100, 45 j → 50, 90 j et plus → 0, donc veto).
+
+- **Garantie jugee en couverture, pas en francs absolus.** `COLLATERAL_FULL_SCORE_XOF` vaut 50 000 000 XOF, calibre pour du credit corporate : une garantie villageoise de 450 000 XOF y valait 0,9/100 et les 10 % de ponderation du facteur etaient **inertes** — deux clients aux garanties six fois differentes etaient separes de 0,07 point. `calculateCreditScore` accepte donc un `collateralFullScoreXof` optionnel (defaut inchange) et l'app microfinance lui passe le principal : le facteur lit alors « quelle part du montant prete est couverte ».
+
+- **Tresorerie alignee sur le risque sectoriel.** L'ancienne regle donnait `STABLE` (100) aux secteurs a risque **eleve** et ne penalisait que les secteurs moyens, annulant 4,0 des 4,5 points que le facteur sectoriel est cense separer. Un secteur eleve est desormais `VOLATILE`, moyen `VARIABLE`, faible `STABLE`, et 30 jours de retard imposent `VOLATILE` quel que soit le secteur.
+
+- **`countryRisk` lu sur la fiche.** Il etait code en dur a `"CI"`, donc le veto « transition militaire » (BF, ML, NE, GN) ne pouvait **jamais** se declencher. Le defaut reste ivoirien parce que l'institution l'est, pas parce que le champ serait fixe.
+
+- **Constantes de module en tete de fichier.** `SUPPORTED_COUNTRY_RISKS` et `CASH_FLOW_LABELS` sont declarees avant le bloc de donnees de demo. Declarees plus bas, elles se trouvaient dans leur *temporal dead zone* au moment ou le portefeuille de demonstration se construit et scorait les clients : `Cannot access 'SUPPORTED_COUNTRY_RISKS' before initialization`, et la liste des clients restait vide.
 
 ### Creation de credit : panne du filtre juridique = revue humaine
 

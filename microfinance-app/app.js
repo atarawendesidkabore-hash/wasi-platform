@@ -22,6 +22,25 @@ import {
 const PAR30_COVENANT_PCT = 5;
 
 /**
+ * Sovereign risk codes the credit engine knows. Declared HERE, at the top of the
+ * module, because the seed portfolio below is built during module evaluation and
+ * scores clients as it goes — a `const` declared further down sits in its
+ * temporal dead zone at that moment and throws
+ * "Cannot access 'SUPPORTED_COUNTRY_RISKS' before initialization".
+ */
+const SUPPORTED_COUNTRY_RISKS = new Set([
+  "BJ", "BF", "CV", "CI", "GM", "GH", "GN", "GW",
+  "LR", "ML", "MR", "NE", "NG", "SN", "SL", "TG"
+]);
+
+/** Display labels for the engine's cash-flow bands. Hoisted for the same reason. */
+const CASH_FLOW_LABELS = {
+  STABLE: "stable",
+  VARIABLE: "variable",
+  VOLATILE: "volatile"
+};
+
+/**
  * Seed fixture dates are relative to today. Hardcoded ones rot: the original
  * demo loans were due in March 2026, so once real days-past-due drove PAR the
  * whole fixture read as 140+ days late and PAR30 showed 100%.
@@ -61,6 +80,48 @@ const WASI_MARKET_TICKER = [
   { symbol: "SLBC", price: "12 800 XOF", change: 0.7 }
 ];
 
+/**
+ * Builds a demonstration loan whose arrears are EXACT.
+ *
+ * The schedule is generated and its first `settled` instalments marked paid, so
+ * the outstanding balance and the days past due follow from the engine rather
+ * than from hand-tuned figures that drift the moment a rate or term changes.
+ * `firstDueOffsetDays` is relative to today, so the fixture cannot rot.
+ */
+function seedLoan(spec) {
+  const firstDueDate = seedDueDate(spec.firstDueOffsetDays);
+  let schedule = buildSchedule({
+    principalCentimes: BigInt(spec.principal) * 100n,
+    annualRatePct: spec.rate,
+    termMonths: spec.term,
+    firstDueDate
+  });
+
+  const alreadyPaid = schedule.instalments
+    .slice(0, spec.settled || 0)
+    .reduce((sum, instalment) => sum + instalment.totalDueCentimes, 0n);
+  if (alreadyPaid > 0n) schedule = applyPayment(schedule, alreadyPaid).schedule;
+
+  const arrears = scheduleArrears(schedule, new Date().toISOString().slice(0, 10));
+
+  return {
+    id: spec.id,
+    clientId: spec.clientId,
+    branchId: spec.branchId,
+    officerId: spec.officerId,
+    purpose: spec.purpose,
+    principal: spec.principal,
+    guarantee: spec.guarantee,
+    outstanding: Number(schedulePrincipalOutstandingCentimes(schedule) / 100n),
+    interestRate: spec.rate,
+    termMonths: spec.term,
+    nextDueDate: arrears.nextDueDate || firstDueDate,
+    status: arrears.overdueInstalments > 0 ? "Late" : spec.watch ? "Watch" : "Current",
+    riskFlag: spec.riskFlag,
+    schedule: serialiseSchedule(schedule)
+  };
+}
+
 const seedState = {
   metadata: {
     institutionName: "CIREX Microfinance",
@@ -78,22 +139,74 @@ const seedState = {
   officers: [
     { id: "OF-01", name: "Jean Kouassi", branchId: "BR-01" },
     { id: "OF-02", name: "Awa Bamba", branchId: "BR-02" },
-    { id: "OF-03", name: "Serge Yao", branchId: "BR-03" }
+    { id: "OF-03", name: "Serge Yao", branchId: "BR-03" },
+    { id: "OF-04", name: "Fatoumata Cissé", branchId: "BR-02" },
+    { id: "OF-05", name: "Marc Adou", branchId: "BR-01" }
   ],
   clients: [
-    { id: "CL-1001", name: "Aminata Kone", sector: "Commerce d'anacarde", region: "Bouaké", phone: "+225 0701010101", branchId: "BR-02", officerId: "OF-02", notes: "Présence solide sur le marché local." },
-    { id: "CL-1002", name: "Kouadio N'Dri", sector: "Producteur de cacao", region: "Daloa", phone: "+225 0702020202", branchId: "BR-03", officerId: "OF-03", notes: "Trésorerie saisonnière à surveiller." },
-    { id: "CL-1003", name: "Mariam Traore", sector: "Transformation d'huile de palme", region: "Yamoussoukro", phone: "+225 0703030303", branchId: "BR-01", officerId: "OF-01", notes: "Cliente en développement." }
+    { id: "CL-1001", name: "Aminata Kone", sector: "Commerce d'anacarde", region: "Bouaké", phone: "+225 0701010101", branchId: "BR-02", officerId: "OF-02", monthlyIncome: 340000, notes: "Présence solide sur le marché local." },
+    { id: "CL-1002", name: "Kouadio N'Dri", sector: "Producteur de cacao", region: "Daloa", phone: "+225 0702020202", branchId: "BR-03", officerId: "OF-03", monthlyIncome: 240000, notes: "Trésorerie saisonnière à surveiller." },
+    { id: "CL-1003", name: "Mariam Traore", sector: "Transformation d'huile de palme", region: "Yamoussoukro", phone: "+225 0703030303", branchId: "BR-01", officerId: "OF-01", monthlyIncome: 170000, notes: "Cliente en développement." },
+    { id: "CL-1004", name: "Adjoua Bakayoko", sector: "Commerce de vivriers", region: "Abidjan", phone: "+225 0704040404", branchId: "BR-01", officerId: "OF-05", monthlyIncome: 395000, notes: "Cycle de rotation court, discipline régulière." },
+    { id: "CL-1005", name: "Ibrahim Ouattara", sector: "Transport de marchandises", region: "Bouaké", phone: "+225 0705050505", branchId: "BR-02", officerId: "OF-04", monthlyIncome: 210000, notes: "Deux véhicules nantis." },
+    { id: "CL-1006", name: "Salimata Diarra", sector: "Commerce de tissus", region: "Abidjan", phone: "+225 0706060606", branchId: "BR-01", officerId: "OF-01", monthlyIncome: 440000, notes: "Cliente fidèle, troisième cycle." },
+    { id: "CL-1007", name: "Yao Kpangni", sector: "Producteur d'hévéa", region: "Daloa", phone: "+225 0707070707", branchId: "BR-03", officerId: "OF-03", monthlyIncome: 245000, notes: "Plantation en production." },
+    { id: "CL-1008", name: "Fatou Sangare", sector: "Restauration de rue", region: "Bouaké", phone: "+225 0708080808", branchId: "BR-02", officerId: "OF-02", monthlyIncome: 155000, notes: "Recettes journalières stables." },
+    { id: "CL-1009", name: "Bintou Coulibaly", sector: "Commerce de karité", region: "Bouaké", phone: "+225 0709090909", branchId: "BR-02", officerId: "OF-04", monthlyIncome: 360000, notes: "Groupement de dix femmes." },
+    { id: "CL-1010", name: "Emmanuel Gbagbo", sector: "Menuiserie", region: "Abidjan", phone: "+225 0710101010", branchId: "BR-01", officerId: "OF-05", monthlyIncome: 185000, notes: "Atelier équipé, carnet de commandes." },
+    { id: "CL-1011", name: "Rokia Sidibe", sector: "Commerce de poisson fumé", region: "Abidjan", phone: "+225 0711111111", branchId: "BR-01", officerId: "OF-01", monthlyIncome: 165000, notes: "Approvisionnement à San-Pédro." },
+    { id: "CL-1012", name: "Seydou Bamba", sector: "Élevage de volaille", region: "Daloa", phone: "+225 0712121212", branchId: "BR-03", officerId: "OF-03", monthlyIncome: 460000, notes: "Deux bâtiments de mille sujets." },
+    { id: "CL-1013", name: "Akissi Yapo", sector: "Coiffure et cosmétique", region: "Abidjan", phone: "+225 0713131313", branchId: "BR-01", officerId: "OF-05", monthlyIncome: 130000, notes: "Salon en zone dense." },
+    { id: "CL-1014", name: "Mamadou Keita", sector: "Quincaillerie", region: "Bouaké", phone: "+225 0714141414", branchId: "BR-02", officerId: "OF-02", monthlyIncome: 190000, notes: "Stock diversifié." },
+    { id: "CL-1015", name: "Djeneba Toure", sector: "Maraîchage", region: "Bouaké", phone: "+225 0715151515", branchId: "BR-02", officerId: "OF-04", monthlyIncome: 160000, notes: "Parcelle irriguée d'un hectare." },
+    { id: "CL-1016", name: "Christelle Assi", sector: "Commerce de céréales", region: "Daloa", phone: "+225 0716161616", branchId: "BR-03", officerId: "OF-03", monthlyIncome: 205000, notes: "Stockage en magasin loué." },
+    { id: "CL-1017", name: "Abdoulaye Sow", sector: "Réparation de motos", region: "Abidjan", phone: "+225 0717171717", branchId: "BR-01", officerId: "OF-01", monthlyIncome: 150000, notes: "Clientèle de taxis-motos." },
+    { id: "CL-1018", name: "Nafissatou Diallo", sector: "Commerce d'anacarde", region: "Bouaké", phone: "+225 0718181818", branchId: "BR-02", officerId: "OF-02", monthlyIncome: 300000, notes: "Campagne d'achat en cours." },
+    { id: "CL-1019", name: "Koffi Aboa", sector: "Producteur de cacao", region: "Daloa", phone: "+225 0719191919", branchId: "BR-03", officerId: "OF-03", monthlyIncome: 230000, notes: "Coopérative certifiée." },
+    { id: "CL-1020", name: "Habiba Cisse", sector: "Boulangerie artisanale", region: "Abidjan", phone: "+225 0720202020", branchId: "BR-01", officerId: "OF-05", monthlyIncome: 195000, notes: "Four à gaz financé au cycle précédent." },
+    { id: "CL-1021", name: "Awa Zongo", sector: "Commerce de savon", region: "Bouaké", phone: "+225 0721212121", branchId: "BR-02", officerId: "OF-04", monthlyIncome: 120000, notes: "Production artisanale et revente." },
+    { id: "CL-1022", name: "Lucien Boni", sector: "Pêche lagunaire", region: "Abidjan", phone: "+225 0722222222", branchId: "BR-01", officerId: "OF-01", monthlyIncome: 210000, notes: "Pirogue motorisée nantie." }
   ],
+  // 26 crédits sur 3 agences. Un seul dossier dépasse 30 jours de retard, ce
+  // qui place le PAR30 sous l'engagement de 5 % — un portefeuille de trois
+  // crédits ne pouvait pas le démontrer, un seul impayé y pesant 20 %.
   loans: [
-    { id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, outstanding: 640000, interestRate: 5.5, termMonths: 8, nextDueDate: seedDueDate(12), guarantee: 320000, status: "Current", riskFlag: "Low" },
-    { id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, outstanding: 930000, interestRate: 6, termMonths: 10, nextDueDate: seedDueDate(-8), guarantee: 250000, status: "Watch", riskFlag: "Medium" },
-    { id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, outstanding: 410000, interestRate: 5.8, termMonths: 6, nextDueDate: seedDueDate(-100), guarantee: 90000, status: "Late", riskFlag: "High" }
+    seedLoan({ id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, guarantee: 320000, rate: 5.5, term: 8, firstDueOffsetDays: -55, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, guarantee: 250000, rate: 6, term: 10, firstDueOffsetDays: -70, settled: 2, watch: true, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, guarantee: 90000, rate: 5.8, term: 6, firstDueOffsetDays: -105, settled: 2, riskFlag: "High" }),
+    seedLoan({ id: "LN-2004", clientId: "CL-1004", branchId: "BR-01", officerId: "OF-05", purpose: "Fonds de roulement vivriers", principal: 400000, guarantee: 120000, rate: 5.5, term: 6, firstDueOffsetDays: -25, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2005", clientId: "CL-1005", branchId: "BR-02", officerId: "OF-04", purpose: "Réparation de camionnette", principal: 900000, guarantee: 450000, rate: 6, term: 12, firstDueOffsetDays: -50, settled: 2, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2006", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Achat de tissus en gros", principal: 550000, guarantee: 180000, rate: 5.5, term: 8, firstDueOffsetDays: -20, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2007", clientId: "CL-1007", branchId: "BR-03", officerId: "OF-03", purpose: "Entretien de plantation d'hévéa", principal: 750000, guarantee: 300000, rate: 5.8, term: 10, firstDueOffsetDays: -40, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2008", clientId: "CL-1008", branchId: "BR-02", officerId: "OF-02", purpose: "Équipement de restauration", principal: 300000, guarantee: 90000, rate: 5.5, term: 6, firstDueOffsetDays: 8, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2009", clientId: "CL-1009", branchId: "BR-02", officerId: "OF-04", purpose: "Crédit groupe karité", principal: 480000, guarantee: 150000, rate: 6, term: 8, firstDueOffsetDays: -35, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2010", clientId: "CL-1010", branchId: "BR-01", officerId: "OF-05", purpose: "Machines de menuiserie", principal: 820000, guarantee: 400000, rate: 6, term: 12, firstDueOffsetDays: -15, settled: 1, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2011", clientId: "CL-1011", branchId: "BR-01", officerId: "OF-01", purpose: "Achat de poisson à San-Pédro", principal: 350000, guarantee: 100000, rate: 5.5, term: 6, firstDueOffsetDays: -28, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2012", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Provende et poussins", principal: 600000, guarantee: 200000, rate: 5.8, term: 8, firstDueOffsetDays: -45, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2013", clientId: "CL-1013", branchId: "BR-01", officerId: "OF-05", purpose: "Fournitures de salon", principal: 280000, guarantee: 80000, rate: 5.5, term: 6, firstDueOffsetDays: 12, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2014", clientId: "CL-1014", branchId: "BR-02", officerId: "OF-02", purpose: "Réassort de quincaillerie", principal: 700000, guarantee: 260000, rate: 6, term: 10, firstDueOffsetDays: -22, settled: 1, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2015", clientId: "CL-1015", branchId: "BR-02", officerId: "OF-04", purpose: "Système d'irrigation", principal: 520000, guarantee: 190000, rate: 5.8, term: 10, firstDueOffsetDays: -18, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2016", clientId: "CL-1016", branchId: "BR-03", officerId: "OF-03", purpose: "Stock de céréales", principal: 640000, guarantee: 210000, rate: 6, term: 8, firstDueOffsetDays: -30, settled: 1, watch: true, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2017", clientId: "CL-1017", branchId: "BR-01", officerId: "OF-01", purpose: "Pièces détachées motos", principal: 320000, guarantee: 95000, rate: 5.5, term: 6, firstDueOffsetDays: 5, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2018", clientId: "CL-1018", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne anacarde 2026", principal: 780000, guarantee: 290000, rate: 5.8, term: 8, firstDueOffsetDays: -12, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2019", clientId: "CL-1019", branchId: "BR-03", officerId: "OF-03", purpose: "Séchage et conditionnement cacao", principal: 950000, guarantee: 380000, rate: 6, term: 12, firstDueOffsetDays: -60, settled: 2, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2020", clientId: "CL-1020", branchId: "BR-01", officerId: "OF-05", purpose: "Matières premières boulangerie", principal: 430000, guarantee: 140000, rate: 5.5, term: 6, firstDueOffsetDays: -26, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2021", clientId: "CL-1021", branchId: "BR-02", officerId: "OF-04", purpose: "Intrants savonnerie", principal: 260000, guarantee: 75000, rate: 5.5, term: 6, firstDueOffsetDays: 15, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2022", clientId: "CL-1022", branchId: "BR-01", officerId: "OF-01", purpose: "Filets et moteur hors-bord", principal: 680000, guarantee: 250000, rate: 5.8, term: 10, firstDueOffsetDays: -33, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2023", clientId: "CL-1004", branchId: "BR-01", officerId: "OF-05", purpose: "Extension de boutique", principal: 500000, guarantee: 170000, rate: 6, term: 8, firstDueOffsetDays: 20, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2024", clientId: "CL-1009", branchId: "BR-02", officerId: "OF-04", purpose: "Deuxième cycle groupe karité", principal: 540000, guarantee: 185000, rate: 6, term: 8, firstDueOffsetDays: -10, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2025", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Bâtiment d'élevage", principal: 870000, guarantee: 330000, rate: 6, term: 12, firstDueOffsetDays: -38, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2026", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Stock saison des fêtes", principal: 460000, guarantee: 160000, rate: 5.5, term: 6, firstDueOffsetDays: 3, settled: 0, riskFlag: "Low" })
   ],
   repayments: [
-    { id: "RP-4001", loanId: "LN-2001", amount: 120000, paymentDate: "2026-03-10", note: "Encaissement en espèces" },
-    { id: "RP-4002", loanId: "LN-2002", amount: 95000, paymentDate: "2026-03-12", note: "Paiement mobile money" },
-    { id: "RP-4003", loanId: "LN-2003", amount: 40000, paymentDate: "2026-03-03", note: "Remboursement partiel sur le terrain" }
+    { id: "RP-4001", loanId: "LN-2001", amount: 120000, paymentDate: seedDueDate(-3), note: "Encaissement en espèces" },
+    { id: "RP-4002", loanId: "LN-2018", amount: 98000, paymentDate: seedDueDate(-4), note: "Paiement mobile money" },
+    { id: "RP-4003", loanId: "LN-2009", amount: 62000, paymentDate: seedDueDate(-6), note: "Collecte de groupe" },
+    { id: "RP-4004", loanId: "LN-2014", amount: 75000, paymentDate: seedDueDate(-7), note: "Encaissement guichet Bouaké" },
+    { id: "RP-4005", loanId: "LN-2022", amount: 70000, paymentDate: seedDueDate(-9), note: "Versement après vente de pêche" },
+    { id: "RP-4006", loanId: "LN-2007", amount: 82000, paymentDate: seedDueDate(-11), note: "Recette de saignée" },
+    { id: "RP-4007", loanId: "LN-2019", amount: 90000, paymentDate: seedDueDate(-13), note: "Livraison coopérative" },
+    { id: "RP-4008", loanId: "LN-2003", amount: 40000, paymentDate: seedDueDate(-16), note: "Remboursement partiel sur le terrain" }
   ]
 };
 
@@ -356,6 +469,7 @@ function bindForms() {
       phone: form.get("phone").trim(),
       branchId: form.get("branchId"),
       officerId: form.get("officerId"),
+      monthlyIncome: Math.max(0, Math.round(Number(form.get("monthlyIncome")) || 0)),
       notes: form.get("notes").trim()
     });
     persistAndRefresh(event.currentTarget);
@@ -900,6 +1014,14 @@ function renderClients() {
           <span>Crédits ${money(loanTotal)}</span>
         </div>
         <div class="record-row">
+          <span class="muted">Revenu declare ${client.monthlyIncome > 0 ? money(client.monthlyIncome) + "/mois" : "non renseigne"}</span>
+          <span class="muted">Charge de dette ${score.monthlyDebtService > 0 ? money(score.monthlyDebtService) + "/mois - " + pct(round1(score.factors.debtRatio)) + " du revenu" : "aucune"}</span>
+        </div>
+        <div class="record-row">
+          <span class="muted">Couverture garantie ${score.collateralCoverage !== null ? pct(round1(score.collateralCoverage)) + " du montant prete" : "-"}</span>
+          <span class="muted">Tresorerie ${CASH_FLOW_LABELS[score.factors.cashFlowStability] || "-"}</span>
+        </div>
+        <div class="record-row">
           <span class="muted">${score.reason}</span>
           <span class="${score.levelClass}">${score.levelLabel}</span>
         </div>
@@ -1130,6 +1252,35 @@ function loanDaysPastDue(loan, today = new Date()) {
   return days > 0 ? days : 0;
 }
 
+/**
+ * The loan monthly instalment: the next unpaid one, or the last if settled.
+ *
+ * Falls back to a straight-line estimate when no schedule can be built, so a
+ * loan with unparseable terms still contributes to the debt-service ratio
+ * instead of silently counting as zero - an omission would flatter the client.
+ */
+function loanMonthlyInstalment(loan) {
+  const schedule = loanSchedule(loan);
+  if (schedule) {
+    const next = schedule.instalments.find((i) => i.paidCentimes < i.totalDueCentimes);
+    const instalment = next || schedule.instalments[schedule.instalments.length - 1];
+    if (instalment) return Number(instalment.totalDueCentimes / 100n);
+  }
+  const term = Number(loan.termMonths) || 1;
+  return Math.round((Number(loan.principal) || 0) / term);
+}
+
+/**
+ * Monthly debt service across a client live loans.
+ *
+ * Settled loans are excluded: a repaid credit is no longer a claim on income.
+ */
+function clientMonthlyDebtService(loans) {
+  return sum(loans
+    .filter((loan) => (Number(loan.outstanding) || 0) > 0)
+    .map(loanMonthlyInstalment));
+}
+
 /** Instalment-level arrears summary for display. Null when no schedule. */
 function loanArrears(loan) {
   const schedule = loanSchedule(loan);
@@ -1162,10 +1313,41 @@ function sectorRiskFor(client) {
   return "MEDIUM";
 }
 
+/**
+ * Cash-flow stability for the credit engine.
+ *
+ * Arrears dominate: a client 30+ days late has demonstrated volatile cash flow
+ * whatever their sector. Otherwise it follows sector risk in the SAME direction -
+ * higher sector risk means less predictable receipts.
+ *
+ * The previous version read `sectorRisk === "MEDIUM" ? "VARIABLE" : "STABLE"`,
+ * which handed HIGH-risk sectors the top STABLE score of 100 and penalised only
+ * MEDIUM ones. That clawed back 4,0 of the 4,5 points the sector factor is meant
+ * to separate them by, leaving an industrial transformation client and a trader
+ * half a point apart.
+ */
+function cashFlowStabilityFor(client, maxDpd) {
+  if (maxDpd >= 30) return "VOLATILE";
+  const sectorRisk = sectorRiskFor(client);
+  if (sectorRisk === "HIGH" || sectorRisk === "CRITICAL") return "VOLATILE";
+  if (sectorRisk === "MEDIUM") return "VARIABLE";
+  return "STABLE";
+}
+
 /** Record completeness, used as the governance proxy and shown in the UI. */
 function governanceScoreFor(client) {
   const fields = client ? [client.phone, client.branchId, client.officerId, client.notes] : [];
   return fields.filter((value) => String(value || "").trim().length > 0).length * 25;
+}
+
+/**
+ * Sovereign risk code for the engine. Falls back to the institution's own
+ * country. Unknown codes are rejected rather than passed through, because the
+ * engine would look them up in its country map and yield NaN.
+ */
+function countryRiskFor(client) {
+  const code = String((client && client.countryRisk) || "").trim().toUpperCase();
+  return SUPPORTED_COUNTRY_RISKS.has(code) ? code : "CI";
 }
 
 function getClientScores() {
@@ -1185,6 +1367,8 @@ function scoreClient(clientId) {
   const principal = sum(loans.map((loan) => loan.principal || 0));
   const outstanding = sum(loans.map((loan) => loan.outstanding || 0));
   const guarantee = sum(loans.map((loan) => loan.guarantee || 0));
+  const monthlyIncome = Number(client && client.monthlyIncome) || 0;
+  const monthlyDebtService = clientMonthlyDebtService(loans);
   const maxDpd = loans.reduce((worst, loan) => Math.max(worst, loanDaysPastDue(loan)), 0);
   const repaymentCount = state.repayments.filter((repayment) =>
     loans.some((loan) => loan.id === repayment.loanId)).length;
@@ -1192,14 +1376,62 @@ function scoreClient(clientId) {
   // Every factor is derived from recorded data and surfaced in the UI, so a
   // credit officer can see what drove the score.
   const factors = {
-    paymentHistory: Math.max(0, Math.min(100, 100 - Math.min(90, maxDpd))),
-    debtRatio: principal > 0 ? Math.max(0, Math.min(100, (outstanding / principal) * 100)) : 0,
+    // Scaled against the 90-day PAR90 write-off threshold: 0 days late scores
+    // 100, 45 days scores 50, and 90+ days scores 0 - which trips the engine's
+    // "payment history below minimum" veto.
+    //
+    // The previous form, 100 - Math.min(90, maxDpd), floored this at EXACTLY 10
+    // while the veto fires below 10, so it could never trigger: a borrower 200
+    // days past due was scored 52,44 and graded BB instead of being refused.
+    paymentHistory: Math.max(0, Math.min(100, 100 - Math.round((maxDpd * 100) / 90))),
+    // AfriCredit debtRatio is a DEBT-SERVICE ratio: the share of monthly income
+    // committed to repayment, which is what its >80 veto refuses. It is NOT loan
+    // utilisation (outstanding / principal) - that reads 100 % on disbursement
+    // day and 0 % at maturity, so using it vetoed every new borrower and
+    // flattered every nearly-repaid one.
+    debtRatio: monthlyIncome > 0
+      ? Math.max(0, Math.min(100, (monthlyDebtService / monthlyIncome) * 100))
+      : 0,
     sectorRisk: sectorRiskFor(client),
     governanceScore: governanceScoreFor(client),
     collateralValue: guarantee,
-    cashFlowStability: maxDpd >= 30 ? "VOLATILE" : sectorRiskFor(client) === "MEDIUM" ? "VARIABLE" : "STABLE",
-    countryRisk: "CI"
+    cashFlowStability: cashFlowStabilityFor(client, maxDpd),
+    // Collateral is judged as COVERAGE of the amount lent, not in absolute
+    // francs. The engine's default anchor of 50 000 000 XOF is corporate-scale:
+    // against it a 450 000 XOF guarantee scores 0,9/100, so the factor's whole
+    // 10 % weight was inert and no client could be distinguished by their
+    // guarantee. Anchoring on the principal makes the factor read "how much of
+    // the loan is secured".
+    collateralFullScoreXof: principal > 0 ? principal : undefined,
+    // Read from the record rather than hardcoded: with a fixed "CI" the engine's
+    // military-transition veto (BF, ML, NE, GN) could never fire, which would
+    // silently mis-rate any cross-border lending. Ivorian is the default because
+    // this institution is Ivorian, not because the field cannot vary.
+    countryRisk: countryRiskFor(client)
   };
+
+  // Income drives the debt-service ratio. Without it the engine would read a
+  // ratio of 0 % - the most creditworthy value there is - so refuse to score.
+  if (loans.length > 0 && !(monthlyIncome > 0)) {
+    return {
+      client,
+      score: 0,
+      grade: "N/A",
+      status: "INCOMPLET",
+      levelLabel: "Revenu non renseigne",
+      levelClass: "negative",
+      pillClass: "score-low",
+      reason: "Revenu mensuel absent de la fiche client : la charge de la dette ne peut pas etre rapportee aux ressources, donc aucun score n'est calcule.",
+      savingsBalance,
+      factors,
+      maxDpd,
+      repaymentCount,
+      monthlyIncome,
+      monthlyDebtService,
+      collateralCoverage: principal > 0 ? (guarantee / principal) * 100 : null,
+      engine: "africredit"
+    };
+  }
 
   // Collateral is a required engine input. Rather than invent one, say so.
   if (!(guarantee > 0)) {
@@ -1216,6 +1448,9 @@ function scoreClient(clientId) {
       factors,
       maxDpd,
       repaymentCount,
+      monthlyIncome,
+      monthlyDebtService,
+      collateralCoverage: principal > 0 ? (guarantee / principal) * 100 : null,
       engine: "africredit"
     };
   }
@@ -1259,6 +1494,9 @@ function scoreClient(clientId) {
     factors,
     maxDpd,
     repaymentCount,
+    monthlyIncome,
+    monthlyDebtService,
+    collateralCoverage: principal > 0 ? (guarantee / principal) * 100 : null,
     engine: "africredit"
   };
 }
@@ -1289,6 +1527,10 @@ function sum(values) {
 
 function money(value) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(value);
+}
+
+function round1(value) {
+  return Math.round(Number(value) * 10) / 10;
 }
 
 function pct(value) {

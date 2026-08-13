@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260812e">
+  <link rel="stylesheet" href="./styles.css?v=20260813a">
 </head>
 <body>
-  <script src="../wasi-network.js?v=20260812e"></script>
+  <script src="../wasi-network.js?v=20260813a"></script>
   <div class="page-orb orb-a"></div>
   <div class="page-orb orb-b"></div>
 
@@ -117,6 +117,7 @@
               <label>Secteur d'activité<input name="sector" required></label>
               <label>Localité<input name="region" required></label>
               <label>Téléphone<input name="phone" required></label>
+              <label>Revenu mensuel net (F CFA)<input name="monthlyIncome" type="number" min="0" step="1000" required></label>
               <label>Agence<select name="branchId" id="client-branch-select" required></select></label>
               <label>Agent de crédit<select name="officerId" id="client-officer-select" required></select></label>
               <label class="full-span">Notes<textarea name="notes" rows="3"></textarea></label>
@@ -273,6 +274,6 @@
   </div>
 
   <!-- module: app.js imports the shared AfriCredit engines from ../lib -->
-  <script type="module" src="./app.js?v=20260812e"></script>
+  <script type="module" src="./app.js?v=20260813a"></script>
 </body>
 </html>

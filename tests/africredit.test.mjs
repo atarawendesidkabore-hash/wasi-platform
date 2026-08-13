@@ -23,6 +23,7 @@ import {
   DECISION_COMPONENT_WEIGHTS,
   WASIExpertScoringEngine,
 } from "../lib/africredit/expert-scoring-engine.js";
+import { buildSchedule } from "../lib/africredit/amortisation.js";
 
 const baseInput = {
   paymentHistory: 82,
@@ -117,6 +118,89 @@ test("vetoes for volatile cash flow with debt ratio above 60%", () => {
   });
   assert.equal(result.status, "VETOED");
   assert.match(result.vetoReason, /Volatile cash flow/);
+});
+
+// ── What debtRatio actually means ──────────────────────────────────────────
+// Regression guard. The microfinance app first fed this input loan utilisation
+// (outstanding / principal), which reads 100 % the day a loan is disbursed and
+// 0 % at maturity. Every new borrower was therefore vetoed on "debt ratio above
+// 80%" while a nearly-repaid one scored as pristine — the metric inverted.
+// debtRatio is a DEBT-SERVICE ratio: monthly instalment ÷ monthly income.
+test("debtRatio is debt service over income, not loan utilisation", () => {
+  // A borrower who took 850 000 XOF over 8 months at 5,5 % yesterday. The whole
+  // principal is still outstanding, so utilisation is 100 %.
+  const schedule = buildSchedule({
+    principalCentimes: 850_000n * 100n,
+    annualRatePct: 5.5,
+    termMonths: 8,
+    firstDueDate: "2026-09-01",
+  });
+  const monthlyInstalment = Number(schedule.instalments[0].totalDueCentimes / 100n);
+  const monthlyIncome = 340_000;
+  const debtService = (monthlyInstalment / monthlyIncome) * 100;
+
+  assert.ok(debtService < 80, `debt service ${debtService} should be affordable`);
+
+  // Fed the service ratio, the engine scores the loan.
+  const scored = calculateCreditScore({ ...baseInput, debtRatio: debtService });
+  assert.equal(scored.status, "APPROVED");
+  assert.ok(scored.score > 0);
+
+  // Fed utilisation instead, the same sound borrower is refused outright. This
+  // is the defect the assertion above exists to prevent.
+  const utilisation = calculateCreditScore({ ...baseInput, debtRatio: 100 });
+  assert.equal(utilisation.status, "VETOED");
+});
+
+// ── Collateral anchor ──────────────────────────────────────────────────────
+// The 50 000 000 XOF default is corporate-scale. Microfinance guarantees are
+// 75 000 - 450 000 XOF, which scored 0,15-0,9 out of 100 and made the factor's
+// entire 10 % weight inert: no client could be told apart by their guarantee.
+test("collateral anchor defaults to 50M and is overridable", () => {
+  const guarantee = 450_000;
+
+  // Default: a village guarantee is worth 0,9/100 on the factor.
+  const corporate = calculateCreditScore({ ...baseInput, collateralValue: guarantee });
+  const tiny = calculateCreditScore({ ...baseInput, collateralValue: 75_000 });
+  assert.ok(Math.abs(corporate.score - tiny.score) < 0.1,
+    "with the corporate anchor a 6x bigger guarantee barely moves the score");
+
+  // Anchored on the principal, the factor becomes a coverage ratio: 450 000 of
+  // 900 000 lent is 50 % coverage, worth 5 of the 10 available points.
+  const covered = calculateCreditScore({
+    ...baseInput, collateralValue: guarantee, collateralFullScoreXof: 900_000 });
+  assert.ok(covered.score - corporate.score > 4.5,
+    `coverage anchoring should add ~5 points, added ${covered.score - corporate.score}`);
+
+  // Coverage above 100 % is capped, never rewarded beyond full security.
+  const over = calculateCreditScore({
+    ...baseInput, collateralValue: 2_000_000, collateralFullScoreXof: 900_000 });
+  const exact = calculateCreditScore({
+    ...baseInput, collateralValue: 900_000, collateralFullScoreXof: 900_000 });
+  assert.equal(over.score, exact.score);
+
+  // A zero or absent anchor must fall back to the default, not divide by zero.
+  const fallback = calculateCreditScore({
+    ...baseInput, collateralValue: guarantee, collateralFullScoreXof: 0 });
+  assert.equal(fallback.score, corporate.score);
+});
+
+// Severe arrears must be able to reach this veto. The microfinance app used to
+// clamp its payment-history input at exactly 10 while the veto fires below 10,
+// so a borrower 200 days past due scored 52,44 and was graded BB.
+test("payment history of 0 vetoes, and 90-day arrears can reach it", () => {
+  const writeOff = calculateCreditScore({ ...baseInput, paymentHistory: 0 });
+  assert.equal(writeOff.status, "VETOED");
+  assert.match(writeOff.vetoReason, /Payment history/);
+
+  // The app scales days past due against the 90-day PAR90 threshold.
+  const scale = (dpd) => Math.max(0, Math.min(100, 100 - Math.round((dpd * 100) / 90)));
+  assert.equal(scale(0), 100);
+  assert.equal(scale(45), 50);
+  assert.equal(scale(90), 0);
+  assert.equal(scale(200), 0);
+  assert.equal(calculateCreditScore({ ...baseInput, paymentHistory: scale(90) }).status, "VETOED");
+  assert.equal(calculateCreditScore({ ...baseInput, paymentHistory: scale(200) }).status, "VETOED");
 });
 
 test("rejects out-of-range and non-positive inputs", () => {
