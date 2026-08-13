@@ -20,7 +20,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run tests (AfriCredit + banking engine)
+      # npm test discovers every tests/**/*.test.mjs via scripts/run-tests.mjs,
+      # so a new suite needs no change here and no Node glob support.
+      - name: Run tests
         run: npm test
 
       - name: Check data scripts parse
