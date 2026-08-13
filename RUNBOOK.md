@@ -100,7 +100,7 @@ Les taux du jour proviennent de `data/market-live.json` (voir ci-dessous) ; l'EU
 Le dépôt reste **sans dépendance et sans étape de build**. Les tests utilisent le lanceur intégré de Node :
 
 ```bash
-npm test          # 59 tests, sans aucune dépendance
+npm test          # 63 tests, sans aucune dépendance
 ```
 
 | Module | Rôle | Tests |
@@ -168,6 +168,7 @@ Le PAR se mesure sur **l'echeance impayee la plus ancienne**, pas sur une date u
 | Base de calcul | Annuite (echeance totale constante), interets sur solde degressif |
 | Taux | `interestRate` est **annuel nominal** ; taux periodique = taux / 12 / 100 |
 | Monnaie | bigint en centimes XOF, jamais de flottant |
+| Granularite | **franc entier** : chaque echeance est un multiple de 100 centimes |
 | Derniere echeance | Absorbe le residu d'arrondi : principal rembourse = principal decaisse **au centime** |
 | Imputation d'un paiement | Echeance la plus ancienne d'abord ; dans une echeance, interets avant principal |
 | Encours pour le PAR | Principal restant du (`schedulePrincipalOutstandingCentimes`), pas principal + interets |
@@ -179,7 +180,16 @@ Apres un remboursement, `outstanding`, `nextDueDate` et le statut sont **derives
 
 ⚠️ Un echeancier vit en bigint : **ne jamais le stocker sur l'objet credit**, `JSON.stringify` leve une exception sur BigInt et casserait `saveState()`. Il est serialise en chaines via `serialiseSchedule` dans `loan.schedule`.
 
-Note de convention : le XOF n'a pas de sous-unite en circulation. Le moteur calcule en centimes par coherence avec `lib/banking-engine.js` ; l'affichage arrondit au franc (`maximumFractionDigits: 0`).
+### Francs entiers, pas seulement a l'affichage
+
+Le XOF n'a **pas de sous-unite en circulation** : un guichetier ne peut pas encaisser 53 centimes. Une echeance de 110 163,53 XOF n'est donc pas collectable. Consequence sur tout le moteur :
+
+- chaque echeance (principal, interets, total) est arrondie au **franc entier** (multiple de 100 centimes), la derniere absorbant le residu — le principal rembourse reste egal au principal decaisse **exactement** ;
+- les paiements entrent en francs entiers (`BigInt(Math.round(montant)) * 100n`) ;
+- `loan.outstanding` est donc un **entier**, plus 327 350,53 mais 327 352 ;
+- les montants restent stockes en centimes pour rester coherents avec `lib/banking-engine.js`, mais contraints au franc.
+
+`roundingUnitCentimes` (defaut `100n`) permet de repasser au centime pour une devise qui en a une : `buildSchedule({ ..., roundingUnitCentimes: 1n })`. Quatre tests verrouillent l'invariant, dont la conservation du principal apres arrondi.
 
 Controle : sur la demo, PAR30 passe de **20,71 % a 0 %** quand l'echeance en retard de Mariam Traore est reglee — l'exact scenario impossible avant.
 

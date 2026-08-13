@@ -252,3 +252,58 @@ test("a fully paid schedule owes no principal", () => {
   const total = scheduleOutstandingCentimes(s);
   assert.equal(schedulePrincipalOutstandingCentimes(applyPayment(s, total).schedule), 0n);
 });
+
+// ── whole francs: the XOF has no collectable subunit ───────────────────────
+const isWholeFranc = (centimes) => centimes % 100n === 0n;
+
+test("every instalment is a whole number of francs", () => {
+  for (const [units, rate, term] of [
+    [850000, 5.5, 8], [1200000, 6, 10], [650000, 5.8, 6],
+    [333333, 7.3, 7], [500000, 12, 24], [1, 9, 3]
+  ]) {
+    const s = buildSchedule({
+      principalCentimes: XOF(units), annualRatePct: rate, termMonths: term, firstDueDate: "2026-09-01"
+    });
+    s.instalments.forEach((i) => {
+      assert.ok(isWholeFranc(i.principalDueCentimes), `principal ${i.principalDueCentimes} not whole (${units}/${rate}/${term})`);
+      assert.ok(isWholeFranc(i.interestDueCentimes), `interest ${i.interestDueCentimes} not whole (${units}/${rate}/${term})`);
+      assert.ok(isWholeFranc(i.totalDueCentimes), `total ${i.totalDueCentimes} not whole (${units}/${rate}/${term})`);
+    });
+    // Rounding to francs must not break the core invariant.
+    assert.equal(schedulePrincipalTotal(s), XOF(units));
+  }
+});
+
+test("outstanding principal stays a whole franc amount as payments land", () => {
+  let s = buildSchedule({
+    principalCentimes: XOF(650000), annualRatePct: 5.8, termMonths: 6, firstDueDate: "2026-05-01"
+  });
+  assert.ok(isWholeFranc(schedulePrincipalOutstandingCentimes(s)));
+  for (const units of [91000, 7, 240000, 1, 500000]) {
+    s = applyPayment(s, XOF(units)).schedule;
+    assert.ok(
+      isWholeFranc(schedulePrincipalOutstandingCentimes(s)),
+      `outstanding ${schedulePrincipalOutstandingCentimes(s)} not whole after paying ${units}`
+    );
+  }
+});
+
+test("the rounding unit is configurable for a currency that has centimes", () => {
+  const centimeGrained = buildSchedule({
+    principalCentimes: XOF(650000), annualRatePct: 5.8, termMonths: 6,
+    firstDueDate: "2026-09-01", roundingUnitCentimes: 1n
+  });
+  const anyFraction = centimeGrained.instalments.some((i) => !isWholeFranc(i.totalDueCentimes));
+  assert.equal(anyFraction, true, "unit 1 should permit sub-franc amounts");
+  assert.equal(schedulePrincipalTotal(centimeGrained), XOF(650000));
+});
+
+test("the rounding unit survives serialisation", () => {
+  const s = buildSchedule({
+    principalCentimes: XOF(400000), annualRatePct: 6, termMonths: 4, firstDueDate: "2026-09-01"
+  });
+  assert.equal(s.roundingUnitCentimes, "100");
+  const restored = deserialiseSchedule(JSON.parse(JSON.stringify(serialiseSchedule(s))));
+  assert.equal(restored.roundingUnitCentimes, "100");
+  assert.equal(schedulePrincipalTotal(restored), XOF(400000));
+});

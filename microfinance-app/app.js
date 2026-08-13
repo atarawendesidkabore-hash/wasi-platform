@@ -554,9 +554,11 @@ function recordRepaymentFromDraft(draft, { approvalMode = "auto", complianceDeci
   if (schedule) {
     // Allocate to the oldest unpaid instalment, then DERIVE the balance, the
     // next due date and the status from the schedule.
-    const result = applyPayment(schedule, BigInt(Math.round(draft.amount * 100)));
+    // Whole francs in, whole francs out: the XOF has no collectable subunit.
+    const paidCentimes = BigInt(Math.round(draft.amount)) * 100n;
+    const result = applyPayment(schedule, paidCentimes);
     persistLoanSchedule(loan, result.schedule);
-    loan.outstanding = Number(schedulePrincipalOutstandingCentimes(result.schedule)) / 100;
+    loan.outstanding = Number(schedulePrincipalOutstandingCentimes(result.schedule) / 100n);
 
     const arrears = scheduleArrears(result.schedule, todayIso());
     if (arrears.nextDueDate) loan.nextDueDate = arrears.nextDueDate;
@@ -564,7 +566,7 @@ function recordRepaymentFromDraft(draft, { approvalMode = "auto", complianceDeci
     else if (loan.status === "Late") loan.status = "Current"; // leave "Watch" to the officer
 
     if (result.excessCentimes > 0n) {
-      loan.prepaymentXof = (loan.prepaymentXof || 0) + Number(result.excessCentimes) / 100;
+      loan.prepaymentXof = (loan.prepaymentXof || 0) + Number(result.excessCentimes / 100n);
     }
   } else {
     // No schedule could be built. Reduce the balance and advance the due date by
@@ -644,7 +646,7 @@ function createLoanFromDraft(draft, { approvalMode = "auto", complianceDecision 
   // per instalment from the first day of the loan.
   try {
     persistLoanSchedule(loan, buildSchedule({
-      principalCentimes: BigInt(Math.round(loan.principal * 100)),
+      principalCentimes: BigInt(Math.round(loan.principal)) * 100n,
       annualRatePct: Number(loan.interestRate) || 0,
       termMonths: Number(loan.termMonths) || 1,
       firstDueDate: String(loan.nextDueDate).slice(0, 10)
@@ -1089,14 +1091,14 @@ function loanSchedule(loan) {
 
   try {
     let schedule = buildSchedule({
-      principalCentimes: BigInt(Math.round((loan.principal || 0) * 100)),
+      principalCentimes: BigInt(Math.round(loan.principal || 0)) * 100n,
       annualRatePct: Number(loan.interestRate) || 0,
       termMonths: Number(loan.termMonths) || 1,
       firstDueDate
     });
-    const alreadyRepaid = Math.max(0, (loan.principal || 0) - (loan.outstanding || 0));
+    const alreadyRepaid = Math.max(0, Math.round((loan.principal || 0) - (loan.outstanding || 0)));
     if (alreadyRepaid > 0) {
-      schedule = applyPayment(schedule, BigInt(Math.round(alreadyRepaid * 100))).schedule;
+      schedule = applyPayment(schedule, BigInt(alreadyRepaid) * 100n).schedule;
     }
     return schedule;
   } catch (_) {
@@ -1139,8 +1141,8 @@ function loanArrears(loan) {
 function toAfriCreditLoans(loans, today = new Date()) {
   return loans.map((loan) => ({
     id: loan.id,
-    disbursedAmount: BigInt(Math.round((loan.principal || 0) * 100)),
-    outstandingBalance: BigInt(Math.round((loan.outstanding || 0) * 100)),
+    disbursedAmount: BigInt(Math.round(loan.principal || 0)) * 100n,
+    outstandingBalance: BigInt(Math.round(loan.outstanding || 0)) * 100n,
     daysPastDue: loanDaysPastDue(loan, today),
     status: (loan.outstanding || 0) <= 0 ? "REPAID" : "ACTIVE"
   }));
