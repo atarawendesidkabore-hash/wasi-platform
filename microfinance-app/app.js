@@ -8,6 +8,15 @@
  */
 import { generatePortfolioSummary } from "../lib/africredit/par-calculator.js";
 import { calculateCreditScore } from "../lib/africredit/credit-scoring.js";
+import {
+  addMonths,
+  applyPayment,
+  buildSchedule,
+  deserialiseSchedule,
+  scheduleArrears,
+  schedulePrincipalOutstandingCentimes,
+  serialiseSchedule
+} from "../lib/africredit/amortisation.js";
 
 /** PAR30 ceiling committed to in the investor projections. */
 const PAR30_COVENANT_PCT = 5;
@@ -79,7 +88,7 @@ const seedState = {
   loans: [
     { id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, outstanding: 640000, interestRate: 5.5, termMonths: 8, nextDueDate: seedDueDate(12), guarantee: 320000, status: "Current", riskFlag: "Low" },
     { id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, outstanding: 930000, interestRate: 6, termMonths: 10, nextDueDate: seedDueDate(-8), guarantee: 250000, status: "Watch", riskFlag: "Medium" },
-    { id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, outstanding: 410000, interestRate: 5.8, termMonths: 6, nextDueDate: seedDueDate(-41), guarantee: 90000, status: "Late", riskFlag: "High" }
+    { id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, outstanding: 410000, interestRate: 5.8, termMonths: 6, nextDueDate: seedDueDate(-100), guarantee: 90000, status: "Late", riskFlag: "High" }
   ],
   repayments: [
     { id: "RP-4001", loanId: "LN-2001", amount: 120000, paymentDate: "2026-03-10", note: "Encaissement en espèces" },
@@ -539,11 +548,37 @@ function recordRepaymentFromDraft(draft, { approvalMode = "auto", complianceDeci
   });
 
   const loan = state.loans.find((entry) => entry.id === draft.loanId);
-  if (loan) {
+  if (!loan) return;
+
+  const schedule = loanSchedule(loan);
+  if (schedule) {
+    // Allocate to the oldest unpaid instalment, then DERIVE the balance, the
+    // next due date and the status from the schedule.
+    const result = applyPayment(schedule, BigInt(Math.round(draft.amount * 100)));
+    persistLoanSchedule(loan, result.schedule);
+    loan.outstanding = Number(schedulePrincipalOutstandingCentimes(result.schedule)) / 100;
+
+    const arrears = scheduleArrears(result.schedule, todayIso());
+    if (arrears.nextDueDate) loan.nextDueDate = arrears.nextDueDate;
+    if (arrears.overdueInstalments > 0) loan.status = "Late";
+    else if (loan.status === "Late") loan.status = "Current"; // leave "Watch" to the officer
+
+    if (result.excessCentimes > 0n) {
+      loan.prepaymentXof = (loan.prepaymentXof || 0) + Number(result.excessCentimes) / 100;
+    }
+  } else {
+    // No schedule could be built. Reduce the balance and advance the due date by
+    // one period, so a paying client stops accruing arrears forever.
     loan.outstanding = Math.max(0, loan.outstanding - draft.amount);
     loan.status = "Current";
-    if (loan.outstanding < loan.principal * 0.35) loan.riskFlag = "Low";
+    if (loan.nextDueDate) {
+      try {
+        loan.nextDueDate = addMonths(String(loan.nextDueDate).slice(0, 10), 1);
+      } catch (_) { /* unparseable date: leave it for an officer to correct */ }
+    }
   }
+
+  if (loan.outstanding < loan.principal * 0.35) loan.riskFlag = "Low";
 }
 
 function buildPendingManualRepaymentReviewPayload(compliance) {
@@ -586,7 +621,7 @@ function buildManualRepaymentApprovalPayload(compliance) {
 }
 
 function createLoanFromDraft(draft, { approvalMode = "auto", complianceDecision = "APPROVED" } = {}) {
-  state.loans.unshift({
+  const loan = {
     id: nextId("LN", state.loans, 2000),
     clientId: draft.clientId,
     branchId: draft.branchId,
@@ -603,7 +638,23 @@ function createLoanFromDraft(draft, { approvalMode = "auto", complianceDecision 
     approvalMode,
     complianceDecision,
     manualReviewValidatedAt: approvalMode === "manual-review" ? new Date().toISOString() : null
-  });
+  };
+
+  // Build the amortisation schedule up front, so arrears and PAR are measured
+  // per instalment from the first day of the loan.
+  try {
+    persistLoanSchedule(loan, buildSchedule({
+      principalCentimes: BigInt(Math.round(loan.principal * 100)),
+      annualRatePct: Number(loan.interestRate) || 0,
+      termMonths: Number(loan.termMonths) || 1,
+      firstDueDate: String(loan.nextDueDate).slice(0, 10)
+    }));
+    loan.scheduleBasis = "annuity";
+  } catch (_) {
+    loan.schedule = null; // terms rejected by the engine; falls back to the date model
+  }
+
+  state.loans.unshift(loan);
 }
 
 function buildPendingManualLoanReviewPayload(compliance) {
@@ -880,6 +931,7 @@ function renderLoans() {
         <span class="muted">${loan.interestRate}% sur ${loan.termMonths} mois</span>
         <span class="muted">Score client ${scoreClient(loan.clientId).score}</span>
       </div>
+      ${renderLoanScheduleRow(loan)}
       ${
         loan.approvalMode === "manual-review"
           ? `
@@ -897,6 +949,44 @@ function renderLoans() {
       }
     </article>
   `).join("");
+}
+
+/** Instalment status line on a loan card: what is due, and what is late. */
+function renderLoanScheduleRow(loan) {
+  const arrears = loanArrears(loan);
+  if (!arrears) {
+    return `
+      <div class="record-row">
+        <span class="pill watch">Pas d'échéancier</span>
+        <span class="muted">Arriérés estimés sur la seule date d'échéance</span>
+      </div>
+    `;
+  }
+
+  const count = arrears.schedule.instalments.length;
+  const settledCount = arrears.schedule.instalments
+    .filter((i) => i.paidCentimes >= i.totalDueCentimes).length;
+
+  if (arrears.settled) {
+    return `
+      <div class="record-row">
+        <span class="pill good">Échéancier soldé</span>
+        <span class="muted">${count} échéances réglées</span>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="record-row">
+      <span class="muted">Échéances ${settledCount}/${count} réglées</span>
+      ${
+        arrears.overdueInstalments > 0
+          ? `<span class="pill late">${arrears.overdueInstalments} échéance${arrears.overdueInstalments > 1 ? "s" : ""} en retard · ${arrears.daysPastDue} j · ${money(Number(arrears.overdueCentimes) / 100)}</span>`
+          : `<span class="pill good">À jour</span>`
+      }
+      <span class="muted">Prochaine échéance ${arrears.nextDueDate ? prettyDate(arrears.nextDueDate) : "-"}</span>
+    </div>
+  `;
 }
 
 function renderRepayments() {
@@ -975,13 +1065,74 @@ function getOfficerMetrics() {
    due and money in centimes. These adapters do only that conversion, so the
    scoring arithmetic stays in the tested library. */
 
-/** Days a loan is past its due date; 0 when not overdue. */
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/**
+ * The loan's amortisation schedule.
+ *
+ * Stored schedules are deserialised. A loan without one — seed data, or a file
+ * created before schedules existed — is reconstructed from its terms, and the
+ * amount already repaid (principal minus outstanding) is applied to it so the
+ * schedule agrees with the balance on record.
+ *
+ * Never cache the result on the loan object: schedules hold bigints and
+ * `JSON.stringify` throws on those, which would break saveState().
+ */
+function loanSchedule(loan) {
+  const stored = deserialiseSchedule(loan.schedule);
+  if (stored) return stored;
+
+  const firstDueDate = String(loan.nextDueDate || "").slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(firstDueDate)) return null;
+
+  try {
+    let schedule = buildSchedule({
+      principalCentimes: BigInt(Math.round((loan.principal || 0) * 100)),
+      annualRatePct: Number(loan.interestRate) || 0,
+      termMonths: Number(loan.termMonths) || 1,
+      firstDueDate
+    });
+    const alreadyRepaid = Math.max(0, (loan.principal || 0) - (loan.outstanding || 0));
+    if (alreadyRepaid > 0) {
+      schedule = applyPayment(schedule, BigInt(Math.round(alreadyRepaid * 100))).schedule;
+    }
+    return schedule;
+  } catch (_) {
+    return null;
+  }
+}
+
+function persistLoanSchedule(loan, schedule) {
+  loan.schedule = serialiseSchedule(schedule);
+}
+
+/**
+ * Days past due, measured against the oldest UNPAID INSTALMENT.
+ *
+ * The previous version compared today with a single `nextDueDate` that no
+ * repayment ever moved, so a paying client stayed permanently in arrears and
+ * PAR could never come down. Loans with no reconstructable schedule fall back
+ * to that older behaviour rather than reporting a falsely clean 0.
+ */
 function loanDaysPastDue(loan, today = new Date()) {
+  const schedule = loanSchedule(loan);
+  if (schedule) {
+    return scheduleArrears(schedule, today.toISOString().slice(0, 10)).daysPastDue;
+  }
   if (!loan.nextDueDate) return 0;
   const due = new Date(loan.nextDueDate + "T00:00:00Z");
   if (Number.isNaN(due.getTime())) return 0;
   const days = Math.floor((today.getTime() - due.getTime()) / 86400000);
   return days > 0 ? days : 0;
+}
+
+/** Instalment-level arrears summary for display. Null when no schedule. */
+function loanArrears(loan) {
+  const schedule = loanSchedule(loan);
+  if (!schedule) return null;
+  return { ...scheduleArrears(schedule, todayIso()), schedule };
 }
 
 /** Maps app loans onto the AfriCredit Loan shape (bigint centimes). */

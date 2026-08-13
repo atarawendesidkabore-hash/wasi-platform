@@ -100,7 +100,7 @@ Les taux du jour proviennent de `data/market-live.json` (voir ci-dessous) ; l'EU
 Le dépôt reste **sans dépendance et sans étape de build**. Les tests utilisent le lanceur intégré de Node :
 
 ```bash
-npm test
+npm test          # 59 tests, sans aucune dépendance
 ```
 
 | Module | Rôle | Tests |
@@ -109,6 +109,7 @@ npm test
 | `lib/africredit/par-calculator.js` | PAR30/60/90, OSS, synthèse de portefeuille | ✅ |
 | `lib/africredit/expert-scoring-engine.js` | Proposition de décision (7 composantes, veto dette souveraine) | ✅ |
 | `lib/banking-engine.js` | Comptes, dépôts, retraits, virements (bigint en centimes XOF) | ✅ |
+| `lib/africredit/amortisation.js` | Échéanciers, imputation des paiements, arriérés par échéance | ✅ |
 
 `.github/workflows/tests.yml` exécute la suite à chaque push et pull request.
 
@@ -158,7 +159,29 @@ Les **remboursements** suivent desormais exactement le meme parcours (bouton « 
 
 Les deux chemins (automatique et revue manuelle) passent par une seule fonction d'ecriture (`recordRepaymentFromDraft`), pour qu'ils ne puissent pas diverger dans la mise a jour du credit.
 
-> ⚠️ **Limite connue — le PAR ne redescend pas apres un remboursement.** Un remboursement reduit l'encours et repasse le statut a « Current », mais **n'avance pas `nextDueDate`**. Le PAR se calculant desormais sur les jours de retard reels, le credit reste compte en retard jusqu'a modification de l'echeance. L'application n'a pas d'echeancier : il faut soit un vrai plan de remboursement, soit avancer l'echeance d'une periode a chaque paiement. A trancher avant de communiquer un PAR a un investisseur.
+### Echeancier d'amortissement (`lib/africredit/amortisation.js`)
+
+Le PAR se mesure sur **l'echeance impayee la plus ancienne**, pas sur une date unique. C'etait indispensable : avec une seule `nextDueDate` que rien ne faisait avancer, un client qui payait restait en retard pour toujours et le PAR ne pouvait jamais redescendre.
+
+| Element | Regle |
+|---|---|
+| Base de calcul | Annuite (echeance totale constante), interets sur solde degressif |
+| Taux | `interestRate` est **annuel nominal** ; taux periodique = taux / 12 / 100 |
+| Monnaie | bigint en centimes XOF, jamais de flottant |
+| Derniere echeance | Absorbe le residu d'arrondi : principal rembourse = principal decaisse **au centime** |
+| Imputation d'un paiement | Echeance la plus ancienne d'abord ; dans une echeance, interets avant principal |
+| Encours pour le PAR | Principal restant du (`schedulePrincipalOutstandingCentimes`), pas principal + interets |
+| Surplus | Retourne comme `excessCentimes` et stocke en `loan.prepaymentXof`, jamais absorbe en silence |
+
+Apres un remboursement, `outstanding`, `nextDueDate` et le statut sont **derives** de l'echeancier. Le statut « Watch » pose par un agent n'est jamais ecrase.
+
+**Repli pour les credits sans echeancier** (donnees anciennes, ou termes refuses par le moteur) : le remboursement reduit l'encours et **avance `nextDueDate` d'une periode**. La fiche affiche alors « Pas d'echeancier ». Sans ce repli, ces credits accumuleraient des arrieres indefiniment.
+
+⚠️ Un echeancier vit en bigint : **ne jamais le stocker sur l'objet credit**, `JSON.stringify` leve une exception sur BigInt et casserait `saveState()`. Il est serialise en chaines via `serialiseSchedule` dans `loan.schedule`.
+
+Note de convention : le XOF n'a pas de sous-unite en circulation. Le moteur calcule en centimes par coherence avec `lib/banking-engine.js` ; l'affichage arrondit au franc (`maximumFractionDigits: 0`).
+
+Controle : sur la demo, PAR30 passe de **20,71 % a 0 %** quand l'echeance en retard de Mariam Traore est reglee — l'exact scenario impossible avant.
 
 ## ⚠️ Creation de credit bloquee hors poste de dev
 
