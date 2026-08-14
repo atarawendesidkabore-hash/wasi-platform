@@ -4,7 +4,13 @@
   // their WASI access token, the Anthropic key stays server-side.
   // Fallback path: direct Anthropic API with a user-supplied key (BYOK).
   const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-  const CLAUDE_MODEL  = "claude-sonnet-4-6";
+  const CLAUDE_MODEL  = "claude-opus-5";
+  // Thinking is on by default on this model and max_tokens caps thinking PLUS
+  // the response text, so the previous 1800 would have truncated long answers.
+  const CLAUDE_MAX_TOKENS = 4096;
+  // Effort stays low: this is a conversational panel, and low effort on this
+  // model still answers well at a fraction of the latency and cost.
+  const CLAUDE_EFFORT = "low";
 
   function getProxyUrl() {
     if (typeof window.WASI_PROXY_URL === "string") return window.WASI_PROXY_URL.replace(/\/$/, "");
@@ -237,12 +243,16 @@
       focusedCtx,
     ].filter(Boolean).join("\n\n");
 
-    const messages = [
-      ...history.slice(-8)
-        .filter((m) => m.role === "user" || m.role === "assistant")
-        .map((m) => ({ role: m.role, content: String(m.content) })),
-      { role: "user", content: userMessage },
-    ];
+    // The API requires messages[0] to be a user turn. history is pushed in
+    // user/assistant pairs, but a turn that errored mid-flight or a localStorage
+    // round-trip can leave the array starting on an assistant turn, and then
+    // slice(-8) sends that as messages[0] and the request 400s. Drop any leading
+    // assistant turns rather than relying on the pairing staying even.
+    const trimmed = history.slice(-8)
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({ role: m.role, content: String(m.content) }));
+    while (trimmed.length && trimmed[0].role !== "user") trimmed.shift();
+    const messages = [...trimmed, { role: "user", content: userMessage }];
 
     // ── 1. Preferred: WASI proxy (Anthropic key stays server-side) ────────
     if (proxyUrl) {
@@ -256,7 +266,7 @@
             "Content-Type": "application/json",
             "x-wasi-token": getWasiToken() || "WASI-DEMO-2026",
           },
-          body: JSON.stringify({ messages: messages, system: systemPrompt, max_tokens: 1800 }),
+          body: JSON.stringify({ messages: messages, system: systemPrompt, max_tokens: CLAUDE_MAX_TOKENS }),
         });
         clearTimeout(_ptid);
         if (presp.ok) {
@@ -292,12 +302,18 @@
         "x-api-key":         apiKey,
         "anthropic-version": "2023-06-01",
         "anthropic-dangerous-direct-browser-access": "true",
+        // Enables fallbacks: "default" below.
+        "anthropic-beta": "server-side-fallback-2026-07-01",
       },
       body: JSON.stringify({
-        model:      CLAUDE_MODEL,
-        max_tokens: 1800,
-        system:     systemPrompt,
-        messages:   messages,
+        model:         CLAUDE_MODEL,
+        max_tokens:    CLAUDE_MAX_TOKENS,
+        output_config: { effort: CLAUDE_EFFORT },
+        // A safety classifier can decline the request; rather than dead-ending,
+        // let the API re-run it server-side on the recommended fallback model.
+        fallbacks:     "default",
+        system:        systemPrompt,
+        messages:      messages,
       }),
     });
     clearTimeout(_tid);

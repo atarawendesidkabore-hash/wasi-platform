@@ -17,7 +17,13 @@ const PORT = process.env.PORT || 3000;
 const ANTHROPIC_API_KEY  = process.env.ANTHROPIC_API_KEY;   // sk-ant-...
 const WASI_ACCESS_TOKENS = (process.env.WASI_ACCESS_TOKENS || 'WASI-DEMO-2026')
   .split(',').map(t => t.trim()).filter(Boolean);
-const CLAUDE_MODEL       = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
+const CLAUDE_MODEL       = process.env.CLAUDE_MODEL || 'claude-opus-5';
+// Thinking is on by default on this model, and max_tokens caps thinking PLUS the
+// response text. The old ceiling of 2000 would truncate answers mid-sentence, so
+// both the default and the hard cap move up.
+const CLAUDE_MAX_TOKENS  = Number(process.env.CLAUDE_MAX_TOKENS || 4096);
+const CLAUDE_MAX_TOKENS_CEILING = 8192;
+const CLAUDE_EFFORT      = process.env.CLAUDE_EFFORT || 'low';
 const ALLOWED_ORIGINS    = (process.env.ALLOWED_ORIGINS || 'https://atarawendesidkabore-hash.github.io')
   .split(',').map(o => o.trim());
 
@@ -110,19 +116,35 @@ app.post('/api/chat', requireToken, async (req, res) => {
     content: String(m.content || '').slice(0, 8000)
   }));
 
+  // The API requires the first message to be a user turn, and rejects a
+  // conversation ending on an assistant turn (that is a prefill, which this
+  // model no longer accepts). A client that forwards a chat log seeded with a
+  // greeting would otherwise get an opaque 400 relayed straight back.
+  while (cleanMessages.length && cleanMessages[0].role !== 'user') cleanMessages.shift();
+  while (cleanMessages.length && cleanMessages[cleanMessages.length - 1].role === 'assistant') cleanMessages.pop();
+  if (!cleanMessages.length) {
+    return res.status(400).json({ error: 'messages[] doit contenir au moins un tour utilisateur.' });
+  }
+
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type':    'application/json',
         'x-api-key':       ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
+        // Enables fallbacks: 'default' below.
+        'anthropic-beta':  'server-side-fallback-2026-07-01'
       },
       body: JSON.stringify({
-        model:      CLAUDE_MODEL,
-        max_tokens: Math.min(max_tokens || 1800, 2000),
-        system:     String(system || '').slice(0, 20000),
-        messages:   cleanMessages
+        model:         CLAUDE_MODEL,
+        max_tokens:    Math.min(max_tokens || CLAUDE_MAX_TOKENS, CLAUDE_MAX_TOKENS_CEILING),
+        output_config: { effort: CLAUDE_EFFORT },
+        // A safety classifier can decline the request; re-run it server-side on
+        // the recommended fallback model instead of relaying a refusal.
+        fallbacks:     'default',
+        system:        String(system || '').slice(0, 20000),
+        messages:      cleanMessages
       })
     });
 
@@ -138,6 +160,22 @@ app.post('/api/chat', requireToken, async (req, res) => {
     }
 
     const data = await response.json();
+
+    // A declined request returns HTTP 200 with stop_reason 'refusal' and empty
+    // or partial content. Relaying the generic 'Réponse indisponible.' would
+    // hide the reason from the caller, so say what happened.
+    if (data.stop_reason === 'refusal') {
+      auditLog({ event: 'chat_refusal', token: req.wasiToken, endpoint: '/api/chat',
+                 status: 200, ms: Date.now()-t0,
+                 ip: req.headers['x-forwarded-for'] || req.ip,
+                 category: data.stop_details?.category || null,
+                 msg_count: cleanMessages.length, sys_len: (system||'').length });
+      return res.status(422).json({
+        error: 'Requête refusée par les filtres de sécurité du modèle.',
+        category: data.stop_details?.category || null
+      });
+    }
+
     const reply = (data.content || [])
       .filter(b => b.type === 'text')
       .map(b => b.text)
