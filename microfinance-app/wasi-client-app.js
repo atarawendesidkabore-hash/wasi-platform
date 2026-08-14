@@ -183,6 +183,22 @@ function submitApplication(event) {
     requestedTermMonths: Math.max(1, Math.round(Number(form.get("requestedTermMonths")) || 6)),
     guarantee: amount("guarantee"),
     purpose: text("purpose"),
+    // KYC captured at intake. The officer console re-checks these before it
+    // will allow an approval; see verifyKyc() in app.js.
+    kyc: {
+      idType: text("idType"),
+      idNumber: text("idNumber").toUpperCase(),
+      birthDate: text("birthDate"),
+      idExpiry: text("idExpiry"),
+      addressCity: text("addressCity"),
+      addressDistrict: text("addressDistrict"),
+      addressLandmark: text("addressLandmark"),
+      addressProof: text("addressProof"),
+      guarantorName: text("guarantorName"),
+      guarantorPhone: text("guarantorPhone"),
+      guarantorRelation: text("guarantorRelation"),
+      guarantorIdNumber: text("guarantorIdNumber").toUpperCase()
+    },
     submittedAt: new Date().toISOString(),
     status: "pending",
     decidedAt: null,
@@ -194,6 +210,20 @@ function submitApplication(event) {
 
   if (!application.name || !application.phone || !application.requestedAmount || !application.monthlyIncome) {
     showToast("Renseignez au moins votre nom, votre téléphone, votre revenu et le montant souhaité.");
+    return;
+  }
+
+  // Caught here as well as in the console so the applicant gets told straight
+  // away rather than waiting for a refusal. A guarantor who is the applicant is
+  // no guarantor at all.
+  const sameDigits = (a, b) => {
+    const da = String(a || "").replace(/\D/g, "");
+    const db = String(b || "").replace(/\D/g, "");
+    return da.length >= 8 && da === db;
+  };
+  if (sameDigits(application.kyc.guarantorPhone, application.phone)
+      || (application.kyc.guarantorIdNumber && application.kyc.guarantorIdNumber === application.kyc.idNumber)) {
+    showToast("Le garant doit être une autre personne que vous.");
     return;
   }
 

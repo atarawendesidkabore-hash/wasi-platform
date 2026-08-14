@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./wasi-client-app.css?v=20260814b">
+  <link rel="stylesheet" href="./wasi-client-app.css?v=20260814c">
 </head>
 <body>
   <div class="access-gate" id="access-gate">
@@ -53,6 +53,53 @@
         <label>Durée souhaitée (mois)<input name="requestedTermMonths" type="number" min="1" max="24" value="6" required></label>
         <label>Garantie proposée (F CFA)<input name="guarantee" type="number" min="0" step="1000" value="0" required></label>
         <label class="signup-full">Objet du crédit<textarea name="purpose" rows="2" required placeholder="À quoi servira ce crédit ?"></textarea></label>
+
+        <div class="signup-full signup-section">Pièce d'identité</div>
+        <label>Type de pièce
+          <select name="idType" required>
+            <option value="CNI">Carte nationale d'identité</option>
+            <option value="Passeport">Passeport</option>
+            <option value="Attestation">Attestation d'identité</option>
+            <option value="Permis">Permis de conduire</option>
+            <option value="Consulaire">Carte consulaire</option>
+          </select>
+        </label>
+        <label>Numéro de la pièce<input name="idNumber" type="text" required autocomplete="off"></label>
+        <label>Date de naissance<input name="birthDate" type="date" required></label>
+        <label>Expiration de la pièce<input name="idExpiry" type="date" required></label>
+
+        <div class="signup-full signup-section">Adresse</div>
+        <label>Commune / ville<input name="addressCity" type="text" required placeholder="Daloa"></label>
+        <label>Quartier<input name="addressDistrict" type="text" required placeholder="Tazibouo"></label>
+        <label class="signup-full">Repère (l'adressage formel est rare — indiquez un point de repère)
+          <input name="addressLandmark" type="text" required placeholder="Derrière la pharmacie du marché">
+        </label>
+        <label class="signup-full">Justificatif de domicile présenté
+          <select name="addressProof" required>
+            <option value="">— choisir —</option>
+            <option value="Facture CIE">Facture CIE (électricité)</option>
+            <option value="Facture SODECI">Facture SODECI (eau)</option>
+            <option value="Attestation de résidence">Attestation de résidence</option>
+            <option value="Contrat de bail">Contrat de bail</option>
+            <option value="Aucun">Aucun justificatif</option>
+          </select>
+        </label>
+
+        <div class="signup-full signup-section">Garant</div>
+        <label>Nom du garant<input name="guarantorName" type="text" required></label>
+        <label>Téléphone du garant<input name="guarantorPhone" type="tel" required></label>
+        <label>Lien avec vous
+          <select name="guarantorRelation" required>
+            <option value="Conjoint">Conjoint(e)</option>
+            <option value="Parent">Parent</option>
+            <option value="Associé">Associé(e)</option>
+            <option value="Membre du groupe">Membre du groupe de caution</option>
+            <option value="Employeur">Employeur</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </label>
+        <label>Pièce du garant (numéro)<input name="guarantorIdNumber" type="text" required autocomplete="off"></label>
+
         <div class="signup-full signup-actions">
           <button class="primary-btn" type="submit">Envoyer la demande</button>
           <button class="ghost-btn" type="button" id="signup-cancel-btn">Retour</button>
@@ -230,6 +277,6 @@
     </nav>
   </div>
 
-  <script src="./wasi-client-app.js?v=20260814b"></script>
+  <script src="./wasi-client-app.js?v=20260814c"></script>
 </body>
 </html>

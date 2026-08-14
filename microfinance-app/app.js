@@ -244,6 +244,13 @@ const seedState = {
       requestedTermMonths: 6,
       purpose: "Stock de pagnes pour la saison des fêtes",
       guarantee: 90000,
+      kyc: {
+        idType: "CNI", idNumber: "CI0034872215", birthDate: "1989-04-12", idExpiry: "2031-04-11",
+        addressCity: "Abidjan", addressDistrict: "Adjamé", addressLandmark: "Face au marché Gouro",
+        addressProof: "Facture CIE",
+        guarantorName: "Mariam Koffi", guarantorPhone: "+225 0755443322",
+        guarantorRelation: "Associé", guarantorIdNumber: "CI0019887431"
+      },
       submittedAt: seedDueDate(-2) + "T09:15:00.000Z",
       status: "pending",
       decidedAt: null,
@@ -263,6 +270,15 @@ const seedState = {
       requestedTermMonths: 12,
       purpose: "Achat d'un tricycle de livraison",
       guarantee: 40000,
+      // Deliberately shows the checks working: the identity document expired
+      // last month, so approval is blocked until it is renewed.
+      kyc: {
+        idType: "CNI", idNumber: "CI0027713904", birthDate: "1994-11-30", idExpiry: seedDueDate(-30),
+        addressCity: "Bouaké", addressDistrict: "Air France 2", addressLandmark: "Près de la gare routière",
+        addressProof: "Attestation de résidence",
+        guarantorName: "Awa Bamba", guarantorPhone: "+225 0766554433",
+        guarantorRelation: "Parent", guarantorIdNumber: "CI0041229087"
+      },
       submittedAt: seedDueDate(-1) + "T16:40:00.000Z",
       status: "pending",
       decidedAt: null,
@@ -707,6 +723,32 @@ function bindForms() {
   els.clientForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+
+    // Registering a client by hand must clear the same KYC bar as an approved
+    // application, otherwise this form is simply a way around it.
+    const candidate = {
+      id: "(nouveau)",
+      phone: String(form.get("phone") || "").trim(),
+      kyc: {
+        idType: String(form.get("idType") || "").trim(),
+        idNumber: String(form.get("idNumber") || "").trim().toUpperCase(),
+        birthDate: String(form.get("birthDate") || "").trim(),
+        idExpiry: String(form.get("idExpiry") || "").trim(),
+        addressCity: String(form.get("region") || "").trim(),
+        addressDistrict: String(form.get("addressDistrict") || "").trim(),
+        addressLandmark: String(form.get("addressLandmark") || "").trim(),
+        addressProof: String(form.get("addressProof") || "").trim(),
+        guarantorName: String(form.get("guarantorName") || "").trim(),
+        guarantorPhone: String(form.get("guarantorPhone") || "").trim(),
+        guarantorIdNumber: String(form.get("guarantorIdNumber") || "").trim().toUpperCase()
+      }
+    };
+    const verdict = verifyKyc(candidate);
+    if (!verdict.ok) {
+      showToast("Enregistrement bloqué — " + verdict.blocking[0]);
+      return;
+    }
+
     state.clients.unshift({
       id: nextId("CL", state.clients, 1000),
       name: form.get("name").trim(),
@@ -716,6 +758,20 @@ function bindForms() {
       branchId: form.get("branchId"),
       officerId: form.get("officerId"),
       monthlyIncome: Math.max(0, Math.round(Number(form.get("monthlyIncome")) || 0)),
+      kyc: {
+        idType: String(form.get("idType") || "").trim(),
+        idNumber: String(form.get("idNumber") || "").trim().toUpperCase(),
+        birthDate: String(form.get("birthDate") || "").trim(),
+        idExpiry: String(form.get("idExpiry") || "").trim(),
+        addressCity: String(form.get("region") || "").trim(),
+        addressDistrict: String(form.get("addressDistrict") || "").trim(),
+        addressLandmark: String(form.get("addressLandmark") || "").trim(),
+        addressProof: String(form.get("addressProof") || "").trim(),
+        guarantorName: String(form.get("guarantorName") || "").trim(),
+        guarantorPhone: String(form.get("guarantorPhone") || "").trim(),
+        guarantorRelation: "",
+        guarantorIdNumber: String(form.get("guarantorIdNumber") || "").trim().toUpperCase()
+      },
       notes: form.get("notes").trim()
     });
     persistAndRefresh(event.currentTarget);
@@ -1371,6 +1427,134 @@ function renderLoanScheduleRow(loan) {
 }
 
 /**
+ * KYC verification on an account-opening request.
+ *
+ * Separates BLOCKING findings from warnings. A blocking finding stops the
+ * approval outright — an expired identity document, an applicant who is not of
+ * age, or a guarantor who is really the applicant are not judgement calls. A
+ * warning is surfaced and left to the officer, because the right answer depends
+ * on context they have and this code does not.
+ *
+ * Note on storage: identity numbers are sensitive personal data and this demo
+ * keeps them in localStorage. In production they belong server-side, encrypted,
+ * with a retention policy — see the note in RUNBOOK.md.
+ */
+function verifyKyc(application) {
+  const kyc = (application && application.kyc) || {};
+  const blocking = [];
+  const warnings = [];
+  const today = new Date().toISOString().slice(0, 10);
+
+  const required = [
+    ["idType", "type de pièce"],
+    ["idNumber", "numéro de pièce"],
+    ["birthDate", "date de naissance"],
+    ["idExpiry", "expiration de la pièce"],
+    ["addressCity", "commune"],
+    ["addressDistrict", "quartier"],
+    ["guarantorName", "nom du garant"],
+    ["guarantorPhone", "téléphone du garant"]
+  ];
+  const missing = required.filter(([key]) => !String(kyc[key] || "").trim()).map(([, label]) => label);
+  if (missing.length) blocking.push("Pièces KYC manquantes : " + missing.join(", ") + ".");
+
+  // Age of majority. Compared on calendar dates rather than by dividing days,
+  // so a birthday that has not yet occurred this year counts correctly.
+  if (kyc.birthDate) {
+    const eighteenth = addMonths(kyc.birthDate, 18 * 12);
+    if (eighteenth > today) blocking.push("Le demandeur est mineur (majorité atteinte le " + prettyDate(eighteenth) + ").");
+    else if (addMonths(kyc.birthDate, 100 * 12) < today) warnings.push("Date de naissance improbable : à vérifier.");
+  }
+
+  if (kyc.idExpiry) {
+    if (kyc.idExpiry < today) {
+      blocking.push("Pièce d'identité expirée le " + prettyDate(kyc.idExpiry) + " : renouvellement requis.");
+    } else if (kyc.idExpiry < addMonths(today, 3)) {
+      warnings.push("Pièce d'identité expirant le " + prettyDate(kyc.idExpiry) + " (moins de 3 mois).");
+    }
+  }
+
+  // A guarantor who is the applicant provides no second recourse.
+  const digits = (value) => String(value || "").replace(/\D/g, "");
+  if (digits(kyc.guarantorPhone).length >= 8 && digits(kyc.guarantorPhone) === digits(application.phone)) {
+    blocking.push("Le garant porte le même numéro que le demandeur.");
+  }
+  if (kyc.guarantorIdNumber && kyc.idNumber && kyc.guarantorIdNumber === kyc.idNumber) {
+    blocking.push("Le garant présente la même pièce d'identité que le demandeur.");
+  }
+
+  if (!kyc.addressProof || kyc.addressProof === "Aucun") {
+    warnings.push("Aucun justificatif de domicile présenté.");
+  }
+  if (!String(kyc.addressLandmark || "").trim()) {
+    warnings.push("Aucun repère d'adresse : la visite terrain sera difficile.");
+  }
+
+  // An identity number already on file usually means this person is already a
+  // client — approving would create a duplicate record and split their history.
+  if (kyc.idNumber) {
+    const existing = state.clients.find((client) => client.kyc && client.kyc.idNumber === kyc.idNumber);
+    if (existing) {
+      blocking.push("Cette pièce est déjà enregistrée pour " + existing.name + " (" + existing.id + ").");
+    }
+    const otherPending = getApplications().find((entry) => entry.id !== application.id
+      && entry.status === "pending" && entry.kyc && entry.kyc.idNumber === kyc.idNumber);
+    if (otherPending) warnings.push("Une autre demande en attente (" + otherPending.id + ") porte la même pièce.");
+  }
+
+  // Guarantor concentration: one person standing behind many loans is a single
+  // point of failure the officer should see before adding another.
+  if (kyc.guarantorIdNumber) {
+    const backing = state.clients.filter((client) => client.kyc
+      && client.kyc.guarantorIdNumber === kyc.guarantorIdNumber).length;
+    if (backing >= 3) {
+      warnings.push("Ce garant cautionne déjà " + backing + " clients : concentration à apprécier.");
+    }
+    const guarantorIsClient = state.clients.find((client) => client.kyc && client.kyc.idNumber === kyc.guarantorIdNumber);
+    if (guarantorIsClient) {
+      warnings.push("Le garant est lui-même client (" + guarantorIsClient.id + ") : vérifier sa propre charge.");
+    }
+  }
+
+  return { blocking, warnings, ok: blocking.length === 0 };
+}
+
+/** KYC panel on an application card. */
+function renderKycBlock(application) {
+  const kyc = (application && application.kyc) || {};
+  const verdict = verifyKyc(application);
+  const rows = [
+    ["Pièce", [kyc.idType, kyc.idNumber].filter(Boolean).join(" ") || "-"],
+    ["Naissance", kyc.birthDate ? prettyDate(kyc.birthDate) : "-"],
+    ["Expiration", kyc.idExpiry ? prettyDate(kyc.idExpiry) : "-"],
+    ["Adresse", [kyc.addressDistrict, kyc.addressCity].filter(Boolean).join(", ") || "-"],
+    ["Repère", kyc.addressLandmark || "-"],
+    ["Justificatif", kyc.addressProof || "-"],
+    ["Garant", [kyc.guarantorName, kyc.guarantorRelation ? "(" + kyc.guarantorRelation + ")" : ""].filter(Boolean).join(" ") || "-"],
+    ["Tél. garant", kyc.guarantorPhone || "-"],
+    ["Pièce garant", kyc.guarantorIdNumber || "-"]
+  ];
+
+  const findings = [
+    ...verdict.blocking.map((item) => `<div class="kyc-finding blocking">${escapeHtml(item)}</div>`),
+    ...verdict.warnings.map((item) => `<div class="kyc-finding warning">${escapeHtml(item)}</div>`)
+  ].join("");
+
+  return `
+    <div class="kyc-block">
+      <div class="kyc-head">
+        <span class="eyebrow">Vérification KYC</span>
+        <span class="pill ${verdict.ok ? "good" : "late"}">${verdict.ok ? "Recevable" : "Bloquant"}</span>
+      </div>
+      <div class="kyc-grid">
+        ${rows.map(([label, value]) => `<div><span class="kyc-label">${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`).join("")}
+      </div>
+      ${findings || `<div class="kyc-finding ok">Aucune anomalie détectée.</div>`}
+    </div>
+  `;
+}
+
+/**
  * Scores an application BEFORE the client exists.
  *
  * scoreClient() needs a client record and its loans, which an applicant has
@@ -1481,6 +1665,13 @@ function approveApplication(applicationId) {
   const application = getApplications().find((entry) => entry.id === applicationId);
   if (!application || application.status !== "pending") return;
 
+  // KYC first: an identity that does not check out is not a credit decision.
+  const kycVerdict = verifyKyc(application);
+  if (!kycVerdict.ok) {
+    showToast("Approbation bloquée — " + kycVerdict.blocking[0]);
+    return;
+  }
+
   const assessment = scoreApplication(application);
   if (assessment.status === "INCOMPLET") {
     showToast("Dossier incomplet : " + assessment.reason);
@@ -1499,6 +1690,9 @@ function approveApplication(applicationId) {
     branchId,
     officerId,
     monthlyIncome: Number(application.monthlyIncome) || 0,
+    // Kept on the client so the identity and guarantor stay on file, and so the
+    // duplicate-piece check has something to match future applications against.
+    kyc: { ...(application.kyc || {}) },
     notes: `Ouverture de compte ${application.id} validée le ${prettyDate(new Date().toISOString().slice(0, 10))}.`
   };
   state.clients.unshift(client);
@@ -1527,7 +1721,8 @@ function approveApplication(applicationId) {
   application.decidedBy = session ? `${session.name} (${session.code})` : "Console";
   application.createdClientId = client.id;
   application.createdLoanId = state.loans[0] ? state.loans[0].id : null;
-  application.decisionNote = `Score AfriCredit ${assessment.score} (${assessment.grade}).`;
+  application.decisionNote = `Score AfriCredit ${assessment.score} (${assessment.grade}).`
+    + (kycVerdict.warnings.length ? ` Réserves KYC acceptées : ${kycVerdict.warnings.join(" ")}` : "");
 
   saveState();
   renderAll();
@@ -1600,6 +1795,7 @@ function renderApplications() {
         <div class="record-row">
           <span class="muted">Historique de remboursement : aucun antécédent chez nous (premier crédit)</span>
         </div>
+        ${renderKycBlock(application)}
         <div class="record-actions">
           <button class="primary-btn" data-approve-application="${application.id}">Approuver et ouvrir le crédit</button>
           <button class="ghost-btn" data-refuse-application="${application.id}">Refuser</button>

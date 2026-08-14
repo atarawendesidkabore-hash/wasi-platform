@@ -276,6 +276,51 @@ Trois modes, dans cet ordre de priorité :
 
 Notes : plan gratuit Render = mise en veille après 15 min d'inactivité (première réponse lente ~30 s) ; passer au plan Starter pour un service permanent. Chaque token WASI distribué est un identifiant client — les révoquer en les retirant de `WASI_ACCESS_TOKENS`. Journal d'audit (tokens hachés, jamais en clair) visible dans les logs Render.
 
+## 3ter. ⚠️ KYC et données personnelles — limite connue
+
+L'ouverture de compte collecte des **données personnelles sensibles** : numéro de
+pièce d'identité, date de naissance, adresse et identité du garant, pour le
+demandeur comme pour sa caution.
+
+**Aujourd'hui ces données sont stockées dans le `localStorage` du navigateur.**
+C'est acceptable pour une démonstration, pas pour de vrais dossiers :
+
+- toute page servie depuis la même origine peut les lire ;
+- rien n'est chiffré ;
+- il n'y a ni durée de conservation, ni journal d'accès, ni possibilité
+  d'effacement à la demande d'une personne ;
+- un poste partagé en agence expose les dossiers déjà saisis.
+
+Avant d'enregistrer de vrais clients, ces champs doivent passer côté serveur :
+chiffrés au repos, avec contrôle d'accès par utilisateur, journalisation des
+consultations et une politique de conservation écrite. La séparation
+client/agent actuelle (porte agent sur la console) est une séparation
+**applicative**, pas une protection des données — c'est écrit dans l'interface et
+dans `microfinance-app/index.html`.
+
+### Ce que la vérification bloque, et ce qu'elle signale
+
+Bloquant — l'approbation est refusée :
+
+| Contrôle | Motif |
+|---|---|
+| Pièce expirée | Une pièce périmée ne vaut pas identification |
+| Demandeur mineur | Calcul sur date calendaire, pas en jours |
+| Garant = demandeur (téléphone ou pièce) | Pas de second recours |
+| Pièce déjà au dossier d'un client | Doublon : scinderait l'historique |
+| Champs KYC manquants | Dossier incomplet |
+
+Signalé, décision laissée à l'agent : pièce expirant sous 3 mois, aucun
+justificatif de domicile, aucun repère d'adresse, garant cautionnant déjà 3
+clients ou plus, garant lui-même client, autre demande en attente avec la même
+pièce, date de naissance improbable.
+
+Les réserves acceptées par l'agent sont recopiées dans la décision
+(`decisionNote`) pour que le dossier reste auditable.
+
+**Le formulaire « Ajouter un client » de la console applique les mêmes contrôles.**
+Sans cela il suffirait de passer par lui pour contourner le KYC.
+
 ## 4bis. ⚠️ Cache navigateur — à faire à CHAQUE déploiement de code
 
 Les fichiers JS/CSS sont référencés avec un jeton de version, par ex. `./app.js?v=20260811a`. **Sans cela, les visiteurs continuent d'exécuter l'ancien code après un déploiement** — c'est exactement ce qui s'est produit : la correction du panneau de transfert était en ligne mais invisible sans `Ctrl+Shift+R`, et le DEX affichait encore « Detailed 4 » alors que le fichier déployé en contenait 43.

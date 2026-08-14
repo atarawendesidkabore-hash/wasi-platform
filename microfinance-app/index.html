@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260814b">
+  <link rel="stylesheet" href="./styles.css?v=20260814c">
 </head>
 <body>
-  <script src="../wasi-network.js?v=20260814b"></script>
+  <script src="../wasi-network.js?v=20260814c"></script>
 
   <!--
     Officer gate. This console shows every client's name, declared income and
@@ -157,6 +157,32 @@
               <label>Revenu mensuel net (F CFA)<input name="monthlyIncome" type="number" min="0" step="1000" required></label>
               <label>Agence<select name="branchId" id="client-branch-select" required></select></label>
               <label>Agent de crédit<select name="officerId" id="client-officer-select" required></select></label>
+              <label>Type de pièce
+                <select name="idType" required>
+                  <option value="CNI">Carte nationale d'identité</option>
+                  <option value="Passeport">Passeport</option>
+                  <option value="Attestation">Attestation d'identité</option>
+                  <option value="Permis">Permis de conduire</option>
+                  <option value="Consulaire">Carte consulaire</option>
+                </select>
+              </label>
+              <label>Numéro de pièce<input name="idNumber" required></label>
+              <label>Date de naissance<input name="birthDate" type="date" required></label>
+              <label>Expiration de la pièce<input name="idExpiry" type="date" required></label>
+              <label>Quartier<input name="addressDistrict" required></label>
+              <label>Repère d'adresse<input name="addressLandmark" required></label>
+              <label>Nom du garant<input name="guarantorName" required></label>
+              <label>Téléphone du garant<input name="guarantorPhone" required></label>
+              <label>Pièce du garant<input name="guarantorIdNumber" required></label>
+              <label>Justificatif de domicile
+                <select name="addressProof" required>
+                  <option value="Facture CIE">Facture CIE</option>
+                  <option value="Facture SODECI">Facture SODECI</option>
+                  <option value="Attestation de résidence">Attestation de résidence</option>
+                  <option value="Contrat de bail">Contrat de bail</option>
+                  <option value="Aucun">Aucun justificatif</option>
+                </select>
+              </label>
               <label class="full-span">Notes<textarea name="notes" rows="3"></textarea></label>
               <div class="full-span actions"><button class="primary-btn" type="submit">Ajouter le client</button></div>
             </form>
@@ -327,6 +353,6 @@
   </div>
 
   <!-- module: app.js imports the shared AfriCredit engines from ../lib -->
-  <script type="module" src="./app.js?v=20260814b"></script>
+  <script type="module" src="./app.js?v=20260814c"></script>
 </body>
 </html>
