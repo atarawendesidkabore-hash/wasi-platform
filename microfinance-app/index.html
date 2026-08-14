@@ -7,14 +7,49 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260813d">
+  <link rel="stylesheet" href="./styles.css?v=20260814b">
 </head>
 <body>
-  <script src="../wasi-network.js?v=20260813d"></script>
+  <script src="../wasi-network.js?v=20260814b"></script>
+
+  <!--
+    Officer gate. This console shows every client's name, declared income and
+    credit score, plus branch and officer exposure — it is staff-only. Clients
+    belong in wasi-client-app.html.
+
+    This is PRODUCT separation, not security: the demo keeps its data in
+    localStorage, which any page on this origin can read. Enforcing it properly
+    needs the backend (per-user auth and server-side scoping of the data).
+  -->
+  <div class="officer-gate" id="officer-gate">
+    <div class="officer-gate-card">
+      <div class="eyebrow">Accès Personnel CIREX</div>
+      <h1>Console de gestion</h1>
+      <p class="officer-gate-copy">
+        Cet espace est réservé aux agents de crédit et à la direction. Il présente
+        le portefeuille complet, les revenus déclarés et les scores de tous les
+        clients.
+      </p>
+      <label class="officer-gate-label">
+        Code agent
+        <input id="officer-code-input" type="text" autocomplete="off" placeholder="OF-01">
+      </label>
+      <div class="officer-gate-actions">
+        <button class="primary-btn" id="officer-code-btn" type="button">Ouvrir la console</button>
+        <a class="ghost-btn" href="./wasi-client-app.html">Je suis client</a>
+      </div>
+      <div class="officer-gate-error" id="officer-gate-error" hidden></div>
+      <div class="officer-gate-hint" id="officer-gate-hint"></div>
+      <p class="officer-gate-note">
+        Séparation applicative de démonstration : les données de démo restent dans
+        le navigateur. Le cloisonnement réel des données se fait côté serveur.
+      </p>
+    </div>
+  </div>
   <div class="page-orb orb-a"></div>
   <div class="page-orb orb-b"></div>
 
-  <div class="app-shell">
+  <div class="app-shell" id="app-shell" hidden>
     <aside class="sidebar">
       <div class="sidebar-top">
         <a class="back-link" href="../wasi-dex/index.html">Retour vers WASI DEX</a>
@@ -31,6 +66,7 @@
           <button class="nav-item active" data-view="overview">Vue d'ensemble</button>
           <button class="nav-item" data-view="clients">Clients</button>
           <button class="nav-item" data-view="loans">Crédits</button>
+          <button class="nav-item" data-view="applications">Demandes</button>
           <button class="nav-item" data-view="repayments">Remboursements</button>
           <button class="nav-item" data-view="advisor">Conseiller IA</button>
         </nav>
@@ -59,6 +95,7 @@
         <div class="topbar-actions">
           <a class="ghost-btn" href="./wasi-client-app.html">App mobile client</a>
           <a class="ghost-btn" href="./wasi-customer-portal.html">Portail client WASI</a>
+          <button id="officer-signout-btn" class="ghost-btn">Fermer la session</button>
           <button id="reset-btn" class="secondary-btn">Réinitialiser la démo</button>
           <button id="export-btn" class="primary-btn">Exporter les données</button>
         </div>
@@ -164,6 +201,22 @@
             <div class="eyebrow">Portefeuille Crédit</div>
             <h3>Crédits</h3>
             <div id="loan-list" class="stack"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-applications">
+        <div class="split">
+          <article class="panel">
+            <div class="eyebrow">File D'Attente</div>
+            <h3>Demandes d'ouverture de compte</h3>
+            <p class="lead-copy" id="applications-summary"></p>
+            <div id="application-list" class="stack"></div>
+          </article>
+          <article class="panel">
+            <div class="eyebrow">Décisions Récentes</div>
+            <h3>Historique</h3>
+            <div id="application-history" class="stack"></div>
           </article>
         </div>
       </section>
@@ -274,6 +327,6 @@
   </div>
 
   <!-- module: app.js imports the shared AfriCredit engines from ../lib -->
-  <script type="module" src="./app.js?v=20260813d"></script>
+  <script type="module" src="./app.js?v=20260814b"></script>
 </body>
 </html>

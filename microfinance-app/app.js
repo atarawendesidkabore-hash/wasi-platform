@@ -60,6 +60,8 @@ function seedDueDate(offsetDays) {
 }
 
 const STORAGE_KEY = "cirex_microfinance_state_v2";
+/** Append-only queue the client app files account-opening requests into. */
+const APPLICATION_OUTBOX_KEY = "cirex_applications_v1";
 const API_BASE = window.location.protocol === "file:" ? "http://localhost:3100" : "";
 const SOURCE_STATUS_POLL_MS = 5 * 60 * 1000;
 const INTEREST_CEILING_POLICY = [
@@ -226,6 +228,50 @@ const seedState = {
     seedLoan({ id: "LN-2025", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Bâtiment d'élevage", principal: 870000, guarantee: 330000, rate: 6, term: 12, oldestUnpaidDpd: -24, settled: 2, riskFlag: "Low" }),
     seedLoan({ id: "LN-2026", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Stock saison des fêtes", principal: 460000, guarantee: 160000, rate: 5.5, term: 6, oldestUnpaidDpd: -6, settled: 0, riskFlag: "Low" })
   ],
+  // Account-opening requests submitted from the client app. A prospect has no
+  // client record yet, so the application carries everything an officer needs to
+  // decide: the person, their declared income, and the credit they are asking
+  // for. Approval creates the client AND the loan.
+  applications: [
+    {
+      id: "AP-5001",
+      name: "Safiatou Ouedraogo",
+      phone: "+225 0709090909",
+      region: "Abidjan",
+      sector: "Commerce de pagnes",
+      monthlyIncome: 180000,
+      requestedAmount: 300000,
+      requestedTermMonths: 6,
+      purpose: "Stock de pagnes pour la saison des fêtes",
+      guarantee: 90000,
+      submittedAt: seedDueDate(-2) + "T09:15:00.000Z",
+      status: "pending",
+      decidedAt: null,
+      decidedBy: null,
+      decisionNote: "",
+      createdClientId: null,
+      createdLoanId: null
+    },
+    {
+      id: "AP-5002",
+      name: "Issa Traoré",
+      phone: "+225 0710101010",
+      region: "Bouaké",
+      sector: "Transport de marchandises",
+      monthlyIncome: 95000,
+      requestedAmount: 750000,
+      requestedTermMonths: 12,
+      purpose: "Achat d'un tricycle de livraison",
+      guarantee: 40000,
+      submittedAt: seedDueDate(-1) + "T16:40:00.000Z",
+      status: "pending",
+      decidedAt: null,
+      decidedBy: null,
+      decisionNote: "",
+      createdClientId: null,
+      createdLoanId: null
+    }
+  ],
   repayments: [
     { id: "RP-4001", loanId: "LN-2001", amount: 120000, paymentDate: seedDueDate(-3), note: "Encaissement en espèces" },
     { id: "RP-4002", loanId: "LN-2018", amount: 98000, paymentDate: seedDueDate(-4), note: "Paiement mobile money" },
@@ -243,6 +289,7 @@ const VIEW_LABELS = {
   overview: "Vue d'ensemble",
   clients: "Clients",
   loans: "Crédits",
+  applications: "Demandes",
   repayments: "Remboursements",
   advisor: "Conseiller IA"
 };
@@ -282,6 +329,16 @@ const els = {
   heroStrip: document.getElementById("hero-strip"),
   portfolioSpotlight: document.getElementById("portfolio-spotlight"),
   collectionSpotlight: document.getElementById("collection-spotlight"),
+  officerGate: document.getElementById("officer-gate"),
+  officerCodeInput: document.getElementById("officer-code-input"),
+  officerCodeBtn: document.getElementById("officer-code-btn"),
+  officerGateError: document.getElementById("officer-gate-error"),
+  officerGateHint: document.getElementById("officer-gate-hint"),
+  officerSignoutBtn: document.getElementById("officer-signout-btn"),
+  appShell: document.getElementById("app-shell"),
+  applicationList: document.getElementById("application-list"),
+  applicationHistory: document.getElementById("application-history"),
+  applicationsSummary: document.getElementById("applications-summary"),
   navItems: [...document.querySelectorAll(".nav-item")],
   views: [...document.querySelectorAll(".view")],
   statsGrid: document.getElementById("stats-grid"),
@@ -320,9 +377,115 @@ const els = {
   aiRefreshBtn: document.getElementById("ai-refresh-btn")
 };
 
+/**
+ * Officer session.
+ *
+ * The console exposes every client's declared income, credit score and the whole
+ * portfolio, so it is staff-only — a client tapping through from the mobile app
+ * used to land here. Kept in sessionStorage rather than localStorage so closing
+ * the tab ends the session.
+ *
+ * This is product separation, not security: the demo's data lives in
+ * localStorage and any page on this origin can read it. Real enforcement needs
+ * per-user auth and server-side scoping in the backend.
+ */
+const OFFICER_SESSION_KEY = "cirex_officer_session_v1";
+
+function officerCodes() {
+  // An officer signs in with their own staff id. Direction keeps a separate code
+  // so supervisory access is distinguishable in the session record.
+  const codes = state.officers.map((officer) => ({
+    code: officer.id.toUpperCase(),
+    name: officer.name,
+    role: officer.role || "Agent de crédit"
+  }));
+  codes.push({ code: "DIR-01", name: "Direction CIREX", role: "Direction" });
+  return codes;
+}
+
+function getOfficerSession() {
+  try {
+    const raw = sessionStorage.getItem(OFFICER_SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.code ? parsed : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function setOfficerSession(entry) {
+  try {
+    sessionStorage.setItem(OFFICER_SESSION_KEY, JSON.stringify(entry));
+  } catch (_) { /* private browsing: the gate simply reopens next load */ }
+}
+
+function clearOfficerSession() {
+  try { sessionStorage.removeItem(OFFICER_SESSION_KEY); } catch (_) {}
+}
+
+function showOfficerGate() {
+  if (els.officerGate) els.officerGate.hidden = false;
+  if (els.appShell) els.appShell.hidden = true;
+  if (els.officerGateHint) {
+    els.officerGateHint.textContent =
+      "Démonstration — codes valides : " + officerCodes().map((c) => c.code).join(", ") + ".";
+  }
+  if (els.officerCodeInput) els.officerCodeInput.focus();
+}
+
+function openConsole() {
+  if (els.officerGate) els.officerGate.hidden = true;
+  if (els.appShell) els.appShell.hidden = false;
+}
+
+function attemptOfficerSignIn() {
+  const raw = String(els.officerCodeInput ? els.officerCodeInput.value : "").trim().toUpperCase();
+  const match = officerCodes().find((entry) => entry.code === raw);
+  if (!match) {
+    if (els.officerGateError) {
+      els.officerGateError.hidden = false;
+      els.officerGateError.textContent = raw
+        ? "Code agent inconnu. Si vous êtes client, utilisez l'application client."
+        : "Saisissez votre code agent.";
+    }
+    return;
+  }
+  if (els.officerGateError) els.officerGateError.hidden = true;
+  setOfficerSession({ code: match.code, name: match.name, role: match.role, since: new Date().toISOString() });
+  openConsole();
+  renderAll();
+}
+
+function bindOfficerGate() {
+  if (els.officerCodeBtn) els.officerCodeBtn.addEventListener("click", attemptOfficerSignIn);
+  if (els.officerCodeInput) {
+    els.officerCodeInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        attemptOfficerSignIn();
+      }
+    });
+  }
+  if (els.officerSignoutBtn) {
+    els.officerSignoutBtn.addEventListener("click", () => {
+      clearOfficerSession();
+      if (els.officerCodeInput) els.officerCodeInput.value = "";
+      showOfficerGate();
+    });
+  }
+}
+
 init();
 
 function init() {
+  // Pick up anything filed from the client app since this console last ran.
+  if (drainApplicationInbox(state)) saveState();
+
+  bindOfficerGate();
+  if (getOfficerSession()) openConsole();
+  else showOfficerGate();
+
   renderMarketTicker();
   bindNavigation();
   bindForms();
@@ -358,6 +521,58 @@ function loadState() {
   }
 }
 
+/**
+ * Moves account-opening requests submitted from the client app into state.
+ *
+ * The client app appends to its own key rather than writing the state document,
+ * so it can never overwrite the portfolio. Draining is idempotent: an id already
+ * present is skipped, which keeps an officer's decision from being reverted by a
+ * stale copy still sitting in the queue.
+ */
+function drainApplicationInbox(targetState) {
+  let inbound;
+  try {
+    inbound = JSON.parse(localStorage.getItem(APPLICATION_OUTBOX_KEY) || "[]");
+  } catch (_) {
+    return false;
+  }
+  if (!Array.isArray(inbound) || !inbound.length) return false;
+
+  if (!Array.isArray(targetState.applications)) targetState.applications = [];
+  const byId = new Map(targetState.applications.map((entry) => [entry.id, entry]));
+  let added = 0;
+
+  for (const entry of inbound) {
+    if (!entry || !entry.id) continue;
+    const existing = byId.get(entry.id);
+
+    // Same reference AND same submission time: this is the request we already
+    // drained, arriving again because the outbox is append-only. Skip it, which
+    // is what keeps an officer's decision from being reverted by a stale copy.
+    if (existing && existing.submittedAt === entry.submittedAt) continue;
+
+    // Same reference, DIFFERENT submission: a genuine collision. The client app
+    // numbers references without being able to see the console's own, so it can
+    // reuse one. Re-key rather than skip — dropping it would lose a real request
+    // silently, and the applicant is holding that reference.
+    let id = entry.id;
+    if (existing) {
+      const highest = [...byId.keys()].reduce((max, key) => {
+        const value = Number(String(key).split("-")[1]);
+        return Number.isFinite(value) ? Math.max(max, value) : max;
+      }, 5000);
+      id = "AP-" + (highest + 1);
+    }
+
+    const drained = { ...entry, id, status: entry.status || "pending" };
+    if (id !== entry.id) drained.clientReference = entry.id;
+    targetState.applications.unshift(drained);
+    byId.set(id, drained);
+    added += 1;
+  }
+  return added > 0;
+}
+
 function normalizeState(saved) {
   const stateCopy = JSON.parse(JSON.stringify(seedState));
   Object.assign(stateCopy.metadata, saved.metadata || {});
@@ -381,6 +596,9 @@ function normalizeState(saved) {
     };
   }) : stateCopy.loans;
   stateCopy.repayments = Array.isArray(saved.repayments) ? saved.repayments : stateCopy.repayments;
+  // A file saved before onboarding existed has no applications key. Fall back to
+  // the seed queue rather than an empty array, so the demo still shows the flow.
+  stateCopy.applications = Array.isArray(saved.applications) ? saved.applications : stateCopy.applications;
   applyInterestCeilingPolicy(stateCopy);
   return stateCopy;
 }
@@ -606,6 +824,16 @@ function bindForms() {
 }
 
 function bindActions() {
+  document.addEventListener("click", (event) => {
+    const approve = event.target.closest("[data-approve-application]");
+    if (approve) {
+      approveApplication(approve.dataset.approveApplication);
+      return;
+    }
+    const refuse = event.target.closest("[data-refuse-application]");
+    if (refuse) refuseApplication(refuse.dataset.refuseApplication);
+  });
+
   els.resetBtn.addEventListener("click", () => {
     state = JSON.parse(JSON.stringify(seedState));
     clearPendingManualLoanApproval();
@@ -851,6 +1079,7 @@ function renderAll() {
   renderOverview();
   renderClients();
   renderLoans();
+  renderApplications();
   renderRepayments();
 }
 
@@ -924,10 +1153,10 @@ function renderShell() {
 }
 
 function populateSelects() {
-  const clientOptions = state.clients.map((client) => `<option value="${client.id}">${client.name} - ${client.sector}</option>`).join("");
+  const clientOptions = state.clients.map((client) => `<option value="${escapeHtml(client.id)}">${escapeHtml(client.name)} - ${escapeHtml(client.sector)}</option>`).join("");
   const branchOptions = state.branches.map((branch) => `<option value="${branch.id}">${branch.name} - ${branch.region}</option>`).join("");
   const officerOptions = state.officers.map((officer) => `<option value="${officer.id}">${officer.name} - ${getBranch(officer.branchId)?.name || officer.branchId}</option>`).join("");
-  const loanOptions = state.loans.map((loan) => `<option value="${loan.id}">${loan.id} - ${getClient(loan.clientId)?.name || "Client inconnu"}</option>`).join("");
+  const loanOptions = state.loans.map((loan) => `<option value="${escapeHtml(loan.id)}">${escapeHtml(loan.id)} - ${escapeHtml(getClient(loan.clientId)?.name || "Client inconnu")}</option>`).join("");
   els.loanClientSelect.innerHTML = clientOptions;
   els.clientBranchSelect.innerHTML = branchOptions;
   els.loanBranchSelect.innerHTML = branchOptions;
@@ -1028,13 +1257,13 @@ function renderClients() {
       <article class="record-card">
         <header>
           <div>
-            <h3>${client.name}</h3>
-            <p>${client.sector} - ${client.region}</p>
+            <h3>${escapeHtml(client.name)}</h3>
+            <p>${escapeHtml(client.sector)} - ${escapeHtml(client.region)}</p>
           </div>
           <span class="pill ${score.pillClass}">Score ${score.score}</span>
         </header>
         <div class="record-row">
-          <span class="muted">${client.phone}</span>
+          <span class="muted">${escapeHtml(client.phone)}</span>
           <span class="muted">${client.id}</span>
         </div>
         <div class="record-row">
@@ -1066,8 +1295,8 @@ function renderLoans() {
     <article class="record-card">
       <header>
         <div>
-          <h3>${getClient(loan.clientId)?.name || "Client inconnu"}</h3>
-          <p>${loan.purpose}</p>
+          <h3>${escapeHtml(getClient(loan.clientId)?.name || "Client inconnu")}</h3>
+          <p>${escapeHtml(loan.purpose)}</p>
         </div>
         <span class="pill ${loan.status.toLowerCase()}">${getStatusLabel(loan.status)}</span>
       </header>
@@ -1141,6 +1370,270 @@ function renderLoanScheduleRow(loan) {
   `;
 }
 
+/**
+ * Scores an application BEFORE the client exists.
+ *
+ * scoreClient() needs a client record and its loans, which an applicant has
+ * neither of. This runs the same AfriCredit engine on what the application
+ * itself declares, so the officer sees a score and its vetoes at decision time
+ * rather than discovering them after approving.
+ *
+ * paymentHistory is the one factor with no evidence: a first-time applicant has
+ * no repayment record with us. It is set to 100 (no arrears observed) and
+ * labelled as such in the UI — inventing a middling number would silently
+ * penalise every newcomer.
+ */
+function scoreApplication(application) {
+  const principal = Number(application.requestedAmount) || 0;
+  const income = Number(application.monthlyIncome) || 0;
+  const guarantee = Number(application.guarantee) || 0;
+  const term = Math.max(1, Number(application.requestedTermMonths) || 6);
+  const rate = state.metadata.interestCeilingCurrent || DEFAULT_INTEREST_RATE_CEILING;
+
+  if (!(principal > 0) || !(income > 0)) {
+    return { status: "INCOMPLET", reason: "Montant demandé ou revenu manquant.", monthlyInstalment: 0, debtRatio: 0 };
+  }
+
+  // Debt service on the requested credit, from the real amortisation engine.
+  let monthlyInstalment = Math.round(principal / term);
+  try {
+    const schedule = buildSchedule({
+      principalCentimes: BigInt(Math.round(principal)) * 100n,
+      annualRatePct: rate,
+      termMonths: term,
+      firstDueDate: addMonths(new Date().toISOString().slice(0, 10), 1)
+    });
+    monthlyInstalment = Number(schedule.instalments[0].totalDueCentimes / 100n);
+  } catch (_) { /* fall back to the straight-line estimate above */ }
+
+  const debtRatio = Math.max(0, Math.min(100, (monthlyInstalment / income) * 100));
+  const sectorRisk = sectorRiskFor({ sector: application.sector });
+  const factors = {
+    paymentHistory: 100,
+    debtRatio,
+    sectorRisk,
+    governanceScore: [application.phone, application.region, application.sector, application.purpose]
+      .filter((value) => String(value || "").trim().length > 0).length * 25,
+    collateralValue: guarantee,
+    collateralFullScoreXof: principal,
+    cashFlowStability: cashFlowStabilityFor({ sector: application.sector }, 0),
+    countryRisk: countryRiskFor(null)
+  };
+
+  if (!(guarantee > 0)) {
+    return {
+      status: "INCOMPLET",
+      reason: "Aucune garantie proposée : le score ne peut pas être calculé.",
+      monthlyInstalment, debtRatio, factors
+    };
+  }
+
+  const assessment = calculateCreditScore(factors);
+  return {
+    status: assessment.status,
+    score: assessment.score,
+    grade: assessment.grade,
+    vetoReason: assessment.vetoReason,
+    monthlyInstalment,
+    debtRatio,
+    factors
+  };
+}
+
+/** Branch and officer for a new client: match the locality, then load-balance. */
+function assignBranchAndOfficer(region) {
+  const normalizedRegion = _normApplicationText(region);
+  const branch = state.branches.find((entry) => _normApplicationText(entry.name).includes(normalizedRegion)
+      || normalizedRegion.includes(_normApplicationText(entry.city || entry.name)))
+    || state.branches.reduce((lightest, entry) => {
+      const load = state.clients.filter((client) => client.branchId === entry.id).length;
+      const bestLoad = state.clients.filter((client) => client.branchId === lightest.id).length;
+      return load < bestLoad ? entry : lightest;
+    }, state.branches[0]);
+
+  const branchOfficers = state.officers.filter((officer) => officer.branchId === branch.id);
+  const pool = branchOfficers.length ? branchOfficers : state.officers;
+  const officer = pool.reduce((lightest, entry) => {
+    const load = state.loans.filter((loan) => loan.officerId === entry.id).length;
+    const bestLoad = state.loans.filter((loan) => loan.officerId === lightest.id).length;
+    return load < bestLoad ? entry : lightest;
+  }, pool[0]);
+
+  return { branchId: branch.id, officerId: officer.id };
+}
+
+function _normApplicationText(value) {
+  return String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+}
+
+function getApplications() {
+  return Array.isArray(state.applications) ? state.applications : [];
+}
+
+/**
+ * Approves an application: creates the client, then the loan.
+ *
+ * Both in one step because a microfinance applicant is asking for money, not for
+ * membership — registering the person without the credit they applied for would
+ * leave the request half-served.
+ */
+function approveApplication(applicationId) {
+  const application = getApplications().find((entry) => entry.id === applicationId);
+  if (!application || application.status !== "pending") return;
+
+  const assessment = scoreApplication(application);
+  if (assessment.status === "INCOMPLET") {
+    showToast("Dossier incomplet : " + assessment.reason);
+    return;
+  }
+
+  const session = getOfficerSession();
+  const { branchId, officerId } = assignBranchAndOfficer(application.region);
+
+  const client = {
+    id: nextId("CL", state.clients, 1000),
+    name: application.name,
+    sector: application.sector,
+    region: application.region,
+    phone: application.phone,
+    branchId,
+    officerId,
+    monthlyIncome: Number(application.monthlyIncome) || 0,
+    notes: `Ouverture de compte ${application.id} validée le ${prettyDate(new Date().toISOString().slice(0, 10))}.`
+  };
+  state.clients.unshift(client);
+
+  const rate = state.metadata.interestCeilingCurrent || DEFAULT_INTEREST_RATE_CEILING;
+  createLoanFromDraft({
+    clientId: client.id,
+    clientName: client.name,
+    clientSector: client.sector,
+    branchId,
+    branchName: getBranch(branchId)?.name || branchId,
+    officerId,
+    officerName: getOfficer(officerId)?.name || officerId,
+    purpose: application.purpose,
+    principal: Number(application.requestedAmount) || 0,
+    guarantee: Number(application.guarantee) || 0,
+    interestRate: rate,
+    termMonths: Math.max(1, Number(application.requestedTermMonths) || 6),
+    nextDueDate: addMonths(new Date().toISOString().slice(0, 10), 1),
+    status: "Current",
+    riskFlag: assessment.score >= 75 ? "Low" : assessment.score >= 50 ? "Medium" : "High"
+  }, { approvalMode: "manual-review", complianceDecision: "APPROVED" });
+
+  application.status = "approved";
+  application.decidedAt = new Date().toISOString();
+  application.decidedBy = session ? `${session.name} (${session.code})` : "Console";
+  application.createdClientId = client.id;
+  application.createdLoanId = state.loans[0] ? state.loans[0].id : null;
+  application.decisionNote = `Score AfriCredit ${assessment.score} (${assessment.grade}).`;
+
+  saveState();
+  renderAll();
+  showToast(`${client.name} est cliente : ${client.id} et crédit ${application.createdLoanId}.`);
+}
+
+function refuseApplication(applicationId) {
+  const application = getApplications().find((entry) => entry.id === applicationId);
+  if (!application || application.status !== "pending") return;
+  const reason = window.prompt("Motif du refus (communiqué au demandeur) :", "");
+  if (reason === null) return;
+  const session = getOfficerSession();
+  application.status = "refused";
+  application.decidedAt = new Date().toISOString();
+  application.decidedBy = session ? `${session.name} (${session.code})` : "Console";
+  application.decisionNote = String(reason).trim() || "Sans motif précisé.";
+  saveState();
+  renderAll();
+  showToast("Demande refusée.");
+}
+
+function renderApplications() {
+  if (!els.applicationList) return;
+  const applications = getApplications();
+  const pending = applications.filter((entry) => entry.status === "pending");
+  const decided = applications.filter((entry) => entry.status !== "pending");
+
+  if (els.applicationsSummary) {
+    els.applicationsSummary.textContent = pending.length
+      ? `${pending.length} demande${pending.length > 1 ? "s" : ""} en attente. L'approbation crée le client et met en place le crédit demandé.`
+      : "Aucune demande en attente.";
+  }
+
+  els.applicationList.innerHTML = pending.length
+    ? pending.map((application) => {
+        const assessment = scoreApplication(application);
+        const scoreLine = assessment.status === "INCOMPLET"
+          ? `<span class="pill watch">Dossier incomplet</span><span class="muted">${assessment.reason}</span>`
+          : assessment.status === "VETOED"
+            ? `<span class="pill late">Veto AfriCredit</span><span class="muted">${assessment.vetoReason}</span>`
+            : `<span class="pill ${assessment.score >= 75 ? "good" : "watch"}">Score ${assessment.score} · ${assessment.grade}</span>
+               <span class="muted">Mensualité ${money(assessment.monthlyInstalment)} — ${pct(round1(assessment.debtRatio))} du revenu</span>`;
+        return `
+      <article class="record-card">
+        <header>
+          <div>
+            <h3>${escapeHtml(application.name)}</h3>
+            <p>${escapeHtml(application.sector)} - ${escapeHtml(application.region)}</p>
+          </div>
+          <span class="pill watch">${application.id}</span>
+        </header>
+        <div class="record-row">
+          <span>${money(application.requestedAmount)} demandés sur ${application.requestedTermMonths} mois</span>
+          <span class="muted">${escapeHtml(application.phone)}</span>
+        </div>
+        <div class="record-row">
+          <span class="muted">Revenu déclaré ${money(application.monthlyIncome)}/mois</span>
+          <span class="muted">Garantie proposée ${money(application.guarantee)}</span>
+        </div>
+        <div class="record-row">${scoreLine}</div>
+        <div class="record-row">
+          <span class="muted">${escapeHtml(application.purpose)}</span>
+          <span class="muted">Reçue ${prettyDateTime(application.submittedAt)}</span>
+        </div>
+        ${application.clientReference ? `
+        <div class="record-row">
+          <span class="pill watch">Réf. donnée au client : ${escapeHtml(application.clientReference)}</span>
+          <span class="muted">Renumérotée à l'arrivée (référence déjà utilisée)</span>
+        </div>` : ""}
+        <div class="record-row">
+          <span class="muted">Historique de remboursement : aucun antécédent chez nous (premier crédit)</span>
+        </div>
+        <div class="record-actions">
+          <button class="primary-btn" data-approve-application="${application.id}">Approuver et ouvrir le crédit</button>
+          <button class="ghost-btn" data-refuse-application="${application.id}">Refuser</button>
+        </div>
+      </article>
+    `;
+      }).join("")
+    : `<div class="detail-card"><strong>File vide</strong><p class="detail-copy">Les demandes envoyées depuis l'application client apparaissent ici.</p></div>`;
+
+  if (els.applicationHistory) {
+    els.applicationHistory.innerHTML = decided.length
+      ? decided
+          .slice()
+          .sort((a, b) => String(b.decidedAt || "").localeCompare(String(a.decidedAt || "")))
+          .map((application) => `
+        <article class="record-card">
+          <header>
+            <div>
+              <h3>${escapeHtml(application.name)}</h3>
+              <p>${application.id} - ${escapeHtml(application.decidedBy || "")}</p>
+            </div>
+            <span class="pill ${application.status === "approved" ? "good" : "late"}">${application.status === "approved" ? "Approuvée" : "Refusée"}</span>
+          </header>
+          <div class="record-row">
+            <span class="muted">${escapeHtml(application.decisionNote || "")}</span>
+            <span class="muted">${application.decidedAt ? prettyDateTime(application.decidedAt) : "-"}</span>
+          </div>
+          ${application.createdClientId ? `<div class="record-row"><span class="muted">Client ${application.createdClientId}</span><span class="muted">Crédit ${application.createdLoanId || "-"}</span></div>` : ""}
+        </article>
+      `).join("")
+      : `<div class="detail-card"><strong>Aucune décision</strong><p class="detail-copy">L'historique des approbations et des refus s'affiche ici.</p></div>`;
+  }
+}
+
 function renderRepayments() {
   els.repaymentList.innerHTML = state.repayments.slice(0, 12).map((repayment) => {
     const loan = state.loans.find((entry) => entry.id === repayment.loanId);
@@ -1181,10 +1674,19 @@ function renderRepayments() {
   }).join("");
 }
 
+/**
+ * Generic table renderer.
+ *
+ * Escapes every cell. The score table feeds it client names, which since
+ * onboarding can originate from an outsider's account-opening request — an
+ * unescaped name of <img src=x onerror=...> executed in the officer's session.
+ * All three callers pass plain text (names, money(), String()), so escaping here
+ * is safe and covers them together.
+ */
 function renderTable(headers, rows) {
   return [
-    `<div class="table-row header">${headers.map((item) => `<span>${item}</span>`).join("")}</div>`,
-    ...rows.map((row) => `<div class="table-row">${row.map((cell) => `<span>${cell}</span>`).join("")}</div>`)
+    `<div class="table-row header">${headers.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>`,
+    ...rows.map((row) => `<div class="table-row">${row.map((cell) => `<span>${escapeHtml(cell)}</span>`).join("")}</div>`)
   ].join("");
 }
 
@@ -2135,6 +2637,29 @@ function apiUrl(path) {
   return `${API_BASE}${path}`;
 }
 
+/**
+ * Transient confirmation for the officer.
+ *
+ * The console had no notification element at all, so the approval path called a
+ * showToast() that did not exist and threw a ReferenceError after doing its
+ * work. Uses textContent, never innerHTML: the message carries an applicant's
+ * name straight from their submission.
+ */
+let consoleToastTimer = null;
+function showToast(message) {
+  let host = document.getElementById("console-toast");
+  if (!host) {
+    host = document.createElement("div");
+    host.id = "console-toast";
+    host.className = "console-toast";
+    document.body.appendChild(host);
+  }
+  host.textContent = String(message);
+  host.classList.add("show");
+  if (consoleToastTimer) clearTimeout(consoleToastTimer);
+  consoleToastTimer = setTimeout(() => host.classList.remove("show"), 5200);
+}
+
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -2169,10 +2694,10 @@ function printClientStatement(clientId) {
     </style></head><body>
       <h1>${state.metadata.institutionName}</h1>
       <div class="muted">Fiche générée le ${new Date().toLocaleDateString("fr-FR")}</div>
-      <div class="card"><strong>${client.name}</strong><div>${client.sector} | ${client.region}</div><div>${getBranch(client.branchId)?.name || ""} | ${getOfficer(client.officerId)?.name || ""}</div><div>Score ${score.score} / 100</div></div>
+      <div class="card"><strong>${escapeHtml(client.name)}</strong><div>${escapeHtml(client.sector)} | ${escapeHtml(client.region)}</div><div>${escapeHtml(getBranch(client.branchId)?.name || "")} | ${escapeHtml(getOfficer(client.officerId)?.name || "")}</div><div>Score ${score.score} / 100</div></div>
       <h2>Crédits</h2>
       <table><thead><tr><th>ID</th><th>Objet</th><th>Statut</th><th>Encours</th></tr></thead><tbody>
-      ${loans.map((loan) => `<tr><td>${loan.id}</td><td>${loan.purpose}</td><td>${getStatusLabel(loan.status)}</td><td>${money(loan.outstanding)}</td></tr>`).join("") || `<tr><td colspan="4">Aucun crédit</td></tr>`}
+      ${loans.map((loan) => `<tr><td>${escapeHtml(loan.id)}</td><td>${escapeHtml(loan.purpose)}</td><td>${getStatusLabel(loan.status)}</td><td>${money(loan.outstanding)}</td></tr>`).join("") || `<tr><td colspan="4">Aucun crédit</td></tr>`}
       </tbody></table>
       <h2>Remboursements récents</h2>
       <table><thead><tr><th>Date</th><th>Crédit</th><th>Montant</th><th>Note</th></tr></thead><tbody>

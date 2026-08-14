@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./wasi-customer-portal.css?v=20260813c">
+  <link rel="stylesheet" href="./wasi-customer-portal.css?v=20260814b">
 </head>
 <body>
   <div class="access-gate" id="access-gate">
@@ -37,7 +37,9 @@
   <div id="app" hidden>
     <header class="topbar">
       <div class="topbar-brand-wrap">
-        <a class="back-link" href="./index.html">Retour vers CIREX</a>
+        <!-- Was href="./index.html" (the officer console). Clients belong in
+             the client app, not the portfolio. -->
+        <a class="back-link" href="./wasi-client-app.html">Retour vers l'app client</a>
         <div>
           <div class="topbar-brand">Portail Client WASI</div>
           <div class="topbar-sub">Marché privé client adossé à la relation microfinance</div>
@@ -219,6 +221,6 @@
     </main>
   </div>
 
-  <script src="./wasi-customer-portal.js?v=20260813c"></script>
+  <script src="./wasi-customer-portal.js?v=20260814b"></script>
 </body>
 </html>

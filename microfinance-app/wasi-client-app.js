@@ -138,6 +138,116 @@ function bind() {
   els.qtyPlus.addEventListener("click", () => nudgeQuantity(1));
   els.orderQuantity.addEventListener("input", renderOrderSummary);
   els.placeOrderBtn.addEventListener("click", placeOrder);
+
+  const signupOpen = document.getElementById("signup-open-btn");
+  const signupCancel = document.getElementById("signup-cancel-btn");
+  const signupForm = document.getElementById("signup-form");
+  if (signupOpen) signupOpen.addEventListener("click", () => toggleSignup(true));
+  if (signupCancel) signupCancel.addEventListener("click", () => toggleSignup(false));
+  if (signupForm) signupForm.addEventListener("submit", submitApplication);
+}
+
+function toggleSignup(open) {
+  const gate = document.getElementById("access-gate");
+  const signup = document.getElementById("signup-gate");
+  if (!gate || !signup) return;
+  gate.hidden = !!open;
+  signup.hidden = !open;
+  if (open) {
+    const first = signup.querySelector("input[name=name]");
+    if (first) first.focus();
+  }
+}
+
+/**
+ * Files an account-opening request into the shared CIREX state.
+ *
+ * Deliberately does NOT create a client or a loan — it queues a request an
+ * officer decides on in the console. Written straight to localStorage rather
+ * than held in the page so the console picks it up on its next load.
+ */
+function submitApplication(event) {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  const text = (key) => String(form.get(key) || "").trim();
+  const amount = (key) => Math.max(0, Math.round(Number(form.get(key)) || 0));
+
+  const application = {
+    id: nextApplicationId(),
+    name: text("name"),
+    phone: text("phone"),
+    region: text("region"),
+    sector: text("sector"),
+    monthlyIncome: amount("monthlyIncome"),
+    requestedAmount: amount("requestedAmount"),
+    requestedTermMonths: Math.max(1, Math.round(Number(form.get("requestedTermMonths")) || 6)),
+    guarantee: amount("guarantee"),
+    purpose: text("purpose"),
+    submittedAt: new Date().toISOString(),
+    status: "pending",
+    decidedAt: null,
+    decidedBy: null,
+    decisionNote: "",
+    createdClientId: null,
+    createdLoanId: null
+  };
+
+  if (!application.name || !application.phone || !application.requestedAmount || !application.monthlyIncome) {
+    showToast("Renseignez au moins votre nom, votre téléphone, votre revenu et le montant souhaité.");
+    return;
+  }
+
+  try {
+    const outbox = readApplicationOutbox();
+    outbox.push(application);
+    localStorage.setItem(APPLICATION_OUTBOX_KEY, JSON.stringify(outbox));
+  } catch (_) {
+    showToast("Impossible d'enregistrer la demande sur cet appareil.");
+    return;
+  }
+
+  const receipt = document.getElementById("signup-receipt");
+  if (receipt) {
+    receipt.hidden = false;
+    receipt.innerHTML = `
+      <strong>Demande enregistrée — référence ${application.id}</strong><br>
+      Un agent de crédit CIREX étudie votre dossier et vous appelle au
+      ${application.phone}. Conservez la référence pour tout suivi.
+    `;
+  }
+  event.currentTarget.reset();
+  showToast("Demande envoyée. Référence " + application.id + ".");
+}
+
+function nextApplicationId() {
+  // Numbered against both the outbox and any applications already drained into
+  // the console's state, so a reference is never reused.
+  const drained = Array.isArray(cirex.applications) ? cirex.applications : [];
+  const existing = readApplicationOutbox().concat(drained);
+  const highest = existing.reduce((max, entry) => {
+    const value = Number(String(entry.id || "").split("-")[1]);
+    return Number.isFinite(value) ? Math.max(max, value) : max;
+  }, 5000);
+  return "AP-" + (highest + 1);
+}
+
+/**
+ * Outbox for account-opening requests.
+ *
+ * Deliberately a separate key from the CIREX state document. loadCirex() falls
+ * back to the small DEMO fixture when nothing is stored yet, so writing `cirex`
+ * back to the state key would replace the console's real portfolio with that
+ * stub. This key is append-only from here; the console drains it on load.
+ */
+const APPLICATION_OUTBOX_KEY = "cirex_applications_v1";
+
+function readApplicationOutbox() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(APPLICATION_OUTBOX_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    return [];
+  }
 }
 
 function loadCirex() {

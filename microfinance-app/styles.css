@@ -1021,3 +1021,124 @@ textarea {
     align-items: flex-start;
   }
 }
+
+
+/* ── Officer gate ─────────────────────────────────────────────────────────
+   Staff-only entry to the console. Product separation, not security — see the
+   comment in index.html. */
+.officer-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 20% 20%, rgba(31, 41, 71, 0.96), rgba(8, 12, 24, 0.99));
+  backdrop-filter: blur(6px);
+}
+
+.officer-gate[hidden] { display: none !important; }
+
+.officer-gate-card {
+  width: min(460px, 100%);
+  padding: 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(13, 18, 33, 0.96);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.officer-gate-card h1 {
+  margin: 6px 0 12px;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.officer-gate-copy,
+.officer-gate-note {
+  color: rgba(226, 232, 240, 0.72);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.officer-gate-note {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+  font-size: 0.78rem;
+  color: rgba(148, 163, 184, 0.72);
+}
+
+.officer-gate-label {
+  display: block;
+  margin: 20px 0 14px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.officer-gate-label input {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(8, 12, 24, 0.85);
+  color: #f8fafc;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.officer-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.officer-gate-error {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecaca;
+  font-size: 0.85rem;
+}
+
+.officer-gate-error[hidden] { display: none !important; }
+
+.officer-gate-hint {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: rgba(212, 175, 55, 0.8);
+}
+
+
+/* ── Console toast ────────────────────────────────────────────────────────── */
+.console-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 9500;
+  transform: translate(-50%, 20px);
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: rgba(13, 18, 33, 0.97);
+  color: #f8fafc;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.console-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

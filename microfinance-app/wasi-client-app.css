@@ -751,3 +751,66 @@ input {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ── Account-opening request ─────────────────────────────────────────────── */
+.gate-card-wide { width: min(560px, 100%); }
+
+.signup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 6px;
+  text-align: left;
+}
+
+.signup-full { grid-column: 1 / -1; }
+
+.signup-grid label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.signup-grid input,
+.signup-grid textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(9, 13, 25, 0.9);
+  color: #f8fafc;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.signup-grid textarea { resize: vertical; }
+
+.signup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.signup-receipt {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.1);
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.signup-receipt[hidden] { display: none !important; }
+
+@media (max-width: 520px) {
+  .signup-grid { grid-template-columns: 1fr; }
+}

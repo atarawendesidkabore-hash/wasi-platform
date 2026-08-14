@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./wasi-client-app.css?v=20260813c">
+  <link rel="stylesheet" href="./wasi-client-app.css?v=20260814b">
 </head>
 <body>
   <div class="access-gate" id="access-gate">
@@ -25,8 +25,42 @@
       <input id="customer-access-input" class="gate-input" type="text" placeholder="Code client CIREX ou téléphone" autocomplete="off">
       <button id="access-btn" class="primary-btn" type="button">Ouvrir l'app client</button>
       <button id="demo-access-btn" class="secondary-btn" type="button">Entrer en démonstration</button>
-      <p class="gate-hint">Accès réservé aux clients disposant d'au moins un prêt actif. Des profils de démonstration restent disponibles pour tester l'app.</p>
+      <button id="signup-open-btn" class="ghost-btn" type="button">Je ne suis pas encore client — ouvrir un compte</button>
+      <p class="gate-hint">L'accès à la bourse privée est réservé aux clients ayant au moins un prêt actif. Sans prêt, envoyez une demande d'ouverture de compte : un agent CIREX l'étudie et vous répond.</p>
       <div id="demo-access-list" class="demo-list"></div>
+    </div>
+  </div>
+
+  <!-- Account-opening request. A prospect has no client record yet, so this
+       collects the person, their declared income and the credit they want; an
+       officer decides in the CIREX console and approval creates both. -->
+  <div class="access-gate" id="signup-gate" hidden>
+    <div class="gate-card gate-card-wide">
+      <div class="gate-badge">Ouverture De Compte CIREX</div>
+      <h1>Demande de crédit</h1>
+      <p class="gate-copy">
+        Renseignez votre activité et le crédit souhaité. Un agent de crédit
+        étudie la demande et vous contacte au numéro indiqué.
+      </p>
+
+      <form id="signup-form" class="signup-grid">
+        <label>Nom complet<input name="name" type="text" required autocomplete="name"></label>
+        <label>Téléphone<input name="phone" type="tel" required autocomplete="tel" placeholder="+225 07 00 00 00 00"></label>
+        <label>Localité<input name="region" type="text" required placeholder="Abidjan"></label>
+        <label>Activité<input name="sector" type="text" required placeholder="Commerce de vivriers"></label>
+        <label>Revenu mensuel net (F CFA)<input name="monthlyIncome" type="number" min="1000" step="1000" required></label>
+        <label>Montant souhaité (F CFA)<input name="requestedAmount" type="number" min="1000" step="1000" required></label>
+        <label>Durée souhaitée (mois)<input name="requestedTermMonths" type="number" min="1" max="24" value="6" required></label>
+        <label>Garantie proposée (F CFA)<input name="guarantee" type="number" min="0" step="1000" value="0" required></label>
+        <label class="signup-full">Objet du crédit<textarea name="purpose" rows="2" required placeholder="À quoi servira ce crédit ?"></textarea></label>
+        <div class="signup-full signup-actions">
+          <button class="primary-btn" type="submit">Envoyer la demande</button>
+          <button class="ghost-btn" type="button" id="signup-cancel-btn">Retour</button>
+        </div>
+      </form>
+
+      <div id="signup-receipt" class="signup-receipt" hidden></div>
+      <p class="gate-hint">Aucun engagement : l'envoi d'une demande ne crée pas de crédit. La décision revient à un agent CIREX.</p>
     </div>
   </div>
 
@@ -38,7 +72,10 @@
   <div id="app" class="app-shell" hidden>
     <header class="app-header">
       <div class="brand-lockup">
-        <a class="header-link" href="./index.html">CIREX</a>
+        <!-- Branding only. This used to link to ./index.html, the officer
+             console, so a client tapping the logo saw every other client's
+             name, income and credit score. -->
+        <span class="header-link" aria-hidden="true">CIREX</span>
         <div>
           <div class="brand-eyebrow">Application Client WASI</div>
           <div class="brand-title">Bourse privée sur mobile</div>
@@ -193,6 +230,6 @@
     </nav>
   </div>
 
-  <script src="./wasi-client-app.js?v=20260813c"></script>
+  <script src="./wasi-client-app.js?v=20260814b"></script>
 </body>
 </html>
