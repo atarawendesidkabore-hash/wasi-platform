@@ -10,6 +10,7 @@ import { generatePortfolioSummary } from "../lib/africredit/par-calculator.js";
 import { calculateCreditScore } from "../lib/africredit/credit-scoring.js";
 import {
   addMonths,
+  firstDueDateForArrears,
   applyPayment,
   buildSchedule,
   deserialiseSchedule,
@@ -44,6 +45,13 @@ const CASH_FLOW_LABELS = {
  * Seed fixture dates are relative to today. Hardcoded ones rot: the original
  * demo loans were due in March 2026, so once real days-past-due drove PAR the
  * whole fixture read as 140+ days late and PAR30 showed 100%.
+ */
+/**
+ * Do NOT use this to place instalment dates. Day offsets and the schedule's
+ * calendar-month steps are different units, and mixing them is what made the
+ * fixture report different arrears in different months. Use
+ * firstDueDateForArrears() for anything a schedule advances from; this helper is
+ * for standalone dates such as repayment timestamps.
  */
 function seedDueDate(offsetDays) {
   const d = new Date();
@@ -81,15 +89,35 @@ const WASI_MARKET_TICKER = [
 ];
 
 /**
- * Builds a demonstration loan whose arrears are EXACT.
+ * Builds a demonstration loan whose arrears are stable on every date.
  *
  * The schedule is generated and its first `settled` instalments marked paid, so
  * the outstanding balance and the days past due follow from the engine rather
  * than from hand-tuned figures that drift the moment a rate or term changes.
- * `firstDueOffsetDays` is relative to today, so the fixture cannot rot.
+ *
+ * Each spec declares `oldestUnpaidDpd` — how many days past due its oldest
+ * UNPAID instalment should be, negative meaning that many days before it falls
+ * due — and firstDueDateForArrears() solves for the first due date that produces
+ * it. Everything is relative to today, so the fixture cannot rot.
+ *
+ * Keep every `oldestUnpaidDpd` more than 3 days away from 0, 30, 60 and 90.
+ * Month-end clamping can move the achieved value by a day or two, and those four
+ * numbers are the Late/Current and PAR band boundaries: a target sitting on one
+ * would let the loan change status with the month. A test in
+ * tests/amortisation.test.mjs enforces this.
  */
 function seedLoan(spec) {
-  const firstDueDate = seedDueDate(spec.firstDueOffsetDays);
+  const today = new Date().toISOString().slice(0, 10);
+  // Anchored on the arrears the fixture wants rather than on a raw day offset.
+  // The old form picked firstDueDate = today - N days and let buildSchedule step
+  // forward in calendar months, which made two loans flip status with month
+  // length: LN-2016 and LN-2019 read Late during March and Watch/Current the
+  // rest of the year, swinging reported late exposure by 96,9 %.
+  const firstDueDate = firstDueDateForArrears({
+    settledInstalments: spec.settled || 0,
+    targetDaysPastDue: spec.oldestUnpaidDpd,
+    today
+  });
   let schedule = buildSchedule({
     principalCentimes: BigInt(spec.principal) * 100n,
     annualRatePct: spec.rate,
@@ -102,7 +130,7 @@ function seedLoan(spec) {
     .reduce((sum, instalment) => sum + instalment.totalDueCentimes, 0n);
   if (alreadyPaid > 0n) schedule = applyPayment(schedule, alreadyPaid).schedule;
 
-  const arrears = scheduleArrears(schedule, new Date().toISOString().slice(0, 10));
+  const arrears = scheduleArrears(schedule, today);
 
   return {
     id: spec.id,
@@ -171,32 +199,32 @@ const seedState = {
   // qui place le PAR30 sous l'engagement de 5 % — un portefeuille de trois
   // crédits ne pouvait pas le démontrer, un seul impayé y pesant 20 %.
   loans: [
-    seedLoan({ id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, guarantee: 320000, rate: 5.5, term: 8, firstDueOffsetDays: -55, settled: 2, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, guarantee: 250000, rate: 6, term: 10, firstDueOffsetDays: -70, settled: 2, watch: true, riskFlag: "Medium" }),
-    seedLoan({ id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, guarantee: 90000, rate: 5.8, term: 6, firstDueOffsetDays: -105, settled: 2, riskFlag: "High" }),
-    seedLoan({ id: "LN-2004", clientId: "CL-1004", branchId: "BR-01", officerId: "OF-05", purpose: "Fonds de roulement vivriers", principal: 400000, guarantee: 120000, rate: 5.5, term: 6, firstDueOffsetDays: -25, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2005", clientId: "CL-1005", branchId: "BR-02", officerId: "OF-04", purpose: "Réparation de camionnette", principal: 900000, guarantee: 450000, rate: 6, term: 12, firstDueOffsetDays: -50, settled: 2, riskFlag: "Medium" }),
-    seedLoan({ id: "LN-2006", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Achat de tissus en gros", principal: 550000, guarantee: 180000, rate: 5.5, term: 8, firstDueOffsetDays: -20, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2007", clientId: "CL-1007", branchId: "BR-03", officerId: "OF-03", purpose: "Entretien de plantation d'hévéa", principal: 750000, guarantee: 300000, rate: 5.8, term: 10, firstDueOffsetDays: -40, settled: 2, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2008", clientId: "CL-1008", branchId: "BR-02", officerId: "OF-02", purpose: "Équipement de restauration", principal: 300000, guarantee: 90000, rate: 5.5, term: 6, firstDueOffsetDays: 8, settled: 0, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2009", clientId: "CL-1009", branchId: "BR-02", officerId: "OF-04", purpose: "Crédit groupe karité", principal: 480000, guarantee: 150000, rate: 6, term: 8, firstDueOffsetDays: -35, settled: 2, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2010", clientId: "CL-1010", branchId: "BR-01", officerId: "OF-05", purpose: "Machines de menuiserie", principal: 820000, guarantee: 400000, rate: 6, term: 12, firstDueOffsetDays: -15, settled: 1, riskFlag: "Medium" }),
-    seedLoan({ id: "LN-2011", clientId: "CL-1011", branchId: "BR-01", officerId: "OF-01", purpose: "Achat de poisson à San-Pédro", principal: 350000, guarantee: 100000, rate: 5.5, term: 6, firstDueOffsetDays: -28, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2012", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Provende et poussins", principal: 600000, guarantee: 200000, rate: 5.8, term: 8, firstDueOffsetDays: -45, settled: 2, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2013", clientId: "CL-1013", branchId: "BR-01", officerId: "OF-05", purpose: "Fournitures de salon", principal: 280000, guarantee: 80000, rate: 5.5, term: 6, firstDueOffsetDays: 12, settled: 0, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2014", clientId: "CL-1014", branchId: "BR-02", officerId: "OF-02", purpose: "Réassort de quincaillerie", principal: 700000, guarantee: 260000, rate: 6, term: 10, firstDueOffsetDays: -22, settled: 1, riskFlag: "Medium" }),
-    seedLoan({ id: "LN-2015", clientId: "CL-1015", branchId: "BR-02", officerId: "OF-04", purpose: "Système d'irrigation", principal: 520000, guarantee: 190000, rate: 5.8, term: 10, firstDueOffsetDays: -18, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2016", clientId: "CL-1016", branchId: "BR-03", officerId: "OF-03", purpose: "Stock de céréales", principal: 640000, guarantee: 210000, rate: 6, term: 8, firstDueOffsetDays: -30, settled: 1, watch: true, riskFlag: "Medium" }),
-    seedLoan({ id: "LN-2017", clientId: "CL-1017", branchId: "BR-01", officerId: "OF-01", purpose: "Pièces détachées motos", principal: 320000, guarantee: 95000, rate: 5.5, term: 6, firstDueOffsetDays: 5, settled: 0, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2018", clientId: "CL-1018", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne anacarde 2026", principal: 780000, guarantee: 290000, rate: 5.8, term: 8, firstDueOffsetDays: -12, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2019", clientId: "CL-1019", branchId: "BR-03", officerId: "OF-03", purpose: "Séchage et conditionnement cacao", principal: 950000, guarantee: 380000, rate: 6, term: 12, firstDueOffsetDays: -60, settled: 2, riskFlag: "Medium" }),
-    seedLoan({ id: "LN-2020", clientId: "CL-1020", branchId: "BR-01", officerId: "OF-05", purpose: "Matières premières boulangerie", principal: 430000, guarantee: 140000, rate: 5.5, term: 6, firstDueOffsetDays: -26, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2021", clientId: "CL-1021", branchId: "BR-02", officerId: "OF-04", purpose: "Intrants savonnerie", principal: 260000, guarantee: 75000, rate: 5.5, term: 6, firstDueOffsetDays: 15, settled: 0, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2022", clientId: "CL-1022", branchId: "BR-01", officerId: "OF-01", purpose: "Filets et moteur hors-bord", principal: 680000, guarantee: 250000, rate: 5.8, term: 10, firstDueOffsetDays: -33, settled: 2, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2023", clientId: "CL-1004", branchId: "BR-01", officerId: "OF-05", purpose: "Extension de boutique", principal: 500000, guarantee: 170000, rate: 6, term: 8, firstDueOffsetDays: 20, settled: 0, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2024", clientId: "CL-1009", branchId: "BR-02", officerId: "OF-04", purpose: "Deuxième cycle groupe karité", principal: 540000, guarantee: 185000, rate: 6, term: 8, firstDueOffsetDays: -10, settled: 1, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2025", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Bâtiment d'élevage", principal: 870000, guarantee: 330000, rate: 6, term: 12, firstDueOffsetDays: -38, settled: 2, riskFlag: "Low" }),
-    seedLoan({ id: "LN-2026", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Stock saison des fêtes", principal: 460000, guarantee: 160000, rate: 5.5, term: 6, firstDueOffsetDays: 3, settled: 0, riskFlag: "Low" })
+    seedLoan({ id: "LN-2001", clientId: "CL-1001", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne d'achat d'anacarde", principal: 850000, guarantee: 320000, rate: 5.5, term: 8, oldestUnpaidDpd: -6, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2002", clientId: "CL-1002", branchId: "BR-03", officerId: "OF-03", purpose: "Intrants agricoles", principal: 1200000, guarantee: 250000, rate: 6, term: 10, oldestUnpaidDpd: 9, settled: 2, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2003", clientId: "CL-1003", branchId: "BR-01", officerId: "OF-01", purpose: "Matériel d'emballage", principal: 650000, guarantee: 90000, rate: 5.8, term: 6, oldestUnpaidDpd: 44, settled: 2, riskFlag: "High" }),
+    seedLoan({ id: "LN-2004", clientId: "CL-1004", branchId: "BR-01", officerId: "OF-05", purpose: "Fonds de roulement vivriers", principal: 400000, guarantee: 120000, rate: 5.5, term: 6, oldestUnpaidDpd: -6, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2005", clientId: "CL-1005", branchId: "BR-02", officerId: "OF-04", purpose: "Réparation de camionnette", principal: 900000, guarantee: 450000, rate: 6, term: 12, oldestUnpaidDpd: -11, settled: 2, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2006", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Achat de tissus en gros", principal: 550000, guarantee: 180000, rate: 5.5, term: 8, oldestUnpaidDpd: -11, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2007", clientId: "CL-1007", branchId: "BR-03", officerId: "OF-03", purpose: "Entretien de plantation d'hévéa", principal: 750000, guarantee: 300000, rate: 5.8, term: 10, oldestUnpaidDpd: -22, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2008", clientId: "CL-1008", branchId: "BR-02", officerId: "OF-02", purpose: "Équipement de restauration", principal: 300000, guarantee: 90000, rate: 5.5, term: 6, oldestUnpaidDpd: -8, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2009", clientId: "CL-1009", branchId: "BR-02", officerId: "OF-04", purpose: "Crédit groupe karité", principal: 480000, guarantee: 150000, rate: 6, term: 8, oldestUnpaidDpd: -27, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2010", clientId: "CL-1010", branchId: "BR-01", officerId: "OF-05", purpose: "Machines de menuiserie", principal: 820000, guarantee: 400000, rate: 6, term: 12, oldestUnpaidDpd: -16, settled: 1, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2011", clientId: "CL-1011", branchId: "BR-01", officerId: "OF-01", purpose: "Achat de poisson à San-Pédro", principal: 350000, guarantee: 100000, rate: 5.5, term: 6, oldestUnpaidDpd: -5, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2012", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Provende et poussins", principal: 600000, guarantee: 200000, rate: 5.8, term: 8, oldestUnpaidDpd: -16, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2013", clientId: "CL-1013", branchId: "BR-01", officerId: "OF-05", purpose: "Fournitures de salon", principal: 280000, guarantee: 80000, rate: 5.5, term: 6, oldestUnpaidDpd: -12, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2014", clientId: "CL-1014", branchId: "BR-02", officerId: "OF-02", purpose: "Réassort de quincaillerie", principal: 700000, guarantee: 260000, rate: 6, term: 10, oldestUnpaidDpd: -9, settled: 1, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2015", clientId: "CL-1015", branchId: "BR-02", officerId: "OF-04", purpose: "Système d'irrigation", principal: 520000, guarantee: 190000, rate: 5.8, term: 10, oldestUnpaidDpd: -13, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2016", clientId: "CL-1016", branchId: "BR-03", officerId: "OF-03", purpose: "Stock de céréales", principal: 640000, guarantee: 210000, rate: 6, term: 8, oldestUnpaidDpd: -7, settled: 1, watch: true, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2017", clientId: "CL-1017", branchId: "BR-01", officerId: "OF-01", purpose: "Pièces détachées motos", principal: 320000, guarantee: 95000, rate: 5.5, term: 6, oldestUnpaidDpd: -5, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2018", clientId: "CL-1018", branchId: "BR-02", officerId: "OF-02", purpose: "Campagne anacarde 2026", principal: 780000, guarantee: 290000, rate: 5.8, term: 8, oldestUnpaidDpd: -19, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2019", clientId: "CL-1019", branchId: "BR-03", officerId: "OF-03", purpose: "Séchage et conditionnement cacao", principal: 950000, guarantee: 380000, rate: 6, term: 12, oldestUnpaidDpd: -9, settled: 2, riskFlag: "Medium" }),
+    seedLoan({ id: "LN-2020", clientId: "CL-1020", branchId: "BR-01", officerId: "OF-05", purpose: "Matières premières boulangerie", principal: 430000, guarantee: 140000, rate: 5.5, term: 6, oldestUnpaidDpd: -5, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2021", clientId: "CL-1021", branchId: "BR-02", officerId: "OF-04", purpose: "Intrants savonnerie", principal: 260000, guarantee: 75000, rate: 5.5, term: 6, oldestUnpaidDpd: -15, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2022", clientId: "CL-1022", branchId: "BR-01", officerId: "OF-01", purpose: "Filets et moteur hors-bord", principal: 680000, guarantee: 250000, rate: 5.8, term: 10, oldestUnpaidDpd: -29, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2023", clientId: "CL-1004", branchId: "BR-01", officerId: "OF-05", purpose: "Extension de boutique", principal: 500000, guarantee: 170000, rate: 6, term: 8, oldestUnpaidDpd: -20, settled: 0, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2024", clientId: "CL-1009", branchId: "BR-02", officerId: "OF-04", purpose: "Deuxième cycle groupe karité", principal: 540000, guarantee: 185000, rate: 6, term: 8, oldestUnpaidDpd: -21, settled: 1, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2025", clientId: "CL-1012", branchId: "BR-03", officerId: "OF-03", purpose: "Bâtiment d'élevage", principal: 870000, guarantee: 330000, rate: 6, term: 12, oldestUnpaidDpd: -24, settled: 2, riskFlag: "Low" }),
+    seedLoan({ id: "LN-2026", clientId: "CL-1006", branchId: "BR-01", officerId: "OF-01", purpose: "Stock saison des fêtes", principal: 460000, guarantee: 160000, rate: 5.5, term: 6, oldestUnpaidDpd: -6, settled: 0, riskFlag: "Low" })
   ],
   repayments: [
     { id: "RP-4001", loanId: "LN-2001", amount: 120000, paymentDate: seedDueDate(-3), note: "Encaissement en espèces" },

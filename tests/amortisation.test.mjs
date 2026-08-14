@@ -6,6 +6,7 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   addMonths,
@@ -17,7 +18,9 @@ import {
   scheduleOutstandingCentimes,
   schedulePrincipalOutstandingCentimes,
   schedulePrincipalTotal,
-  serialiseSchedule
+  serialiseSchedule,
+  firstDueDateForArrears,
+  shiftDays,
 } from "../lib/africredit/amortisation.js";
 
 const XOF = (units) => BigInt(units) * 100n;
@@ -306,4 +309,107 @@ test("the rounding unit survives serialisation", () => {
   const restored = deserialiseSchedule(JSON.parse(JSON.stringify(serialiseSchedule(s))));
   assert.equal(restored.roundingUnitCentimes, "100");
   assert.equal(schedulePrincipalTotal(restored), XOF(400000));
+});
+
+// ── Calendar-month vs day-offset drift ─────────────────────────────────────
+// Regression guard for a defect that shipped in the demo fixture. Seed loans
+// picked firstDueDate = today - N days, then buildSchedule advanced instalments
+// by CALENDAR MONTHS. A 1-month step spans 28-31 days and a 2-month step 59-62,
+// so a loan whose oldest unpaid instalment sat near today crossed the overdue
+// boundary depending only on which month it landed in: two loans read Late
+// through March and Watch/Current the rest of the year, swinging reported late
+// exposure from 1 400 183 to 2 757 162 XOF (+96,9 %) on identical data.
+
+test("shiftDays moves whole days and rejects junk", () => {
+  assert.equal(shiftDays("2026-03-01", -1), "2026-02-28");
+  assert.equal(shiftDays("2028-03-01", -1), "2028-02-29"); // leap year
+  assert.equal(shiftDays("2026-12-31", 1), "2027-01-01");
+  assert.equal(shiftDays("2026-05-10", 0), "2026-05-10");
+  assert.throws(() => shiftDays("not-a-date", 1), /invalid ISO date/);
+});
+
+test("firstDueDateForArrears is exact when nothing is settled", () => {
+  // With no settled instalments the oldest unpaid one IS the first, so no month
+  // arithmetic is involved and the target date is reachable on every date.
+  for (const dpd of [-30, -8, -1, 0, 5, 44]) {
+    for (const today of ["2026-01-31", "2026-02-28", "2026-03-31", "2028-02-29"]) {
+      const first = firstDueDateForArrears({ settledInstalments: 0, targetDaysPastDue: dpd, today });
+      assert.equal(daysBetween(first, today), dpd, `dpd ${dpd} on ${today}`);
+    }
+  }
+});
+
+test("firstDueDateForArrears holds the arrears steady across a whole year", () => {
+  // The two configurations that used to flip: one settled instalment about a
+  // month back, and two settled instalments about two months back.
+  const cases = [
+    { settledInstalments: 1, targetDaysPastDue: -7 },
+    { settledInstalments: 2, targetDaysPastDue: -9 },
+    { settledInstalments: 1, targetDaysPastDue: 9 },
+    { settledInstalments: 2, targetDaysPastDue: 44 },
+    { settledInstalments: 3, targetDaysPastDue: -20 },
+  ];
+
+  for (const input of cases) {
+    const observed = new Set();
+    const start = Date.parse("2026-01-01T00:00:00Z");
+    for (let k = 0; k < 400; k += 1) {
+      const today = new Date(start + k * 86400000).toISOString().slice(0, 10);
+      const firstDueDate = firstDueDateForArrears({ ...input, today });
+      const schedule = buildSchedule({
+        principalCentimes: 600_000n * 100n,
+        annualRatePct: 6,
+        termMonths: 12,
+        firstDueDate,
+      });
+      // Mark the settled instalments paid, exactly as the fixture does.
+      const paid = schedule.instalments
+        .slice(0, input.settledInstalments)
+        .reduce((sum, i) => sum + i.totalDueCentimes, 0n);
+      const settledSchedule = paid > 0n ? applyPayment(schedule, paid).schedule : schedule;
+      const oldest = settledSchedule.instalments.find((i) => i.paidCentimes < i.totalDueCentimes);
+      observed.add(daysBetween(oldest.dueDate, today));
+    }
+
+    const values = [...observed];
+    // A +/-1 day wobble is inherent to calendar months — an instalment due the
+    // 31st falls on the 28th in February. What must never happen is crossing a
+    // decision boundary, which is what flipped a loan's status.
+    for (const value of values) {
+      assert.ok(Math.abs(value - input.targetDaysPastDue) <= 3,
+        `dpd ${value} drifted more than 3 days from ${input.targetDaysPastDue}`);
+    }
+    for (const boundary of [0, 30, 60, 90]) {
+      const above = values.some((v) => v > boundary);
+      const below = values.some((v) => v <= boundary);
+      assert.ok(!(above && below),
+        `settled=${input.settledInstalments} target=${input.targetDaysPastDue} straddles ${boundary}: {${values.sort((a, b) => a - b)}}`);
+    }
+  }
+});
+
+test("the demo fixture keeps every arrears target clear of a decision boundary", () => {
+  // A lint over the real seed data: a target within 3 days of 0, 30, 60 or 90
+  // could be pushed across it by month-end clamping and would reintroduce the
+  // drift. Loans with nothing settled are exempt — their first instalment date
+  // is exact, so no month arithmetic can move it.
+  const src = readFileSync(new URL("../microfinance-app/app.js", import.meta.url), "utf8");
+  const specs = [...src.matchAll(/seedLoan\((\{[\s\S]*?\})\)/g)].map((m) => ({
+    id: (m[1].match(/id:\s*"([^"]+)"/) || [])[1],
+    dpd: Number((m[1].match(/oldestUnpaidDpd:\s*(-?\d+)/) || [])[1]),
+    settled: Number((m[1].match(/settled:\s*(\d+)/) || [, 0])[1]),
+  }));
+
+  assert.ok(specs.length >= 20, `expected the seed fixture, parsed ${specs.length} specs`);
+  assert.ok(!/firstDueOffsetDays/.test(src),
+    "firstDueOffsetDays is back in the fixture — that is the day-vs-month mismatch");
+
+  for (const spec of specs) {
+    assert.ok(Number.isFinite(spec.dpd), `${spec.id} has no oldestUnpaidDpd`);
+    if (spec.settled === 0) continue;
+    for (const boundary of [0, 30, 60, 90]) {
+      assert.ok(Math.abs(spec.dpd - boundary) > 3,
+        `${spec.id} target ${spec.dpd} sits within 3 days of the ${boundary}-day boundary`);
+    }
+  }
 });
