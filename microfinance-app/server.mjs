@@ -407,7 +407,16 @@ refreshTimer.unref?.();
 
 const app = express();
 const port = Number(process.env.PORT || 3100);
-const model = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5-20250929";
+// Dated Sonnet 4.5 snapshots are two generations behind. Opus 5 is the current
+// default; ANTHROPIC_MODEL still overrides it for a cheaper or pinned model.
+const model = process.env.ANTHROPIC_MODEL || "claude-opus-5";
+
+// Thinking is on by default on Opus 5, and max_tokens caps thinking PLUS the
+// response text, so the previous 900 / 1200 budgets would truncate answers
+// mid-sentence. Effort is set per call site: the advisor is conversational,
+// the compliance filter gates real credit decisions and gets a higher setting.
+const ADVISOR_MAX_TOKENS = 8192;
+const COMPLIANCE_MAX_TOKENS = 8192;
 const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null;
@@ -567,7 +576,8 @@ app.post("/api/ask", async (request, response) => {
     const aiResponse = await anthropic.messages.create({
       model,
       system: instructions,
-      max_tokens: 900,
+      max_tokens: ADVISOR_MAX_TOKENS,
+      output_config: { effort: "medium" },
       messages,
     });
 
@@ -714,7 +724,10 @@ app.post("/api/compliance/check", async (request, response) => {
     const aiResponse = await anthropic.messages.create({
       model,
       system: complianceInstructions,
-      max_tokens: 1200,
+      // The legal filter decides whether a credit or repayment may proceed, so
+      // it runs at high effort rather than the advisor's medium.
+      max_tokens: COMPLIANCE_MAX_TOKENS,
+      output_config: { effort: "high" },
       messages: [
         {
           role: "user",

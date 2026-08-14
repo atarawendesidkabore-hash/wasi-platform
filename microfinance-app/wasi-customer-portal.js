@@ -274,6 +274,37 @@ function getWasiApiKey() {
   return e;
 }
 
+/**
+ * Claude model for the WASI advisory chats.
+ *
+ * max_tokens is a ceiling on thinking PLUS response text, and thinking is on by
+ * default on this model, so the previous 600 would have truncated most answers
+ * mid-sentence. Effort stays "low": these are short advisory replies, and low
+ * effort on this model still answers well while keeping latency and cost down.
+ */
+var WASI_AI_MODEL = "claude-opus-5";
+var WASI_AI_MAX_TOKENS = 4096;
+
+/**
+ * Turns a stored chat log into a valid messages array.
+ *
+ * The API requires the FIRST message to be role "user", and rejects a
+ * conversation whose LAST message is an assistant turn (that is a prefill, which
+ * this model no longer accepts). Neither held before: every chat is seeded with
+ * a "Bienvenue ..." greeting stored as role "assistant", so messages[0] was an
+ * assistant turn and every request returned 400. The catch swallowed it and the
+ * panel answered from answerLocal() instead - the chat looked like it worked
+ * while never once reaching Claude.
+ */
+function wasiChatTurns(history) {
+  var turns = (history || [])
+    .filter(function(m) { return m.role === "user" || m.role === "assistant"; })
+    .map(function(m) { return { role: m.role, content: String(m.content) }; });
+  while (turns.length && turns[0].role !== "user") turns.shift();
+  while (turns.length && turns[turns.length - 1].role === "assistant") turns.pop();
+  return turns;
+}
+
 async function ask(question) {
   if (!customer || !question || !question.trim()) return;
   const q = question.trim();
@@ -293,16 +324,31 @@ async function ask(question) {
         "Titres disponibles : " + ASSETS.map(function(a) { return a.name + " (" + a.type + ", " + money(a.price) + "/unité, min " + money(a.minimumTicket) + ")"; }).join("; ") + ".",
         "Réponds en français, de façon concise et adaptée au profil du client.",
       ].join(" ");
-      const messages = history
-        .filter(function(m) { return m.role === "user" || m.role === "assistant"; })
-        .map(function(m) { return { role: m.role, content: String(m.content) }; });
+      const messages = wasiChatTurns(history);
+      if (!messages.length) throw new Error("no_user_turn");
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-        body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 600, system: systemPrompt, messages: messages })
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-beta": "server-side-fallback-2026-07-01"
+        },
+        body: JSON.stringify({
+          model: WASI_AI_MODEL,
+          max_tokens: WASI_AI_MAX_TOKENS,
+          output_config: { effort: "low" },
+          fallbacks: "default",
+          system: systemPrompt,
+          messages: messages
+        })
       });
       if (!res.ok) { if (res.status === 401) try { localStorage.removeItem("wasi_anthropic_key"); } catch(_) {} throw new Error("API " + res.status); }
       const data = await res.json();
+      // A safety classifier can decline the request: HTTP 200 with
+      // stop_reason "refusal" and no usable content. Reading content[0] blindly
+      // would surface an empty bubble, so fall back to the local answer.
+      if (data.stop_reason === "refusal") throw new Error("refusal");
       reply = (data.content || []).filter(function(b) { return b.type === "text"; }).map(function(b) { return b.text; }).join("\n").trim() || "Réponse indisponible.";
     } catch(_) {
       reply = answerLocal(q);

@@ -9,7 +9,7 @@
     "start": "node server.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.62.0",
+    "@anthropic-ai/sdk": "^0.116.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1"
   }
