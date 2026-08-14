@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-13T06:55:36.086Z",
+ "generatedAt": "2026-08-14T06:53:03.310Z",
  "source": "Google News RSS (legislative & regulatory query per country)",
  "classifier": "lexicon_v1",
  "adjustment_range": [
@@ -18,18 +18,18 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 1,
-   "items_before_dedup": 1,
+   "items_scored": 2,
+   "items_before_dedup": 2,
    "items_skipped_foreign_actor": 4,
-   "positives": 0,
+   "positives": 1,
    "negatives": 1,
-   "net_signal": -2,
+   "net_signal": -0.95,
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [
     {
-     "title": "South Africa slams $18.5m repatriation bill on Nigeria, 2 other African countries amid migration crackdown - africa.businessinsider.com",
-     "source": "africa.businessinsider.com",
+     "title": "South Africa slams $18.5m repatriation bill on Nigeria, 2 other African countries amid migration crackdown - Business Insider Africa",
+     "source": "Business Insider Africa",
      "date": "2026-08-12",
      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOaGFpM3RCazg1bE8wUldPRzllVl83ZDZUXzB4Q0Z0dUQ4RlJmSE5tRVRxMGpPMkxIOGxFMDdwZDRNdXc0UFVFUk5USU43ZlNsTGhneXRYbWdlLTROSWN5RF9OSGRsaDRxYTFVZnlGeWY4Zll5SjhKVThSSE9Yb3JwMThCN0stNUpudjlUNWp2QUwyRlJMMmNyQkNHZ2xyUkgwdXNsTXl1dW5SY1p4dGVkSUd2cGR5bHlLU0pEMHBPQjYyWGp1UTU4ZHM5M0JqZjFScHRPc1N6OUJiTWs?oc=5",
      "polarity": "negative",
@@ -37,9 +37,21 @@
      "matched": [
       "!crackdown"
      ]
+    },
+    {
+     "title": "Nigeria electricity regulation passes to 16 subnational commissions two years into the Act - energy-news-network.com",
+     "source": "energy-news-network.com",
+     "date": "2026-08-01",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOOFBqWnhWRFc5OU9ramFNcjRTb1JmOHZnb0xQbElFV1hRc1BLV09HUFBIakZ4cDNMTUZYMi0zby14OFBYcWlPam12MlJ6akdQY3NENEVqMmdyZ3pfcTJndmVONURGck1NWXlsUnVoWlJWcGxZQjdmTXU4a2FKVk9hNjFJN0xYTGN1WmJSSENlUDFhSUxEd1dzZVZPMA?oc=5",
+     "polarity": "positive",
+     "weight": 1.05,
+     "matched": [
+      "+energy",
+      "+electricity"
+     ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:11.681Z"
+   "fetchedAt": "2026-08-14T06:51:39.088Z"
   },
   "GH": {
    "code": "GH",
@@ -48,7 +60,7 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 13,
-   "items_before_dedup": 41,
+   "items_before_dedup": 42,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
    "negatives": 13,
@@ -79,15 +91,14 @@
      ]
     },
     {
-     "title": "IBAHRI condemns Ghana’s passage of sweeping anti-LGBTQ+ Bill and warns of grave human rights implications - ibanet.org",
-     "source": "ibanet.org",
+     "title": "IBAHRI condemns Ghana’s passage of sweeping anti-LGBTQ+ Bill and warns of grave human rights implications - International Bar Association | IBA",
+     "source": "International Bar Association | IBA",
      "date": "2026-07-23",
      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNYUI0bDZmbjlFZGQwRi1fdm9Jd25uQmZ0NGhSNGFnam95QloxNUd0MklYU2dySThkSFNkUERMX3J4WU5uR1RxOGtSR3I3V0F6R0hLcWQxak9oelIxbDZPX0g1NnZ6Q1NrZWxGcUpFVHByWXpzVjhfVEJ6eS1jM2U1RVp3ck5tc3I2eWhyeUJDbmtPenlpYWFkY1VISjNERFBmOHVRa2txeVNDZDdDeDk3ZWxtOVlRYUtRZWhnb0V4TEwwb1h5RHc?oc=5",
      "polarity": "negative",
      "weight": -1.4,
      "matched": [
-      "!anti-lgbt",
-      "-ban"
+      "!anti-lgbt"
      ]
     },
     {
@@ -113,8 +124,8 @@
      ]
     },
     {
-     "title": "Ghana parliament approves 'anti-LGBTQ' law, awaiting president's signature - france24.com",
-     "source": "france24.com",
+     "title": "Ghana parliament approves 'anti-LGBTQ' law, awaiting president's signature - France 24",
+     "source": "France 24",
      "date": "2026-05-29",
      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOVHBZQ285MjJ5T1VLbzJHVG8yNEdhVjNzMjJZdFBfZ24zTmlvMHFGOUR6LUtmQzhiYUpFb1EyR2ZBZUpXT20xeFFqSXlCWFZrSlVPcnQ2RzQweVItTlFIakhNMG50ZlhTVGQxQjBxWGJOblV4am5BNUJTeVJzNTQ1QUQ5S2lZbEg1WkhpRTFBOGJ6RmNtMWFLQ3FHREU0WExIVWJranRDRjAtTTVycVpoVkk2aWd4QQ?oc=5",
      "polarity": "negative",
@@ -146,7 +157,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:13.407Z"
+   "fetchedAt": "2026-08-14T06:51:40.809Z"
   },
   "SN": {
    "code": "SN",
@@ -154,12 +165,12 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 5,
-   "items_before_dedup": 9,
+   "items_scored": 4,
+   "items_before_dedup": 7,
    "items_skipped_foreign_actor": 1,
    "positives": 0,
-   "negatives": 5,
-   "net_signal": -2.15,
+   "negatives": 4,
+   "net_signal": -1.65,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -175,14 +186,14 @@
      ]
     },
     {
-     "title": "Répression accrue contre les homosexuels au Sénégal : une nouvelle loi durcit le ton - RTBF",
-     "source": "RTBF",
-     "date": "2026-05-16",
-     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPcTdINFhfTkYzMDN2S1BjRUVjQXpHa2J3ampTMjF2bFBNRVZwTlZIX2k0aDF0WkpvZGpPZ2lVLVZKb2ZoX3VCRUowWFlXNjUtVzQwU3FPTnRyVTgtZE90c0pMbWo3T0cwUFhEWVpuV2VoVTduR200d3FoZkdveXA0UjlWcmJ2anJGajRteXN4a2hmeWF3MUhva2lBZTFtLWxMSGxMdmJ1Z2VaVnNQa2tjZXRSVjI3ZGdmVHYw?oc=5",
+     "title": "Au Sénégal, le premier ministre, Ousmane Sonko, dénonce « une tyrannie de l’Occident », qui veut « imposer l’homosexualité au reste du monde » - Le Monde.fr",
+     "source": "Le Monde.fr",
+     "date": "2026-05-22",
+     "url": "https://news.google.com/rss/articles/CBMipAJBVV95cUxPZVpSc2JQMUNYUmktVUE0YkhVbzBMLVB1LURIUlZaTGZvd1FMWTB6Xy1pNzZ1N0puWDZuZlZvU3J6VDU0dmp1a3hMdDBJNlNqdWlyY1FucFI4dm4zUHlXQllMZDZLdjZQV0ZNMGQ2QmlSbUtGc19mUk92alpNQTE0dmQ0ZlUxZjJWd3U1QXZUZ24wdTZCdTVJVXJ2WV9kMUhJeDNWZEI1d1R2Q1YxTE9vWEJ5RmF0dEZYZnJTZG1ZUTJubkl4cC1TQi1nMnNRNWkzR0VLRkhHbFZ0RGpQZnZQMmtNVUkyQWxUajdrWUtCUnVPUkk2Sl9ZZk5SZzc0aHFvTXdoM2h1emlDdlV2dVJKbEJMb29xUUttWkNaRnkzNFR0ek9z?oc=5",
      "polarity": "negative",
-     "weight": -0.5,
+     "weight": -0.45,
      "matched": [
-      "!répression"
+      "!homosexualité"
      ]
     },
     {
@@ -198,19 +209,8 @@
      ]
     },
     {
-     "title": "Au Sénégal, le premier ministre, Ousmane Sonko, dénonce « une tyrannie de l’Occident », qui veut « imposer l’homosexualité au reste du monde » - Le Monde.fr",
-     "source": "Le Monde.fr",
-     "date": "2026-05-22",
-     "url": "https://news.google.com/rss/articles/CBMipAJBVV95cUxPZVpSc2JQMUNYUmktVUE0YkhVbzBMLVB1LURIUlZaTGZvd1FMWTB6Xy1pNzZ1N0puWDZuZlZvU3J6VDU0dmp1a3hMdDBJNlNqdWlyY1FucFI4dm4zUHlXQllMZDZLdjZQV0ZNMGQ2QmlSbUtGc19mUk92alpNQTE0dmQ0ZlUxZjJWd3U1QXZUZ24wdTZCdTVJVXJ2WV9kMUhJeDNWZEI1d1R2Q1YxTE9vWEJ5RmF0dEZYZnJTZG1ZUTJubkl4cC1TQi1nMnNRNWkzR0VLRkhHbFZ0RGpQZnZQMmtNVUkyQWxUajdrWUtCUnVPUkk2Sl9ZZk5SZzc0aHFvTXdoM2h1emlDdlV2dVJKbEJMb29xUUttWkNaRnkzNFR0ek9z?oc=5",
-     "polarity": "negative",
-     "weight": -0.45,
-     "matched": [
-      "!homosexualité"
-     ]
-    },
-    {
-     "title": "Le Premier ministre sénégalais rejette la demande de moratoire sur la loi durcissant les peines contre les relations homosexuelles - franceinfo",
-     "source": "franceinfo",
+     "title": "Le Premier ministre sénégalais rejette la demande de moratoire sur la loi durcissant les peines contre les relations homosexuelles - franceinfo.fr",
+     "source": "franceinfo.fr",
      "date": "2026-05-22",
      "url": "https://news.google.com/rss/articles/CBMimwJBVV95cUxNRlpNTXhtNzVoMmJGcllScG81UlFwSU90SzZMSC1pT2JFazg3M0dMVDY3MzBuN093LUZZcTJIZ2NJejcxWWRTdUVudkYzUHVGM193THJZem9tMm40ZVZrWGJSNDVwQmlwaVNMLUQ0RDlrWGZKajduaWI0Z0dfd0N3VGp2UkVqWndMbVFNZEtaUGVJUy1EVkxlR3Vib0tBRGFVWHJxR2owSlhtM2tWdHZRMVJlMUhhbW1IVkRRQ3RLUGNNX0FETDVJSjItQVpzUEUzZnpHcncxN1BnRmNxVW1QS3h4a3JwdnVYcXZzd0NtenljdGlUdlNUV0VxSExWcjEtNkpjSFBMZEVvMnhwWmVKRVp3TkN5R19ZRFow?oc=5",
      "polarity": "negative",
@@ -220,7 +220,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:15.118Z"
+   "fetchedAt": "2026-08-14T06:51:42.509Z"
   },
   "BF": {
    "code": "BF",
@@ -228,12 +228,12 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 6,
-   "items_before_dedup": 8,
+   "items_scored": 7,
+   "items_before_dedup": 9,
    "items_skipped_foreign_actor": 12,
-   "positives": 0,
+   "positives": 1,
    "negatives": 6,
-   "net_signal": -2.96,
+   "net_signal": -2.54,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -260,8 +260,8 @@
      ]
     },
     {
-     "title": "Le Burkina Faso : la foi , la loi et la junte ? - CANAL+",
-     "source": "CANAL+",
+     "title": "Le Burkina Faso : la foi , la loi et la junte ? - Canal+",
+     "source": "Canal+",
      "date": "2026-06-05",
      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPaUFUdHIxcTMzZFdiV1o3QXF3cFhBcU9tVGUwVko1WDlKSkM2SzF5OFE0SDFIelBPdklPelJSVVpxaEI5RElnYXhlNGRhbUZ2bW43Y2JrZ3NiQ3RJaklkNHlBYjBMUDU5ZEdPd0FvSGFQUFE3NFRwd19xc2VLcmRSVnc0dENVLTNnX0tGcmFHMU5abkJJcGgwUzV5SjMtNmZB?oc=5",
      "polarity": "negative",
@@ -271,8 +271,8 @@
      ]
     },
     {
-     "title": "Le Burkina Faso : la foi , la loi et la junte ? - CANAL+",
-     "source": "CANAL+",
+     "title": "Le Burkina Faso : la foi , la loi et la junte ? - Canal+",
+     "source": "Canal+",
      "date": "2026-06-14",
      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWE1DRzVYcmsxT1ZXWG1fbHdLWWVROHRCWTFBank3MWVJRTJIck5CbzEtNzRHc0V3UjNHVnJvY2VHT3ZQTUZ4Y0pTbUo2TXRpWVd4bGpzSGJXQ0VOVi1wUkNaZDBGYlJ2RFZPYUVKdTFZeVd1dUdTN2xibFRuYk12aHo1aHNFc25sdG5Sdm5wNVc3SXluYWtZQkZKYkhFMGpDN2F5aENpQmlEQ1VZbEZlV24wdzA?oc=5",
      "polarity": "negative",
@@ -282,14 +282,25 @@
      ]
     },
     {
-     "title": "Le Burkina Faso : la foi , la loi et la junte ? - CANAL+",
-     "source": "CANAL+",
+     "title": "Le Burkina Faso : la foi , la loi et la junte ? - Canal+",
+     "source": "Canal+",
      "date": "2026-06-17",
      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQLUFEZGZLQ2pKNVhXekFxZFcwNEpNMm41R2ItWmI1aWg0QjQzWXMtbDRxSlpkcHo4OFZqTE1kajJOUHprbFR0blhGeF8tZVR5bTRQa0JqaW9YcXJfSjVlc1JqQlFadzJXc3I4NUpseVd3Mnd4SXY2cWtVQXFoU3JGOEdPWG5lN1FxcDZURm5WZzFteWpMUEVkdVp4SXd3YnlpRjJyOGNuVGlmTGpPdWMtTTRfenk?oc=5",
      "polarity": "negative",
      "weight": -0.5,
      "matched": [
       "!junte"
+     ]
+    },
+    {
+     "title": "Statut des autorités administratives indépendantes et réglementation bancaire: les députés adoptent un nouveau cadre législatif - Quotidien Sidwaya",
+     "source": "Quotidien Sidwaya",
+     "date": "2026-06-28",
+     "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxNTnRsVkVSdWtvcjNSZXJsQ1RDNDB3QnRJMklIRnE0UW5UN1dma1E3dFlST0k5Rm9LX1NjTmRPT1NxX0FjdGJrc3RLV1NYWkNHZnRUemlJMzBRbEhxaldFNDFiYXZCZ2U5Y1hBdmJzVVRTR0g0NEhtaTdDcFZ6Z3dvOUNfdzdDVVZJM2xoRFBBdWV5WDZmZnVUVFhyZThOa1dncXJWMnAwc2gxZ0E5cTNJZ0kxbUdmS3dYbmtyT0tRR2VUX01qNlVnQTZSbVl1UXZqMjFId1ZXSVBGOEM2a0xnZzdleU4taHM?oc=5",
+     "polarity": "positive",
+     "weight": 0.42,
+     "matched": [
+      "+bancaire"
      ]
     },
     {
@@ -304,7 +315,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:16.848Z"
+   "fetchedAt": "2026-08-14T06:51:44.156Z"
   },
   "ML": {
    "code": "ML",
@@ -333,7 +344,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:18.489Z"
+   "fetchedAt": "2026-08-14T06:51:45.844Z"
   },
   "GN": {
    "code": "GN",
@@ -350,7 +361,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:20.020Z"
+   "fetchedAt": "2026-08-14T06:51:47.369Z"
   },
   "BJ": {
    "code": "BJ",
@@ -401,7 +412,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:21.623Z"
+   "fetchedAt": "2026-08-14T06:51:48.983Z"
   },
   "TG": {
    "code": "TG",
@@ -418,7 +429,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:23.236Z"
+   "fetchedAt": "2026-08-14T06:51:50.569Z"
   },
   "NE": {
    "code": "NE",
@@ -448,7 +459,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:24.967Z"
+   "fetchedAt": "2026-08-14T06:51:52.197Z"
   },
   "MR": {
    "code": "MR",
@@ -477,14 +488,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:26.675Z"
+   "fetchedAt": "2026-08-14T06:51:53.853Z"
   },
   "GW": {
    "code": "GW",
    "name": "Guinee-Bissau",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 29,
+   "items_scanned": 30,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
@@ -507,7 +518,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:28.201Z"
+   "fetchedAt": "2026-08-14T06:51:55.383Z"
   },
   "SL": {
    "code": "SL",
@@ -524,7 +535,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:29.929Z"
+   "fetchedAt": "2026-08-14T06:51:57.179Z"
   },
   "LR": {
    "code": "LR",
@@ -564,7 +575,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:31.610Z"
+   "fetchedAt": "2026-08-14T06:51:58.825Z"
   },
   "GM": {
    "code": "GM",
@@ -581,14 +592,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:33.059Z"
+   "fetchedAt": "2026-08-14T06:52:00.284Z"
   },
   "CV": {
    "code": "CV",
    "name": "Cap-Vert",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 12,
+   "items_scanned": 14,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -598,7 +609,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:34.557Z"
+   "fetchedAt": "2026-08-14T06:52:01.761Z"
   },
   "CM": {
    "code": "CM",
@@ -616,8 +627,8 @@
    "corroborated": false,
    "evidence": [
     {
-     "title": "Sérail : Paul Biya met 46 officiers de l’armée à la retraite - Actu Cameroun",
-     "source": "Actu Cameroun",
+     "title": "Sérail : Paul Biya met 46 officiers de l’armée à la retraite - actucameroun.com",
+     "source": "actucameroun.com",
      "date": "2026-07-23",
      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPaDJjTktUQ0h2ZExVcFU0a2xtTjlkWjdTc1M0VEV1SHZkbmhaTmg2MTZhdmdGSGwtemhtLVFxREk1ekVkYVpCVVczeDl6UW1WYTE2c2dzSGo5YXBKM2EwZl9qR2ZxYy1fb3oxdFFrbjVObzRja0xBOERTd0pSUmdfSjBiY19uWHdEaVFacG4xc0JrdlFlbUlXWnl3?oc=5",
      "polarity": "negative",
@@ -627,7 +638,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:36.173Z"
+   "fetchedAt": "2026-08-14T06:52:03.392Z"
   },
   "GA": {
    "code": "GA",
@@ -656,7 +667,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:37.786Z"
+   "fetchedAt": "2026-08-14T06:52:05.051Z"
   },
   "CG": {
    "code": "CG",
@@ -674,8 +685,8 @@
    "corroborated": true,
    "evidence": [
     {
-     "title": "Congo - la HALC & le Parlement : une Journée axée sur la sensibilisation des parlementaires à la lutte contre la corruption - lesechos-congobrazza.com",
-     "source": "lesechos-congobrazza.com",
+     "title": "Congo - la HALC & le Parlement : une Journée axée sur la sensibilisation des parlementaires à la lutte contre la corruption - Les Echos du Congo Brazzaville",
+     "source": "Les Echos du Congo Brazzaville",
      "date": "2026-08-07",
      "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxQY3FFRjMzOFlJVmFtdlN3aVAtZHVkeXpGRmVGTTFNTmZSWGlEdVk2Vm55bklUTk92TXpZYkc0eXVnbnFTUndaM2RWSmFIVmlZb2liS1l2aVcya1V2UzZqeTlvX0Z5RUNycm8zMlM5dkR4cFlmcHdTajI4TGZpNC1LM1BIeGNkTDJWaGRGWFlOMUtXWFVpRThFS1dvMTJ3SWRLOXk3bzNUZ1Axc1FxVEotNWJybmRFTThOZEVLOUJNcGx5Wnd4LWZNUUpqR3U5ZktwRGtUTTZJQzY4dHY0MFJnWGpIZkxaRFNpNUxrbWtmM3dXNk9LVEc4?oc=5",
      "polarity": "positive",
@@ -696,7 +707,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:39.409Z"
+   "fetchedAt": "2026-08-14T06:52:06.669Z"
   },
   "CD": {
    "code": "CD",
@@ -713,7 +724,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:41.027Z"
+   "fetchedAt": "2026-08-14T06:52:08.318Z"
   },
   "CF": {
    "code": "CF",
@@ -742,7 +753,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:42.625Z"
+   "fetchedAt": "2026-08-14T06:52:09.926Z"
   },
   "TD": {
    "code": "TD",
@@ -782,14 +793,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:44.236Z"
+   "fetchedAt": "2026-08-14T06:52:11.594Z"
   },
   "GQ": {
    "code": "GQ",
    "name": "Guinee Equatoriale",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 15,
+   "items_scanned": 16,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -799,7 +810,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:45.755Z"
+   "fetchedAt": "2026-08-14T06:52:13.079Z"
   },
   "KE": {
    "code": "KE",
@@ -839,10 +850,10 @@
      ]
     },
     {
-     "title": "Kenya court suspends US plan for Ebola quarantine facility for Americans - bostonherald.com",
-     "source": "bostonherald.com",
+     "title": "Kenya court suspends U.S. plan for Ebola quarantine facility for Americans - STAT",
+     "source": "STAT",
      "date": "2026-05-29",
-     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPZnBHTTRvWk5TeERmWEN4MkRJREw5NmJfZGNGblhEREd1czVkQUZBY2ljV2xPMTlLaUVGeHUzb2ZpV1RMUW9LbzZ3cFp5MlF1REJid2xva3c2VUhRNGZNYkFMd3N4clRfRUhha1JRTTZRMVRKdWhaMk44RjNDajJVR05Lb2RaenZuTjZCNXAzQkFQeTN3?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQc0xnT3VQQnkySnBmbExmWFJVbmxkX0M0a2hka3VYNjdzTHdzcGJ0REV2dldMQWpWcUIxMWxUWTdhaWZtMHlveV9yTnZPUHM4UGZuUzhOY3dYNlg5SUV3ZUEtN0xXZHJnRmhBcHdiaHB6cWIzYlU2aDUydldMRnRqUlBjbzZSeS1rcTFseFN6NGl2MzFZTmJjeEdvLWZzYWM?oc=5",
      "polarity": "negative",
      "weight": -0.3,
      "matched": [
@@ -850,7 +861,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:47.450Z"
+   "fetchedAt": "2026-08-14T06:52:14.769Z"
   },
   "TZ": {
    "code": "TZ",
@@ -867,7 +878,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:48.898Z"
+   "fetchedAt": "2026-08-14T06:52:16.237Z"
   },
   "UG": {
    "code": "UG",
@@ -884,7 +895,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:50.342Z"
+   "fetchedAt": "2026-08-14T06:52:17.737Z"
   },
   "RW": {
    "code": "RW",
@@ -913,7 +924,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:51.986Z"
+   "fetchedAt": "2026-08-14T06:52:19.350Z"
   },
   "BI": {
    "code": "BI",
@@ -942,14 +953,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:54:53.652Z"
+   "fetchedAt": "2026-08-14T06:52:20.988Z"
   },
   "SS": {
    "code": "SS",
    "name": "Soudan du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 5,
+   "items_scanned": 6,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -959,14 +970,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:55.177Z"
+   "fetchedAt": "2026-08-14T06:52:22.479Z"
   },
   "ET": {
    "code": "ET",
    "name": "Ethiopie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 3,
+   "items_scanned": 6,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -976,14 +987,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:56.630Z"
+   "fetchedAt": "2026-08-14T06:52:23.993Z"
   },
   "DJ": {
    "code": "DJ",
    "name": "Djibouti",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 58,
+   "items_scanned": 59,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -993,7 +1004,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:58.191Z"
+   "fetchedAt": "2026-08-14T06:52:25.658Z"
   },
   "ER": {
    "code": "ER",
@@ -1010,7 +1021,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:54:59.645Z"
+   "fetchedAt": "2026-08-14T06:52:27.103Z"
   },
   "SO": {
    "code": "SO",
@@ -1027,14 +1038,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:01.100Z"
+   "fetchedAt": "2026-08-14T06:52:28.615Z"
   },
   "SD": {
    "code": "SD",
    "name": "Soudan",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 46,
+   "items_scanned": 47,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1044,14 +1055,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:02.663Z"
+   "fetchedAt": "2026-08-14T06:52:30.153Z"
   },
   "ZA": {
    "code": "ZA",
    "name": "Afrique du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 28,
+   "items_scanned": 30,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1061,7 +1072,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:04.192Z"
+   "fetchedAt": "2026-08-14T06:52:31.735Z"
   },
   "MZ": {
    "code": "MZ",
@@ -1070,7 +1081,7 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 4,
-   "items_before_dedup": 5,
+   "items_before_dedup": 4,
    "items_skipped_foreign_actor": 2,
    "positives": 2,
    "negatives": 2,
@@ -1090,8 +1101,8 @@
      ]
     },
     {
-     "title": "Bank of Mozambique Governor Calls for Regulation of AI in the Financial Sector - iAfrica.com",
-     "source": "iAfrica.com",
+     "title": "Bank of Mozambique Governor Calls for Regulation of AI in the Financial Sector - iafrica.com",
+     "source": "iafrica.com",
      "date": "2026-06-21",
      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcktqZWhSR2dnRjhOWlBYbmd5MVpMUkxMMWlqdFIycGZSelAwcFY0Sy1vTW1DNlBwSzhDZlhPS3g2NmU4YXJPbDBpTkZDSjZ2UWYtTDVZQkpHMU1PNFgyOFp2V2dJeVFVY0x5N1luMWRucFZvMDA2Y0h6MFJCY2NBNFdHNlhVZ1VlcGQwRnVISGRrejNoeTBxTmJPbWxlWVU0?oc=5",
      "polarity": "negative",
@@ -1125,7 +1136,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:05.884Z"
+   "fetchedAt": "2026-08-14T06:52:33.418Z"
   },
   "ZW": {
    "code": "ZW",
@@ -1142,7 +1153,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:07.546Z"
+   "fetchedAt": "2026-08-14T06:52:35.083Z"
   },
   "ZM": {
    "code": "ZM",
@@ -1159,7 +1170,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:08.998Z"
+   "fetchedAt": "2026-08-14T06:52:36.547Z"
   },
   "BW": {
    "code": "BW",
@@ -1188,14 +1199,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:10.665Z"
+   "fetchedAt": "2026-08-14T06:52:38.215Z"
   },
   "NA": {
    "code": "NA",
    "name": "Namibie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 3,
+   "items_scanned": 2,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1205,7 +1216,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:12.127Z"
+   "fetchedAt": "2026-08-14T06:52:39.664Z"
   },
   "MW": {
    "code": "MW",
@@ -1223,8 +1234,8 @@
    "corroborated": true,
    "evidence": [
     {
-     "title": "South Africa slams $18.5m repatriation bill on Nigeria, 2 other African countries amid migration crackdown - africa.businessinsider.com",
-     "source": "africa.businessinsider.com",
+     "title": "South Africa slams $18.5m repatriation bill on Nigeria, 2 other African countries amid migration crackdown - Business Insider Africa",
+     "source": "Business Insider Africa",
      "date": "2026-08-12",
      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOaGFpM3RCazg1bE8wUldPRzllVl83ZDZUXzB4Q0Z0dUQ4RlJmSE5tRVRxMGpPMkxIOGxFMDdwZDRNdXc0UFVFUk5USU43ZlNsTGhneXRYbWdlLTROSWN5RF9OSGRsaDRxYTFVZnlGeWY4Zll5SjhKVThSSE9Yb3JwMThCN0stNUpudjlUNWp2QUwyRlJMMmNyQkNHZ2xyUkgwdXNsTXl1dW5SY1p4dGVkSUd2cGR5bHlLU0pEMHBPQjYyWGp1UTU4ZHM5M0JqZjFScHRPc1N6OUJiTWs?oc=5",
      "polarity": "negative",
@@ -1258,7 +1269,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:13.778Z"
+   "fetchedAt": "2026-08-14T06:52:41.342Z"
   },
   "AO": {
    "code": "AO",
@@ -1275,7 +1286,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:15.469Z"
+   "fetchedAt": "2026-08-14T06:52:42.982Z"
   },
   "MG": {
    "code": "MG",
@@ -1315,7 +1326,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:17.132Z"
+   "fetchedAt": "2026-08-14T06:52:44.573Z"
   },
   "MU": {
    "code": "MU",
@@ -1332,7 +1343,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:18.753Z"
+   "fetchedAt": "2026-08-14T06:52:46.133Z"
   },
   "SC": {
    "code": "SC",
@@ -1349,7 +1360,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:20.276Z"
+   "fetchedAt": "2026-08-14T06:52:47.626Z"
   },
   "SZ": {
    "code": "SZ",
@@ -1366,7 +1377,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:21.935Z"
+   "fetchedAt": "2026-08-14T06:52:49.323Z"
   },
   "LS": {
    "code": "LS",
@@ -1383,7 +1394,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:23.656Z"
+   "fetchedAt": "2026-08-14T06:52:51.006Z"
   },
   "KM": {
    "code": "KM",
@@ -1400,7 +1411,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:25.361Z"
+   "fetchedAt": "2026-08-14T06:52:52.615Z"
   },
   "MA": {
    "code": "MA",
@@ -1410,7 +1421,7 @@
    "items_scanned": 100,
    "items_scored": 3,
    "items_before_dedup": 3,
-   "items_skipped_foreign_actor": 8,
+   "items_skipped_foreign_actor": 7,
    "positives": 1,
    "negatives": 2,
    "net_signal": -1.06,
@@ -1429,8 +1440,8 @@
      ]
     },
     {
-     "title": "Parlement : Le plafonnement des prix des carburants et la nationalisation la Samir rejetés - Yabiladi.com",
-     "source": "Yabiladi.com",
+     "title": "Parlement : Le plafonnement des prix des carburants et la nationalisation la Samir rejetés - yabiladi.com",
+     "source": "yabiladi.com",
      "date": "2026-06-17",
      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPbHQ0ZFFpejEtRFRuWTI1Zy00djI5QnFXRzI0VldQNWtaTjNBVDhudkNhOXlPUUl3YjJZVWE5WkZ0Wl9GMDJyVnpVTnRPMl9mNFQyU1B2RmdGaE80MlVpblJLZk9oUVFMbVJ1Tnp5bjViLUJDWDdBX2JTY1RldU52bmZvM0hqdWJuV0gtdkJPUVdRcktneGhCN0x1OWVwQlpER3FfVE1RaklDOGdu?oc=5",
      "polarity": "negative",
@@ -1451,7 +1462,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:26.949Z"
+   "fetchedAt": "2026-08-14T06:52:54.251Z"
   },
   "TN": {
    "code": "TN",
@@ -1480,8 +1491,8 @@
      ]
     },
     {
-     "title": "Tunisie : un projet de loi prévoit des réductions et avantages sociaux pour les retraités - Webmanagercenter",
-     "source": "Webmanagercenter",
+     "title": "Tunisie : un projet de loi prévoit des réductions et avantages sociaux pour les retraités - webmanagercenter.com",
+     "source": "webmanagercenter.com",
      "date": "2026-05-15",
      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxPcUtPMWtOczVDdmEyZTRLaVN5eXZNVTl0a2NjSXBQNEVaZE9LSWJTUTlEMGYtNzgtdjFYV2lKT19HSE1Da3J6ZGl1T29QSUtGSjRqSUxDRVN3MUNrVHNOTk1pbXhfWGgyWGpRUG5zVVVOOC1McDRUblU1MHprRG1xMFp1YnROZ01ITjFpVlQwajBDbElHN21KUmZ2UDNMNFFMZlN3NG1hMDY5TFFYS1djNGxJb24xOV9XemM2d2RXQmMxdmZDT3dDd0Z1ZkN5OERZaDNCeWF3?oc=5",
      "polarity": "negative",
@@ -1491,7 +1502,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:28.563Z"
+   "fetchedAt": "2026-08-14T06:52:55.848Z"
   },
   "EG": {
    "code": "EG",
@@ -1508,7 +1519,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-08-13T06:55:30.111Z"
+   "fetchedAt": "2026-08-14T06:52:57.395Z"
   },
   "DZ": {
    "code": "DZ",
@@ -1548,7 +1559,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:31.723Z"
+   "fetchedAt": "2026-08-14T06:52:58.995Z"
   },
   "LY": {
    "code": "LY",
@@ -1566,8 +1577,8 @@
    "corroborated": false,
    "evidence": [
     {
-     "title": "Libya: the NOC declares a state of emergency after drone attacks on the Zawiya refinery. - - beninwebtv.bj",
-     "source": "beninwebtv.bj",
+     "title": "Libya: the NOC declares a state of emergency after drone attacks on the Zawiya refinery. - - Benin Web TV",
+     "source": "Benin Web TV",
      "date": "2026-08-12",
      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOM201WkdTY0Y2ZTlrNk5wYzF2NURadHVCcDZrdm50eGtvYlBYNjNReGdFTWVRZzhQYUtYd3k3SkF5SGt4RVdLcWllWjhQTEFsYWxrZnhiVUJTY09RS1dUOTNtb0VJU29wUTBVendRclNLVTJhMEZscUhfb29Nb3ZTN09CMEdXajBnVlNfSTVBN3dGX1pGbkJmaHJ2TXhPVEdSMEdVQU1nWlBKVmFqT0o4aUt3?oc=5",
      "polarity": "negative",
@@ -1577,7 +1588,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:33.168Z"
+   "fetchedAt": "2026-08-14T06:53:00.451Z"
   },
   "CI": {
    "code": "CI",
@@ -1639,7 +1650,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-08-13T06:55:34.885Z"
+   "fetchedAt": "2026-08-14T06:53:02.109Z"
   }
  }
 }
