@@ -1333,7 +1333,7 @@ function renderOverview() {
     ["Client", "Score", "Note", "Niveau de risque", "Retard max"],
     getClientScores().slice(0, 6).map((item) => [
       item.client.name,
-      item.status === "INCOMPLET" ? "-" : String(item.score),
+      item.status === "INCOMPLET" ? "-" : displayScore(item.score),
       item.grade,
       item.levelLabel,
       item.maxDpd > 0 ? item.maxDpd + " j" : "-"
@@ -1352,7 +1352,7 @@ function renderClients() {
             <h3>${escapeHtml(client.name)}</h3>
             <p>${escapeHtml(client.sector)} - ${escapeHtml(client.region)}</p>
           </div>
-          <span class="pill ${score.pillClass}">Score ${score.score}</span>
+          <span class="pill ${score.pillClass}">Score ${displayScore(score.score)}</span>
         </header>
         <div class="record-row">
           <span class="muted">${escapeHtml(client.phone)}</span>
@@ -1402,7 +1402,7 @@ function renderLoans() {
       </div>
       <div class="record-row">
         <span class="muted">${loan.interestRate}% sur ${loan.termMonths} mois</span>
-        <span class="muted">Score client ${scoreClient(loan.clientId).score}</span>
+        <span class="muted">Score client ${displayScore(scoreClient(loan.clientId).score)}</span>
       </div>
       ${renderLoanScheduleRow(loan)}
       ${
@@ -2321,6 +2321,23 @@ function money(value) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(value);
 }
 
+/**
+ * A credit score as it should be shown to a human.
+ *
+ * The engine returns two decimals, but its paymentHistory input is derived from
+ * days past due — and days past due carry about a day of slack, because an
+ * instalment due the 31st falls on the 28th in February. Rendering hundredths
+ * asserts precision the input does not have: CL-1002 showed 70,21 / 70,46 / 70,71
+ * across the calendar on a fixture whose data never changed.
+ *
+ * Whole numbers are ample for the decision — the engine's own grade bands are ten
+ * points wide. Full precision is kept on the object for logic and for the tests
+ * that pin exact values; only the display is coarsened.
+ */
+function displayScore(score) {
+  return Number.isFinite(Number(score)) ? String(Math.round(Number(score))) : "-";
+}
+
 function round1(value) {
   return Math.round(Number(value) * 10) / 10;
 }
@@ -2956,7 +2973,7 @@ function printClientStatement(clientId) {
     </style></head><body>
       <h1>${state.metadata.institutionName}</h1>
       <div class="muted">Fiche générée le ${new Date().toLocaleDateString("fr-FR")}</div>
-      <div class="card"><strong>${escapeHtml(client.name)}</strong><div>${escapeHtml(client.sector)} | ${escapeHtml(client.region)}</div><div>${escapeHtml(getBranch(client.branchId)?.name || "")} | ${escapeHtml(getOfficer(client.officerId)?.name || "")}</div><div>Score ${score.score} / 100</div></div>
+      <div class="card"><strong>${escapeHtml(client.name)}</strong><div>${escapeHtml(client.sector)} | ${escapeHtml(client.region)}</div><div>${escapeHtml(getBranch(client.branchId)?.name || "")} | ${escapeHtml(getOfficer(client.officerId)?.name || "")}</div><div>Score ${displayScore(score.score)} / 100</div></div>
       <h2>Crédits</h2>
       <table><thead><tr><th>ID</th><th>Objet</th><th>Statut</th><th>Encours</th></tr></thead><tbody>
       ${loans.map((loan) => `<tr><td>${escapeHtml(loan.id)}</td><td>${escapeHtml(loan.purpose)}</td><td>${getStatusLabel(loan.status)}</td><td>${money(loan.outstanding)}</td></tr>`).join("") || `<tr><td colspan="4">Aucun crédit</td></tr>`}

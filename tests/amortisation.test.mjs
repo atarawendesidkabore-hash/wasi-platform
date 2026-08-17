@@ -7,6 +7,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { calculateCreditScore } from "../lib/africredit/credit-scoring.js";
 
 import {
   addMonths,
@@ -379,7 +380,12 @@ test("firstDueDateForArrears holds the arrears steady across a whole year", () =
       assert.ok(Math.abs(value - input.targetDaysPastDue) <= 3,
         `dpd ${value} drifted more than 3 days from ${input.targetDaysPastDue}`);
     }
-    for (const boundary of [0, 30, 60, 90]) {
+    // 81 is not a PAR band: it is where the app's paymentHistory ramp
+    // (100 - round(dpd * 100 / 90)) crosses below 10 and trips the engine's
+    // "Payment history below minimum threshold" veto. dpd 81 gives 10, dpd 82
+    // gives 9. A target sitting there would flip an approval to a refusal with
+    // the calendar, so it belongs in this list alongside the PAR bands.
+    for (const boundary of [0, 30, 60, 81, 90]) {
       const above = values.some((v) => v > boundary);
       const below = values.some((v) => v <= boundary);
       assert.ok(!(above && below),
@@ -407,9 +413,26 @@ test("the demo fixture keeps every arrears target clear of a decision boundary",
   for (const spec of specs) {
     assert.ok(Number.isFinite(spec.dpd), `${spec.id} has no oldestUnpaidDpd`);
     if (spec.settled === 0) continue;
-    for (const boundary of [0, 30, 60, 90]) {
+    // Includes 81, the paymentHistory veto crossing — see the note above.
+    for (const boundary of [0, 30, 60, 81, 90]) {
       assert.ok(Math.abs(spec.dpd - boundary) > 3,
         `${spec.id} target ${spec.dpd} sits within 3 days of the ${boundary}-day boundary`);
     }
   }
+});
+
+test("the paymentHistory ramp crosses the engine's veto between 81 and 82 days", () => {
+  // Justifies including 81 in the boundary lists above. The app derives
+  // paymentHistory from days past due; the engine refuses below 10.
+  const paymentHistory = (dpd) => Math.max(0, Math.min(100, 100 - Math.round((dpd * 100) / 90)));
+
+  assert.equal(paymentHistory(81), 10, "81 days still clears the veto");
+  assert.equal(paymentHistory(82), 9, "82 days trips it");
+
+  const base = {
+    debtRatio: 35, sectorRisk: "MEDIUM", governanceScore: 78,
+    collateralValue: 22_000_000, cashFlowStability: "STABLE", countryRisk: "SN",
+  };
+  assert.equal(calculateCreditScore({ ...base, paymentHistory: paymentHistory(81) }).status, "APPROVED");
+  assert.equal(calculateCreditScore({ ...base, paymentHistory: paymentHistory(82) }).status, "VETOED");
 });
