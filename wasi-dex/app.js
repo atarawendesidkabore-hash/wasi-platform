@@ -2,17 +2,17 @@
 // All 54 AFEX sovereign-state instruments loaded from wasi-upload
 
 const SUBFAMILY_COLORS = {
-  NAEX: { color: "#f59e0b", label: "North Africa" },
-  WAEX: { color: "#22c55e", label: "West Africa" },
-  CAEX: { color: "#a78bfa", label: "Central Africa" },
-  EAEX: { color: "#3b82f6", label: "East Africa" },
-  SAEX: { color: "#ef4444", label: "Southern Africa" }
+  NAEX: { color: "#f59e0b", label: "Afrique du Nord" },
+  WAEX: { color: "#22c55e", label: "Afrique de l'Ouest" },
+  CAEX: { color: "#a78bfa", label: "Afrique centrale" },
+  EAEX: { color: "#3b82f6", label: "Afrique de l'Est" },
+  SAEX: { color: "#ef4444", label: "Afrique australe" }
 };
 
 const MODEL_LABELS = {
-  coastal_export_model: "Coastal",
-  landlocked_corridor_model: "Landlocked",
-  island_export_model: "Island"
+  coastal_export_model: "Côtier",
+  landlocked_corridor_model: "Enclavé",
+  island_export_model: "Insulaire"
 };
 
 const EXPORTS_BASE_PATH = "./exports";
@@ -31,68 +31,68 @@ function getFundMarkdownPath(code) {
 
 const instruments = [
   // NAEX — North Africa
-  { code: "ALGEX", country: "Algeria", iso3: "DZA", currency: "DZD", subfamily: "NAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Condensates", "Iron Ore", "Phosphates"], note: "Energy export benchmark with secondary mining exposure." },
-  { code: "EGYEX", country: "Egypt", iso3: "EGY", currency: "EGP", subfamily: "NAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Gold", "Raw Cotton", "Phosphates"], note: "Energy, mining, and agricultural export logic." },
-  { code: "LBYEX", country: "Libya", iso3: "LBY", currency: "LYD", subfamily: "NAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Condensates", "Petrochemical Feedstocks"], note: "Highly concentrated energy benchmark." },
-  { code: "MAREX", country: "Morocco", iso3: "MAR", currency: "MAD", subfamily: "NAEX", model: "coastal_export_model", role: "diversified_coastal_member", detail: "starter_profile", commodities: ["Phosphates", "Fish and Seafood", "Citrus", "Lead and Zinc Concentrates"], note: "Phosphates and fisheries with diversified-coastal profile." },
-  { code: "TUNEX", country: "Tunisia", iso3: "TUN", currency: "TND", subfamily: "NAEX", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Olive Oil", "Phosphates", "Crude Oil", "Dates"], note: "Energy, phosphates, and agro-exports." },
-  { code: "SUDEX", country: "Sudan", iso3: "SDN", currency: "SDG", subfamily: "NAEX", model: "coastal_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Gold", "Gum Arabic", "Livestock", "Sesame Seeds", "Raw Cotton"], note: "Mining and agricultural export logic with conflict-risk caution." },
+  { code: "ALGEX", country: "Algérie", iso3: "DZA", currency: "DZD", subfamily: "NAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Condensats", "Minerai de fer", "Phosphates"], note: "Référence d'exportation énergétique, exposition minière secondaire." },
+  { code: "EGYEX", country: "Égypte", iso3: "EGY", currency: "EGP", subfamily: "NAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Or", "Coton brut", "Phosphates"], note: "Logique d'exportation énergétique, minière et agricole." },
+  { code: "LBYEX", country: "Libye", iso3: "LBY", currency: "LYD", subfamily: "NAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Condensats", "Charges pétrochimiques"], note: "Référence énergétique très concentrée." },
+  { code: "MAREX", country: "Maroc", iso3: "MAR", currency: "MAD", subfamily: "NAEX", model: "coastal_export_model", role: "diversified_coastal_member", detail: "starter_profile", commodities: ["Phosphates", "Poissons et fruits de mer", "Agrumes", "Concentrés de plomb et de zinc"], note: "Phosphates et pêche, profil côtier diversifié." },
+  { code: "TUNEX", country: "Tunisie", iso3: "TUN", currency: "TND", subfamily: "NAEX", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Huile d'olive", "Phosphates", "Pétrole brut", "Dattes"], note: "Énergie, phosphates et exportations agroalimentaires." },
+  { code: "SUDEX", country: "Soudan", iso3: "SDN", currency: "SDG", subfamily: "NAEX", model: "coastal_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Or", "Gomme arabique", "Bétail", "Graines de sésame", "Coton brut"], note: "Exportations minières et agricoles ; prudence liée au risque de conflit." },
 
   // WAEX — West Africa
-  { code: "BENEX", country: "Benin", iso3: "BEN", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Raw Cotton", "Cashew Nuts", "Soybeans", "Shea Nuts"], note: "Coastal exporter and corridor interface for Sahel trade." },
-  { code: "BUREX", country: "Burkina Faso", iso3: "BFA", currency: "XOF", subfamily: "WAEX", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "detailed_prototype_ready", commodities: ["Other Oily Seeds", "Cashew Nuts", "Raw Cotton", "Sesame Seeds", "Zinc Ore", "Gold"], note: "Detailed prototype. Corridor-based trade with six-country overlay." },
-  { code: "CABEX", country: "Cabo Verde", iso3: "CPV", currency: "CVE", subfamily: "WAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Fish and Seafood", "Salt", "Marine Products"], note: "Smaller raw-material base with diversification warning." },
-  { code: "CIREX", country: "Cote d'Ivoire", iso3: "CIV", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_anchor_member", detail: "detailed_prototype_ready", commodities: ["Cocoa Beans", "Natural Rubber", "Cashew Nuts", "Crude Oil", "Manganese", "Palm Oil", "Raw Cotton", "Coffee", "Nickel", "Gold", "Diamonds"], note: "Detailed prototype. Port-led export economy with cocoa anchor." },
-  { code: "GMBEX", country: "The Gambia", iso3: "GMB", currency: "GMD", subfamily: "WAEX", model: "coastal_export_model", role: "river_coastal_member", detail: "starter_profile", commodities: ["Groundnuts", "Fish and Seafood", "Sesame Seeds", "Cashew Nuts"], note: "Narrow agricultural and fisheries export base." },
-  { code: "GHAEX", country: "Ghana", iso3: "GHA", currency: "GHS", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_anchor_member", detail: "detailed_prototype_ready", commodities: ["Cocoa Beans", "Gold", "Crude Oil", "Manganese", "Bauxite", "Timber"], note: "Detailed prototype. Dual cocoa-mining profile with corridor relevance to Burkina Faso." },
-  { code: "GUIEX", country: "Guinea", iso3: "GIN", currency: "GNF", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Bauxite", "Gold", "Diamonds", "Iron Ore"], note: "Mining-heavy export logic." },
-  { code: "GNBEX", country: "Guinea-Bissau", iso3: "GNB", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "single_crop_member", detail: "starter_profile", commodities: ["Cashew Nuts", "Fish and Seafood", "Groundnuts"], note: "Concentration warning: heavy cashew reliance." },
-  { code: "LIBEX", country: "Liberia", iso3: "LBR", currency: "LRD", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_and_agriculture_member", detail: "starter_profile", commodities: ["Natural Rubber", "Iron Ore", "Gold", "Palm Oil", "Timber"], note: "Mining and plantation export logic." },
-  { code: "MALIEX", country: "Mali", iso3: "MLI", currency: "XOF", subfamily: "WAEX", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Gold", "Raw Cotton", "Livestock", "Sesame Seeds", "Shea Nuts"], note: "Corridor logic with gold and livestock mix." },
-  { code: "MRTEX", country: "Mauritania", iso3: "MRT", currency: "MRU", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_and_fisheries_member", detail: "starter_profile", commodities: ["Iron Ore", "Gold", "Copper Concentrate", "Fish and Seafood"], note: "Mining exports blended with fisheries." },
-  { code: "NEREX", country: "Niger", iso3: "NER", currency: "XOF", subfamily: "WAEX", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Uranium", "Crude Oil", "Livestock", "Cowpeas", "Onions"], note: "Landlocked corridor: mineral and agricultural exports." },
-  { code: "NGAEX", country: "Nigeria", iso3: "NGA", currency: "NGN", subfamily: "WAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "detailed_prototype_ready", commodities: ["Crude Oil", "Natural Gas", "Cocoa Beans", "Sesame Seeds", "Natural Rubber", "Urea"], note: "Detailed prototype. Africa's largest economy. Energy-dominant benchmark (~86% oil+gas by tonnage)." },
-  { code: "SENEX", country: "Senegal", iso3: "SEN", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Phosphates", "Gold", "Fish and Seafood", "Groundnuts", "Zircon"], note: "Mining and fisheries exposure." },
-  { code: "SLEX", country: "Sierra Leone", iso3: "SLE", currency: "SLE", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamonds", "Iron Ore", "Rutile", "Bauxite", "Cocoa"], note: "Mining commodities with smaller agricultural exposure." },
-  { code: "TOGEX", country: "Togo", iso3: "TGO", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Phosphates", "Raw Cotton", "Soybeans", "Cashew Nuts"], note: "Export country and corridor interface for Sahel trade." },
+  { code: "BENEX", country: "Bénin", iso3: "BEN", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Coton brut", "Noix de cajou", "Soja", "Noix de karité"], note: "Exportateur côtier et interface de corridor pour le commerce sahélien." },
+  { code: "BUREX", country: "Burkina Faso", iso3: "BFA", currency: "XOF", subfamily: "WAEX", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "detailed_prototype_ready", commodities: ["Autres graines oléagineuses", "Noix de cajou", "Coton brut", "Graines de sésame", "Minerai de zinc", "Or"], note: "Prototype détaillé. Commerce de corridor avec recouvrement sur six pays." },
+  { code: "CABEX", country: "Cap-Vert", iso3: "CPV", currency: "CVE", subfamily: "WAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Poissons et fruits de mer", "Sel", "Produits de la mer"], note: "Base de matières premières réduite ; alerte de diversification." },
+  { code: "CIREX", country: "Côte d'Ivoire", iso3: "CIV", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_anchor_member", detail: "detailed_prototype_ready", commodities: ["Fèves de cacao", "Caoutchouc naturel", "Noix de cajou", "Pétrole brut", "Manganèse", "Huile de palme", "Coton brut", "Café", "Nickel", "Or", "Diamants"], note: "Prototype détaillé. Économie d'exportation portuaire ancrée sur le cacao." },
+  { code: "GMBEX", country: "Gambie", iso3: "GMB", currency: "GMD", subfamily: "WAEX", model: "coastal_export_model", role: "river_coastal_member", detail: "starter_profile", commodities: ["Arachides", "Poissons et fruits de mer", "Graines de sésame", "Noix de cajou"], note: "Base d'exportation agricole et halieutique étroite." },
+  { code: "GHAEX", country: "Ghana", iso3: "GHA", currency: "GHS", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_anchor_member", detail: "detailed_prototype_ready", commodities: ["Fèves de cacao", "Or", "Pétrole brut", "Manganèse", "Bauxite", "Bois"], note: "Prototype détaillé. Profil double cacao-mines, corridor pertinent vers le Burkina Faso." },
+  { code: "GUIEX", country: "Guinée", iso3: "GIN", currency: "GNF", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Bauxite", "Or", "Diamants", "Minerai de fer"], note: "Logique d'exportation à forte dominante minière." },
+  { code: "GNBEX", country: "Guinée-Bissau", iso3: "GNB", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "single_crop_member", detail: "starter_profile", commodities: ["Noix de cajou", "Poissons et fruits de mer", "Arachides"], note: "Alerte de concentration : forte dépendance à l'anacarde." },
+  { code: "LIBEX", country: "Liberia", iso3: "LBR", currency: "LRD", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_and_agriculture_member", detail: "starter_profile", commodities: ["Caoutchouc naturel", "Minerai de fer", "Or", "Huile de palme", "Bois"], note: "Exportations minières et de plantation." },
+  { code: "MALIEX", country: "Mali", iso3: "MLI", currency: "XOF", subfamily: "WAEX", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Or", "Coton brut", "Bétail", "Graines de sésame", "Noix de karité"], note: "Logique de corridor, mélange or et bétail." },
+  { code: "MRTEX", country: "Mauritanie", iso3: "MRT", currency: "MRU", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_and_fisheries_member", detail: "starter_profile", commodities: ["Minerai de fer", "Or", "Concentré de cuivre", "Poissons et fruits de mer"], note: "Exportations minières combinées à la pêche." },
+  { code: "NEREX", country: "Niger", iso3: "NER", currency: "XOF", subfamily: "WAEX", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Uranium", "Pétrole brut", "Bétail", "Niébé", "Oignons"], note: "Corridor enclavé : exportations minières et agricoles." },
+  { code: "NGAEX", country: "Nigeria", iso3: "NGA", currency: "NGN", subfamily: "WAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "detailed_prototype_ready", commodities: ["Pétrole brut", "Gaz naturel", "Fèves de cacao", "Graines de sésame", "Caoutchouc naturel", "Urée"], note: "Prototype détaillé. Première économie d'Afrique. Référence à dominante énergétique (~86 % pétrole et gaz en tonnage)." },
+  { code: "SENEX", country: "Sénégal", iso3: "SEN", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Phosphates", "Or", "Poissons et fruits de mer", "Arachides", "Zircon"], note: "Exposition minière et halieutique." },
+  { code: "SLEX", country: "Sierra Leone", iso3: "SLE", currency: "SLE", subfamily: "WAEX", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamants", "Minerai de fer", "Rutile", "Bauxite", "Cacao"], note: "Matières minières, exposition agricole plus faible." },
+  { code: "TOGEX", country: "Togo", iso3: "TGO", currency: "XOF", subfamily: "WAEX", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Phosphates", "Coton brut", "Soja", "Noix de cajou"], note: "Pays exportateur et interface de corridor pour le commerce sahélien." },
 
   // CAEX — Central Africa
-  { code: "CAMEX", country: "Cameroon", iso3: "CMR", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Cocoa Beans", "Timber", "Raw Cotton", "Coffee", "Natural Gas"], note: "Energy, timber, and agricultural exports." },
-  { code: "CAFEX", country: "Central African Republic", iso3: "CAF", currency: "XAF", subfamily: "CAEX", model: "landlocked_corridor_model", role: "minerals_and_forest_member", detail: "starter_profile", commodities: ["Timber", "Gold", "Diamonds", "Raw Cotton"], note: "Landlocked corridor with governance-risk caution." },
-  { code: "CHAEX", country: "Chad", iso3: "TCD", currency: "XAF", subfamily: "CAEX", model: "landlocked_corridor_model", role: "energy_and_livestock_member", detail: "starter_profile", commodities: ["Crude Oil", "Livestock", "Sesame Seeds", "Gum Arabic", "Raw Cotton"], note: "Crude oil with agricultural and livestock exports." },
-  { code: "COGEX", country: "Republic of the Congo", iso3: "COG", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Crude Oil", "Timber", "Iron Ore", "Potash"], note: "Oil-led coastal benchmark with forest and mining secondary." },
-  { code: "DRCEX", country: "DR Congo", iso3: "COD", currency: "CDF", subfamily: "CAEX", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Copper", "Cobalt", "Gold", "Tin Ore", "Coltan", "Diamonds"], note: "Mining-heavy with multi-corridor transport model." },
-  { code: "EQGEX", country: "Equatorial Guinea", iso3: "GNQ", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Methanol", "Timber", "Cocoa Beans"], note: "Concentrated energy export benchmark." },
-  { code: "GABEX", country: "Gabon", iso3: "GAB", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "energy_and_metals_member", detail: "starter_profile", commodities: ["Crude Oil", "Manganese", "Timber", "Gold"], note: "Oil, manganese, and timber exposure." },
-  { code: "STPEX", country: "Sao Tome and Principe", iso3: "STP", currency: "STN", subfamily: "CAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Cocoa Beans", "Fish and Seafood", "Palm Products"], note: "Small-market and concentration warning." },
+  { code: "CAMEX", country: "Cameroun", iso3: "CMR", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Fèves de cacao", "Bois", "Coton brut", "Café", "Gaz naturel"], note: "Exportations énergétiques, forestières et agricoles." },
+  { code: "CAFEX", country: "République centrafricaine", iso3: "CAF", currency: "XAF", subfamily: "CAEX", model: "landlocked_corridor_model", role: "minerals_and_forest_member", detail: "starter_profile", commodities: ["Bois", "Or", "Diamants", "Coton brut"], note: "Corridor enclavé ; prudence liée au risque de gouvernance." },
+  { code: "CHAEX", country: "Tchad", iso3: "TCD", currency: "XAF", subfamily: "CAEX", model: "landlocked_corridor_model", role: "energy_and_livestock_member", detail: "starter_profile", commodities: ["Pétrole brut", "Bétail", "Graines de sésame", "Gomme arabique", "Coton brut"], note: "Pétrole brut avec exportations agricoles et d'élevage." },
+  { code: "COGEX", country: "République du Congo", iso3: "COG", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Pétrole brut", "Bois", "Minerai de fer", "Potasse"], note: "Référence côtière tirée par le pétrole, forêt et mines en secondaire." },
+  { code: "DRCEX", country: "République démocratique du Congo", iso3: "COD", currency: "CDF", subfamily: "CAEX", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Cuivre", "Cobalt", "Or", "Minerai d'étain", "Coltan", "Diamants"], note: "Forte dominante minière, modèle de transport multi-corridors." },
+  { code: "EQGEX", country: "Guinée équatoriale", iso3: "GNQ", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Méthanol", "Bois", "Fèves de cacao"], note: "Référence d'exportation énergétique concentrée." },
+  { code: "GABEX", country: "Gabon", iso3: "GAB", currency: "XAF", subfamily: "CAEX", model: "coastal_export_model", role: "energy_and_metals_member", detail: "starter_profile", commodities: ["Pétrole brut", "Manganèse", "Bois", "Or"], note: "Exposition pétrole, manganèse et bois." },
+  { code: "STPEX", country: "Sao Tomé-et-Principe", iso3: "STP", currency: "STN", subfamily: "CAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Fèves de cacao", "Poissons et fruits de mer", "Produits du palmier"], note: "Alerte de petit marché et de concentration." },
 
   // EAEX — East Africa
-  { code: "BDIEX", country: "Burundi", iso3: "BDI", currency: "BIF", subfamily: "EAEX", model: "landlocked_corridor_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Coffee", "Tea", "Gold", "Nickel Ore"], note: "Agriculture and mining with landlocked corridor." },
-  { code: "COMREX", country: "Comoros", iso3: "COM", currency: "KMF", subfamily: "EAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Vanilla", "Cloves", "Ylang-Ylang", "Fish and Seafood"], note: "Narrow island agro-export benchmark." },
-  { code: "DJIEX", country: "Djibouti", iso3: "DJI", currency: "DJF", subfamily: "EAEX", model: "coastal_export_model", role: "trade_gateway_member", detail: "starter_profile", commodities: ["Salt", "Livestock", "Fish and Seafood"], note: "Strategic trade-gateway with small raw-material base." },
-  { code: "ERIEX", country: "Eritrea", iso3: "ERI", currency: "ERN", subfamily: "EAEX", model: "coastal_export_model", role: "metals_member", detail: "starter_profile", commodities: ["Gold", "Copper", "Zinc", "Potash", "Salt"], note: "Smaller mining-heavy benchmark." },
-  { code: "ETHEX", country: "Ethiopia", iso3: "ETH", currency: "ETB", subfamily: "EAEX", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Coffee", "Gold", "Sesame Seeds", "Oilseeds", "Livestock"], note: "Landlocked corridor with diversified agriculture." },
-  { code: "KENEX", country: "Kenya", iso3: "KEN", currency: "KES", subfamily: "EAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Tea", "Coffee", "Soda Ash", "Titanium Ore", "Cut Flowers"], note: "Agricultural and mining exports with logistics-hub status." },
-  { code: "RWAEX", country: "Rwanda", iso3: "RWA", currency: "RWF", subfamily: "EAEX", model: "landlocked_corridor_model", role: "minerals_and_agri_member", detail: "starter_profile", commodities: ["Gold", "Tin Ore", "Tantalum", "Tungsten", "Coffee", "Tea"], note: "Landlocked corridor and specialty-metals exporter." },
-  { code: "SOMEX", country: "Somalia", iso3: "SOM", currency: "SOS", subfamily: "EAEX", model: "coastal_export_model", role: "livestock_member", detail: "starter_profile", commodities: ["Livestock", "Sesame Seeds", "Frankincense", "Fish and Seafood"], note: "High-fragility caution. Livestock and sesame exports." },
-  { code: "SSDEX", country: "South Sudan", iso3: "SSD", currency: "SSP", subfamily: "EAEX", model: "landlocked_corridor_model", role: "energy_member", detail: "starter_profile", commodities: ["Crude Oil", "Gum Arabic", "Livestock", "Sesame Seeds"], note: "Landlocked oil exporter with elevated fragility risk." },
-  { code: "TZAEX", country: "Tanzania", iso3: "TZA", currency: "TZS", subfamily: "EAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Gold", "Cashew Nuts", "Coffee", "Raw Cotton", "Tobacco", "Natural Gas"], note: "Mining, agriculture, and gas exposure." },
-  { code: "UGAEX", country: "Uganda", iso3: "UGA", currency: "UGX", subfamily: "EAEX", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Coffee", "Gold", "Raw Cotton", "Tea", "Fish and Seafood"], note: "Landlocked corridor with coffee-led agriculture." },
+  { code: "BDIEX", country: "Burundi", iso3: "BDI", currency: "BIF", subfamily: "EAEX", model: "landlocked_corridor_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Café", "Thé", "Or", "Minerai de nickel"], note: "Agriculture et mines, corridor enclavé." },
+  { code: "COMREX", country: "Comores", iso3: "COM", currency: "KMF", subfamily: "EAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Vanille", "Clous de girofle", "Ylang-ylang", "Poissons et fruits de mer"], note: "Référence agro-exportatrice insulaire étroite." },
+  { code: "DJIEX", country: "Djibouti", iso3: "DJI", currency: "DJF", subfamily: "EAEX", model: "coastal_export_model", role: "trade_gateway_member", detail: "starter_profile", commodities: ["Sel", "Bétail", "Poissons et fruits de mer"], note: "Porte d'entrée commerciale stratégique, base de matières premières réduite." },
+  { code: "ERIEX", country: "Érythrée", iso3: "ERI", currency: "ERN", subfamily: "EAEX", model: "coastal_export_model", role: "metals_member", detail: "starter_profile", commodities: ["Or", "Cuivre", "Zinc", "Potasse", "Sel"], note: "Référence minière de taille réduite." },
+  { code: "ETHEX", country: "Éthiopie", iso3: "ETH", currency: "ETB", subfamily: "EAEX", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Café", "Or", "Graines de sésame", "Graines oléagineuses", "Bétail"], note: "Corridor enclavé, agriculture diversifiée." },
+  { code: "KENEX", country: "Kenya", iso3: "KEN", currency: "KES", subfamily: "EAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Thé", "Café", "Carbonate de sodium", "Minerai de titane", "Fleurs coupées"], note: "Exportations agricoles et minières, statut de hub logistique." },
+  { code: "RWAEX", country: "Rwanda", iso3: "RWA", currency: "RWF", subfamily: "EAEX", model: "landlocked_corridor_model", role: "minerals_and_agri_member", detail: "starter_profile", commodities: ["Or", "Minerai d'étain", "Tantale", "Tungstène", "Café", "Thé"], note: "Corridor enclavé et exportateur de métaux spécialisés." },
+  { code: "SOMEX", country: "Somalie", iso3: "SOM", currency: "SOS", subfamily: "EAEX", model: "coastal_export_model", role: "livestock_member", detail: "starter_profile", commodities: ["Bétail", "Graines de sésame", "Encens", "Poissons et fruits de mer"], note: "Prudence : fragilité élevée. Exportations de bétail et de sésame." },
+  { code: "SSDEX", country: "Soudan du Sud", iso3: "SSD", currency: "SSP", subfamily: "EAEX", model: "landlocked_corridor_model", role: "energy_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gomme arabique", "Bétail", "Graines de sésame"], note: "Exportateur pétrolier enclavé, risque de fragilité élevé." },
+  { code: "TZAEX", country: "Tanzanie", iso3: "TZA", currency: "TZS", subfamily: "EAEX", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Or", "Noix de cajou", "Café", "Coton brut", "Tabac", "Gaz naturel"], note: "Exposition minière, agricole et gazière." },
+  { code: "UGAEX", country: "Ouganda", iso3: "UGA", currency: "UGX", subfamily: "EAEX", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Café", "Or", "Coton brut", "Thé", "Poissons et fruits de mer"], note: "Corridor enclavé, agriculture tirée par le café." },
 
   // SAEX — Southern Africa
-  { code: "ANGEX", country: "Angola", iso3: "AGO", currency: "AOA", subfamily: "SAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Diamonds", "Iron Ore", "Coffee"], note: "Oil-led benchmark with diamonds secondary." },
-  { code: "BOTEX", country: "Botswana", iso3: "BWA", currency: "BWP", subfamily: "SAEX", model: "landlocked_corridor_model", role: "diamonds_member", detail: "starter_profile", commodities: ["Diamonds", "Copper", "Nickel", "Soda Ash", "Beef"], note: "Diamonds and mining with landlocked corridor." },
-  { code: "ESWEX", country: "Eswatini", iso3: "SWZ", currency: "SZL", subfamily: "SAEX", model: "landlocked_corridor_model", role: "agri_industrial_member", detail: "starter_profile", commodities: ["Sugar", "Wood Pulp", "Citrus", "Coal"], note: "Agro-industrial and forestry-linked exports." },
-  { code: "LESEX", country: "Lesotho", iso3: "LSO", currency: "LSL", subfamily: "SAEX", model: "landlocked_corridor_model", role: "small_minerals_member", detail: "starter_profile", commodities: ["Wool", "Mohair", "Diamonds"], note: "Small-market caution. Wool, mohair, and diamonds." },
-  { code: "MDGEX", country: "Madagascar", iso3: "MDG", currency: "MGA", subfamily: "SAEX", model: "island_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Vanilla", "Nickel and Cobalt", "Cloves", "Chromium Ore", "Ilmenite"], note: "Specialty agriculture with mining secondary." },
-  { code: "MWIEX", country: "Malawi", iso3: "MWI", currency: "MWK", subfamily: "SAEX", model: "landlocked_corridor_model", role: "agri_member", detail: "starter_profile", commodities: ["Tobacco", "Tea", "Sugar", "Macadamia Nuts"], note: "Agricultural benchmark with corridor dependence." },
-  { code: "MUSEX", country: "Mauritius", iso3: "MUS", currency: "MUR", subfamily: "SAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Sugar", "Fish and Seafood", "Molasses"], note: "Limited raw-material base with diversification warning." },
-  { code: "MOZEX", country: "Mozambique", iso3: "MOZ", currency: "MZN", subfamily: "SAEX", model: "coastal_export_model", role: "energy_and_mining_member", detail: "starter_profile", commodities: ["Coal", "Natural Gas", "Graphite", "Heavy Mineral Sands", "Aluminum"], note: "Energy and mining with regional corridor role." },
-  { code: "NAMEX", country: "Namibia", iso3: "NAM", currency: "NAD", subfamily: "SAEX", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamonds", "Uranium", "Zinc", "Copper", "Fish and Seafood"], note: "Mining and fisheries exposure." },
-  { code: "SEYEX", country: "Seychelles", iso3: "SYC", currency: "SCR", subfamily: "SAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Fish and Seafood", "Tuna", "Cinnamon", "Vanilla"], note: "Fisheries-led island benchmark." },
-  { code: "ZAFEX", country: "South Africa", iso3: "ZAF", currency: "ZAR", subfamily: "SAEX", model: "coastal_export_model", role: "continental_anchor_member", detail: "starter_profile", commodities: ["Gold", "Platinum Group Metals", "Coal", "Iron Ore", "Manganese", "Chromium"], note: "Continental anchor: depth, scale, and commodity diversity." },
-  { code: "ZMBEX", country: "Zambia", iso3: "ZMB", currency: "ZMW", subfamily: "SAEX", model: "landlocked_corridor_model", role: "copper_anchor_member", detail: "starter_profile", commodities: ["Copper", "Cobalt", "Emeralds", "Sugar"], note: "Copper and cobalt with corridor-dependent exports." },
-  { code: "ZIMEX", country: "Zimbabwe", iso3: "ZWE", currency: "ZWG", subfamily: "SAEX", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Gold", "Platinum", "Lithium", "Tobacco", "Nickel"], note: "Mining and agricultural exports. Extra currency-governance review." }
+  { code: "ANGEX", country: "Angola", iso3: "AGO", currency: "AOA", subfamily: "SAEX", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Diamants", "Minerai de fer", "Café"], note: "Référence tirée par le pétrole, diamants en secondaire." },
+  { code: "BOTEX", country: "Botswana", iso3: "BWA", currency: "BWP", subfamily: "SAEX", model: "landlocked_corridor_model", role: "diamonds_member", detail: "starter_profile", commodities: ["Diamants", "Cuivre", "Nickel", "Carbonate de sodium", "Viande bovine"], note: "Diamants et mines, corridor enclavé." },
+  { code: "ESWEX", country: "Eswatini", iso3: "SWZ", currency: "SZL", subfamily: "SAEX", model: "landlocked_corridor_model", role: "agri_industrial_member", detail: "starter_profile", commodities: ["Sucre", "Pâte à papier", "Agrumes", "Charbon"], note: "Exportations agro-industrielles et liées à la forêt." },
+  { code: "LESEX", country: "Lesotho", iso3: "LSO", currency: "LSL", subfamily: "SAEX", model: "landlocked_corridor_model", role: "small_minerals_member", detail: "starter_profile", commodities: ["Laine", "Mohair", "Diamants"], note: "Prudence : petit marché. Laine, mohair et diamants." },
+  { code: "MDGEX", country: "Madagascar", iso3: "MDG", currency: "MGA", subfamily: "SAEX", model: "island_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Vanille", "Nickel et cobalt", "Clous de girofle", "Minerai de chrome", "Ilménite"], note: "Agriculture de spécialité, mines en secondaire." },
+  { code: "MWIEX", country: "Malawi", iso3: "MWI", currency: "MWK", subfamily: "SAEX", model: "landlocked_corridor_model", role: "agri_member", detail: "starter_profile", commodities: ["Tabac", "Thé", "Sucre", "Noix de macadamia"], note: "Référence agricole, dépendance au corridor." },
+  { code: "MUSEX", country: "Maurice", iso3: "MUS", currency: "MUR", subfamily: "SAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Sucre", "Poissons et fruits de mer", "Mélasse"], note: "Base de matières premières limitée ; alerte de diversification." },
+  { code: "MOZEX", country: "Mozambique", iso3: "MOZ", currency: "MZN", subfamily: "SAEX", model: "coastal_export_model", role: "energy_and_mining_member", detail: "starter_profile", commodities: ["Charbon", "Gaz naturel", "Graphite", "Sables minéralisés lourds", "Aluminium"], note: "Énergie et mines, rôle de corridor régional." },
+  { code: "NAMEX", country: "Namibie", iso3: "NAM", currency: "NAD", subfamily: "SAEX", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamants", "Uranium", "Zinc", "Cuivre", "Poissons et fruits de mer"], note: "Exposition minière et halieutique." },
+  { code: "SEYEX", country: "Seychelles", iso3: "SYC", currency: "SCR", subfamily: "SAEX", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Poissons et fruits de mer", "Thon", "Cannelle", "Vanille"], note: "Référence insulaire tirée par la pêche." },
+  { code: "ZAFEX", country: "Afrique du Sud", iso3: "ZAF", currency: "ZAR", subfamily: "SAEX", model: "coastal_export_model", role: "continental_anchor_member", detail: "starter_profile", commodities: ["Or", "Métaux du groupe platine", "Charbon", "Minerai de fer", "Manganèse", "Chrome"], note: "Ancre continentale : profondeur, échelle et diversité des matières." },
+  { code: "ZMBEX", country: "Zambie", iso3: "ZMB", currency: "ZMW", subfamily: "SAEX", model: "landlocked_corridor_model", role: "copper_anchor_member", detail: "starter_profile", commodities: ["Cuivre", "Cobalt", "Émeraudes", "Sucre"], note: "Cuivre et cobalt, exportations dépendantes du corridor." },
+  { code: "ZIMEX", country: "Zimbabwe", iso3: "ZWE", currency: "ZWG", subfamily: "SAEX", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Or", "Platine", "Lithium", "Tabac", "Nickel"], note: "Exportations minières et agricoles. Revue renforcée de la gouvernance monétaire." }
 ];
 
 // FX — African currency rates vs XOF (indicative reference rates, source: BCEAO / market mid-rate)
@@ -100,45 +100,45 @@ const instruments = [
 // Rates expressed as: 1 unit of currency = X XOF
 const FX_RATES_FALLBACK = [
   // ── Base & Anchor ──────────────────────────────────────────────────────────
-  { currency: "XOF", name: "CFA Franc UEMOA", countries: ["Benin", "Burkina Faso", "Côte d'Ivoire", "Guinea-Bissau", "Mali", "Niger", "Senegal", "Togo"], region: "WAEX", rate: 1.0000, status: "base", note: "Base currency (BCEAO peg to EUR)" },
-  { currency: "XAF", name: "CFA Franc BEAC", countries: ["Cameroon", "CAR", "Chad", "Congo", "Equatorial Guinea", "Gabon"], region: "CAEX", rate: 1.0000, status: "pegged", note: "At parity with XOF (both pegged to EUR at 655.957)" },
+  { currency: "XOF", name: "CFA Franc UEMOA", countries: ["Bénin", "Burkina Faso", "Côte d'Ivoire", "Guinée-Bissau", "Mali", "Niger", "Sénégal", "Togo"], region: "WAEX", rate: 1.0000, status: "base", note: "Base currency (BCEAO peg to EUR)" },
+  { currency: "XAF", name: "CFA Franc BEAC", countries: ["Cameroun", "CAR", "Tchad", "Congo", "Guinée équatoriale", "Gabon"], region: "CAEX", rate: 1.0000, status: "pegged", note: "At parity with XOF (both pegged to EUR at 655.957)" },
   { currency: "EUR", name: "Euro (référence)", countries: ["Zone Euro"], region: "REF", rate: 655.957, status: "anchor", note: "Anchor currency — XOF/XAF peg fixed" },
   { currency: "USD", name: "US Dollar (référence)", countries: ["—"], region: "REF", rate: 615.00, status: "ref", note: "Indicative — marché mid-rate" },
 
   // ── North Africa (NAEX) ───────────────────────────────────────────────────
-  { currency: "DZD", name: "Dinar Algérien", countries: ["Algeria"], region: "NAEX", rate: 4.60, status: "managed", note: "Géré par la Banque d'Algérie" },
-  { currency: "EGP", name: "Livre Égyptienne", countries: ["Egypt"], region: "NAEX", rate: 12.80, status: "flottant", note: "Flottant dirigé depuis 2022" },
-  { currency: "LYD", name: "Dinar Libyen", countries: ["Libya"], region: "NAEX", rate: 128.0, status: "managed", note: "Taux multiple — instabilité institutionnelle" },
-  { currency: "MAD", name: "Dirham Marocain", countries: ["Morocco"], region: "NAEX", rate: 61.5, status: "semi-pegged", note: "Panier EUR/USD (60%/40%)" },
-  { currency: "TND", name: "Dinar Tunisien", countries: ["Tunisia"], region: "NAEX", rate: 198.5, status: "managed", note: "Flottant géré par la BCT" },
-  { currency: "SDG", name: "Livre Soudanaise", countries: ["Sudan"], region: "NAEX", rate: 1.08, status: "volatile", note: "Très volatile — contexte de crise" },
+  { currency: "DZD", name: "Dinar Algérien", countries: ["Algérie"], region: "NAEX", rate: 4.60, status: "managed", note: "Géré par la Banque d'Algérie" },
+  { currency: "EGP", name: "Livre Égyptienne", countries: ["Égypte"], region: "NAEX", rate: 12.80, status: "flottant", note: "Flottant dirigé depuis 2022" },
+  { currency: "LYD", name: "Dinar Libyen", countries: ["Libye"], region: "NAEX", rate: 128.0, status: "managed", note: "Taux multiple — instabilité institutionnelle" },
+  { currency: "MAD", name: "Dirham Marocain", countries: ["Maroc"], region: "NAEX", rate: 61.5, status: "semi-pegged", note: "Panier EUR/USD (60%/40%)" },
+  { currency: "TND", name: "Dinar Tunisien", countries: ["Tunisie"], region: "NAEX", rate: 198.5, status: "managed", note: "Flottant géré par la BCT" },
+  { currency: "SDG", name: "Livre Soudanaise", countries: ["Soudan"], region: "NAEX", rate: 1.08, status: "volatile", note: "Très volatile — contexte de crise" },
 
   // ── West Africa non-XOF (WAEX) ────────────────────────────────────────────
-  { currency: "CVE", name: "Escudo Cap-Verdien", countries: ["Cabo Verde"], region: "WAEX", rate: 5.96, status: "pegged", note: "Ancré à l'EUR (1 EUR = 110.265 CVE)" },
+  { currency: "CVE", name: "Escudo Cap-Verdien", countries: ["Cap-Vert"], region: "WAEX", rate: 5.96, status: "pegged", note: "Ancré à l'EUR (1 EUR = 110.265 CVE)" },
   { currency: "GMD", name: "Dalasi Gambien", countries: ["Gambia"], region: "WAEX", rate: 8.54, status: "flottant", note: "Flottant dirigé" },
   { currency: "GHS", name: "Cedi Ghanéen", countries: ["Ghana"], region: "WAEX", rate: 39.7, status: "flottant", note: "Flottant — forte dépréciation 2022–2023" },
-  { currency: "GNF", name: "Franc Guinéen", countries: ["Guinea"], region: "WAEX", rate: 0.0715, status: "managed", note: "Géré par la BCRG" },
+  { currency: "GNF", name: "Franc Guinéen", countries: ["Guinée"], region: "WAEX", rate: 0.0715, status: "managed", note: "Géré par la BCRG" },
   { currency: "LRD", name: "Dollar Libérien", countries: ["Liberia"], region: "WAEX", rate: 3.17, status: "flottant", note: "Cours libre" },
-  { currency: "MRU", name: "Ouguiya Mauritanien", countries: ["Mauritania"], region: "WAEX", rate: 15.57, status: "managed", note: "Géré par la BCM (réforme 2018 ÷10)" },
+  { currency: "MRU", name: "Ouguiya Mauritanien", countries: ["Mauritanie"], region: "WAEX", rate: 15.57, status: "managed", note: "Géré par la BCM (réforme 2018 ÷10)" },
   { currency: "NGN", name: "Naira Nigérian", countries: ["Nigeria"], region: "WAEX", rate: 0.389, status: "volatile", note: "Flottant unifié depuis juin 2023" },
   { currency: "SLE", name: "Leone Sierra-Léonais", countries: ["Sierra Leone"], region: "WAEX", rate: 0.0273, status: "managed", note: "Réforme 2022 : 1 nouveau Leone = 1000 anciens" },
 
   // ── Central Africa non-XAF (CAEX) ────────────────────────────────────────
-  { currency: "CDF", name: "Franc Congolais", countries: ["DR Congo"], region: "CAEX", rate: 0.220, status: "volatile", note: "Très déprécié — dollarisation partielle" },
+  { currency: "CDF", name: "Franc Congolais", countries: ["République démocratique du Congo"], region: "CAEX", rate: 0.220, status: "volatile", note: "Très déprécié — dollarisation partielle" },
   { currency: "STN", name: "Dobra São-Toméen", countries: ["Sao Tome & Principe"], region: "CAEX", rate: 25.1, status: "pegged", note: "Ancré à l'EUR (1 EUR = 24.5 STN env.)" },
 
   // ── East Africa (EAEX) ────────────────────────────────────────────────────
   { currency: "BIF", name: "Franc Burundais", countries: ["Burundi"], region: "EAEX", rate: 0.213, status: "managed", note: "Géré par la BRB" },
-  { currency: "KMF", name: "Franc Comorien", countries: ["Comoros"], region: "EAEX", rate: 1.333, status: "pegged", note: "Ancré à l'EUR via Trésor français (491.97 KMF = 1 EUR)" },
+  { currency: "KMF", name: "Franc Comorien", countries: ["Comores"], region: "EAEX", rate: 1.333, status: "pegged", note: "Ancré à l'EUR via Trésor français (491.97 KMF = 1 EUR)" },
   { currency: "DJF", name: "Franc Djiboutien", countries: ["Djibouti"], region: "EAEX", rate: 3.46, status: "pegged", note: "Ancré au USD (1 USD = 177.721 DJF)" },
-  { currency: "ERN", name: "Nakfa Érythréen", countries: ["Eritrea"], region: "EAEX", rate: 41.0, status: "fixed", note: "Taux officiel fixe 1 USD = 15 ERN" },
-  { currency: "ETB", name: "Birr Éthiopien", countries: ["Ethiopia"], region: "EAEX", rate: 5.13, status: "managed", note: "Géré par la NBE" },
+  { currency: "ERN", name: "Nakfa Érythréen", countries: ["Érythrée"], region: "EAEX", rate: 41.0, status: "fixed", note: "Taux officiel fixe 1 USD = 15 ERN" },
+  { currency: "ETB", name: "Birr Éthiopien", countries: ["Éthiopie"], region: "EAEX", rate: 5.13, status: "managed", note: "Géré par la NBE" },
   { currency: "KES", name: "Shilling Kényan", countries: ["Kenya"], region: "EAEX", rate: 4.77, status: "flottant", note: "Flottant dirigé — hub régional" },
   { currency: "RWF", name: "Franc Rwandais", countries: ["Rwanda"], region: "EAEX", rate: 0.443, status: "managed", note: "Géré par la BNR" },
-  { currency: "SOS", name: "Shilling Somalien", countries: ["Somalia"], region: "EAEX", rate: 1.077, status: "volatile", note: "Instabilité institutionnelle — usage USD dominant" },
-  { currency: "SSP", name: "Livre Sud-Soudanaise", countries: ["South Sudan"], region: "EAEX", rate: 0.473, status: "volatile", note: "Très volatile — contexte de conflit" },
-  { currency: "TZS", name: "Shilling Tanzanien", countries: ["Tanzania"], region: "EAEX", rate: 0.228, status: "managed", note: "Géré par la BoT" },
-  { currency: "UGX", name: "Shilling Ougandais", countries: ["Uganda"], region: "EAEX", rate: 0.164, status: "flottant", note: "Flottant dirigé — BoU" },
+  { currency: "SOS", name: "Shilling Somalien", countries: ["Somalie"], region: "EAEX", rate: 1.077, status: "volatile", note: "Instabilité institutionnelle — usage USD dominant" },
+  { currency: "SSP", name: "Livre Sud-Soudanaise", countries: ["Soudan du Sud"], region: "EAEX", rate: 0.473, status: "volatile", note: "Très volatile — contexte de conflit" },
+  { currency: "TZS", name: "Shilling Tanzanien", countries: ["Tanzanie"], region: "EAEX", rate: 0.228, status: "managed", note: "Géré par la BoT" },
+  { currency: "UGX", name: "Shilling Ougandais", countries: ["Ouganda"], region: "EAEX", rate: 0.164, status: "flottant", note: "Flottant dirigé — BoU" },
 
   // ── Southern Africa (SAEX) ────────────────────────────────────────────────
   { currency: "AOA", name: "Kwanza Angolais", countries: ["Angola"], region: "SAEX", rate: 0.683, status: "managed", note: "Géré par la BNA — lié au USD/EUR" },
@@ -147,12 +147,12 @@ const FX_RATES_FALLBACK = [
   { currency: "LSL", name: "Loti Lésothan", countries: ["Lesotho"], region: "SAEX", rate: 33.8, status: "pegged", note: "Ancré au ZAR à parité (CMA)" },
   { currency: "MGA", name: "Ariary Malgache", countries: ["Madagascar"], region: "SAEX", rate: 0.137, status: "managed", note: "Géré par la BFM" },
   { currency: "MWK", name: "Kwacha Malawien", countries: ["Malawi"], region: "SAEX", rate: 0.353, status: "managed", note: "Géré par la RBM — forte dépréciation" },
-  { currency: "MUR", name: "Roupie Mauricienne", countries: ["Mauritius"], region: "SAEX", rate: 13.82, status: "managed", note: "Géré par la BoM" },
+  { currency: "MUR", name: "Roupie Mauricienne", countries: ["Maurice"], region: "SAEX", rate: 13.82, status: "managed", note: "Géré par la BoM" },
   { currency: "MZN", name: "Metical Mozambicain", countries: ["Mozambique"], region: "SAEX", rate: 9.61, status: "managed", note: "Géré par le BM" },
-  { currency: "NAD", name: "Dollar Namibien", countries: ["Namibia"], region: "SAEX", rate: 33.8, status: "pegged", note: "Ancré au ZAR à parité (CMA)" },
+  { currency: "NAD", name: "Dollar Namibien", countries: ["Namibie"], region: "SAEX", rate: 33.8, status: "pegged", note: "Ancré au ZAR à parité (CMA)" },
   { currency: "SCR", name: "Roupie Seychelloise", countries: ["Seychelles"], region: "SAEX", rate: 45.2, status: "flottant", note: "Flottant depuis 2008" },
-  { currency: "ZAR", name: "Rand Sud-Africain", countries: ["South Africa"], region: "SAEX", rate: 33.8, status: "flottant", note: "Flottant libre — ancre CMA" },
-  { currency: "ZMW", name: "Kwacha Zambien", countries: ["Zambia"], region: "SAEX", rate: 22.4, status: "managed", note: "Géré par la BoZ" },
+  { currency: "ZAR", name: "Rand Sud-Africain", countries: ["Afrique du Sud"], region: "SAEX", rate: 33.8, status: "flottant", note: "Flottant libre — ancre CMA" },
+  { currency: "ZMW", name: "Kwacha Zambien", countries: ["Zambie"], region: "SAEX", rate: 22.4, status: "managed", note: "Géré par la BoZ" },
   { currency: "ZWG", name: "Zimbabwe Gold (ZiG)", countries: ["Zimbabwe"], region: "SAEX", rate: 23.7, status: "managed", note: "Nouvelle monnaie 2024 — adossée à l'or" }
 ];
 
@@ -423,14 +423,14 @@ function renderKPIs() {
   const filtered = getFiltered();
   const fc = new Set(filtered.flatMap((i) => i.commodities)).size;
   const kpis = [
-    { label: "Instruments", value: filtered.length, note: `of ${instruments.length} total` },
-    { label: "Subfamilies", value: new Set(filtered.map((i) => i.subfamily)).size, note: "regional groups" },
-    { label: "Detailed", value: filtered.filter((i) => i.detail === "detailed_prototype_ready").length, note: "prototype ready" },
-    { label: "Commodities", value: fc, note: "distinct raw materials" },
-    { label: "Currencies", value: new Set(filtered.map((i) => i.currency)).size, note: "base currencies" },
-    { label: "Coastal", value: filtered.filter((i) => i.model === "coastal_export_model").length, note: "port-led" },
-    { label: "Landlocked", value: filtered.filter((i) => i.model === "landlocked_corridor_model").length, note: "corridor" },
-    { label: "Island", value: filtered.filter((i) => i.model === "island_export_model").length, note: "maritime/air" }
+    { label: "Instruments", value: filtered.length, note: `sur ${instruments.length} au total` },
+    { label: "Sous-familles", value: new Set(filtered.map((i) => i.subfamily)).size, note: "groupes régionaux" },
+    { label: "Détaillés", value: filtered.filter((i) => i.detail === "detailed_prototype_ready").length, note: "prototype prêt" },
+    { label: "Matières", value: fc, note: "matières premières distinctes" },
+    { label: "Devises", value: new Set(filtered.map((i) => i.currency)).size, note: "devises de référence" },
+    { label: "Côtiers", value: filtered.filter((i) => i.model === "coastal_export_model").length, note: "tirés par les ports" },
+    { label: "Enclavés", value: filtered.filter((i) => i.model === "landlocked_corridor_model").length, note: "corridor" },
+    { label: "Insulaires", value: filtered.filter((i) => i.model === "island_export_model").length, note: "maritime / aérien" }
   ];
   document.getElementById("kpi-strip").innerHTML = kpis.map((k) => `
     <div class="kpi-card">
@@ -450,7 +450,7 @@ function renderTerminal() {
   if (filterProfile) parts.push(filterProfile);
   if (searchTerm) parts.push(`"${searchTerm}"`);
   document.getElementById("terminal-count").textContent = `${filtered.length} instruments loaded`;
-  document.getElementById("terminal-filter").textContent = parts.length ? parts.join(" + ") : "No filter";
+  document.getElementById("terminal-filter").textContent = parts.length ? parts.join(" + ") : "Aucun filtre";
   document.getElementById("terminal-commodities").textContent = `${new Set(filtered.flatMap((i) => i.commodities)).size} commodities tracked`;
 }
 
@@ -461,7 +461,7 @@ function renderSidebar() {
   instruments.forEach((i) => { sfCounts[i.subfamily] = (sfCounts[i.subfamily] || 0) + 1; });
   document.getElementById("subfamily-nav").innerHTML = `
     <button class="nav-btn ${!filterSubfamily ? "active" : ""}" data-sf="">
-      <span class="nav-dot" style="background: var(--muted)"></span> All regions
+      <span class="nav-dot" style="background: var(--muted)"></span> Toutes les régions
       <span class="nav-count">${instruments.length}</span>
     </button>
     ${Object.entries(SUBFAMILY_COLORS).map(([code, info]) => `
@@ -482,7 +482,7 @@ function renderSidebar() {
   const modelCounts = {};
   instruments.forEach((i) => { modelCounts[i.model] = (modelCounts[i.model] || 0) + 1; });
   document.getElementById("model-nav").innerHTML = `
-    <button class="nav-btn ${!filterModel ? "active" : ""}" data-model="">All models<span class="nav-count">${instruments.length}</span></button>
+    <button class="nav-btn ${!filterModel ? "active" : ""}" data-model="">Tous les modèles<span class="nav-count">${instruments.length}</span></button>
     ${Object.entries(MODEL_LABELS).map(([key, label]) => `
       <button class="nav-btn ${filterModel === key ? "active" : ""}" data-model="${key}">${label}<span class="nav-count">${modelCounts[key] || 0}</span></button>
     `).join("")}
@@ -497,8 +497,8 @@ function renderSidebar() {
   // Profile
   document.getElementById("profile-nav").innerHTML = `
     <button class="nav-btn ${!filterProfile ? "active" : ""}" data-profile="">All<span class="nav-count">${instruments.length}</span></button>
-    <button class="nav-btn ${filterProfile === "detailed" ? "active" : ""}" data-profile="detailed">Detailed<span class="nav-count">${getDetailedCount()}</span></button>
-    <button class="nav-btn ${filterProfile === "starter" ? "active" : ""}" data-profile="starter">Starter<span class="nav-count">${instruments.length - getDetailedCount()}</span></button>
+    <button class="nav-btn ${filterProfile === "detailed" ? "active" : ""}" data-profile="detailed">Détaillé<span class="nav-count">${getDetailedCount()}</span></button>
+    <button class="nav-btn ${filterProfile === "starter" ? "active" : ""}" data-profile="starter">Initial<span class="nav-count">${instruments.length - getDetailedCount()}</span></button>
   `;
   document.getElementById("profile-nav").querySelectorAll(".nav-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -552,7 +552,7 @@ function cardHTML(i) {
       <div class="card-meta">
         <span>${i.currency}</span>
         <span>${MODEL_LABELS[i.model]}</span>
-        <span>${i.detail === "detailed_prototype_ready" ? "Detailed" : "Starter"}</span>
+        <span>${i.detail === "detailed_prototype_ready" ? "Détaillé" : "Initial"}</span>
       </div>
       <div class="card-commodities">
         ${i.commodities.slice(0, 3).map((c) => `<span class="commodity-tag">${c}</span>`).join("")}
@@ -573,7 +573,7 @@ function renderTable(list) {
       <thead>
         <tr>
           <th>Code</th>
-          <th>Country</th>
+          <th>Pays</th>
           <th>Region</th>
           <th>Currency</th>
           <th>Model</th>
@@ -590,7 +590,7 @@ function renderTable(list) {
             <td><span style="color: ${SUBFAMILY_COLORS[i.subfamily].color}">${i.subfamily}</span></td>
             <td>${i.currency}</td>
             <td>${MODEL_LABELS[i.model]}</td>
-            <td><span class="table-badge ${i.detail === "detailed_prototype_ready" ? "badge-detailed" : "badge-starter"}">${i.detail === "detailed_prototype_ready" ? "Detailed" : "Starter"}</span></td>
+            <td><span class="table-badge ${i.detail === "detailed_prototype_ready" ? "badge-detailed" : "badge-starter"}">${i.detail === "detailed_prototype_ready" ? "Détaillé" : "Initial"}</span></td>
             <td>${i.commodities.length}</td>
             <td>
               <a class="card-link" href="${getFundJsonPath(i.code)}" target="_blank">JSON</a>
@@ -630,13 +630,13 @@ function renderCompareDetail(id, code) {
   slot.classList.add("filled");
   const sf = SUBFAMILY_COLORS[i.subfamily];
   el.innerHTML = `
-    <div class="compare-row"><span>Country</span><strong>${i.country}</strong></div>
+    <div class="compare-row"><span>Pays</span><strong>${i.country}</strong></div>
     <div class="compare-row"><span>ISO3</span><strong>${i.iso3}</strong></div>
     <div class="compare-row"><span>Region</span><strong style="color: ${sf.color}">${sf.label} (${i.subfamily})</strong></div>
     <div class="compare-row"><span>Currency</span><strong>${i.currency}</strong></div>
     <div class="compare-row"><span>Model</span><strong>${MODEL_LABELS[i.model]}</strong></div>
     <div class="compare-row"><span>Role</span><strong>${formatRole(i.role)}</strong></div>
-    <div class="compare-row"><span>Profile</span><strong>${i.detail === "detailed_prototype_ready" ? "Detailed prototype" : "Starter profile"}</strong></div>
+    <div class="compare-row"><span>Profil</span><strong>${i.detail === "detailed_prototype_ready" ? "Prototype détaillé" : "Profil initial"}</strong></div>
     <div class="compare-row"><span>Commodity count</span><strong>${i.commodities.length}</strong></div>
     <div class="compare-commodities">
       ${i.commodities.map((c) => `<span class="commodity-tag">${c}</span>`).join("")}
@@ -659,23 +659,23 @@ function openDrawer(code) {
   document.getElementById("drawer-body").innerHTML = `
     <div class="drawer-section">
       <div class="drawer-section-title">Identity</div>
-      <div class="drawer-field"><span>Fund name</span><strong>${i.code} Fund</strong></div>
-      <div class="drawer-field"><span>Full name</span><strong>${i.country} Raw Export Index Fund</strong></div>
-      <div class="drawer-field"><span>Benchmark</span><strong>${i.country} Raw Export Index</strong></div>
+      <div class="drawer-field"><span>Nom du fonds</span><strong>${i.code} Fund</strong></div>
+      <div class="drawer-field"><span>Dénomination complète</span><strong>Fonds indiciel d'exportation brute — ${i.country}</strong></div>
+      <div class="drawer-field"><span>Référence</span><strong>${i.country} Raw Export Index</strong></div>
       <div class="drawer-field"><span>ISO3</span><strong>${i.iso3}</strong></div>
     </div>
     <div class="drawer-section">
       <div class="drawer-section-title">Classification</div>
-      <div class="drawer-field"><span>Family</span><strong>AFEX</strong></div>
+      <div class="drawer-field"><span>Famille</span><strong>AFEX</strong></div>
       <div class="drawer-field"><span>Subfamily</span><strong style="color: ${sf.color}">${i.subfamily} — ${sf.label}</strong></div>
       <div class="drawer-field"><span>Role</span><strong>${formatRole(i.role)}</strong></div>
-      <div class="drawer-field"><span>Profile</span><strong>${i.detail === "detailed_prototype_ready" ? "Detailed prototype" : "Starter profile"}</strong></div>
+      <div class="drawer-field"><span>Profil</span><strong>${i.detail === "detailed_prototype_ready" ? "Prototype détaillé" : "Profil initial"}</strong></div>
     </div>
     <div class="drawer-section">
       <div class="drawer-section-title">Methodology</div>
       <div class="drawer-field"><span>Model</span><strong>${MODEL_LABELS[i.model]}</strong></div>
       <div class="drawer-field"><span>Weighting</span><strong>${i.profile
-        ? "Trailing " + i.profile.years_count + "-year avg export value (USD)"
+        ? "Trailing " + i.profile.years_count + " ans — valeur moyenne d'exportation (USD)"
         : "Trailing 20-year avg export tonnage (target)"}</strong></div>
       <div class="drawer-field"><span>Reconstitution</span><strong>Annual</strong></div>
       <div class="drawer-field"><span>Rebalancing</span><strong>Quarterly</strong></div>
@@ -684,7 +684,7 @@ function openDrawer(code) {
     <div class="drawer-section">
       <div class="drawer-section-title">Currency</div>
       <div class="drawer-field"><span>Base currency</span><strong>${i.currency}</strong></div>
-      <div class="drawer-field"><span>Continental comparison</span><strong>USD</strong></div>
+      <div class="drawer-field"><span>Comparaison continentale</span><strong>USD</strong></div>
     </div>
     <div class="drawer-section">
       <div class="drawer-section-title">Candidate Commodities (${i.commodities.length})</div>
@@ -699,9 +699,9 @@ function openDrawer(code) {
     <div class="drawer-section">
       <div class="drawer-section-title">Package Links</div>
       <div class="drawer-links">
-        <a class="drawer-link" href="${getFundJsonPath(i.code)}" target="_blank">Fund JSON</a>
-        <a class="drawer-link" href="${getFundMarkdownPath(i.code)}" target="_blank">Fund Markdown</a>
-        <a class="drawer-link" href="${AFEX_MANIFEST_JSON_PATH}" target="_blank">AFEX Manifest</a>
+        <a class="drawer-link" href="${getFundJsonPath(i.code)}" target="_blank">Fonds (JSON)</a>
+        <a class="drawer-link" href="${getFundMarkdownPath(i.code)}" target="_blank">Fonds (Markdown)</a>
+        <a class="drawer-link" href="${AFEX_MANIFEST_JSON_PATH}" target="_blank">Manifeste AFEX</a>
       </div>
     </div>
   `;
@@ -739,7 +739,7 @@ function renderProfileSections(i) {
       <div class="afex-weights">${rows}</div>
       <div style="font-size:.76rem;color:var(--muted);margin-top:8px;line-height:1.5;">
         Weights are the trailing average share of annual export value, renormalised across the retained constituents.
-        Basis: <strong>export value (USD)</strong> — Comtrade net weight is unreported for this reporter
+        Basis: <strong>valeur d'exportation (USD)</strong> — Comtrade net weight is unreported for this reporter
         (${p.tonnage_coverage_pct}% coverage), so tonnage weighting is not computable.
       </div>
     </div>
@@ -1110,7 +1110,7 @@ initializeFxRates();
 // ── TRANSFER — Quote Simulator ──────────────────────────────────────────────
 
 const TRANSFER_PRICING_TIERS = [
-  { minAmount: 0, feePct: 0.012, fxMarginPct: 0.004, label: "Starter" },
+  { minAmount: 0, feePct: 0.012, fxMarginPct: 0.004, label: "Essentiel" },
   { minAmount: 200, feePct: 0.010, fxMarginPct: 0.004, label: "Growth" },
   { minAmount: 1000, feePct: 0.008, fxMarginPct: 0.004, label: "Pro" }
 ];

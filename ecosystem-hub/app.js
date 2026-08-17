@@ -1,91 +1,91 @@
 const subfamilies = [
   {
     code: "NAEX",
-    name: "North Africa Export Index Family",
+    name: "Famille d'indices d'exportation — Afrique du Nord",
     color: "#b45309",
     countries: [
-      { code: "ALGEX", country: "Algeria", currency: "DZD", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Condensates", "Iron Ore", "Phosphates"] },
-      { code: "EGYEX", country: "Egypt", currency: "EGP", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Gold", "Raw Cotton", "Phosphates"] },
-      { code: "LBYEX", country: "Libya", currency: "LYD", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Condensates", "Petrochemical Feedstocks"] },
-      { code: "MAREX", country: "Morocco", currency: "MAD", model: "coastal_export_model", role: "diversified_coastal_member", detail: "starter_profile", commodities: ["Phosphates", "Fish and Seafood", "Citrus", "Lead and Zinc Concentrates"] },
-      { code: "TUNEX", country: "Tunisia", currency: "TND", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Olive Oil", "Phosphates", "Crude Oil", "Dates"] },
-      { code: "SUDEX", country: "Sudan", currency: "SDG", model: "coastal_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Gold", "Gum Arabic", "Livestock", "Sesame Seeds", "Raw Cotton"] }
+      { code: "ALGEX", country: "Algérie", currency: "DZD", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Condensats", "Minerai de fer", "Phosphates"] },
+      { code: "EGYEX", country: "Égypte", currency: "EGP", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Or", "Coton brut", "Phosphates"] },
+      { code: "LBYEX", country: "Libye", currency: "LYD", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Condensats", "Charges pétrochimiques"] },
+      { code: "MAREX", country: "Maroc", currency: "MAD", model: "coastal_export_model", role: "diversified_coastal_member", detail: "starter_profile", commodities: ["Phosphates", "Poissons et fruits de mer", "Agrumes", "Concentrés de plomb et de zinc"] },
+      { code: "TUNEX", country: "Tunisie", currency: "TND", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Huile d'olive", "Phosphates", "Pétrole brut", "Dattes"] },
+      { code: "SUDEX", country: "Soudan", currency: "SDG", model: "coastal_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Or", "Gomme arabique", "Bétail", "Graines de sésame", "Coton brut"] }
     ]
   },
   {
     code: "WAEX",
-    name: "West Africa Export Index Family",
+    name: "Famille d'indices d'exportation — Afrique de l'Ouest",
     color: "#2c884b",
     countries: [
-      { code: "BENEX", country: "Benin", currency: "XOF", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Raw Cotton", "Cashew Nuts", "Soybeans", "Shea Nuts"] },
-      { code: "BUREX", country: "Burkina Faso", currency: "XOF", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "detailed_prototype_ready", commodities: ["Other Oily Seeds", "Cashew Nuts", "Raw Cotton", "Sesame Seeds", "Zinc Ore", "Gold"] },
-      { code: "CABEX", country: "Cabo Verde", currency: "CVE", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Fish and Seafood", "Salt", "Marine Products"] },
-      { code: "CIREX", country: "Cote d'Ivoire", currency: "XOF", model: "coastal_export_model", role: "coastal_anchor_member", detail: "detailed_prototype_ready", commodities: ["Cocoa Beans", "Natural Rubber", "Cashew Nuts", "Crude Oil", "Manganese", "Palm Oil", "Raw Cotton", "Coffee", "Nickel", "Gold", "Diamonds"] },
-      { code: "GMBEX", country: "The Gambia", currency: "GMD", model: "coastal_export_model", role: "river_coastal_member", detail: "starter_profile", commodities: ["Groundnuts", "Fish and Seafood", "Sesame Seeds", "Cashew Nuts"] },
-      { code: "GHAEX", country: "Ghana", currency: "GHS", model: "coastal_export_model", role: "coastal_anchor_member", detail: "starter_profile", commodities: ["Cocoa Beans", "Gold", "Crude Oil", "Manganese", "Bauxite", "Timber"] },
-      { code: "GUIEX", country: "Guinea", currency: "GNF", model: "coastal_export_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Bauxite", "Gold", "Diamonds", "Iron Ore"] },
-      { code: "GNBEX", country: "Guinea-Bissau", currency: "XOF", model: "coastal_export_model", role: "single_crop_member", detail: "starter_profile", commodities: ["Cashew Nuts", "Fish and Seafood", "Groundnuts"] },
-      { code: "LIBEX", country: "Liberia", currency: "LRD", model: "coastal_export_model", role: "minerals_and_agriculture_member", detail: "starter_profile", commodities: ["Natural Rubber", "Iron Ore", "Gold", "Palm Oil", "Timber"] },
-      { code: "MALIEX", country: "Mali", currency: "XOF", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Gold", "Raw Cotton", "Livestock", "Sesame Seeds", "Shea Nuts"] },
-      { code: "MRTEX", country: "Mauritania", currency: "MRU", model: "coastal_export_model", role: "minerals_and_fisheries_member", detail: "starter_profile", commodities: ["Iron Ore", "Gold", "Copper Concentrate", "Fish and Seafood"] },
-      { code: "NEREX", country: "Niger", currency: "XOF", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Uranium", "Crude Oil", "Livestock", "Cowpeas", "Onions"] },
-      { code: "NGAEX", country: "Nigeria", currency: "NGN", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Cocoa Beans", "Sesame Seeds", "Natural Rubber"] },
-      { code: "SENEX", country: "Senegal", currency: "XOF", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Phosphates", "Gold", "Fish and Seafood", "Groundnuts", "Zircon"] },
-      { code: "SLEX", country: "Sierra Leone", currency: "SLE", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamonds", "Iron Ore", "Rutile", "Bauxite", "Cocoa"] },
-      { code: "TOGEX", country: "Togo", currency: "XOF", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Phosphates", "Raw Cotton", "Soybeans", "Cashew Nuts"] }
+      { code: "BENEX", country: "Bénin", currency: "XOF", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Coton brut", "Noix de cajou", "Soja", "Noix de karité"] },
+      { code: "BUREX", country: "Burkina Faso", currency: "XOF", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "detailed_prototype_ready", commodities: ["Autres graines oléagineuses", "Noix de cajou", "Coton brut", "Graines de sésame", "Minerai de zinc", "Or"] },
+      { code: "CABEX", country: "Cap-Vert", currency: "CVE", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Poissons et fruits de mer", "Sel", "Produits de la mer"] },
+      { code: "CIREX", country: "Côte d'Ivoire", currency: "XOF", model: "coastal_export_model", role: "coastal_anchor_member", detail: "detailed_prototype_ready", commodities: ["Fèves de cacao", "Caoutchouc naturel", "Noix de cajou", "Pétrole brut", "Manganèse", "Huile de palme", "Coton brut", "Café", "Nickel", "Or", "Diamants"] },
+      { code: "GMBEX", country: "Gambie", currency: "GMD", model: "coastal_export_model", role: "river_coastal_member", detail: "starter_profile", commodities: ["Arachides", "Poissons et fruits de mer", "Graines de sésame", "Noix de cajou"] },
+      { code: "GHAEX", country: "Ghana", currency: "GHS", model: "coastal_export_model", role: "coastal_anchor_member", detail: "starter_profile", commodities: ["Fèves de cacao", "Or", "Pétrole brut", "Manganèse", "Bauxite", "Bois"] },
+      { code: "GUIEX", country: "Guinée", currency: "GNF", model: "coastal_export_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Bauxite", "Or", "Diamants", "Minerai de fer"] },
+      { code: "GNBEX", country: "Guinée-Bissau", currency: "XOF", model: "coastal_export_model", role: "single_crop_member", detail: "starter_profile", commodities: ["Noix de cajou", "Poissons et fruits de mer", "Arachides"] },
+      { code: "LIBEX", country: "Liberia", currency: "LRD", model: "coastal_export_model", role: "minerals_and_agriculture_member", detail: "starter_profile", commodities: ["Caoutchouc naturel", "Minerai de fer", "Or", "Huile de palme", "Bois"] },
+      { code: "MALIEX", country: "Mali", currency: "XOF", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Or", "Coton brut", "Bétail", "Graines de sésame", "Noix de karité"] },
+      { code: "MRTEX", country: "Mauritanie", currency: "MRU", model: "coastal_export_model", role: "minerals_and_fisheries_member", detail: "starter_profile", commodities: ["Minerai de fer", "Or", "Concentré de cuivre", "Poissons et fruits de mer"] },
+      { code: "NEREX", country: "Niger", currency: "XOF", model: "landlocked_corridor_model", role: "landlocked_corridor_member", detail: "starter_profile", commodities: ["Uranium", "Pétrole brut", "Bétail", "Niébé", "Oignons"] },
+      { code: "NGAEX", country: "Nigeria", currency: "NGN", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Fèves de cacao", "Graines de sésame", "Caoutchouc naturel"] },
+      { code: "SENEX", country: "Sénégal", currency: "XOF", model: "coastal_export_model", role: "coastal_diversified_member", detail: "starter_profile", commodities: ["Phosphates", "Or", "Poissons et fruits de mer", "Arachides", "Zircon"] },
+      { code: "SLEX", country: "Sierra Leone", currency: "SLE", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamants", "Minerai de fer", "Rutile", "Bauxite", "Cacao"] },
+      { code: "TOGEX", country: "Togo", currency: "XOF", model: "coastal_export_model", role: "coastal_corridor_member", detail: "starter_profile", commodities: ["Phosphates", "Coton brut", "Soja", "Noix de cajou"] }
     ]
   },
   {
     code: "CAEX",
-    name: "Central Africa Export Index Family",
+    name: "Famille d'indices d'exportation — Afrique centrale",
     color: "#7c3aed",
     countries: [
-      { code: "CAMEX", country: "Cameroon", currency: "XAF", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Cocoa Beans", "Timber", "Raw Cotton", "Coffee", "Natural Gas"] },
-      { code: "CAFEX", country: "Central African Republic", currency: "XAF", model: "landlocked_corridor_model", role: "minerals_and_forest_member", detail: "starter_profile", commodities: ["Timber", "Gold", "Diamonds", "Raw Cotton"] },
-      { code: "CHAEX", country: "Chad", currency: "XAF", model: "landlocked_corridor_model", role: "energy_and_livestock_member", detail: "starter_profile", commodities: ["Crude Oil", "Livestock", "Sesame Seeds", "Gum Arabic", "Raw Cotton"] },
-      { code: "COGEX", country: "Republic of the Congo", currency: "XAF", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Crude Oil", "Timber", "Iron Ore", "Potash"] },
-      { code: "DRCEX", country: "DR Congo", currency: "CDF", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Copper", "Cobalt", "Gold", "Tin Ore", "Coltan", "Diamonds"] },
-      { code: "EQGEX", country: "Equatorial Guinea", currency: "XAF", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Methanol", "Timber", "Cocoa Beans"] },
-      { code: "GABEX", country: "Gabon", currency: "XAF", model: "coastal_export_model", role: "energy_and_metals_member", detail: "starter_profile", commodities: ["Crude Oil", "Manganese", "Timber", "Gold"] },
-      { code: "STPEX", country: "Sao Tome and Principe", currency: "STN", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Cocoa Beans", "Fish and Seafood", "Palm Products"] }
+      { code: "CAMEX", country: "Cameroun", currency: "XAF", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Fèves de cacao", "Bois", "Coton brut", "Café", "Gaz naturel"] },
+      { code: "CAFEX", country: "République centrafricaine", currency: "XAF", model: "landlocked_corridor_model", role: "minerals_and_forest_member", detail: "starter_profile", commodities: ["Bois", "Or", "Diamants", "Coton brut"] },
+      { code: "CHAEX", country: "Tchad", currency: "XAF", model: "landlocked_corridor_model", role: "energy_and_livestock_member", detail: "starter_profile", commodities: ["Pétrole brut", "Bétail", "Graines de sésame", "Gomme arabique", "Coton brut"] },
+      { code: "COGEX", country: "République du Congo", currency: "XAF", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Pétrole brut", "Bois", "Minerai de fer", "Potasse"] },
+      { code: "DRCEX", country: "République démocratique du Congo", currency: "CDF", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Cuivre", "Cobalt", "Or", "Minerai d'étain", "Coltan", "Diamants"] },
+      { code: "EQGEX", country: "Guinée équatoriale", currency: "XAF", model: "coastal_export_model", role: "energy_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Méthanol", "Bois", "Fèves de cacao"] },
+      { code: "GABEX", country: "Gabon", currency: "XAF", model: "coastal_export_model", role: "energy_and_metals_member", detail: "starter_profile", commodities: ["Pétrole brut", "Manganèse", "Bois", "Or"] },
+      { code: "STPEX", country: "Sao Tomé-et-Principe", currency: "STN", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Fèves de cacao", "Poissons et fruits de mer", "Produits du palmier"] }
     ]
   },
   {
     code: "EAEX",
-    name: "East Africa Export Index Family",
+    name: "Famille d'indices d'exportation — Afrique de l'Est",
     color: "#0284c7",
     countries: [
-      { code: "BDIEX", country: "Burundi", currency: "BIF", model: "landlocked_corridor_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Coffee", "Tea", "Gold", "Nickel Ore"] },
-      { code: "COMREX", country: "Comoros", currency: "KMF", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Vanilla", "Cloves", "Ylang-Ylang", "Fish and Seafood"] },
-      { code: "DJIEX", country: "Djibouti", currency: "DJF", model: "coastal_export_model", role: "trade_gateway_member", detail: "starter_profile", commodities: ["Salt", "Livestock", "Fish and Seafood"] },
-      { code: "ERIEX", country: "Eritrea", currency: "ERN", model: "coastal_export_model", role: "metals_member", detail: "starter_profile", commodities: ["Gold", "Copper", "Zinc", "Potash", "Salt"] },
-      { code: "ETHEX", country: "Ethiopia", currency: "ETB", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Coffee", "Gold", "Sesame Seeds", "Oilseeds", "Livestock"] },
-      { code: "KENEX", country: "Kenya", currency: "KES", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Tea", "Coffee", "Soda Ash", "Titanium Ore", "Cut Flowers"] },
-      { code: "RWAEX", country: "Rwanda", currency: "RWF", model: "landlocked_corridor_model", role: "minerals_and_agri_member", detail: "starter_profile", commodities: ["Gold", "Tin Ore", "Tantalum", "Tungsten", "Coffee", "Tea"] },
-      { code: "SOMEX", country: "Somalia", currency: "SOS", model: "coastal_export_model", role: "livestock_member", detail: "starter_profile", commodities: ["Livestock", "Sesame Seeds", "Frankincense", "Fish and Seafood"] },
-      { code: "SSDEX", country: "South Sudan", currency: "SSP", model: "landlocked_corridor_model", role: "energy_member", detail: "starter_profile", commodities: ["Crude Oil", "Gum Arabic", "Livestock", "Sesame Seeds"] },
-      { code: "TZAEX", country: "Tanzania", currency: "TZS", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Gold", "Cashew Nuts", "Coffee", "Raw Cotton", "Tobacco", "Natural Gas"] },
-      { code: "UGAEX", country: "Uganda", currency: "UGX", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Coffee", "Gold", "Raw Cotton", "Tea", "Fish and Seafood"] }
+      { code: "BDIEX", country: "Burundi", currency: "BIF", model: "landlocked_corridor_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Café", "Thé", "Or", "Minerai de nickel"] },
+      { code: "COMREX", country: "Comores", currency: "KMF", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Vanille", "Clous de girofle", "Ylang-ylang", "Poissons et fruits de mer"] },
+      { code: "DJIEX", country: "Djibouti", currency: "DJF", model: "coastal_export_model", role: "trade_gateway_member", detail: "starter_profile", commodities: ["Sel", "Bétail", "Poissons et fruits de mer"] },
+      { code: "ERIEX", country: "Érythrée", currency: "ERN", model: "coastal_export_model", role: "metals_member", detail: "starter_profile", commodities: ["Or", "Cuivre", "Zinc", "Potasse", "Sel"] },
+      { code: "ETHEX", country: "Éthiopie", currency: "ETB", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Café", "Or", "Graines de sésame", "Graines oléagineuses", "Bétail"] },
+      { code: "KENEX", country: "Kenya", currency: "KES", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Thé", "Café", "Carbonate de sodium", "Minerai de titane", "Fleurs coupées"] },
+      { code: "RWAEX", country: "Rwanda", currency: "RWF", model: "landlocked_corridor_model", role: "minerals_and_agri_member", detail: "starter_profile", commodities: ["Or", "Minerai d'étain", "Tantale", "Tungstène", "Café", "Thé"] },
+      { code: "SOMEX", country: "Somalie", currency: "SOS", model: "coastal_export_model", role: "livestock_member", detail: "starter_profile", commodities: ["Bétail", "Graines de sésame", "Encens", "Poissons et fruits de mer"] },
+      { code: "SSDEX", country: "Soudan du Sud", currency: "SSP", model: "landlocked_corridor_model", role: "energy_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gomme arabique", "Bétail", "Graines de sésame"] },
+      { code: "TZAEX", country: "Tanzanie", currency: "TZS", model: "coastal_export_model", role: "diversified_anchor_member", detail: "starter_profile", commodities: ["Or", "Noix de cajou", "Café", "Coton brut", "Tabac", "Gaz naturel"] },
+      { code: "UGAEX", country: "Ouganda", currency: "UGX", model: "landlocked_corridor_model", role: "agri_anchor_member", detail: "starter_profile", commodities: ["Café", "Or", "Coton brut", "Thé", "Poissons et fruits de mer"] }
     ]
   },
   {
     code: "SAEX",
-    name: "Southern Africa Export Index Family",
+    name: "Famille d'indices d'exportation — Afrique australe",
     color: "#dc2626",
     countries: [
-      { code: "ANGEX", country: "Angola", currency: "AOA", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Crude Oil", "Natural Gas", "Diamonds", "Iron Ore", "Coffee"] },
-      { code: "BOTEX", country: "Botswana", currency: "BWP", model: "landlocked_corridor_model", role: "diamonds_member", detail: "starter_profile", commodities: ["Diamonds", "Copper", "Nickel", "Soda Ash", "Beef"] },
-      { code: "ESWEX", country: "Eswatini", currency: "SZL", model: "landlocked_corridor_model", role: "agri_industrial_member", detail: "starter_profile", commodities: ["Sugar", "Wood Pulp", "Citrus", "Coal"] },
-      { code: "LESEX", country: "Lesotho", currency: "LSL", model: "landlocked_corridor_model", role: "small_minerals_member", detail: "starter_profile", commodities: ["Wool", "Mohair", "Diamonds"] },
-      { code: "MDGEX", country: "Madagascar", currency: "MGA", model: "island_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Vanilla", "Nickel and Cobalt", "Cloves", "Chromium Ore", "Ilmenite"] },
-      { code: "MWIEX", country: "Malawi", currency: "MWK", model: "landlocked_corridor_model", role: "agri_member", detail: "starter_profile", commodities: ["Tobacco", "Tea", "Sugar", "Macadamia Nuts"] },
-      { code: "MUSEX", country: "Mauritius", currency: "MUR", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Sugar", "Fish and Seafood", "Molasses"] },
-      { code: "MOZEX", country: "Mozambique", currency: "MZN", model: "coastal_export_model", role: "energy_and_mining_member", detail: "starter_profile", commodities: ["Coal", "Natural Gas", "Graphite", "Heavy Mineral Sands", "Aluminum"] },
-      { code: "NAMEX", country: "Namibia", currency: "NAD", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamonds", "Uranium", "Zinc", "Copper", "Fish and Seafood"] },
-      { code: "SEYEX", country: "Seychelles", currency: "SCR", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Fish and Seafood", "Tuna", "Cinnamon", "Vanilla"] },
-      { code: "ZAFEX", country: "South Africa", currency: "ZAR", model: "coastal_export_model", role: "continental_anchor_member", detail: "starter_profile", commodities: ["Gold", "Platinum Group Metals", "Coal", "Iron Ore", "Manganese", "Chromium"] },
-      { code: "ZMBEX", country: "Zambia", currency: "ZMW", model: "landlocked_corridor_model", role: "copper_anchor_member", detail: "starter_profile", commodities: ["Copper", "Cobalt", "Emeralds", "Sugar"] },
-      { code: "ZIMEX", country: "Zimbabwe", currency: "ZWG", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Gold", "Platinum", "Lithium", "Tobacco", "Nickel"] }
+      { code: "ANGEX", country: "Angola", currency: "AOA", model: "coastal_export_model", role: "energy_anchor_member", detail: "starter_profile", commodities: ["Pétrole brut", "Gaz naturel", "Diamants", "Minerai de fer", "Café"] },
+      { code: "BOTEX", country: "Botswana", currency: "BWP", model: "landlocked_corridor_model", role: "diamonds_member", detail: "starter_profile", commodities: ["Diamants", "Cuivre", "Nickel", "Carbonate de sodium", "Viande bovine"] },
+      { code: "ESWEX", country: "Eswatini", currency: "SZL", model: "landlocked_corridor_model", role: "agri_industrial_member", detail: "starter_profile", commodities: ["Sucre", "Pâte à papier", "Agrumes", "Charbon"] },
+      { code: "LESEX", country: "Lesotho", currency: "LSL", model: "landlocked_corridor_model", role: "small_minerals_member", detail: "starter_profile", commodities: ["Laine", "Mohair", "Diamants"] },
+      { code: "MDGEX", country: "Madagascar", currency: "MGA", model: "island_export_model", role: "agri_and_minerals_member", detail: "starter_profile", commodities: ["Vanille", "Nickel et cobalt", "Clous de girofle", "Minerai de chrome", "Ilménite"] },
+      { code: "MWIEX", country: "Malawi", currency: "MWK", model: "landlocked_corridor_model", role: "agri_member", detail: "starter_profile", commodities: ["Tabac", "Thé", "Sucre", "Noix de macadamia"] },
+      { code: "MUSEX", country: "Maurice", currency: "MUR", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Sucre", "Poissons et fruits de mer", "Mélasse"] },
+      { code: "MOZEX", country: "Mozambique", currency: "MZN", model: "coastal_export_model", role: "energy_and_mining_member", detail: "starter_profile", commodities: ["Charbon", "Gaz naturel", "Graphite", "Sables minéralisés lourds", "Aluminium"] },
+      { code: "NAMEX", country: "Namibie", currency: "NAD", model: "coastal_export_model", role: "minerals_member", detail: "starter_profile", commodities: ["Diamants", "Uranium", "Zinc", "Cuivre", "Poissons et fruits de mer"] },
+      { code: "SEYEX", country: "Seychelles", currency: "SCR", model: "island_export_model", role: "island_member", detail: "starter_profile", commodities: ["Poissons et fruits de mer", "Thon", "Cannelle", "Vanille"] },
+      { code: "ZAFEX", country: "Afrique du Sud", currency: "ZAR", model: "coastal_export_model", role: "continental_anchor_member", detail: "starter_profile", commodities: ["Or", "Métaux du groupe platine", "Charbon", "Minerai de fer", "Manganèse", "Chrome"] },
+      { code: "ZMBEX", country: "Zambie", currency: "ZMW", model: "landlocked_corridor_model", role: "copper_anchor_member", detail: "starter_profile", commodities: ["Cuivre", "Cobalt", "Émeraudes", "Sucre"] },
+      { code: "ZIMEX", country: "Zimbabwe", currency: "ZWG", model: "landlocked_corridor_model", role: "minerals_anchor_member", detail: "starter_profile", commodities: ["Or", "Platine", "Lithium", "Tabac", "Nickel"] }
     ]
   }
 ];
@@ -122,14 +122,14 @@ const commodityFrequency = Object.entries(
 renderMarketTicker();
 
 const stats = [
-  { label: "Family code", value: "AFEX", note: "Continental umbrella for the export-index family", meta: "Core layer", tone: "accent" },
-  { label: "Countries", value: String(totalCountries), note: "54 sovereign African states", meta: "Full coverage", tone: "green" },
-  { label: "Subfamilies", value: "5", note: "NAEX, WAEX, CAEX, EAEX, SAEX", meta: "Regional lattice", tone: "blue" },
-  { label: "Detailed prototypes", value: String(detailedCount), note: "Priority country packages with richer logic", meta: "Deep builds", tone: "accent" },
-  { label: "Starter profiles", value: String(starterCount), note: "Country templates ready for further validation", meta: "Expansion queue", tone: "purple" },
-  { label: "Tracked commodities", value: String(uniqueCommodities), note: "Distinct raw materials across all funds", meta: "Commodity spread", tone: "green" },
-  { label: "Currencies", value: String(uniqueCurrencies), note: "Base currencies across all countries", meta: "Monetary map", tone: "blue" },
-  { label: "Comparison currency", value: "USD", note: "Continent-wide comparison layer", meta: "Shared benchmark", tone: "purple" }
+  { label: "Code famille", value: "AFEX", note: "Chapeau continental de la famille d'indices d'exportation", meta: "Couche socle", tone: "accent" },
+  { label: "Pays", value: String(totalCountries), note: "54 États africains souverains", meta: "Couverture complète", tone: "green" },
+  { label: "Sous-familles", value: "5", note: "NAEX, WAEX, CAEX, EAEX, SAEX", meta: "Maillage régional", tone: "blue" },
+  { label: "Prototypes détaillés", value: String(detailedCount), note: "Paquets pays prioritaires à la logique plus riche", meta: "Constructions approfondies", tone: "accent" },
+  { label: "Profils initiaux", value: String(starterCount), note: "Modèles pays prêts pour validation complémentaire", meta: "File d'expansion", tone: "purple" },
+  { label: "Matières suivies", value: String(uniqueCommodities), note: "Matières premières distinctes sur l'ensemble des fonds", meta: "Éventail des matières", tone: "green" },
+  { label: "Devises", value: String(uniqueCurrencies), note: "Devises de référence sur l'ensemble des pays", meta: "Carte monétaire", tone: "blue" },
+  { label: "Devise de comparaison", value: "USD", note: "Couche de comparaison à l'échelle du continent", meta: "Référence commune", tone: "purple" }
 ];
 
 document.getElementById("stats-grid").innerHTML = stats.map((item) => `
@@ -407,8 +407,8 @@ function renderRegionContainer() {
   el.innerHTML = blocks || `
     <div class="empty-state">
       <div>
-        <strong>No country matches that search.</strong>
-        <div class="muted">Try a country name, code, commodity, currency, or methodology model.</div>
+        <strong>Aucun pays ne correspond à cette recherche.</strong>
+        <div class="muted">Essayez un nom de pays, un code, une matière, une devise ou un modèle méthodologique.</div>
       </div>
     </div>
   `;
@@ -425,49 +425,49 @@ document.getElementById("region-search").addEventListener("input", (event) => {
 const detailedFunds = [
   {
     code: "CIREX",
-    name: "Cote d'Ivoire Raw Export Index",
-    country: "Cote d'Ivoire",
-    role: "Coastal anchor",
+    name: "Indice d'exportation brute — Côte d'Ivoire",
+    country: "Côte d'Ivoire",
+    role: "Ancre côtière",
     status: "building",
-    summary: "Coastal export benchmark centered on raw materials leaving through the country's export system.",
-    transportModel: "Seaborne loading and export-tonnage logic",
+    summary: "Référence d'exportation côtière centrée sur les matières premières sortant par le système d'exportation du pays.",
+    transportModel: "Logique de chargement maritime et de tonnage à l'export",
     uploadJson: "../wasi-upload/cirex_fund_characteristics.json",
     uploadMd: "../wasi-upload/cirex_fund_characteristics.md",
     notes: [
       "Designed for a port-led export economy",
       "Prototype weights already prepared",
-      "Best for cocoa-led coastal commodity exposure"
+      "Idéal pour une exposition côtière aux matières tirée par le cacao"
     ],
     weights: [
-      { name: "Cocoa Beans", weight: 33.9 },
-      { name: "Natural Rubber", weight: 19.26 },
-      { name: "Cashew Nuts", weight: 15.1 },
-      { name: "Crude Oil", weight: 11.71 },
-      { name: "Manganese Ore", weight: 7.86 }
+      { name: "Fèves de cacao", weight: 33.9 },
+      { name: "Caoutchouc naturel", weight: 19.26 },
+      { name: "Noix de cajou", weight: 15.1 },
+      { name: "Pétrole brut", weight: 11.71 },
+      { name: "Minerai de manganèse", weight: 7.86 }
     ]
   },
   {
     code: "BUREX",
-    name: "Burkina Faso Raw Export Index",
+    name: "Indice d'exportation brute — Burkina Faso",
     country: "Burkina Faso",
-    role: "Landlocked corridor member",
+    role: "Membre de corridor enclavé",
     status: "building",
-    summary: "Landlocked export benchmark built around outbound tonnage moving through regional corridors and border relationships.",
+    summary: "Référence d'exportation enclavée construite autour du tonnage sortant qui transite par les corridors régionaux et les relations frontalières.",
     transportModel: "Road, rail, air, and transit corridor tonnage",
     uploadJson: "../wasi-upload-burex/burex_fund_characteristics.json",
     uploadMd: "../wasi-upload-burex/burex_fund_characteristics.md",
-    corridorCountries: ["Ghana", "Togo", "Benin", "Cote d'Ivoire", "Mali", "Niger"],
+    corridorCountries: ["Ghana", "Togo", "Bénin", "Côte d'Ivoire", "Mali", "Niger"],
     notes: [
-      "Built for corridor-based trade instead of seaborne loading",
+      "Conçu pour le commerce de corridor plutôt que pour le chargement maritime",
       "Gold dominates value but not tonnage",
-      "Explicitly tracks the six-country corridor overlay"
+      "Suit explicitement le recouvrement de corridor sur six pays"
     ],
     weights: [
-      { name: "Other Oily Seeds", weight: 41.94 },
-      { name: "Cashew Nuts", weight: 25.26 },
-      { name: "Raw Cotton", weight: 24.52 },
-      { name: "Sesame Seeds", weight: 8.24 },
-      { name: "Zinc Ore", weight: 0.04 }
+      { name: "Autres graines oléagineuses", weight: 41.94 },
+      { name: "Noix de cajou", weight: 25.26 },
+      { name: "Coton brut", weight: 24.52 },
+      { name: "Graines de sésame", weight: 8.24 },
+      { name: "Minerai de zinc", weight: 0.04 }
     ]
   }
 ];
@@ -483,14 +483,14 @@ document.getElementById("fund-grid").innerHTML = detailedFunds.map((fund) => `
     </div>
     <p>${fund.summary}</p>
     <div class="metric-list">
-      <div class="metric-row"><span>Country</span><strong>${fund.country}</strong></div>
-      <div class="metric-row"><span>Family role</span><strong>${fund.role}</strong></div>
-      <div class="metric-row"><span>Transport model</span><strong>${fund.transportModel}</strong></div>
+      <div class="metric-row"><span>Pays</span><strong>${fund.country}</strong></div>
+      <div class="metric-row"><span>Rôle dans la famille</span><strong>${fund.role}</strong></div>
+      <div class="metric-row"><span>Modèle de transport</span><strong>${fund.transportModel}</strong></div>
       <div class="metric-row"><span>Top weight</span><strong>${fund.weights[0].name} ${formatPercent(fund.weights[0].weight)}</strong></div>
     </div>
-    ${fund.corridorCountries ? `<div class="sub-block"><div class="eyebrow">Corridor countries</div><div class="pill-row">${fund.corridorCountries.map((c) => `<span class="pill soft">${c}</span>`).join("")}</div></div>` : ""}
+    ${fund.corridorCountries ? `<div class="sub-block"><div class="eyebrow">Pays du corridor</div><div class="pill-row">${fund.corridorCountries.map((c) => `<span class="pill soft">${c}</span>`).join("")}</div></div>` : ""}
     <div class="sub-block">
-      <div class="eyebrow">What matters</div>
+      <div class="eyebrow">Points clés</div>
       <ul>${fund.notes.map((note) => `<li>${note}</li>`).join("")}</ul>
     </div>
     <div class="sub-block">
@@ -505,8 +505,8 @@ document.getElementById("fund-grid").innerHTML = detailedFunds.map((fund) => `
       </div>
     </div>
     <div class="action-row">
-      <a class="secondary-btn" href="${fund.uploadJson}">Open JSON</a>
-      <a class="secondary-btn" href="${fund.uploadMd}">Open Markdown</a>
+      <a class="secondary-btn" href="${fund.uploadJson}">Ouvrir le JSON</a>
+      <a class="secondary-btn" href="${fund.uploadMd}">Ouvrir le Markdown</a>
     </div>
   </article>
 `).join("");
@@ -516,7 +516,7 @@ const familyMap = [
   { title: "1. AFEX umbrella", body: "One continental family name for 54 sovereign country export-index funds with shared documentation, governance rules, and USD comparison." },
   { title: "2. Five subfamilies", body: "NAEX (North), WAEX (West), CAEX (Central), EAEX (East), SAEX (Southern) — each with its own regional comparison currency where applicable." },
   { title: "3. Three methodology models", body: "Coastal export model for port-led economies, landlocked corridor model for border-trade economies, and island export model for maritime/air flows." },
-  { title: "4. Country specialization", body: "Each country keeps its own export methodology, weighting, and candidate commodity universe while staying aligned to the family architecture." },
+  { title: "4. Spécialisation par pays", body: "Chaque pays conserve sa méthodologie d'exportation, sa pondération et son univers de matières candidates, tout en restant aligné sur l'architecture de la famille." },
   { title: "5. Shared governance", body: "Every fund stays separate legally, but the methodology framework, risk language, upload format, and naming rules remain aligned continent-wide." }
 ];
 
@@ -527,21 +527,21 @@ document.getElementById("family-map").innerHTML = familyMap.map((item) => `
 // Methodology models
 const methodologyModels = [
   {
-    name: "Coastal Export Model",
+    name: "Modèle d'exportation côtier",
     count: coastalCount,
-    description: "Use outbound export tonnage across port-led export flows and official trade statistics.",
+    description: "Utilise le tonnage sortant sur les flux d'exportation portuaires et les statistiques commerciales officielles.",
     examples: "CIREX, ALGEX, EGYEX, NGAEX, KENEX, ZAFEX"
   },
   {
-    name: "Landlocked Corridor Model",
+    name: "Modèle de corridor enclavé",
     count: landlockedCount,
     description: "Use outbound export tonnage across road, rail, air, border-post, and transit-corridor flows rather than seaborne loading.",
     examples: "BUREX, ETHEX, MALIEX, DRCEX, ZMBEX, ZIMEX"
   },
   {
-    name: "Island Export Model",
+    name: "Modèle d'exportation insulaire",
     count: islandCount,
-    description: "Use outbound export tonnage across maritime and air flows, with an explicit diversification caution where the raw-material base is narrow.",
+    description: "Utilise le tonnage sortant sur les flux maritimes et aériens, avec une alerte de diversification explicite lorsque la base de matières premières est étroite.",
     examples: "CABEX, STPEX, COMREX, MDGEX, MUSEX, SEYEX"
   }
 ];
@@ -559,8 +559,8 @@ document.getElementById("methodology-grid").innerHTML = methodologyModels.map((m
 // Upload center
 const uploadPackages = [
   {
-    name: "AFEX All-54 Manifest",
-    summary: "Master manifest for the entire 54-country library.",
+    name: "Manifeste AFEX — les 54",
+    summary: "Manifeste maître pour l'ensemble de la bibliothèque des 54 pays.",
     links: [
       { label: "JSON", href: "../wasi-upload/afex_all54_manifest.json" },
       { label: "Markdown", href: "../wasi-upload/afex_all54_manifest.md" }
@@ -576,14 +576,14 @@ const uploadPackages = [
   },
   {
     name: "BUREX Detailed Package",
-    summary: "Burkina Faso detailed prototype with corridor overlay.",
+    summary: "Prototype détaillé du Burkina Faso avec recouvrement de corridor.",
     links: [
       { label: "JSON", href: "../wasi-upload-burex/burex_fund_characteristics.json" },
       { label: "ZIP", href: "../wasi-upload-burex/burex_wasi_upload_package.zip" }
     ]
   },
   {
-    name: "WAEX Family Package",
+    name: "Paquet de la famille WAEX",
     summary: "West Africa umbrella family characteristics.",
     links: [
       { label: "JSON", href: "../wasi-upload-waex/waex_family_characteristics.json" },
@@ -613,7 +613,7 @@ document.getElementById("upload-center").innerHTML = uploadPackages.map((pkg) =>
 
 // Scope notes
 const scopeNotes = [
-  { title: "54 sovereign states", body: "This library follows the 54-sovereign-state interpretation of Africa. The African Union has 55 member states, including the Sahrawi Arab Democratic Republic." },
+  { title: "54 sovereign states", body: "Cette bibliothèque suit l'interprétation de l'Afrique à 54 États souverains. L'Union africaine compte 55 États membres, dont la République arabe sahraouie démocratique." },
   { title: "Pre-launch status", body: "All country packages are proposed and pre-launch. Official country trade statistics, benchmark rules, and legal review should be completed before institutional launch." },
   { title: "Regulatory separation", body: "Country-specific legal and securities review is required. Do not assume one regulatory regime applies across all 54 sovereign states." },
   { title: "Microfinance separation", body: "Fund vehicles should remain separate from any microfinance balance sheet." }
@@ -624,7 +624,7 @@ document.getElementById("scope-notes").innerHTML = scopeNotes.map((item) => `
 `).join("");
 
 function labelStatus(status) {
-  if (status === "ready") return "Ready now";
+  if (status === "ready") return "Disponible";
   if (status === "building") return "Built in workspace";
   return "Future";
 }
@@ -638,9 +638,9 @@ function formatPercent(value) {
 }
 
 function formatModel(model) {
-  if (model === "coastal_export_model") return "Coastal";
-  if (model === "landlocked_corridor_model") return "Landlocked";
-  return "Island";
+  if (model === "coastal_export_model") return "Côtier";
+  if (model === "landlocked_corridor_model") return "Enclavé";
+  return "Insulaire";
 }
 
 function formatRole(role) {

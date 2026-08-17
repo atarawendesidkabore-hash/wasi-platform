@@ -1764,7 +1764,7 @@ function renderApplications() {
         const scoreLine = assessment.status === "INCOMPLET"
           ? `<span class="pill watch">Dossier incomplet</span><span class="muted">${assessment.reason}</span>`
           : assessment.status === "VETOED"
-            ? `<span class="pill late">Veto AfriCredit</span><span class="muted">${assessment.vetoReason}</span>`
+            ? `<span class="pill late">Veto AfriCredit</span><span class="muted">${escapeHtml(vetoReasonFr(assessment.vetoReason))}</span>`
             : `<span class="pill ${assessment.score >= 75 ? "good" : "watch"}">Score ${assessment.score} · ${assessment.grade}</span>
                <span class="muted">Mensualité ${money(assessment.monthlyInstalment)} — ${pct(round1(assessment.debtRatio))} du revenu</span>`;
         return `
@@ -2095,6 +2095,28 @@ function countryRiskFor(client) {
   return SUPPORTED_COUNTRY_RISKS.has(code) ? code : "CI";
 }
 
+/**
+ * French wording for an AfriCredit veto.
+ *
+ * The engine's own reason strings stay in English on purpose: they are stable
+ * identifiers, tests/africredit.test.mjs asserts on them, and they document the
+ * equivalence with the React implementation the engine was harvested from.
+ * Translating them there would break all three. So the boundary is here — the
+ * engine states the rule, this maps it to what an officer reads.
+ */
+const VETO_REASONS_FR = {
+  "Country under military transition": "Pays sous transition militaire",
+  "Debt ratio above 80% threshold": "Charge de dette supérieure au seuil de 80 % du revenu",
+  "Payment history below minimum threshold": "Historique de remboursement sous le seuil minimal",
+  "Volatile cash flow combined with high debt ratio":
+    "Trésorerie volatile combinée à une charge de dette élevée"
+};
+
+function vetoReasonFr(reason) {
+  if (!reason) return "";
+  return VETO_REASONS_FR[reason] || reason;
+}
+
 function getClientScores() {
   return state.clients.map((client) => scoreClient(client.id)).sort((a, b) => a.score - b.score);
 }
@@ -2212,7 +2234,7 @@ function scoreClient(clientId) {
     levelLabel = "Veto";
     levelClass = "negative";
     pillClass = "score-low";
-    reason = "Veto AfriCredit : " + assessment.vetoReason + ".";
+    reason = "Veto AfriCredit : " + vetoReasonFr(assessment.vetoReason) + ".";
   } else if (score < 50) {
     levelLabel = "Alerte élevée";
     levelClass = "negative";
