@@ -9,6 +9,13 @@
 import { generatePortfolioSummary } from "../lib/africredit/par-calculator.js";
 import { calculateCreditScore } from "../lib/africredit/credit-scoring.js";
 import {
+  expiresWithinMonths,
+  isDocumentExpired,
+  isMinorOn,
+  majorityDate,
+  todayLocalIso
+} from "../lib/africredit/calendar.js";
+import {
   addMonths,
   firstDueDateForArrears,
   applyPayment,
@@ -35,6 +42,31 @@ const SUPPORTED_COUNTRY_RISKS = new Set([
 ]);
 
 /** Display labels for the engine's cash-flow bands. Hoisted for the same reason. */
+// Declared here, above init(): renderAll() runs during module evaluation and
+// reaches vetoReasonFr(), so a const declared later sits in its temporal dead
+// zone and throws "Cannot access 'VETO_REASONS_FR' before initialization".
+/**
+ * French wording for an AfriCredit veto.
+ *
+ * The engine's own reason strings stay in English on purpose: they are stable
+ * identifiers, tests/africredit.test.mjs asserts on them, and they document the
+ * equivalence with the React implementation the engine was harvested from.
+ * Translating them there would break all three. So the boundary is here — the
+ * engine states the rule, this maps it to what an officer reads.
+ */
+const VETO_REASONS_FR = {
+  "Country under military transition": "Pays sous transition militaire",
+  "Debt ratio above 80% threshold": "Charge de dette supérieure au seuil de 80 % du revenu",
+  "Payment history below minimum threshold": "Historique de remboursement sous le seuil minimal",
+  "Volatile cash flow combined with high debt ratio":
+    "Trésorerie volatile combinée à une charge de dette élevée"
+};
+
+function vetoReasonFr(reason) {
+  if (!reason) return "";
+  return VETO_REASONS_FR[reason] || reason;
+}
+
 const CASH_FLOW_LABELS = {
   STABLE: "stable",
   VARIABLE: "variable",
@@ -54,9 +86,11 @@ const CASH_FLOW_LABELS = {
  * for standalone dates such as repayment timestamps.
  */
 function seedDueDate(offsetDays) {
+  // Local setters, matching todayIso(): a fixture anchored on the UTC day while
+  // arrears are measured against the local day is off by one for part of the day.
   const d = new Date();
-  d.setUTCDate(d.getUTCDate() + offsetDays);
-  return d.toISOString().slice(0, 10);
+  d.setDate(d.getDate() + offsetDays);
+  return todayLocalIso(d);
 }
 
 const STORAGE_KEY = "cirex_microfinance_state_v2";
@@ -109,7 +143,7 @@ const WASI_MARKET_TICKER = [
  * tests/amortisation.test.mjs enforces this.
  */
 function seedLoan(spec) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayIso();
   // Anchored on the arrears the fixture wants rather than on a raw day offset.
   // The old form picked firstDueDate = today - N days and let buildSchedule step
   // forward in calendar months, which made two loans flip status with month
@@ -623,7 +657,7 @@ function normalizeState(saved) {
 
 function saveState() {
   applyInterestCeilingPolicy(state);
-  state.metadata.lastUpdated = new Date().toISOString().slice(0, 10);
+  state.metadata.lastUpdated = todayIso();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
@@ -1445,7 +1479,9 @@ function verifyKyc(application) {
   const kyc = (application && application.kyc) || {};
   const blocking = [];
   const warnings = [];
-  const today = new Date().toISOString().slice(0, 10);
+  // Local calendar, not UTC: the dates below come from <input type="date">, which
+  // records the day the applicant sees. See lib/africredit/calendar.js.
+  const today = todayIso();
 
   const required = [
     ["idType", "type de pièce"],
@@ -1463,15 +1499,17 @@ function verifyKyc(application) {
   // Age of majority. Compared on calendar dates rather than by dividing days,
   // so a birthday that has not yet occurred this year counts correctly.
   if (kyc.birthDate) {
-    const eighteenth = addMonths(kyc.birthDate, 18 * 12);
-    if (eighteenth > today) blocking.push("Le demandeur est mineur (majorité atteinte le " + prettyDate(eighteenth) + ").");
-    else if (addMonths(kyc.birthDate, 100 * 12) < today) warnings.push("Date de naissance improbable : à vérifier.");
+    if (isMinorOn(kyc.birthDate, today)) {
+      blocking.push("Le demandeur est mineur (majorité atteinte le " + prettyDate(majorityDate(kyc.birthDate)) + ").");
+    } else if (majorityDate(kyc.birthDate, 100) < today) {
+      warnings.push("Date de naissance improbable : à vérifier.");
+    }
   }
 
   if (kyc.idExpiry) {
-    if (kyc.idExpiry < today) {
+    if (isDocumentExpired(kyc.idExpiry, today)) {
       blocking.push("Pièce d'identité expirée le " + prettyDate(kyc.idExpiry) + " : renouvellement requis.");
-    } else if (kyc.idExpiry < addMonths(today, 3)) {
+    } else if (expiresWithinMonths(kyc.idExpiry, today, 3)) {
       warnings.push("Pièce d'identité expirant le " + prettyDate(kyc.idExpiry) + " (moins de 3 mois).");
     }
   }
@@ -1587,7 +1625,7 @@ function scoreApplication(application) {
       principalCentimes: BigInt(Math.round(principal)) * 100n,
       annualRatePct: rate,
       termMonths: term,
-      firstDueDate: addMonths(new Date().toISOString().slice(0, 10), 1)
+      firstDueDate: addMonths(todayIso(), 1)
     });
     monthlyInstalment = Number(schedule.instalments[0].totalDueCentimes / 100n);
   } catch (_) { /* fall back to the straight-line estimate above */ }
@@ -1695,7 +1733,7 @@ function approveApplication(applicationId) {
     // Kept on the client so the identity and guarantor stay on file, and so the
     // duplicate-piece check has something to match future applications against.
     kyc: { ...(application.kyc || {}) },
-    notes: `Ouverture de compte ${application.id} validée le ${prettyDate(new Date().toISOString().slice(0, 10))}.`
+    notes: `Ouverture de compte ${application.id} validée le ${prettyDate(todayIso())}.`
   };
   state.clients.unshift(client);
 
@@ -1713,7 +1751,7 @@ function approveApplication(applicationId) {
     guarantee: Number(application.guarantee) || 0,
     interestRate: rate,
     termMonths: Math.max(1, Number(application.requestedTermMonths) || 6),
-    nextDueDate: addMonths(new Date().toISOString().slice(0, 10), 1),
+    nextDueDate: addMonths(todayIso(), 1),
     status: "Current",
     riskFlag: assessment.score >= 75 ? "Low" : assessment.score >= 50 ? "Medium" : "High"
   }, { approvalMode: "manual-review", complianceDecision: "APPROVED" });
@@ -1917,8 +1955,17 @@ function getOfficerMetrics() {
    due and money in centimes. These adapters do only that conversion, so the
    scoring arithmetic stays in the tested library. */
 
+/**
+ * Today, on the user's own calendar.
+ *
+ * Every date this app compares against — instalment due dates, identity document
+ * expiry, dates of birth — is a bare calendar date. Deriving today from
+ * toISOString() gave the UTC date instead, which is a different day for part of
+ * every day in Lagos (UTC+1) and Nairobi (UTC+3), both inside our coverage. That
+ * accepted expired identity documents and declared adults minors.
+ */
 function todayIso() {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocalIso();
 }
 
 /**
@@ -1971,7 +2018,7 @@ function persistLoanSchedule(loan, schedule) {
 function loanDaysPastDue(loan, today = new Date()) {
   const schedule = loanSchedule(loan);
   if (schedule) {
-    return scheduleArrears(schedule, today.toISOString().slice(0, 10)).daysPastDue;
+    return scheduleArrears(schedule, todayLocalIso(today)).daysPastDue;
   }
   if (!loan.nextDueDate) return 0;
   const due = new Date(loan.nextDueDate + "T00:00:00Z");
@@ -2093,28 +2140,6 @@ function governanceScoreFor(client) {
 function countryRiskFor(client) {
   const code = String((client && client.countryRisk) || "").trim().toUpperCase();
   return SUPPORTED_COUNTRY_RISKS.has(code) ? code : "CI";
-}
-
-/**
- * French wording for an AfriCredit veto.
- *
- * The engine's own reason strings stay in English on purpose: they are stable
- * identifiers, tests/africredit.test.mjs asserts on them, and they document the
- * equivalence with the React implementation the engine was harvested from.
- * Translating them there would break all three. So the boundary is here — the
- * engine states the rule, this maps it to what an officer reads.
- */
-const VETO_REASONS_FR = {
-  "Country under military transition": "Pays sous transition militaire",
-  "Debt ratio above 80% threshold": "Charge de dette supérieure au seuil de 80 % du revenu",
-  "Payment history below minimum threshold": "Historique de remboursement sous le seuil minimal",
-  "Volatile cash flow combined with high debt ratio":
-    "Trésorerie volatile combinée à une charge de dette élevée"
-};
-
-function vetoReasonFr(reason) {
-  if (!reason) return "";
-  return VETO_REASONS_FR[reason] || reason;
 }
 
 function getClientScores() {
