@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-16T06:27:33.379Z",
+  "fetchedAt": "2026-08-17T06:40:14.066Z",
   "source": "World Bank Open Data API",
   "countries": {
     "NG": {
@@ -16,7 +16,7 @@
       "growth_divergent": false,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "CI": {
       "iso3": "CIV",
@@ -32,7 +32,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "GH": {
       "iso3": "GHA",
@@ -48,7 +48,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SN": {
       "iso3": "SEN",
@@ -64,7 +64,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "BF": {
       "iso3": "BFA",
@@ -80,7 +80,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "ML": {
       "iso3": "MLI",
@@ -96,7 +96,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "GN": {
       "iso3": "GIN",
@@ -112,7 +112,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "BJ": {
       "iso3": "BEN",
@@ -128,7 +128,7 @@
       "growth_divergent": false,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "TG": {
       "iso3": "TGO",
@@ -144,7 +144,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "NE": {
       "iso3": "NER",
@@ -160,7 +160,7 @@
       "growth_divergent": false,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "MR": {
       "iso3": "MRT",
@@ -176,7 +176,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "GW": {
       "iso3": "GNB",
@@ -192,7 +192,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SL": {
       "iso3": "SLE",
@@ -208,7 +208,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "LR": {
       "iso3": "LBR",
@@ -224,7 +224,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "GM": {
       "iso3": "GMB",
@@ -240,7 +240,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "CV": {
       "iso3": "CPV",
@@ -256,7 +256,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "CM": {
       "iso3": "CMR",
@@ -272,7 +272,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "GA": {
       "iso3": "GAB",
@@ -288,7 +288,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "CG": {
       "iso3": "COG",
@@ -304,7 +304,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "CD": {
       "iso3": "COD",
@@ -320,7 +320,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "CF": {
       "iso3": "CAF",
@@ -336,7 +336,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "TD": {
       "iso3": "TCD",
@@ -352,7 +352,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "GQ": {
       "iso3": "GNQ",
@@ -368,7 +368,7 @@
       "growth_divergent": false,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "KE": {
       "iso3": "KEN",
@@ -384,7 +384,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "TZ": {
       "iso3": "TZA",
@@ -400,7 +400,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "UG": {
       "iso3": "UGA",
@@ -416,7 +416,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "RW": {
       "iso3": "RWA",
@@ -432,7 +432,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "BI": {
       "iso3": "BDI",
@@ -448,7 +448,7 @@
       "growth_divergent": false,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SS": {
       "iso3": "SSD",
@@ -464,7 +464,7 @@
       "growth_divergent": false,
       "scoreAdj": -5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "ET": {
       "iso3": "ETH",
@@ -480,7 +480,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "DJ": {
       "iso3": "DJI",
@@ -496,7 +496,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "ER": {
       "iso3": "ERI",
@@ -512,7 +512,7 @@
       "growth_divergent": false,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SO": {
       "iso3": "SOM",
@@ -528,7 +528,7 @@
       "growth_divergent": false,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SD": {
       "iso3": "SDN",
@@ -544,7 +544,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "ZA": {
       "iso3": "ZAF",
@@ -560,7 +560,7 @@
       "growth_divergent": false,
       "scoreAdj": -1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "MZ": {
       "iso3": "MOZ",
@@ -576,7 +576,7 @@
       "growth_divergent": false,
       "scoreAdj": -4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "ZW": {
       "iso3": "ZWE",
@@ -592,7 +592,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "ZM": {
       "iso3": "ZMB",
@@ -608,7 +608,7 @@
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "BW": {
       "iso3": "BWA",
@@ -624,7 +624,7 @@
       "growth_divergent": false,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "NA": {
       "iso3": "NAM",
@@ -640,7 +640,7 @@
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "MW": {
       "iso3": "MWI",
@@ -656,7 +656,7 @@
       "growth_divergent": false,
       "scoreAdj": -2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "AO": {
       "iso3": "AGO",
@@ -672,7 +672,7 @@
       "growth_divergent": false,
       "scoreAdj": 0,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "MG": {
       "iso3": "MDG",
@@ -688,7 +688,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "MU": {
       "iso3": "MUS",
@@ -704,7 +704,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SC": {
       "iso3": "SYC",
@@ -720,7 +720,7 @@
       "growth_divergent": false,
       "scoreAdj": 4,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "SZ": {
       "iso3": "SWZ",
@@ -736,7 +736,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "LS": {
       "iso3": "LSO",
@@ -752,7 +752,7 @@
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "KM": {
       "iso3": "COM",
@@ -768,7 +768,7 @@
       "growth_divergent": false,
       "scoreAdj": 2,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "MA": {
       "iso3": "MAR",
@@ -784,7 +784,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "TN": {
       "iso3": "TUN",
@@ -800,7 +800,7 @@
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "EG": {
       "iso3": "EGY",
@@ -816,7 +816,7 @@
       "growth_divergent": false,
       "scoreAdj": 1,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "DZ": {
       "iso3": "DZA",
@@ -832,7 +832,7 @@
       "growth_divergent": false,
       "scoreAdj": 3,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     },
     "LY": {
       "iso3": "LBY",
@@ -848,7 +848,7 @@
       "growth_divergent": false,
       "scoreAdj": 5,
       "source": "World Bank Open Data",
-      "fetchedAt": "2026-08-16T06:27:33.379Z"
+      "fetchedAt": "2026-08-17T06:40:14.066Z"
     }
   }
 }
