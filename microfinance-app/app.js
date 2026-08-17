@@ -158,7 +158,9 @@ const seedState = {
     institutionCountry: "Côte d’Ivoire",
     legalRegion: "UEMOA / BCEAO",
     baseCurrency: "XOF",
-    lastUpdated: "2026-03-23",
+    // Relative like every other seed date: a hardcoded value here showed a
+    // months-old "Mise à jour" beside arrears computed for today.
+    lastUpdated: seedDueDate(0),
     interestCeilingCurrent: DEFAULT_INTEREST_RATE_CEILING
   },
   branches: [
@@ -1143,8 +1145,8 @@ function renderShell() {
   const activeView = getActiveViewKey();
   const outstanding = sum(state.loans.map((loan) => loan.outstanding));
   const totalRepaid = sum(state.repayments.map((repayment) => repayment.amount));
-  const lateLoans = state.loans.filter((loan) => loan.status === "Late");
-  const watchLoans = state.loans.filter((loan) => loan.status === "Watch");
+  const lateLoans = state.loans.filter((loan) => loanStatus(loan) === "Late");
+  const watchLoans = state.loans.filter((loan) => loanStatus(loan) === "Watch");
   const currentInterestCeiling = getCurrentInterestCeiling();
   const nextInterestCeilingStage = getNextInterestCeilingStage();
   const nextDueLoan = [...state.loans]
@@ -1197,7 +1199,7 @@ function renderShell() {
     {
       label: "Prochaine échéance",
       value: nextDueLoan ? prettyDate(nextDueLoan.nextDueDate) : "Aucune échéance",
-      note: nextDueLoan ? `${getClient(nextDueLoan.clientId)?.name || "Client inconnu"} · ${getStatusLabel(nextDueLoan.status)}` : "Créez un crédit pour lancer le calendrier d'échéances."
+      note: nextDueLoan ? `${getClient(nextDueLoan.clientId)?.name || "Client inconnu"} · ${getStatusLabel(loanStatus(nextDueLoan))}` : "Créez un crédit pour lancer le calendrier d'échéances."
     }
   ].map((item) => `
     <article class="hero-mini-card">
@@ -1226,17 +1228,17 @@ function renderOverview() {
   // PAR comes from the tested engine, driven by real days past due rather than
   // the manually set status flag.
   const par = portfolioSummary();
-  const lateAmount = sum(state.loans.filter((loan) => loan.status === "Late").map((loan) => loan.outstanding));
-  const watchAmount = sum(state.loans.filter((loan) => loan.status === "Watch").map((loan) => loan.outstanding));
+  const lateAmount = sum(state.loans.filter((loan) => loanStatus(loan) === "Late").map((loan) => loan.outstanding));
+  const watchAmount = sum(state.loans.filter((loan) => loanStatus(loan) === "Watch").map((loan) => loan.outstanding));
   const totalCollected = sum(state.repayments.map((repayment) => repayment.amount));
-  const lateLoans = state.loans.filter((loan) => loan.status === "Late");
+  const lateLoans = state.loans.filter((loan) => loanStatus(loan) === "Late");
   const nextDueLoan = [...state.loans]
     .filter((loan) => loan.nextDueDate)
     .sort((a, b) => a.nextDueDate.localeCompare(b.nextDueDate))[0];
   const stats = [
     { label: "Clients", value: String(state.clients.length), note: "Emprunteurs enregistrés" },
     { label: "Encours", value: money(outstanding), note: "Montant restant dû" },
-    { label: "Retards", value: String(state.loans.filter((loan) => loan.status === "Late").length), note: "Suivi immédiat requis" },
+    { label: "Retards", value: String(state.loans.filter((loan) => loanStatus(loan) === "Late").length), note: "Suivi immédiat requis" },
     { label: "PAR 30", value: pct(par.par30), note: "Moteur AfriCredit · plafond investisseur " + PAR30_COVENANT_PCT + " %" },
     { label: "PAR 60", value: pct(par.par60), note: "Impayés de plus de 60 jours" },
     { label: "PAR 90", value: pct(par.par90), note: "Impayés de plus de 90 jours" }
@@ -1354,7 +1356,7 @@ function renderLoans() {
           <h3>${escapeHtml(getClient(loan.clientId)?.name || "Client inconnu")}</h3>
           <p>${escapeHtml(loan.purpose)}</p>
         </div>
-        <span class="pill ${loan.status.toLowerCase()}">${getStatusLabel(loan.status)}</span>
+        <span class="pill ${loanStatus(loan).toLowerCase()}">${getStatusLabel(loanStatus(loan))}</span>
       </header>
       <div class="record-row">
         <span>${money(loan.outstanding)} d'encours</span>
@@ -1894,7 +1896,7 @@ function getBranchMetrics() {
       branch,
       clientCount: clients.length,
       outstanding: sum(loans.map((loan) => loan.outstanding)),
-      lateLoans: loans.filter((loan) => loan.status === "Late").length
+      lateLoans: loans.filter((loan) => loanStatus(loan) === "Late").length
     };
   }).sort((a, b) => b.outstanding - a.outstanding);
 }
@@ -2005,6 +2007,23 @@ function clientMonthlyDebtService(loans) {
   return sum(loans
     .filter((loan) => (Number(loan.outstanding) || 0) > 0)
     .map(loanMonthlyInstalment));
+}
+
+/**
+ * The loan's status as of today, derived rather than trusted.
+ *
+ * `loan.status` is a snapshot: seedLoan writes it once, and a repayment rewrites
+ * it, but nothing recomputes it as time passes. PAR, meanwhile, is measured live
+ * off the schedule. Left alone the two drift apart — an instalment falls due, PAR
+ * moves, and the "Retards" tile still reads the old number.
+ *
+ * Arrears decide "Late". "Watch" stays an officer judgement and is preserved from
+ * the stored value; anything else with no overdue instalment is "Current".
+ */
+function loanStatus(loan) {
+  if (!loan) return "Current";
+  if (loanDaysPastDue(loan) > 0) return "Late";
+  return loan.status === "Watch" ? "Watch" : "Current";
 }
 
 /** Instalment-level arrears summary for display. Null when no schedule. */
