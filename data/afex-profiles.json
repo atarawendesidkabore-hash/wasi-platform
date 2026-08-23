@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-16T05:15:01.074Z",
+ "generatedAt": "2026-08-23T04:29:55.358Z",
  "source": "UN Comtrade (public preview API)",
  "weighting_basis": "export_value_usd",
  "year_range": "2014-2023",
@@ -100,7 +100,7 @@
   },
   "CIREX": {
    "code": "CIREX",
-   "country": "Cote d'Ivoire",
+   "country": "Côte d'Ivoire",
    "iso3": "CIV",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -378,7 +378,7 @@
   },
   "SENEX": {
    "code": "SENEX",
-   "country": "Senegal",
+   "country": "Sénégal",
    "iso3": "SEN",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -471,7 +471,7 @@
   },
   "ZMBEX": {
    "code": "ZMBEX",
-   "country": "Zambia",
+   "country": "Zambie",
    "iso3": "ZMB",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -564,7 +564,7 @@
   },
   "ALGEX": {
    "code": "ALGEX",
-   "country": "Algeria",
+   "country": "Algérie",
    "iso3": "DZA",
    "detail_level": "starter_profile",
    "weighting_basis": "export_value_usd",
@@ -651,7 +651,7 @@
   },
   "EGYEX": {
    "code": "EGYEX",
-   "country": "Egypt",
+   "country": "Égypte",
    "iso3": "EGY",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -744,7 +744,7 @@
   },
   "LBYEX": {
    "code": "LBYEX",
-   "country": "Libya",
+   "country": "Libye",
    "iso3": "LBY",
    "detail_level": "starter_profile",
    "weighting_basis": "export_value_usd",
@@ -831,7 +831,7 @@
   },
   "MAREX": {
    "code": "MAREX",
-   "country": "Morocco",
+   "country": "Maroc",
    "iso3": "MAR",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -924,7 +924,7 @@
   },
   "TUNEX": {
    "code": "TUNEX",
-   "country": "Tunisia",
+   "country": "Tunisie",
    "iso3": "TUN",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -1017,7 +1017,7 @@
   },
   "BENEX": {
    "code": "BENEX",
-   "country": "Benin",
+   "country": "Bénin",
    "iso3": "BEN",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -1110,7 +1110,7 @@
   },
   "CABEX": {
    "code": "CABEX",
-   "country": "Cabo Verde",
+   "country": "Cap-Vert",
    "iso3": "CPV",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -1203,7 +1203,7 @@
   },
   "GMBEX": {
    "code": "GMBEX",
-   "country": "The Gambia",
+   "country": "Gambie",
    "iso3": "GMB",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -1296,7 +1296,7 @@
   },
   "GUIEX": {
    "code": "GUIEX",
-   "country": "Guinea",
+   "country": "Guinée",
    "iso3": "GIN",
    "detail_level": "starter_profile",
    "weighting_basis": "export_value_usd",
@@ -1382,7 +1382,7 @@
   },
   "GNBEX": {
    "code": "GNBEX",
-   "country": "Guinea-Bissau",
+   "country": "Guinée-Bissau",
    "iso3": "GNB",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -1651,7 +1651,7 @@
   },
   "MRTEX": {
    "code": "MRTEX",
-   "country": "Mauritania",
+   "country": "Mauritanie",
    "iso3": "MRT",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -2018,7 +2018,7 @@
   },
   "CAMEX": {
    "code": "CAMEX",
-   "country": "Cameroon",
+   "country": "Cameroun",
    "iso3": "CMR",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -2111,7 +2111,7 @@
   },
   "CAFEX": {
    "code": "CAFEX",
-   "country": "Central African Republic",
+   "country": "République centrafricaine",
    "iso3": "CAF",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -2204,7 +2204,7 @@
   },
   "COGEX": {
    "code": "COGEX",
-   "country": "Republic of the Congo",
+   "country": "République du Congo",
    "iso3": "COG",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -2297,7 +2297,7 @@
   },
   "DRCEX": {
    "code": "DRCEX",
-   "country": "DR Congo",
+   "country": "République démocratique du Congo",
    "iso3": "COD",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -2482,7 +2482,7 @@
   },
   "STPEX": {
    "code": "STPEX",
-   "country": "Sao Tome and Principe",
+   "country": "Sao Tomé-et-Principe",
    "iso3": "STP",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -2668,7 +2668,7 @@
   },
   "COMREX": {
    "code": "COMREX",
-   "country": "Comoros",
+   "country": "Comores",
    "iso3": "COM",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -3031,7 +3031,7 @@
   },
   "TZAEX": {
    "code": "TZAEX",
-   "country": "Tanzania",
+   "country": "Tanzanie",
    "iso3": "TZA",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -3124,7 +3124,7 @@
   },
   "UGAEX": {
    "code": "UGAEX",
-   "country": "Uganda",
+   "country": "Ouganda",
    "iso3": "UGA",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -3775,7 +3775,7 @@
   },
   "MUSEX": {
    "code": "MUSEX",
-   "country": "Mauritius",
+   "country": "Maurice",
    "iso3": "MUS",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -3961,7 +3961,7 @@
   },
   "NAMEX": {
    "code": "NAMEX",
-   "country": "Namibia",
+   "country": "Namibie",
    "iso3": "NAM",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
@@ -4147,7 +4147,7 @@
   },
   "ZAFEX": {
    "code": "ZAFEX",
-   "country": "South Africa",
+   "country": "Afrique du Sud",
    "iso3": "ZAF",
    "detail_level": "detailed_prototype_ready",
    "weighting_basis": "export_value_usd",
