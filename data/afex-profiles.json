@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-23T04:29:55.358Z",
+ "generatedAt": "2026-08-30T10:21:39.876Z",
  "source": "UN Comtrade (public preview API)",
  "weighting_basis": "export_value_usd",
  "year_range": "2014-2023",
@@ -3240,28 +3240,28 @@
    "latest_total_export_usd": 38731586575,
    "tonnage_coverage_pct": 0,
    "concentration": {
-    "top1_pct": 89.31,
-    "top5_pct": 98.9,
-    "hhi": 8019,
+    "top1_pct": 89.3,
+    "top5_pct": 98.88,
+    "hhi": 8016,
     "classification": "tres_concentre"
    },
    "constituents": [
     {
      "hs2": "27",
      "name": "Mineral Fuels, Oil and Gas",
-     "weight": 89.75,
-     "export_share": 89.31
+     "weight": 89.74,
+     "export_share": 89.3
     },
     {
      "hs2": "89",
      "name": "Ships and Boats",
-     "weight": 5.51,
+     "weight": 5.52,
      "export_share": 5.49
     },
     {
      "hs2": "71",
      "name": "Precious Stones and Metals",
-     "weight": 3.46,
+     "weight": 3.45,
      "export_share": 3.44
     },
     {
@@ -3277,6 +3277,12 @@
      "export_share": 0.17
     },
     {
+     "hs2": "25",
+     "name": "Salt, Stone, Cement and Plaster",
+     "weight": 0.15,
+     "export_share": 0.15
+    },
+    {
      "hs2": "73",
      "name": "Iron and Steel Articles",
      "weight": 0.15,
@@ -3287,12 +3293,6 @@
      "name": "Wood and Timber",
      "weight": 0.14,
      "export_share": 0.14
-    },
-    {
-     "hs2": "25",
-     "name": "Salt, Stone, Cement and Plaster",
-     "weight": 0.14,
-     "export_share": 0.13
     },
     {
      "hs2": "90",
