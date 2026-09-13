@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T08:16:33.900Z",
+ "generatedAt": "2026-09-13T09:32:19.964Z",
  "source": "UN Comtrade (public preview API)",
  "weighting_basis": "export_value_usd",
  "year_range": "2014-2023",
@@ -212,38 +212,38 @@
    ],
    "years_count": 9,
    "latest_year": 2023,
-   "latest_total_export_usd": 16874662286,
+   "latest_total_export_usd": 16834036452,
    "tonnage_coverage_pct": 0,
    "concentration": {
-    "top1_pct": 37.24,
-    "top5_pct": 85.34,
-    "hhi": 2372,
+    "top1_pct": 36.71,
+    "top5_pct": 85.09,
+    "hhi": 2341,
     "classification": "concentre"
    },
    "constituents": [
     {
      "hs2": "71",
      "name": "Precious Stones and Metals",
-     "weight": 40.8,
-     "export_share": 37.24
+     "weight": 40.23,
+     "export_share": 36.71
     },
     {
      "hs2": "27",
      "name": "Mineral Fuels, Oil and Gas",
-     "weight": 28.33,
-     "export_share": 25.85
+     "weight": 28.21,
+     "export_share": 25.74
     },
     {
      "hs2": "18",
      "name": "Cocoa and Cocoa Preparations",
-     "weight": 18.69,
-     "export_share": 17.06
+     "weight": 19.15,
+     "export_share": 17.48
     },
     {
      "hs2": "08",
      "name": "Edible Fruit and Nuts",
-     "weight": 3.85,
-     "export_share": 3.52
+     "weight": 3.84,
+     "export_share": 3.5
     },
     {
      "hs2": "39",
@@ -254,32 +254,32 @@
     {
      "hs2": "44",
      "name": "Wood and Timber",
-     "weight": 1.67,
+     "weight": 1.66,
      "export_share": 1.52
     },
     {
      "hs2": "26",
      "name": "Metal Ores, Slag and Ash",
-     "weight": 1.59,
-     "export_share": 1.45
+     "weight": 1.58,
+     "export_share": 1.44
     },
     {
      "hs2": "15",
      "name": "Animal and Vegetable Fats",
-     "weight": 1.48,
-     "export_share": 1.35
+     "weight": 1.53,
+     "export_share": 1.4
     },
     {
      "hs2": "16",
      "name": "Prepared Meat and Fish",
-     "weight": 0.95,
-     "export_share": 0.87
+     "weight": 1.12,
+     "export_share": 1.02
     },
     {
      "hs2": "72",
      "name": "Iron and Steel",
-     "weight": 0.81,
-     "export_share": 0.74
+     "weight": 0.85,
+     "export_share": 0.78
     }
    ]
   },
