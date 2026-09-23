@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-22T10:10:24.599Z",
+ "generatedAt": "2026-09-23T10:12:05.751Z",
  "source": "Google News RSS (legislative & regulatory query per country)",
  "classifier": "lexicon_v1",
  "adjustment_range": [
@@ -18,42 +18,20 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 6,
-   "items_before_dedup": 9,
-   "items_skipped_foreign_actor": 5,
+   "items_scored": 4,
+   "items_before_dedup": 8,
+   "items_skipped_foreign_actor": 6,
    "positives": 2,
-   "negatives": 4,
-   "net_signal": -3.16,
-   "legalAdj": -1,
+   "negatives": 2,
+   "net_signal": -0.46,
+   "legalAdj": 0,
    "corroborated": true,
    "evidence": [
     {
-     "title": "US Signs Russia Economic Sanctions Bill Into Law - Voice of Nigeria",
-     "source": "Voice of Nigeria",
-     "date": "2026-09-19",
-     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE56Zk5KRk9aNS1iNnhVZ2hzN1l4OFVqUy13Q2xRelRQSVpMRkVaS1k0bEhhWlJTRWlqSm5IdkJybnZ4WUo5dGFxMDlpVjV6Z0JDTkFacGdLT2FZZmJmSktQeHQ2SzVCNHdBeUNIVzZ2N1J3X3F4NnJB?oc=5",
-     "polarity": "negative",
-     "weight": -1.5,
-     "matched": [
-      "-sanctions"
-     ]
-    },
-    {
-     "title": "When banking power meets political money: Questions Nigeria must ask - The Guardian Nigeria News",
-     "source": "The Guardian Nigeria News",
-     "date": "2026-09-20",
-     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPTDlyMzlvTS1Hb1V0dUpVLTU2WEs2RjVPN1NGWHJXSUN2NmJFTjg1WjRYUEdpWDBTM19ZR055d3pob0Q3MEUxVnR6MEE0MmhrR0xaVVgyS0s4aWxOcW5YTnVsUDdxWjhESkQtbk92ZkpEWVVFLVJrMHVWZXNQZkNEQnFTNEJjeElNUzdRUDhUQzZwQjdSZF80UmpwMkc?oc=5",
-     "polarity": "negative",
-     "weight": -1.2,
-     "matched": [
-      "-ban"
-     ]
-    },
-    {
-     "title": "Nigeria suspends official visits to South Africa over anti-migrant violence - Al Jazeera",
-     "source": "Al Jazeera",
+     "title": "Nigeria’s parliament suspends engagements with South Africa over anti-migrant violence - ABC News - Breaking News, Latest News and Videos",
+     "source": "ABC News - Breaking News, Latest News and Videos",
      "date": "2026-09-11",
-     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNOG1JVWI2cHBBS0I4VnBDdy1UeU5NS2hWdUtPc1ZtMWRpQWlEUjc0bEE2MUU5ZENmN0xFQmhmUHg3OTN5SnpSS3pZcGhWUWxwQkg1OTRfd3JoNE5xYlZfSHMzTlFuaVQwcUhKMWZGS00zNmUwcDF1RFFZckttRG1Ec1FMZHYwVDlCMENFYjVJR0xRZmxKTkhVSDhfQ0RhYVh4OTc1UV9JanVwc1h2Q0wwQndjTEU5cTjSAbwBQVVfeXFMT0tyZzMyTlowcjd1OGJaMURzZ0VwenVEWFRiRzVGQ2VrREl6RTlqenF6TEh0OTlmMHZLRE9PQmN6d0VoaWhpTUFoRGJ4Z3lNMEtBazc1SGxNUldhcTJoOFowTGVGSkxsMnNMazFCSm1mM3NXaXZZd1o0Ui13UXpSTmpKUElHR0RILXU0R3MzZXlpSjFrcWV3SWJJU1BsQU1ZZldnR1R1YWMwZGZ5b2d5T25nRzBuRlY0MmZGTXU?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNSVpobEZXNUJBdnV0Y0NXTHVsbVQ2WDlTcVhVZ053OWVsb2ZyUElHOWdaTVktSVFqcktoZGNXT0VidmJ3MWtTM3FKQTJGdXFLMUduX3NyTTFhak5kSkFEc0FZd0VNMWd6bE1ISVIyeDlRUmQ3aVctNWE2SVduaEU3MXhEMXVwWTZwZzBITUxBZU5YT29kVHNORlVaajZMbEVtSVpwRkFNS1hDMi1yUGJ2TDd6UUFGd9IBuwFBVV95cUxPeDVuVmZoMDBCbTd2aEViRkJPdjF2aEk4UlRzNE5HMkN0T001eUEybFZYdnBGbWJ0aW1sREFpYTZxZGVWRFpKWnV6UVNBNkRvSXBIWWhvaGZ6T1FCVlJELWw1UzdfTnI4SDUtLUQwQWVhMHVtRVBzWkxuX00yVjJsVFJacVVlcEhxaXhvMGd1UWhxQm1FdWJYbmNoamhaT3dMc2l5aU1vQ01yMlRvZ0I2WG91MGl1RV9oRXhJ?oc=5",
      "polarity": "negative",
      "weight": -0.84,
      "matched": [
@@ -95,7 +73,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:08:55.468Z"
+   "fetchedAt": "2026-09-23T10:10:40.613Z"
   },
   "GH": {
    "code": "GH",
@@ -103,29 +81,18 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 6,
-   "items_before_dedup": 11,
+   "items_scored": 5,
+   "items_before_dedup": 8,
    "items_skipped_foreign_actor": 1,
    "positives": 0,
-   "negatives": 6,
-   "net_signal": -4.71,
-   "legalAdj": -2,
+   "negatives": 5,
+   "net_signal": -2.71,
+   "legalAdj": -1,
    "corroborated": true,
    "evidence": [
     {
-     "title": "Ghana’s parliamentary minority calls for probe into cocaine seizures — MyJoyOnline - UA.NEWS",
-     "source": "UA.NEWS",
-     "date": "2026-09-18",
-     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQUUdwLTBqekhFNEp4LXdIa19KSW9tUG1FbHlWMFJST0dHc0twRXJYX3JqYXAyZnIzNDA0bEQ5RnZGdjlCQTMwWW5jRTJqaTdVRzNkQllaaHg0UjdVNW1UOUJZRVV1b3lKSWQ5S1JGV2hjazBGVmU2eWc4eVYzZTZqbEFqRkc0VnBPNzRiNVFGN29lcnpiaHlnY1ZER2tCM0tSeFpqcQ?oc=5",
-     "polarity": "negative",
-     "weight": -2,
-     "matched": [
-      "-seizure"
-     ]
-    },
-    {
-     "title": "‘We do not support criminalisation’ — Anglican archbishop in Ghana - Erasing 76 Crimes",
-     "source": "Erasing 76 Crimes",
+     "title": "‘We do not support criminalisation’ — Anglican archbishop in Ghana - 76crimes.com",
+     "source": "76crimes.com",
      "date": "2026-08-19",
      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOaW96UUVETTdKdHhGdUVscWRCNlpYakstektqbG14ckhKZzBOUTNwNHZTa2lhdWlrVEtzT2VvSkRjMWpKOGhBZmhTa2F6S2xuanRMcVVyREdMc1JPcTlpc1lBZUl1eURYaFRQelI4Ti1WSlhGMnBuMy02SHYxdGl0QkEzbDF4TW1fUGNEbU4wVExUamg2SG5ia0haTQ?oc=5",
      "polarity": "negative",
@@ -146,8 +113,8 @@
      ]
     },
     {
-     "title": "Ghana parliament plans to redo anti-LGBTQ+ bill, maybe make it crueler - Erasing 76 Crimes",
-     "source": "Erasing 76 Crimes",
+     "title": "Ghana parliament plans to redo anti-LGBTQ+ bill, maybe make it crueler - 76crimes.com",
+     "source": "76crimes.com",
      "date": "2026-08-03",
      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOaGx1RzhLenJEazBlaG1ZTF9vTFI4WkxUWU1yb2paX0w3OElCT1dINkJpRTA3ZEl0WjZRcmVQVmV0VHBQS0NHYW1FdWhlWlJBeHl1ZHlhd2dpQU9YeE5Pb3dmZ292VkowdjVYeGtJUmNzemZVZHJPQzBPWHRjUlFQSGlOMVhiMGc3Q3Q1aDJaYkFnaGVMRWFNYjVNZGJET1dmeENj?oc=5",
      "polarity": "negative",
@@ -179,7 +146,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:08:57.415Z"
+   "fetchedAt": "2026-09-23T10:10:42.463Z"
   },
   "SN": {
    "code": "SN",
@@ -209,8 +176,8 @@
      ]
     },
     {
-     "title": "Senegal: Attorney Discusses Constitutional Limits on Censure Motion - wansom.ai",
-     "source": "wansom.ai",
+     "title": "Senegal: Attorney Discusses Constitutional Limits on Censure Motion - Wansom AI",
+     "source": "Wansom AI",
      "date": "2026-08-31",
      "url": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxOMHFsZmRFWWZ6bTFWV0EwQVRaSWFyUVpJMzVMZHdGRDBNZ1hsWkZkUkE4emRheGVpaVQ5NmNwOHlIR2doclBjZWhLX3BxenF6MlJybDJBeWZ0bjZRaC1ER0dWcHU0ZVlDbVBYY25ER1l0NFRxSTJic09oS0ZDWTU2OGNFalRpUUdteVg1TXlfeTlIYkx2T3oza2VjLXdQWU9BS1hqcV9SY2h5eXV1QnBfNTFmdjhhUl9hWFRhZnQxazZvb2sxT0hTLWxCYzg3ZWN3cFQ1NW0weXg1cDhCTDJOQUlYYw?oc=5",
      "polarity": "negative",
@@ -220,7 +187,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:08:59.075Z"
+   "fetchedAt": "2026-09-23T10:10:44.101Z"
   },
   "BF": {
    "code": "BF",
@@ -230,7 +197,7 @@
    "items_scanned": 100,
    "items_scored": 3,
    "items_before_dedup": 4,
-   "items_skipped_foreign_actor": 7,
+   "items_skipped_foreign_actor": 3,
    "positives": 1,
    "negatives": 2,
    "net_signal": -0.18,
@@ -249,8 +216,8 @@
      ]
     },
     {
-     "title": "Rupture diplomatique : au Burkina Faso, la France est devenue le “bouc émissaire idéal” - courrierinternational.com",
-     "source": "courrierinternational.com",
+     "title": "Rupture diplomatique : au Burkina Faso, la France est devenue le “bouc émissaire idéal” - Courrier international",
+     "source": "Courrier international",
      "date": "2026-06-29",
      "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxNUXV0cVRHNDlKODAtcXlqZFFTS0dtbUg5U3M2SFY0NkQ3c1VlZXVUUmV1bGFLbWZSUEJPYzNBdS1ZREtVc1dDSkkzN2QyS1l4UFVfTk1iNUh5czlXNkpfV3lzY283VTV0WXVQU3Rpc0V3VVN1emQ5RlFRM2Z1XzRUZDFZWFh5Y1R6SWlZLTE3SC1YbDZnTGFlWklhRi1tUFI5Q0RQbzNNWTBkWW9fY3J0aUo4NlFFUjJ1cHNhdV8tUGE2bzl3TmhBcEpXdV91c0daTlJTd00tZmw0NHpMdThOM3pR?oc=5",
      "polarity": "negative",
@@ -271,7 +238,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:00.738Z"
+   "fetchedAt": "2026-09-23T10:10:45.904Z"
   },
   "ML": {
    "code": "ML",
@@ -301,8 +268,8 @@
      ]
     },
     {
-     "title": "Aidez-moi à faire avancer ce combat : Pour l’interdiction nationale de l’excision au Mali par la loi - mypetition.org",
-     "source": "mypetition.org",
+     "title": "Aidez-moi à faire avancer ce combat : Pour l’interdiction nationale de l’excision au Mali par la loi - MyPetition.org",
+     "source": "MyPetition.org",
      "date": "2026-08-12",
      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOOXhoUXRVaFdMd1ZrR3lCRGM1MkZhTzJLanUwdUdWMjZxZ3NSck5ETHoySTR4a2RtUU1YbmhibWdHNGZMVGcxakRaUnEzVTQwdVFFenpuT2M3bnB5UDJtRUFNS1h3TUR3ZHdnRC01LWpWQVRZdTBBelhjM1E1QWpXaC1aWEwxRWluZVdDX01jR1pLUjIwdWR6QlFwU1c?oc=5",
      "polarity": "negative",
@@ -312,14 +279,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:02.441Z"
+   "fetchedAt": "2026-09-23T10:10:47.551Z"
   },
   "GN": {
    "code": "GN",
    "name": "Guinee",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 63,
+   "items_scanned": 61,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -329,7 +296,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:04.034Z"
+   "fetchedAt": "2026-09-23T10:10:49.103Z"
   },
   "BJ": {
    "code": "BJ",
@@ -346,7 +313,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:05.817Z"
+   "fetchedAt": "2026-09-23T10:10:50.743Z"
   },
   "TG": {
    "code": "TG",
@@ -363,7 +330,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:07.524Z"
+   "fetchedAt": "2026-09-23T10:10:52.373Z"
   },
   "NE": {
    "code": "NE",
@@ -380,7 +347,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:09.198Z"
+   "fetchedAt": "2026-09-23T10:10:54.026Z"
   },
   "MR": {
    "code": "MR",
@@ -409,7 +376,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:10.937Z"
+   "fetchedAt": "2026-09-23T10:10:55.700Z"
   },
   "GW": {
    "code": "GW",
@@ -426,7 +393,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:12.561Z"
+   "fetchedAt": "2026-09-23T10:10:57.237Z"
   },
   "SL": {
    "code": "SL",
@@ -443,7 +410,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:14.587Z"
+   "fetchedAt": "2026-09-23T10:10:59.168Z"
   },
   "LR": {
    "code": "LR",
@@ -483,14 +450,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:16.509Z"
+   "fetchedAt": "2026-09-23T10:11:01.026Z"
   },
   "GM": {
    "code": "GM",
    "name": "Gambie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 13,
+   "items_scanned": 14,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
@@ -512,14 +479,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:18.039Z"
+   "fetchedAt": "2026-09-23T10:11:02.501Z"
   },
   "CV": {
    "code": "CV",
    "name": "Cap-Vert",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 12,
+   "items_scanned": 13,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -529,7 +496,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:19.563Z"
+   "fetchedAt": "2026-09-23T10:11:03.985Z"
   },
   "CM": {
    "code": "CM",
@@ -558,7 +525,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:21.273Z"
+   "fetchedAt": "2026-09-23T10:11:05.645Z"
   },
   "GA": {
    "code": "GA",
@@ -575,7 +542,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:23.452Z"
+   "fetchedAt": "2026-09-23T10:11:07.273Z"
   },
   "CG": {
    "code": "CG",
@@ -604,7 +571,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:25.114Z"
+   "fetchedAt": "2026-09-23T10:11:08.886Z"
   },
   "CD": {
    "code": "CD",
@@ -621,7 +588,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:26.767Z"
+   "fetchedAt": "2026-09-23T10:11:10.556Z"
   },
   "CF": {
    "code": "CF",
@@ -650,7 +617,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:28.428Z"
+   "fetchedAt": "2026-09-23T10:11:12.137Z"
   },
   "TD": {
    "code": "TD",
@@ -679,8 +646,8 @@
      ]
     },
     {
-     "title": "Tchad : l’Assemblée nationale soutient le retrait de la CPI ‎ - tchadinfos.com",
-     "source": "tchadinfos.com",
+     "title": "Tchad : l’Assemblée nationale soutient le retrait de la CPI ‎ - Tchadinfos",
+     "source": "Tchadinfos",
      "date": "2026-07-28",
      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNTDlPTGpaQUpjUHhhTDczMlAyNjhON3BzQ0FnYk1CYTB0WG5CbUxwWTNKcnNxeTJ3bEVkZVRFS05teUd0MTY5c3Z2dVUtZXZzRFN4cTh3QzVwVjZvYzkxS0RBWEZjWkdLWGwybjV4c0x5TmpmRmVSTExYMVliLXcwOG9YUElXVHN1Y3pFZDN5Z1I2WUxaUkE?oc=5",
      "polarity": "negative",
@@ -690,7 +657,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:30.097Z"
+   "fetchedAt": "2026-09-23T10:11:13.749Z"
   },
   "GQ": {
    "code": "GQ",
@@ -707,7 +674,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:31.640Z"
+   "fetchedAt": "2026-09-23T10:11:15.247Z"
   },
   "KE": {
    "code": "KE",
@@ -716,17 +683,17 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 6,
-   "items_before_dedup": 6,
+   "items_before_dedup": 7,
    "items_skipped_foreign_actor": 0,
-   "positives": 2,
-   "negatives": 4,
-   "net_signal": -2.42,
+   "positives": 1,
+   "negatives": 5,
+   "net_signal": -3.48,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
     {
-     "title": "Kenya’s new payments bill could force banks to share customer data - techcabal.com",
-     "source": "techcabal.com",
+     "title": "Kenya’s new payments bill could force banks to share customer data - TechCabal",
+     "source": "TechCabal",
      "date": "2026-09-22",
      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOOHZlanNRbnVMSWdfT3JMMjNFTFNaUDNIN1ZMVHlDR05NQXFBYzVQbnBnSkZucGNsaC1UYUJwcFlkQ1pfX05QcHNHd1ZNZU9vT3RRb1lwOVZXaXE1SGdwVmw1QThOS1hfSm9vNS1MTE9nNnNuUldmb1VZQUNJbTVrYTBTT3RnVmN2TTFfbTdn?oc=5",
      "polarity": "negative",
@@ -747,6 +714,17 @@
      ]
     },
     {
+     "title": "Kenya Match-Fixing Bill targets betting with higher fines and new sanctions - Focus Gaming News",
+     "source": "Focus Gaming News",
+     "date": "2026-08-11",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNVTNwSVRkQTNGTXRaWE13NmdPY19YWTlNdDBtNzFNaEh0R1cwaWJSV2VscnpocUdnTG5PQkQ4YnRsUmI4QWFKUklSSXhSVDhUWEo2X2VmdFAyRktaLTZTN2ozY0duZnZSbDVZVG1LTVBOTU9tQzVyMmJpS0FldU9BdnMxUEE1S2JaWVRBRm92YV9ET2pWdnJTOUpRMF9IUU5kTFhlQjl4bFZURWZMV2dUZE5n?oc=5",
+     "polarity": "negative",
+     "weight": -0.68,
+     "matched": [
+      "-sanctions"
+     ]
+    },
+    {
      "title": "Kenya: Court suspends rollout of mandatory health insurance for foreign visitors - VisasNews",
      "source": "VisasNews",
      "date": "2026-08-25",
@@ -755,17 +733,6 @@
      "weight": -0.54,
      "matched": [
       "-suspends"
-     ]
-    },
-    {
-     "title": "Kenya Parliament Approves National Cybersecurity Agency to Strengthen Digital Security - TechAfrica News",
-     "source": "TechAfrica News",
-     "date": "2026-06-24",
-     "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNMjU4ejM0R2dFRnZZWmUwLTFyUnVuSWlRQ2lNQm82VnUySlFLaUI3bGxMYjFBYVcweDE3bEhHQTlnMkVOd1hxay1rVVhGSTl2bnF2OHg5WGpzZ0M2WVpNQnpWamhqRlFMdnFITGFUbGRTSG9KcGlpUjBLMWViUWRsWUUwVmJKd3Y4aXZWbTl2WnVtNFp5VENJSDA4YmoxTl9HRVo2UTdCRmZlRFRkRFF1ajlFYkgxam8wdklaYzRmMkE3ZG8?oc=5",
-     "polarity": "positive",
-     "weight": 0.38,
-     "matched": [
-      "+digital"
      ]
     },
     {
@@ -792,7 +759,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:33.413Z"
+   "fetchedAt": "2026-09-23T10:11:16.977Z"
   },
   "TZ": {
    "code": "TZ",
@@ -809,14 +776,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:34.900Z"
+   "fetchedAt": "2026-09-23T10:11:18.431Z"
   },
   "UG": {
    "code": "UG",
    "name": "Ouganda",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 14,
+   "items_scanned": 13,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -826,7 +793,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:36.531Z"
+   "fetchedAt": "2026-09-23T10:11:19.909Z"
   },
   "RW": {
    "code": "RW",
@@ -843,7 +810,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:38.260Z"
+   "fetchedAt": "2026-09-23T10:11:21.567Z"
   },
   "BI": {
    "code": "BI",
@@ -872,7 +839,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:40.034Z"
+   "fetchedAt": "2026-09-23T10:11:23.217Z"
   },
   "SS": {
    "code": "SS",
@@ -889,14 +856,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:41.549Z"
+   "fetchedAt": "2026-09-23T10:11:24.715Z"
   },
   "ET": {
    "code": "ET",
    "name": "Ethiopie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 10,
+   "items_scanned": 9,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -906,7 +873,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:43.135Z"
+   "fetchedAt": "2026-09-23T10:11:26.183Z"
   },
   "DJ": {
    "code": "DJ",
@@ -923,7 +890,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:44.823Z"
+   "fetchedAt": "2026-09-23T10:11:27.878Z"
   },
   "ER": {
    "code": "ER",
@@ -940,7 +907,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:46.311Z"
+   "fetchedAt": "2026-09-23T10:11:29.337Z"
   },
   "SO": {
    "code": "SO",
@@ -957,7 +924,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:47.877Z"
+   "fetchedAt": "2026-09-23T10:11:30.808Z"
   },
   "SD": {
    "code": "SD",
@@ -974,7 +941,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:49.469Z"
+   "fetchedAt": "2026-09-23T10:11:32.320Z"
   },
   "ZA": {
    "code": "ZA",
@@ -992,8 +959,8 @@
    "corroborated": false,
    "evidence": [
     {
-     "title": "Nigeria–South Africa: Parliament suspends official visits following anti-migrant violence - Benin Web TV",
-     "source": "Benin Web TV",
+     "title": "Nigeria–South Africa: Parliament suspends official visits following anti-migrant violence - beninwebtv.bj",
+     "source": "beninwebtv.bj",
      "date": "2026-09-11",
      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQeElzQ1pTY05SNDNmaTlSOUdXQ2hJdFVMalplRnVZQmQ3YzN2YXdnMnEyOHY0X19mbWQ2eUppTEZzM2VGbVpfYUh5Mk4teTFuWEdXbE5lTElfV3lXYnRwQzNqZVkzX2NMRzZKak1rLUl1V2ZJbjlQbVhyMWtVcEM4UUlKWjBKNG1nRFI5WDlQeGQzRWQySExwVjFyTkZtSkk3ZnRKQWNTUWktaElFQ1NxYzRubDA?oc=5",
      "polarity": "negative",
@@ -1003,7 +970,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:51.061Z"
+   "fetchedAt": "2026-09-23T10:11:33.834Z"
   },
   "MZ": {
    "code": "MZ",
@@ -1033,7 +1000,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:52.861Z"
+   "fetchedAt": "2026-09-23T10:11:35.524Z"
   },
   "ZW": {
    "code": "ZW",
@@ -1062,14 +1029,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:54.713Z"
+   "fetchedAt": "2026-09-23T10:11:37.256Z"
   },
   "ZM": {
    "code": "ZM",
    "name": "Zambie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 10,
+   "items_scanned": 11,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1079,7 +1046,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:56.237Z"
+   "fetchedAt": "2026-09-23T10:11:38.716Z"
   },
   "BW": {
    "code": "BW",
@@ -1120,7 +1087,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:09:58.084Z"
+   "fetchedAt": "2026-09-23T10:11:40.397Z"
   },
   "NA": {
    "code": "NA",
@@ -1137,7 +1104,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:09:59.564Z"
+   "fetchedAt": "2026-09-23T10:11:41.849Z"
   },
   "MW": {
    "code": "MW",
@@ -1146,11 +1113,11 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 5,
-   "items_before_dedup": 7,
+   "items_before_dedup": 6,
    "items_skipped_foreign_actor": 0,
-   "positives": 3,
-   "negatives": 2,
-   "net_signal": 1.11,
+   "positives": 2,
+   "negatives": 3,
+   "net_signal": -1.12,
    "legalAdj": 0,
    "corroborated": true,
    "evidence": [
@@ -1166,6 +1133,28 @@
      ]
     },
     {
+     "title": "National Bank of Malawi sponsors LUANAR Alumni Connect with K4m donation - Nyasa Times",
+     "source": "Nyasa Times",
+     "date": "2026-09-22",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNVC1iWVFPblkxWTRVSkdoTmNQRjlkNDBGMFVTZ3FCNGdsNE96aUtRU2hfT1VWOHB0cHZ3QldvdWNBYkNObXZrNU5kdFdEcTB3ZXNsS05UQk5PanBSaG44MFB6c3ZCRE1MWExsSm4tZkxBcTZSOURBX2xyaU5XUDJPX0hiaGxDNlNEUFJGQ2VQUVUtUmZpby13b1pEVS1Na2hOSlE?oc=5",
+     "polarity": "negative",
+     "weight": -1.2,
+     "matched": [
+      "-ban"
+     ]
+    },
+    {
+     "title": "EDF, FDH Bank partner to formalise Malawi gold trade - Business News Malawi - Nyasa Times",
+     "source": "Nyasa Times",
+     "date": "2026-09-21",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOamt3SVFOdGs5Sy1MUTRKd1doTXlUdTlZZDJkSGZZR1NfczRWVlJpSXVvcFJaYS1HdHItQ1F3bEZ0cXVoa0pRS01yUWZLTUZ0RlFiZnlXam5QQnBZNFoyRzk0bzR1ZnluVTdiZHdOUG1CcXVEUnNlMU5YRUJlby1RSFhlUWdJdw?oc=5",
+     "polarity": "negative",
+     "weight": -1.2,
+     "matched": [
+      "-ban"
+     ]
+    },
+    {
      "title": "Malawi High Court: Banking Amendment Bill Mandates Toilet Facilities - Wansom AI",
      "source": "Wansom AI",
      "date": "2026-08-05",
@@ -1177,34 +1166,10 @@
      ]
     },
     {
-     "title": "Malawi Parliament Urged to Impose Travel Ban on Undocumented Citizens - Wansom AI",
+     "title": "Malawi Parliament Passes Financial Services Amendment Bill to Recover Unclaimed Bank Funds - Wansom AI",
      "source": "Wansom AI",
-     "date": "2026-07-16",
-     "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxPYU1ScWhuOHRjbWJyRndWY0VqRTFBX2lXY2Vza09QWGNwalVER3I0OTdxV0E2aGdFdE8tbnJJR210UXc2dk9ENjVjdGpRNXJMbFlENG94cWlXVEtRal9iSm1wVDBqa2pjelU4aHZsS3FIVEVMV3ZvSVduLXF0V0dWdEJ2bzRTeVdyNnFWNENDU1ltRzB0Rm5QWGZQRkdtVWdiSGhOSWpDTnphd3hTaHZjS1I5bThPcTVKVzllRE5IZzd5Q3d4TEdQZkl1VWRVQ3R1UE9GLUd5Z05ZNDRTNm1KZXJQOTh5Zw?oc=5",
-     "polarity": "negative",
-     "weight": -0.3,
-     "matched": [
-      "-ban"
-     ]
-    },
-    {
-     "title": "Malawi Parliament approves new banking Bill to shield depositors from bank collapses - Nyasa Times",
-     "source": "Nyasa Times",
      "date": "2026-08-04",
-     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQcGVleGRRLUxrM05kRVZTS1Z0dDdvbFJlWXRBcXp5MHVoanpWTGNYLV9CYk4zN2JDd3YzVExpdGxJZDM3emQ2VmFWY0N4S3JkMllILWNPMGc3bWJBNmxlNmR2UTRLdEQyeXVjTlFkWHA2MkhROTJhVlpFVzBaTmVOTUVKUFhVNHB2bF8wMS1LUC1LV0JtcFk3MjRHZHhtNXdtMktJcEhCcWdVS2V3X0todHZ3?oc=5",
-     "polarity": "positive",
-     "weight": 0.13,
-     "matched": [
-      "+bank",
-      "+banking",
-      "-ban"
-     ]
-    },
-    {
-     "title": "Malawi parliament approves World Bank IDA grant funding for GESD Project - Wansom AI",
-     "source": "Wansom AI",
-     "date": "2026-07-30",
-     "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNZzhWVEFXbzFlRjBvbUJ5ckpHVUdVaVA3VkhFVFBKUm42REpha1JST3RrcV9nb29BZlJKZm80RXhkdWFvcWxub0c2YU16Wk9XeWdJbnN2SHJFcWh0dUZmUFhjX2g4aWNQZ1lSUzN3SXBiTEhZWjdBdVZUcUd1US1rSTI3TE9NU3Q3dDlaN1B5WHlZSEdFMmxTRDFxM3dtU1NxY1ZNN19XUTJhYU5KTUx6TWNTdDVMMWNNMHY1SktKYS0?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxQbkJrSGl3VFE1eHJWNGhMQ1JISzNHb09GUWdTcXVFcXZQTU1iMmFhZ0t4NHVfcXEwUkpKZU40djBKOTg4dE5DNERKRnVhaWNhcmdLUHlkeTc5aWF6dmZ3bjFHV3k0RTRTN0VCY0RhckVyNTFQZ1pFaWM5dEdLb1R3NEdQaVBDcVRidENydlZBX2FBX1RMM01BaEZvZ3FHRXZzSGdyTS1YR1lDd29vamQ5ZzAzY2JMSWE5VERsRHNINTEyWXJObW5tSGtWN1AzNS1oOFVEOEIyTjVkX2hUU3NVUjFZUVVSZ3ZVS0xJaVZWVzk3djg?oc=5",
      "polarity": "positive",
      "weight": 0.08,
      "matched": [
@@ -1213,7 +1178,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:01.265Z"
+   "fetchedAt": "2026-09-23T10:11:43.501Z"
   },
   "AO": {
    "code": "AO",
@@ -1230,7 +1195,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:03.177Z"
+   "fetchedAt": "2026-09-23T10:11:45.155Z"
   },
   "MG": {
    "code": "MG",
@@ -1281,7 +1246,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:04.898Z"
+   "fetchedAt": "2026-09-23T10:11:46.756Z"
   },
   "MU": {
    "code": "MU",
@@ -1298,14 +1263,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:06.684Z"
+   "fetchedAt": "2026-09-23T10:11:48.363Z"
   },
   "SC": {
    "code": "SC",
    "name": "Seychelles",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 68,
+   "items_scanned": 69,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1315,7 +1280,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:08.260Z"
+   "fetchedAt": "2026-09-23T10:11:49.892Z"
   },
   "SZ": {
    "code": "SZ",
@@ -1344,7 +1309,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:10.034Z"
+   "fetchedAt": "2026-09-23T10:11:51.569Z"
   },
   "LS": {
    "code": "LS",
@@ -1361,7 +1326,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:11.751Z"
+   "fetchedAt": "2026-09-23T10:11:53.288Z"
   },
   "KM": {
    "code": "KM",
@@ -1378,7 +1343,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:13.435Z"
+   "fetchedAt": "2026-09-23T10:11:54.896Z"
   },
   "MA": {
    "code": "MA",
@@ -1386,12 +1351,12 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 3,
-   "items_before_dedup": 3,
-   "items_skipped_foreign_actor": 23,
+   "items_scored": 2,
+   "items_before_dedup": 2,
+   "items_skipped_foreign_actor": 20,
    "positives": 0,
-   "negatives": 3,
-   "net_signal": -2.04,
+   "negatives": 2,
+   "net_signal": -1.74,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -1416,20 +1381,9 @@
      "matched": [
       "-interdiction"
      ]
-    },
-    {
-     "title": "Maroc : le gouvernement maintient l’interdiction des chiens dangereux et rejette le permis de détention - Afrik",
-     "source": "Afrik",
-     "date": "2026-06-24",
-     "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQT0NnZnpNeXhfRURGX3VOTGtSaEg5TlJQZlVSdkkxU2d0UjJTbWVYWE1ORk5vdlJyWGNCX21odDZObkpHLUVDb19RdUplVHZFTmNvZkxBcUFqNEFxTDVxNkw2clZZSTJIME9hS18wRnJuM0JidjFyRzNUWm5TeUo2Q0MxZWNUMTc5ZFMtcTdnRGY4a0EyVDZnekdoVXdtTlNXWlVwQlhmOUZveGExQzVzaFl6UElTMlB0ekpvekFEeUk?oc=5",
-     "polarity": "negative",
-     "weight": -0.3,
-     "matched": [
-      "-interdiction"
-     ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:15.141Z"
+   "fetchedAt": "2026-09-23T10:11:56.522Z"
   },
   "TN": {
    "code": "TN",
@@ -1437,14 +1391,14 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 2,
-   "items_before_dedup": 2,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
-   "negatives": 2,
-   "net_signal": -0.68,
+   "negatives": 1,
+   "net_signal": -0.38,
    "legalAdj": 0,
-   "corroborated": true,
+   "corroborated": false,
    "evidence": [
     {
      "title": "Tunisie: Détérioration sans précédent de la liberté de la presse et d’expression - International Federation of Journalists - IFJ",
@@ -1456,20 +1410,9 @@
      "matched": [
       "!liberté de la presse"
      ]
-    },
-    {
-     "title": "Tunisie : l’interdiction de photographier au Parlement fait polémique… que dit le règlement intérieur ? (Rapport) - Tunisie Numerique",
-     "source": "Tunisie Numerique",
-     "date": "2026-07-30",
-     "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNUVRMVFBPMWlKUm13N1FWYVZnd1Z6X2RxcnlwaGVPQTZaTDI2SUZJRmhOTlh4dER3ZC1sY05ESERzNnVLV0dldlNoeUhNTjNXaTlvNWxNWFJoZ21jUC03YW9HMUVQeG1aRFRFWTRtMDdscUo3SjlVSXdQWFRXSXBFVXFMZkl5a3NSN2JFdlBzQjFUY3RJWDNCUWxXZlJYejVLd1VlWWthU2RTOGVycUw2Ni1HVDRtSVlhVVdDSU54bnpjVkxkRGJxTzZ1bHlFWnNfR1F2eDV3?oc=5",
-     "polarity": "negative",
-     "weight": -0.3,
-     "matched": [
-      "-interdiction"
-     ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:16.850Z"
+   "fetchedAt": "2026-09-23T10:11:58.297Z"
   },
   "EG": {
    "code": "EG",
@@ -1486,7 +1429,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:18.419Z"
+   "fetchedAt": "2026-09-23T10:11:59.826Z"
   },
   "DZ": {
    "code": "DZ",
@@ -1503,7 +1446,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-09-22T10:10:20.142Z"
+   "fetchedAt": "2026-09-23T10:12:01.426Z"
   },
   "LY": {
    "code": "LY",
@@ -1521,8 +1464,8 @@
    "corroborated": false,
    "evidence": [
     {
-     "title": "Libya: the NOC declares a state of emergency after drone attacks on the Zawiya refinery. - Benin Web TV",
-     "source": "Benin Web TV",
+     "title": "Libya: the NOC declares a state of emergency after drone attacks on the Zawiya refinery. - beninwebtv.bj",
+     "source": "beninwebtv.bj",
      "date": "2026-08-12",
      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOM201WkdTY0Y2ZTlrNk5wYzF2NURadHVCcDZrdm50eGtvYlBYNjNReGdFTWVRZzhQYUtYd3k3SkF5SGt4RVdLcWllWjhQTEFsYWxrZnhiVUJTY09RS1dUOTNtb0VJU29wUTBVendRclNLVTJhMEZscUhfb29Nb3ZTN09CMEdXajBnVlNfSTVBN3dGX1pGbkJmaHJ2TXhPVEdSMEdVQU1nWlBKVmFqT0o4aUt3?oc=5",
      "polarity": "negative",
@@ -1532,7 +1475,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:21.654Z"
+   "fetchedAt": "2026-09-23T10:12:02.901Z"
   },
   "CI": {
    "code": "CI",
@@ -1540,12 +1483,12 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 1,
-   "items_before_dedup": 2,
+   "items_scored": 2,
+   "items_before_dedup": 3,
    "items_skipped_foreign_actor": 1,
-   "positives": 0,
+   "positives": 1,
    "negatives": 1,
-   "net_signal": -0.3,
+   "net_signal": -0.05,
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [
@@ -1559,9 +1502,20 @@
      "matched": [
       "-interdiction"
      ]
+    },
+    {
+     "title": "Côte d'Ivoire : Réforme de la société civile, le gouvernement valide six décrets pour renforcer le dialogue, la transparence et la gouvernance des OSC - koaci.com",
+     "source": "koaci.com",
+     "date": "2026-08-05",
+     "url": "https://news.google.com/rss/articles/CBMiwAJBVV95cUxPdHZHd3dsZFA2bVNYaXpPMmh1Tk1xQ05tYzlUSHlZekJCQmt2R0ZUMkJEWE1oMVpoX0pNdGQycXY2VXBRampjNm1qNjBJTm1iQzBNOEtmbmR3QzBhNjdOWE9RX2trTnpZX1ZFdnltSXI5UEVySVpRNjgyMklrSFdwSkpqZVVhTV93M1hLeWZyZjVBRmk1eUctRmNaN3dFSzZqeXFGTU00TEhHeXQ4bmZ1MS04YnJ4VWw0cEhZVDlNSVhhbThNTFkxdFlHNzZ0LS1hVHVzU1VzQjlnZzBQNmk5Z1hKc3ExR2Y4VEhwQkJMQzQ4b1BaS1huSVhSVDZlMmdRNXBNaVFkaDVIRWZFYnRzUG8wSktxRlhzcXZvTW1mRk1rTmx6TFllZmstUUxQWERiVGY5N1JkclA0a3ozWjRJTg?oc=5",
+     "polarity": "positive",
+     "weight": 0.25,
+     "matched": [
+      "+transparence"
+     ]
     }
    ],
-   "fetchedAt": "2026-09-22T10:10:23.398Z"
+   "fetchedAt": "2026-09-23T10:12:04.551Z"
   }
  }
 }
