@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-07T11:54:55.644Z",
+ "generatedAt": "2026-10-08T12:10:03.615Z",
  "source": "Google News RSS (legislative & regulatory query per country)",
  "classifier": "lexicon_v1",
  "adjustment_range": [
@@ -18,12 +18,12 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 4,
-   "items_before_dedup": 7,
-   "items_skipped_foreign_actor": 6,
+   "items_scored": 3,
+   "items_before_dedup": 6,
+   "items_skipped_foreign_actor": 5,
    "positives": 1,
-   "negatives": 3,
-   "net_signal": -1.96,
+   "negatives": 2,
+   "net_signal": -1.66,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -60,20 +60,9 @@
       "+energy",
       "+electricity"
      ]
-    },
-    {
-     "title": "Senate Clarifies FRSC Amendment Bill, Says Ban On Preaching In Commercial Vehicles Not New - Channels Television",
-     "source": "Channels Television",
-     "date": "2026-07-27",
-     "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPT1owbi1sdmZmNGR6Rmg4Y3VJRmFucVgzMXEwR3BqNnFBUXVPTWc1c1pqOGJ4dkN5N2U5NVRJRjB4UXR4WmRIZVctT3BfRXc0V0dxNzJZU0Qybm1lbW5ab2x2ZnhFUVJwZkg5b244ODA1aFVOMlEzeHZOZXl0UkRDYWdkWV9Uc01iYl91dTd2MWo0WkZsX0d0V09nU3lwcDc0ZkwwWmoyR21lUVVlLTJ5VUhmQ1prdlQ1LWdqSW9yN3RpYWVDb1Fj?oc=5",
-     "polarity": "negative",
-     "weight": -0.3,
-     "matched": [
-      "-ban"
-     ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:27.930Z"
+   "fetchedAt": "2026-10-08T12:08:36.084Z"
   },
   "GH": {
    "code": "GH",
@@ -81,12 +70,12 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 7,
-   "items_before_dedup": 10,
+   "items_scored": 8,
+   "items_before_dedup": 11,
    "items_skipped_foreign_actor": 0,
-   "positives": 0,
+   "positives": 1,
    "negatives": 7,
-   "net_signal": -6.3,
+   "net_signal": -5.46,
    "legalAdj": -2,
    "corroborated": true,
    "evidence": [
@@ -111,6 +100,17 @@
      "weight": -1.5,
      "matched": [
       "!arrests"
+     ]
+    },
+    {
+     "title": "Ghana hosts forum on the rule of law and anti-corruption — MyJoyOnline - UA.NEWS",
+     "source": "UA.NEWS",
+     "date": "2026-09-25",
+     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOSmI1eHQ3cXdQZG9PYUVWWTBOSUFDQzBSV2s0d0Y4LXpwa2poaGE1WmJQYWhMaWdoRGF1Y09raXVBZEhiMGJRT3ZyMVZ2YklXZllXOENoNEt6Y3M1WTVXOHRKSU9iVDdOVGpRSmFPTWtnOXpqdmp4cTNQcHkyTWM3Z1ZEd0FmQnVjZE00SFNIY2Q3cmM4MkQ5S0NNelVGcFI1Znh3UXV1Z3Q?oc=5",
+     "polarity": "positive",
+     "weight": 0.84,
+     "matched": [
+      "+anti-corruption"
      ]
     },
     {
@@ -169,7 +169,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:29.921Z"
+   "fetchedAt": "2026-10-08T12:08:37.879Z"
   },
   "SN": {
    "code": "SN",
@@ -186,7 +186,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:31.591Z"
+   "fetchedAt": "2026-10-08T12:08:39.547Z"
   },
   "BF": {
    "code": "BF",
@@ -203,7 +203,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:33.314Z"
+   "fetchedAt": "2026-10-08T12:08:41.238Z"
   },
   "ML": {
    "code": "ML",
@@ -232,14 +232,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:34.986Z"
+   "fetchedAt": "2026-10-08T12:08:42.909Z"
   },
   "GN": {
    "code": "GN",
    "name": "Guinee",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 68,
+   "items_scanned": 70,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -249,7 +249,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:36.540Z"
+   "fetchedAt": "2026-10-08T12:08:44.490Z"
   },
   "BJ": {
    "code": "BJ",
@@ -266,7 +266,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:38.203Z"
+   "fetchedAt": "2026-10-08T12:08:46.173Z"
   },
   "TG": {
    "code": "TG",
@@ -283,7 +283,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:39.865Z"
+   "fetchedAt": "2026-10-08T12:08:47.852Z"
   },
   "NE": {
    "code": "NE",
@@ -300,7 +300,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:41.523Z"
+   "fetchedAt": "2026-10-08T12:08:49.531Z"
   },
   "MR": {
    "code": "MR",
@@ -340,14 +340,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:43.206Z"
+   "fetchedAt": "2026-10-08T12:08:51.247Z"
   },
   "GW": {
    "code": "GW",
    "name": "Guinee-Bissau",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 31,
+   "items_scanned": 30,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -357,7 +357,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:44.808Z"
+   "fetchedAt": "2026-10-08T12:08:52.775Z"
   },
   "SL": {
    "code": "SL",
@@ -374,7 +374,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:46.875Z"
+   "fetchedAt": "2026-10-08T12:08:55.002Z"
   },
   "LR": {
    "code": "LR",
@@ -414,7 +414,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:48.660Z"
+   "fetchedAt": "2026-10-08T12:08:56.876Z"
   },
   "GM": {
    "code": "GM",
@@ -443,14 +443,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:50.155Z"
+   "fetchedAt": "2026-10-08T12:08:58.389Z"
   },
   "CV": {
    "code": "CV",
    "name": "Cap-Vert",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 13,
+   "items_scanned": 14,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -460,7 +460,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:51.703Z"
+   "fetchedAt": "2026-10-08T12:08:59.946Z"
   },
   "CM": {
    "code": "CM",
@@ -489,7 +489,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:53.374Z"
+   "fetchedAt": "2026-10-08T12:09:01.665Z"
   },
   "GA": {
    "code": "GA",
@@ -506,7 +506,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:55.236Z"
+   "fetchedAt": "2026-10-08T12:09:03.310Z"
   },
   "CG": {
    "code": "CG",
@@ -535,7 +535,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:53:56.852Z"
+   "fetchedAt": "2026-10-08T12:09:05.044Z"
   },
   "CD": {
    "code": "CD",
@@ -552,7 +552,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:53:58.497Z"
+   "fetchedAt": "2026-10-08T12:09:06.787Z"
   },
   "CF": {
    "code": "CF",
@@ -581,7 +581,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:00.174Z"
+   "fetchedAt": "2026-10-08T12:09:08.390Z"
   },
   "TD": {
    "code": "TD",
@@ -621,7 +621,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:01.979Z"
+   "fetchedAt": "2026-10-08T12:09:10.051Z"
   },
   "GQ": {
    "code": "GQ",
@@ -638,7 +638,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:03.519Z"
+   "fetchedAt": "2026-10-08T12:09:11.629Z"
   },
   "KE": {
    "code": "KE",
@@ -646,11 +646,11 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 2,
-   "items_before_dedup": 2,
+   "items_scored": 4,
+   "items_before_dedup": 4,
    "items_skipped_foreign_actor": 0,
-   "positives": 2,
-   "negatives": 0,
+   "positives": 3,
+   "negatives": 1,
    "net_signal": 2.3,
    "legalAdj": 1,
    "corroborated": true,
@@ -667,6 +667,28 @@
      ]
     },
     {
+     "title": "Parliament passes Bill seeking dedicated lanes for cyclists and pedestrians - Citizen Digital",
+     "source": "Citizen Digital",
+     "date": "2026-08-14",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPZG1wLUkwaVJrTk94VFc1MmI5bUJqYWlWZWJBS21VdjFxeTJHWFplNFlOYkg3ckotYWNyVjBaQnd3UElzdXFPZDlSeDhMN3Z3anNBUGNzMEgyMWpRQnZVOVNldC1lVXFVQmhEdTJBOVNUMlozVVg0dXhKczFQMDdEN3ZMNFhHUVk2NEVidlNTclpETm40VW4tZXdxdElTUzlmTTZsa2JSVlRCZEFTb0RVR3ZvU1hZQQ?oc=5",
+     "polarity": "positive",
+     "weight": 0.38,
+     "matched": [
+      "+digital"
+     ]
+    },
+    {
+     "title": "Kenya Parliament backs higher fines, new sanctions in betting-linked match-fixing Bill - Focus Gaming News",
+     "source": "Focus Gaming News",
+     "date": "2026-08-11",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNVTNwSVRkQTNGTXRaWE13NmdPY19YWTlNdDBtNzFNaEh0R1cwaWJSV2VscnpocUdnTG5PQkQ4YnRsUmI4QWFKUklSSXhSVDhUWEo2X2VmdFAyRktaLTZTN2ozY0duZnZSbDVZVG1LTVBOTU9tQzVyMmJpS0FldU9BdnMxUEE1S2JaWVRBRm92YV9ET2pWdnJTOUpRMF9IUU5kTFhlQjl4bFZURWZMV2dUZE5n?oc=5",
+     "polarity": "negative",
+     "weight": -0.38,
+     "matched": [
+      "-sanctions"
+     ]
+    },
+    {
      "title": "Ignore fake memo requesting Kenya’s anti-corruption agency to vet five new cabinet nominees - Africa Check",
      "source": "Africa Check",
      "date": "2026-07-29",
@@ -678,14 +700,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:05.312Z"
+   "fetchedAt": "2026-10-08T12:09:13.456Z"
   },
   "TZ": {
    "code": "TZ",
    "name": "Tanzanie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 7,
+   "items_scanned": 8,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -695,7 +717,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:06.821Z"
+   "fetchedAt": "2026-10-08T12:09:14.959Z"
   },
   "UG": {
    "code": "UG",
@@ -712,7 +734,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:08.335Z"
+   "fetchedAt": "2026-10-08T12:09:16.526Z"
   },
   "RW": {
    "code": "RW",
@@ -729,7 +751,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:09.975Z"
+   "fetchedAt": "2026-10-08T12:09:18.159Z"
   },
   "BI": {
    "code": "BI",
@@ -746,14 +768,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:11.679Z"
+   "fetchedAt": "2026-10-08T12:09:19.934Z"
   },
   "SS": {
    "code": "SS",
    "name": "Soudan du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 9,
+   "items_scanned": 11,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -763,7 +785,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:13.246Z"
+   "fetchedAt": "2026-10-08T12:09:21.490Z"
   },
   "ET": {
    "code": "ET",
@@ -780,7 +802,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:14.776Z"
+   "fetchedAt": "2026-10-08T12:09:23.015Z"
   },
   "DJ": {
    "code": "DJ",
@@ -797,7 +819,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:16.650Z"
+   "fetchedAt": "2026-10-08T12:09:24.713Z"
   },
   "ER": {
    "code": "ER",
@@ -814,14 +836,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:18.162Z"
+   "fetchedAt": "2026-10-08T12:09:26.185Z"
   },
   "SO": {
    "code": "SO",
    "name": "Somalie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 10,
+   "items_scanned": 9,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -831,7 +853,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:19.654Z"
+   "fetchedAt": "2026-10-08T12:09:27.688Z"
   },
   "SD": {
    "code": "SD",
@@ -848,20 +870,20 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:21.224Z"
+   "fetchedAt": "2026-10-08T12:09:29.249Z"
   },
   "ZA": {
    "code": "ZA",
    "name": "Afrique du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 38,
-   "items_scored": 3,
-   "items_before_dedup": 3,
+   "items_scanned": 39,
+   "items_scored": 2,
+   "items_before_dedup": 2,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
-   "negatives": 3,
-   "net_signal": -2.43,
+   "negatives": 2,
+   "net_signal": -1.59,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -877,17 +899,6 @@
      ]
     },
     {
-     "title": "Gabon bans all exports of iboga, with penalties to follow - Benin Web TV",
-     "source": "Benin Web TV",
-     "date": "2026-09-20",
-     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQTlJUdVREUG9rUjVMSkdCTnFQQ2VYRlZqNU1YUWZvdkkzaXkxVDJqMmd4NHN0VVdCRmNrU09CamhOdHlVVEZFN195YktfOVlOQmdxM1c4SzVEOVdYT2c4bWdhNXE5SE0xajJIMV9OcDlVOVNIZndadzhRU3ZGQUVfcmsydTczVHFScWc?oc=5",
-     "polarity": "negative",
-     "weight": -0.84,
-     "matched": [
-      "-ban"
-     ]
-    },
-    {
      "title": "Nigeria–South Africa: Parliament suspends official visits following anti-migrant violence - Benin Web TV",
      "source": "Benin Web TV",
      "date": "2026-09-11",
@@ -899,7 +910,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:22.808Z"
+   "fetchedAt": "2026-10-08T12:09:30.817Z"
   },
   "MZ": {
    "code": "MZ",
@@ -908,7 +919,7 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 2,
-   "items_before_dedup": 2,
+   "items_before_dedup": 3,
    "items_skipped_foreign_actor": 0,
    "positives": 2,
    "negatives": 0,
@@ -928,10 +939,10 @@
      ]
     },
     {
-     "title": "Government approves regulation establishing Mozambique Development Bank - aimnews.org",
-     "source": "aimnews.org",
+     "title": "Mozambique Government Approves Development Bank Regulation - Wansom AI",
+     "source": "Wansom AI",
      "date": "2026-08-26",
-     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOT2FZRWNXWFowaXdTeUZWYVNKWE5SU3lJYkJWSTR1RF9mX0NkbVVnLVl1UVpmeXVubXBFSnJuMG5uVFljUjBIWUVrZ1cwVE52em1ERXVjNzAxdE4xV1JBVXNrdy0yOVNqNmozcUFtYUFWb0dwZGUteU5iYlRVcVRXdHplQmJEMU84akJCa3NCLXl6MHlHVW1QcmNTTlE0YTc2UGNqVTRn?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOSWRMdFhId1hnMm9WQTNSV19Edm1VaGMtS2pScGlwUXEwQTFaSmdnTkRLN2otVEY0ZklFVFNLNU1hcXlaN3luR0pNano4dHZRRUVweWNQU2JwYWwyTEw3TzJHVkpYY1YyV1VOdHhhMWhNdHNSY3JtVUdhalNDSFh2RXF0ejFfVklqSkZ0SDFjWDBEQTZBWUVGeXk0SExmQnU3Slc0LXEtSUhGamVIMHU0d04zWFQ5T1B1YTVycTJXOEdVQ3JYOHhuWEp1Ml9EWGFJeGFKYWpGTDc?oc=5",
      "polarity": "positive",
      "weight": 0.14,
      "matched": [
@@ -940,7 +951,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:24.553Z"
+   "fetchedAt": "2026-10-08T12:09:32.537Z"
   },
   "ZW": {
    "code": "ZW",
@@ -991,14 +1002,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:26.358Z"
+   "fetchedAt": "2026-10-08T12:09:34.470Z"
   },
   "ZM": {
    "code": "ZM",
    "name": "Zambie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 11,
+   "items_scanned": 12,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1008,7 +1019,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:27.865Z"
+   "fetchedAt": "2026-10-08T12:09:36.006Z"
   },
   "BW": {
    "code": "BW",
@@ -1025,14 +1036,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:29.575Z"
+   "fetchedAt": "2026-10-08T12:09:37.673Z"
   },
   "NA": {
    "code": "NA",
    "name": "Namibie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 2,
+   "items_scanned": 1,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1042,7 +1053,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:31.059Z"
+   "fetchedAt": "2026-10-08T12:09:39.145Z"
   },
   "MW": {
    "code": "MW",
@@ -1129,7 +1140,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:32.781Z"
+   "fetchedAt": "2026-10-08T12:09:40.856Z"
   },
   "AO": {
    "code": "AO",
@@ -1180,7 +1191,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:34.548Z"
+   "fetchedAt": "2026-10-08T12:09:42.544Z"
   },
   "MG": {
    "code": "MG",
@@ -1189,7 +1200,7 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 3,
-   "items_before_dedup": 6,
+   "items_before_dedup": 5,
    "items_skipped_foreign_actor": 1,
    "positives": 0,
    "negatives": 3,
@@ -1231,7 +1242,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:36.193Z"
+   "fetchedAt": "2026-10-08T12:09:44.224Z"
   },
   "MU": {
    "code": "MU",
@@ -1248,14 +1259,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:37.827Z"
+   "fetchedAt": "2026-10-08T12:09:45.837Z"
   },
   "SC": {
    "code": "SC",
    "name": "Seychelles",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 64,
+   "items_scanned": 62,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1265,7 +1276,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:39.445Z"
+   "fetchedAt": "2026-10-08T12:09:47.462Z"
   },
   "SZ": {
    "code": "SZ",
@@ -1294,7 +1305,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:41.159Z"
+   "fetchedAt": "2026-10-08T12:09:49.220Z"
   },
   "LS": {
    "code": "LS",
@@ -1311,7 +1322,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:42.868Z"
+   "fetchedAt": "2026-10-08T12:09:51.046Z"
   },
   "KM": {
    "code": "KM",
@@ -1328,7 +1339,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:44.636Z"
+   "fetchedAt": "2026-10-08T12:09:52.683Z"
   },
   "MA": {
    "code": "MA",
@@ -1338,7 +1349,7 @@
    "items_scanned": 100,
    "items_scored": 2,
    "items_before_dedup": 2,
-   "items_skipped_foreign_actor": 15,
+   "items_skipped_foreign_actor": 12,
    "positives": 1,
    "negatives": 1,
    "net_signal": -0.05,
@@ -1368,7 +1379,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:46.298Z"
+   "fetchedAt": "2026-10-08T12:09:54.361Z"
   },
   "TN": {
    "code": "TN",
@@ -1408,14 +1419,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:48.018Z"
+   "fetchedAt": "2026-10-08T12:09:56.072Z"
   },
   "EG": {
    "code": "EG",
    "name": "Egypte",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 15,
+   "items_scanned": 14,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1425,7 +1436,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-07T11:54:49.574Z"
+   "fetchedAt": "2026-10-08T12:09:57.601Z"
   },
   "DZ": {
    "code": "DZ",
@@ -1454,7 +1465,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:51.173Z"
+   "fetchedAt": "2026-10-08T12:09:59.261Z"
   },
   "LY": {
    "code": "LY",
@@ -1483,7 +1494,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:52.677Z"
+   "fetchedAt": "2026-10-08T12:10:00.736Z"
   },
   "CI": {
    "code": "CI",
@@ -1512,8 +1523,8 @@
      ]
     },
     {
-     "title": "Côte d'Ivoire : Réforme de la société civile, le gouvernement valide six décrets pour renforcer le dialogue, la transparence et la gouvernance des OSC - Koaci",
-     "source": "Koaci",
+     "title": "Côte d'Ivoire : Réforme de la société civile, le gouvernement valide six décrets pour renforcer le dialogue, la transparence et la gouvernance des OSC - koaci",
+     "source": "koaci",
      "date": "2026-08-05",
      "url": "https://news.google.com/rss/articles/CBMiwAJBVV95cUxPdHZHd3dsZFA2bVNYaXpPMmh1Tk1xQ05tYzlUSHlZekJCQmt2R0ZUMkJEWE1oMVpoX0pNdGQycXY2VXBRampjNm1qNjBJTm1iQzBNOEtmbmR3QzBhNjdOWE9RX2trTnpZX1ZFdnltSXI5UEVySVpRNjgyMklrSFdwSkpqZVVhTV93M1hLeWZyZjVBRmk1eUctRmNaN3dFSzZqeXFGTU00TEhHeXQ4bmZ1MS04YnJ4VWw0cEhZVDlNSVhhbThNTFkxdFlHNzZ0LS1hVHVzU1VzQjlnZzBQNmk5Z1hKc3ExR2Y4VEhwQkJMQzQ4b1BaS1huSVhSVDZlMmdRNXBNaVFkaDVIRWZFYnRzUG8wSktxRlhzcXZvTW1mRk1rTmx6TFllZmstUUxQWERiVGY5N1JkclA0a3ozWjRJTg?oc=5",
      "polarity": "positive",
@@ -1523,7 +1534,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-07T11:54:54.444Z"
+   "fetchedAt": "2026-10-08T12:10:02.415Z"
   }
  }
 }
