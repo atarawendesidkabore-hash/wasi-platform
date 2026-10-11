@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-10T11:18:02.488Z",
+ "generatedAt": "2026-10-11T11:31:29.970Z",
  "source": "Google News RSS (legislative & regulatory query per country)",
  "classifier": "lexicon_v1",
  "adjustment_range": [
@@ -18,26 +18,15 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 3,
-   "items_before_dedup": 7,
-   "items_skipped_foreign_actor": 5,
+   "items_scored": 2,
+   "items_before_dedup": 6,
+   "items_skipped_foreign_actor": 4,
    "positives": 1,
-   "negatives": 2,
-   "net_signal": -1.66,
-   "legalAdj": -1,
-   "corroborated": true,
+   "negatives": 1,
+   "net_signal": -0.16,
+   "legalAdj": 0,
+   "corroborated": false,
    "evidence": [
-    {
-     "title": "Nigeria Arrests Alleged Mexican Meth Figure - Africa Defense Forum",
-     "source": "Africa Defense Forum",
-     "date": "2026-10-06",
-     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxObFB1M1JaUk1fRDM3QU1nZXVvcVY5VlJLd0NmTVJSSDYySnZ4eGpPUG5SbElDNlI0WHdmM014N0RPNVVPS25nQmFoTVpjTDctLWV1THhVSFVBZmFlbm9PZGIwVDhta1FYeEU4d29SdThJUENudjN6MGxoN0czbkxIZHFvaw?oc=5",
-     "polarity": "negative",
-     "weight": -1.5,
-     "matched": [
-      "!arrests"
-     ]
-    },
     {
      "title": "Nigeria suspends official visits to South Africa over anti-migrant violence - Al Jazeera",
      "source": "Al Jazeera",
@@ -62,7 +51,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:16:39.478Z"
+   "fetchedAt": "2026-10-11T11:30:03.736Z"
   },
   "GH": {
    "code": "GH",
@@ -70,26 +59,15 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 7,
-   "items_before_dedup": 7,
+   "items_scored": 6,
+   "items_before_dedup": 6,
    "items_skipped_foreign_actor": 0,
    "positives": 1,
-   "negatives": 6,
-   "net_signal": -2.76,
+   "negatives": 5,
+   "net_signal": -1.56,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
-    {
-     "title": "Faith, Law, and the Commute: Analyzing Ghana’s Ban on Transport Preaching through the Lens of Traditional Priesthood - Modern Ghana",
-     "source": "Modern Ghana",
-     "date": "2026-10-10",
-     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPZUMtaW5ibkI3S3U2TWVKWEVWalI0Ukd5R2lWM3FYQTEtVEF0eGFmR0VBNnVtQXZ1UGRaM3FkdWFnbExoUFdMdEd2eXRGLUphQmptREdmM2RvdjJsbzdHRHVpWHdSOWc1bVNnUlFkekZSNWtwRi1LR3hjM2djN09EVGtJUFFnVDVlcnBRUzNUdDVWZ9IBkAFBVV95cUxOZFJoTGM3dEwzbDFhU3RHWlR3dkpydlM0N3MtT2JZcWtpcVA0ajlkQVFyY0tseHZ2cTZMelFTMERwUmdnZU4yeFhSQWZxTkdJWW5lRURMQ3NiRFFRc0d0TTJZczdSR1JadHRZOEtIaGU0LV8teVZaanB6RDVWcVBrQktDX09SbFkyZDBPZU9iRlg?oc=5",
-     "polarity": "negative",
-     "weight": -1.2,
-     "matched": [
-      "-ban"
-     ]
-    },
     {
      "title": "Ghana hosts forum on the rule of law and anti-corruption — MyJoyOnline - UA.NEWS",
      "source": "UA.NEWS",
@@ -157,7 +135,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:16:41.350Z"
+   "fetchedAt": "2026-10-11T11:30:05.696Z"
   },
   "SN": {
    "code": "SN",
@@ -174,7 +152,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:42.963Z"
+   "fetchedAt": "2026-10-11T11:30:07.364Z"
   },
   "BF": {
    "code": "BF",
@@ -191,7 +169,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:44.588Z"
+   "fetchedAt": "2026-10-11T11:30:09.002Z"
   },
   "ML": {
    "code": "ML",
@@ -220,14 +198,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:16:46.200Z"
+   "fetchedAt": "2026-10-11T11:30:10.682Z"
   },
   "GN": {
    "code": "GN",
    "name": "Guinee",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 70,
+   "items_scanned": 67,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -237,7 +215,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:47.736Z"
+   "fetchedAt": "2026-10-11T11:30:12.226Z"
   },
   "BJ": {
    "code": "BJ",
@@ -254,7 +232,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:49.324Z"
+   "fetchedAt": "2026-10-11T11:30:13.858Z"
   },
   "TG": {
    "code": "TG",
@@ -271,7 +249,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:50.962Z"
+   "fetchedAt": "2026-10-11T11:30:15.530Z"
   },
   "NE": {
    "code": "NE",
@@ -300,7 +278,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:16:52.583Z"
+   "fetchedAt": "2026-10-11T11:30:17.157Z"
   },
   "MR": {
    "code": "MR",
@@ -340,14 +318,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:16:54.212Z"
+   "fetchedAt": "2026-10-11T11:30:18.792Z"
   },
   "GW": {
    "code": "GW",
    "name": "Guinee-Bissau",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 35,
+   "items_scanned": 34,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -357,7 +335,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:55.730Z"
+   "fetchedAt": "2026-10-11T11:30:20.386Z"
   },
   "SL": {
    "code": "SL",
@@ -374,7 +352,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:16:57.537Z"
+   "fetchedAt": "2026-10-11T11:30:22.494Z"
   },
   "LR": {
    "code": "LR",
@@ -414,7 +392,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:16:59.263Z"
+   "fetchedAt": "2026-10-11T11:30:24.245Z"
   },
   "GM": {
    "code": "GM",
@@ -443,7 +421,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:00.698Z"
+   "fetchedAt": "2026-10-11T11:30:25.730Z"
   },
   "CV": {
    "code": "CV",
@@ -460,7 +438,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:02.153Z"
+   "fetchedAt": "2026-10-11T11:30:27.242Z"
   },
   "CM": {
    "code": "CM",
@@ -477,7 +455,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:03.772Z"
+   "fetchedAt": "2026-10-11T11:30:28.870Z"
   },
   "GA": {
    "code": "GA",
@@ -494,7 +472,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:05.358Z"
+   "fetchedAt": "2026-10-11T11:30:30.494Z"
   },
   "CG": {
    "code": "CG",
@@ -523,7 +501,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:06.925Z"
+   "fetchedAt": "2026-10-11T11:30:32.131Z"
   },
   "CD": {
    "code": "CD",
@@ -540,7 +518,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:08.508Z"
+   "fetchedAt": "2026-10-11T11:30:33.775Z"
   },
   "CF": {
    "code": "CF",
@@ -569,7 +547,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:10.080Z"
+   "fetchedAt": "2026-10-11T11:30:35.387Z"
   },
   "TD": {
    "code": "TD",
@@ -609,7 +587,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:11.690Z"
+   "fetchedAt": "2026-10-11T11:30:37.036Z"
   },
   "GQ": {
    "code": "GQ",
@@ -626,7 +604,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:13.180Z"
+   "fetchedAt": "2026-10-11T11:30:38.631Z"
   },
   "KE": {
    "code": "KE",
@@ -634,13 +612,13 @@
    "language": "en",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 3,
-   "items_before_dedup": 3,
+   "items_scored": 4,
+   "items_before_dedup": 4,
    "items_skipped_foreign_actor": 0,
    "positives": 2,
-   "negatives": 1,
-   "net_signal": 1.92,
-   "legalAdj": 1,
+   "negatives": 2,
+   "net_signal": 1.08,
+   "legalAdj": 0,
    "corroborated": true,
    "evidence": [
     {
@@ -652,6 +630,17 @@
      "weight": 2,
      "matched": [
       "+finance bill"
+     ]
+    },
+    {
+     "title": "New Bill forces banks, M-Pesa to share customer data - Business Daily",
+     "source": "Business Daily",
+     "date": "2026-09-22",
+     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQc3Jka3R0VnkxZHJWRXRZR2luR1VBOUQ1aVUtVHZmWS1YenRPZ05OQWVMZ1g3T2VWT3RZUE02YU9TZDlBcTRyVkgtM3V0SkVMOThTb2tRSk03ckZWMEw0YVBRX2xyWmdpRkdRdVRMdVVlNHhkaVhmeF85UmN3dkxyOWdzYU1ucWFYZ0FfVVNmOU9YQ2hJRzRrZkJrZ1FuMWdSS3hnWWhYZDk?oc=5",
+     "polarity": "negative",
+     "weight": -0.84,
+     "matched": [
+      "-ban"
      ]
     },
     {
@@ -677,7 +666,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:14.851Z"
+   "fetchedAt": "2026-10-11T11:30:40.333Z"
   },
   "TZ": {
    "code": "TZ",
@@ -694,14 +683,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:16.284Z"
+   "fetchedAt": "2026-10-11T11:30:41.872Z"
   },
   "UG": {
    "code": "UG",
    "name": "Ouganda",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 12,
+   "items_scanned": 11,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -711,7 +700,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:17.736Z"
+   "fetchedAt": "2026-10-11T11:30:43.384Z"
   },
   "RW": {
    "code": "RW",
@@ -728,7 +717,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:19.323Z"
+   "fetchedAt": "2026-10-11T11:30:45.023Z"
   },
   "BI": {
    "code": "BI",
@@ -745,14 +734,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:20.890Z"
+   "fetchedAt": "2026-10-11T11:30:46.684Z"
   },
   "SS": {
    "code": "SS",
    "name": "Soudan du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 12,
+   "items_scanned": 13,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -762,7 +751,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:22.393Z"
+   "fetchedAt": "2026-10-11T11:30:48.260Z"
   },
   "ET": {
    "code": "ET",
@@ -779,7 +768,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:23.849Z"
+   "fetchedAt": "2026-10-11T11:30:49.758Z"
   },
   "DJ": {
    "code": "DJ",
@@ -796,7 +785,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:25.487Z"
+   "fetchedAt": "2026-10-11T11:30:51.462Z"
   },
   "ER": {
    "code": "ER",
@@ -813,7 +802,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:26.916Z"
+   "fetchedAt": "2026-10-11T11:30:52.918Z"
   },
   "SO": {
    "code": "SO",
@@ -830,7 +819,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:28.369Z"
+   "fetchedAt": "2026-10-11T11:30:54.402Z"
   },
   "SD": {
    "code": "SD",
@@ -847,34 +836,23 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:29.851Z"
+   "fetchedAt": "2026-10-11T11:30:55.959Z"
   },
   "ZA": {
    "code": "ZA",
    "name": "Afrique du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 38,
-   "items_scored": 2,
-   "items_before_dedup": 2,
+   "items_scanned": 37,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
-   "negatives": 2,
-   "net_signal": -1.59,
-   "legalAdj": -1,
-   "corroborated": true,
+   "negatives": 1,
+   "net_signal": -0.54,
+   "legalAdj": 0,
+   "corroborated": false,
    "evidence": [
-    {
-     "title": "South Sudan: Kiir dissolves government, five vice presidents removed ahead of elections - Benin Web TV",
-     "source": "Benin Web TV",
-     "date": "2026-09-22",
-     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOQ2dldEE0WlZUMjAzYU82bWJ4Y04zVFBMUHo3dmZ2NDVKUk5GQ0JsMUp0Tm4zUGRZTktsakxSb2JZR0FGSm9zUG1Pa0E0Q0pkdFJhZURtbTlSamhBSTI1YzBqb05RM1hyQUxiYzYtcDlLWUJia0hwQkdWMGUwWnRsOUgxZkplQmdwRUJZaGROYTFwY2JxV1g5ejctSW5kQ19JN1UxT1k3dDJ5bmpLYTFBbQ?oc=5",
-     "polarity": "negative",
-     "weight": -1.05,
-     "matched": [
-      "-dissolves"
-     ]
-    },
     {
      "title": "Nigeria–South Africa: Parliament suspends official visits following anti-migrant violence - beninwebtv.com",
      "source": "beninwebtv.com",
@@ -887,7 +865,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:31.350Z"
+   "fetchedAt": "2026-10-11T11:30:57.527Z"
   },
   "MZ": {
    "code": "MZ",
@@ -896,11 +874,11 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 2,
-   "items_before_dedup": 3,
+   "items_before_dedup": 2,
    "items_skipped_foreign_actor": 0,
    "positives": 2,
    "negatives": 0,
-   "net_signal": 0.52,
+   "net_signal": 0.46,
    "legalAdj": 0,
    "corroborated": true,
    "evidence": [
@@ -916,19 +894,19 @@
      ]
     },
     {
-     "title": "Mozambique Government Approves Development Bank Regulation - Wansom AI",
-     "source": "Wansom AI",
+     "title": "Government approves regulation establishing Mozambique Development Bank - aimnews.org",
+     "source": "aimnews.org",
      "date": "2026-08-26",
-     "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOSWRMdFhId1hnMm9WQTNSV19Edm1VaGMtS2pScGlwUXEwQTFaSmdnTkRLN2otVEY0ZklFVFNLNU1hcXlaN3luR0pNano4dHZRRUVweWNQU2JwYWwyTEw3TzJHVkpYY1YyV1VOdHhhMWhNdHNSY3JtVUdhalNDSFh2RXF0ejFfVklqSkZ0SDFjWDBEQTZBWUVGeXk0SExmQnU3Slc0LXEtSUhGamVIMHU0d04zWFQ5T1B1YTVycTJXOEdVQ3JYOHhuWEp1Ml9EWGFJeGFKYWpGTDc?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOT2FZRWNXWFowaXdTeUZWYVNKWE5SU3lJYkJWSTR1RF9mX0NkbVVnLVl1UVpmeXVubXBFSnJuMG5uVFljUjBIWUVrZ1cwVE52em1ERXVjNzAxdE4xV1JBVXNrdy0yOVNqNmozcUFtYUFWb0dwZGUteU5iYlRVcVRXdHplQmJEMU84akJCa3NCLXl6MHlHVW1QcmNTTlE0YTc2UGNqVTRn?oc=5",
      "polarity": "positive",
-     "weight": 0.14,
+     "weight": 0.08,
      "matched": [
       "+bank",
       "-ban"
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:32.982Z"
+   "fetchedAt": "2026-10-11T11:30:59.238Z"
   },
   "ZW": {
    "code": "ZW",
@@ -979,7 +957,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:34.752Z"
+   "fetchedAt": "2026-10-11T11:31:01.039Z"
   },
   "ZM": {
    "code": "ZM",
@@ -996,7 +974,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:36.190Z"
+   "fetchedAt": "2026-10-11T11:31:02.528Z"
   },
   "BW": {
    "code": "BW",
@@ -1026,24 +1004,36 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:37.801Z"
+   "fetchedAt": "2026-10-11T11:31:04.238Z"
   },
   "NA": {
    "code": "NA",
    "name": "Namibie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 1,
-   "items_scored": 0,
-   "items_before_dedup": 0,
+   "items_scanned": 2,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
-   "negatives": 0,
-   "net_signal": 0,
+   "negatives": 1,
+   "net_signal": -1.2,
    "legalAdj": 0,
    "corroborated": false,
-   "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:39.227Z"
+   "evidence": [
+    {
+     "title": "EU suspends some meat imports from Namibia - Bénin Web TV",
+     "source": "Bénin Web TV",
+     "date": "2026-10-06",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9Ddml0OC1MSk9jbjNxWFNZRzMwSnJUdE0ta2ZGNDhqVS1XUXQzTTdqa0NqMUtIbUsxTVJoM3lsa3dpbGxWaTR0Qmt2ZnZkYkZ5NXJnTHdlZEpwLWFyYndJSzl0Q05OOWFxd29hSWhCR2s?oc=5",
+     "polarity": "negative",
+     "weight": -1.2,
+     "matched": [
+      "-suspends"
+     ]
+    }
+   ],
+   "fetchedAt": "2026-10-11T11:31:05.720Z"
   },
   "MW": {
    "code": "MW",
@@ -1056,7 +1046,7 @@
    "items_skipped_foreign_actor": 0,
    "positives": 2,
    "negatives": 2,
-   "net_signal": 0.58,
+   "net_signal": 0.21,
    "legalAdj": 0,
    "corroborated": true,
    "evidence": [
@@ -1066,7 +1056,7 @@
      "date": "2026-09-19",
      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxNTGhlMmJ0UjlWSWRLa0VhRkJNdVhLelRBbzhMS2xSWmxJUkhadHB1ckZEalEzRXZ6bEE1ZUhLV1V2dzU2TmpkUjJZRWlDdzRNbGNxYXVMS2VXRVF4OGlKSFZJOWluakNPOFNGZjgtX21ia1pQbzBDQVUxMFBlSlN5UnF1S2dqb2kySHJUM0VOREItTHgyUjZNb09uVGUycjRvaXUxTFdzX05rMDZTVzcyU2U5V2UxTkw5TTVPb0V2VnRzX09vc1dsRnZYX1Y?oc=5",
      "polarity": "positive",
-     "weight": 1.05,
+     "weight": 0.68,
      "matched": [
       "+budget"
      ]
@@ -1107,7 +1097,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:40.843Z"
+   "fetchedAt": "2026-10-11T11:31:07.406Z"
   },
   "AO": {
    "code": "AO",
@@ -1120,7 +1110,7 @@
    "items_skipped_foreign_actor": 0,
    "positives": 0,
    "negatives": 3,
-   "net_signal": -1.88,
+   "net_signal": -1.52,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -1130,7 +1120,7 @@
      "date": "2026-10-03",
      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQRmhBWWI3YVJ4MjZyRUl2RVdTbXF4OEpfWmV3RjdrZERpbzBmMW5vNVNMLUlJa19Jc1RUdU5pLV9iM0xqdXk4bXFOV3RqZmNsVjRyZWwzVE5ORGZJR2xDUUdTWnk2SWdKalhibXByYVNlSkZ1dU1lRHJWQzdjZXZackNjUlU3dFlLLWc5bVVPQ3dxRTBWUUNMRHJzM3p1cHhm?oc=5",
      "polarity": "negative",
-     "weight": -1.2,
+     "weight": -0.84,
      "matched": [
       "-ban"
      ]
@@ -1158,7 +1148,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:42.463Z"
+   "fetchedAt": "2026-10-11T11:31:09.067Z"
   },
   "MG": {
    "code": "MG",
@@ -1167,7 +1157,7 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 3,
-   "items_before_dedup": 5,
+   "items_before_dedup": 6,
    "items_skipped_foreign_actor": 1,
    "positives": 0,
    "negatives": 3,
@@ -1209,14 +1199,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:44.046Z"
+   "fetchedAt": "2026-10-11T11:31:10.712Z"
   },
   "MU": {
    "code": "MU",
    "name": "Maurice",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 67,
+   "items_scanned": 69,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1226,14 +1216,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:45.629Z"
+   "fetchedAt": "2026-10-11T11:31:12.433Z"
   },
   "SC": {
    "code": "SC",
    "name": "Seychelles",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 63,
+   "items_scanned": 64,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1243,7 +1233,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:47.139Z"
+   "fetchedAt": "2026-10-11T11:31:13.979Z"
   },
   "SZ": {
    "code": "SZ",
@@ -1272,7 +1262,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:48.754Z"
+   "fetchedAt": "2026-10-11T11:31:15.687Z"
   },
   "LS": {
    "code": "LS",
@@ -1289,7 +1279,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:50.380Z"
+   "fetchedAt": "2026-10-11T11:31:17.402Z"
   },
   "KM": {
    "code": "KM",
@@ -1306,7 +1296,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:51.957Z"
+   "fetchedAt": "2026-10-11T11:31:19.124Z"
   },
   "MA": {
    "code": "MA",
@@ -1316,7 +1306,7 @@
    "items_scanned": 100,
    "items_scored": 2,
    "items_before_dedup": 2,
-   "items_skipped_foreign_actor": 9,
+   "items_skipped_foreign_actor": 6,
    "positives": 1,
    "negatives": 1,
    "net_signal": -0.05,
@@ -1346,7 +1336,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:53.532Z"
+   "fetchedAt": "2026-10-11T11:31:20.813Z"
   },
   "TN": {
    "code": "TN",
@@ -1355,21 +1345,21 @@
    "classifier": "lexicon_v1",
    "items_scanned": 100,
    "items_scored": 3,
-   "items_before_dedup": 4,
+   "items_before_dedup": 5,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
    "negatives": 3,
-   "net_signal": -2.08,
+   "net_signal": -2.68,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
     {
-     "title": "Tunisie: le décret 54, instrument de répression, assoupli par le pouvoir - RFI",
-     "source": "RFI",
-     "date": "2026-10-02",
-     "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOa2tnbk0yWi05dkFMM0I3bDhiNm96WFdTaEM2b3NCcnYxTEM1OHJtVHBPTmJZZ0s1LXlTVkZSX3ZxVnh3cmxmVlVsMGhnOXcxZXU5cS1qSEpoNktRNWZiQWh1VFF3eWprQlFVQmlIaVFwbXc5X2lFZ3FramU1R3oyYlRIdWdfaXA3VTFieE14SUJmSzZZQnJGd2pMRmZ3QWFwUVk5QUJOdnduTXhDSy1ZNVYzWGhwZ3RnTUE?oc=5",
+     "title": "Tunisie : le décret 54, instrument de répression, assoupli par Kaïs Saïed - Le Matin d'Algérie",
+     "source": "Le Matin d'Algérie",
+     "date": "2026-10-03",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNQi0yTnJiUldDZDNSeHlIWTdBOHBjOU5hS181U09vT2hRSEZQTDROUVd6OWlQRHB1ZXltSmxEdkNJU09HNEFYTTktWlVEaEVLM2l4WlZpamxBSHZmcTVWSFNyN3dFQndaYXVtai0tNEdaMUtZdUVOS21jTDQ2WWlLNUU1ZDR4alhLdGhjVUNEQnhNblhtWFpwRU1saTdtV1nSAacBQVVfeXFMTzhNaWZldFljamcybnFNVUhhdkU1NVBodWphdTIzUE92bzc0OHhYWWMxMk9WanpjeTFrbmpSRjVyNXQ0cmxyMjRFOE5CbGg2SlViVFU5SkR5RjZJcVR5YmNTX1RTX0plVm5nRjNIMXlBaEJnVjJaVkdGamRqdEM2ZG56S1BOa0k3eEh3ekJoWHNXLW9YT0I5eXJyd241eFktWmVFcTdsZlk?oc=5",
      "polarity": "negative",
-     "weight": -1.4,
+     "weight": -2,
      "matched": [
       "!répression"
      ]
@@ -1397,14 +1387,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:55.127Z"
+   "fetchedAt": "2026-10-11T11:31:22.412Z"
   },
   "EG": {
    "code": "EG",
    "name": "Egypte",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 16,
+   "items_scanned": 17,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1414,7 +1404,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-10-10T11:17:56.612Z"
+   "fetchedAt": "2026-10-11T11:31:23.941Z"
   },
   "DZ": {
    "code": "DZ",
@@ -1443,7 +1433,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:58.195Z"
+   "fetchedAt": "2026-10-11T11:31:25.598Z"
   },
   "LY": {
    "code": "LY",
@@ -1472,7 +1462,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:17:59.667Z"
+   "fetchedAt": "2026-10-11T11:31:27.073Z"
   },
   "CI": {
    "code": "CI",
@@ -1480,12 +1470,12 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 2,
-   "items_before_dedup": 2,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
-   "positives": 1,
+   "positives": 0,
    "negatives": 1,
-   "net_signal": -0.05,
+   "net_signal": -0.3,
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [
@@ -1499,20 +1489,9 @@
      "matched": [
       "-interdiction"
      ]
-    },
-    {
-     "title": "Côte d'Ivoire : Réforme de la société civile, le gouvernement valide six décrets pour renforcer le dialogue, la transparence et la gouvernance des OSC - Koaci",
-     "source": "Koaci",
-     "date": "2026-08-05",
-     "url": "https://news.google.com/rss/articles/CBMiwAJBVV95cUxPdHZHd3dsZFA2bVNYaXpPMmh1Tk1xQ05tYzlUSHlZekJCQmt2R0ZUMkJEWE1oMVpoX0pNdGQycXY2VXBRampjNm1qNjBJTm1iQzBNOEtmbmR3QzBhNjdOWE9RX2trTnpZX1ZFdnltSXI5UEVySVpRNjgyMklrSFdwSkpqZVVhTV93M1hLeWZyZjVBRmk1eUctRmNaN3dFSzZqeXFGTU00TEhHeXQ4bmZ1MS04YnJ4VWw0cEhZVDlNSVhhbThNTFkxdFlHNzZ0LS1hVHVzU1VzQjlnZzBQNmk5Z1hKc3ExR2Y4VEhwQkJMQzQ4b1BaS1huSVhSVDZlMmdRNXBNaVFkaDVIRWZFYnRzUG8wSktxRlhzcXZvTW1mRk1rTmx6TFllZmstUUxQWERiVGY5N1JkclA0a3ozWjRJTg?oc=5",
-     "polarity": "positive",
-     "weight": 0.25,
-     "matched": [
-      "+transparence"
-     ]
     }
    ],
-   "fetchedAt": "2026-10-10T11:18:01.288Z"
+   "fetchedAt": "2026-10-11T11:31:28.769Z"
   }
  }
 }
