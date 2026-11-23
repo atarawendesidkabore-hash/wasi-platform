@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T13:30:51.063Z",
+ "generatedAt": "2026-11-23T16:18:10.737Z",
  "source": "Google News RSS (legislative & regulatory query per country)",
  "classifier": "lexicon_v1",
  "adjustment_range": [
@@ -17,27 +17,16 @@
    "name": "Nigeria",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 100,
-   "items_scored": 6,
-   "items_before_dedup": 10,
+   "items_scanned": 64,
+   "items_scored": 1,
+   "items_before_dedup": 3,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
-   "negatives": 6,
-   "net_signal": -6.68,
-   "legalAdj": -2,
-   "corroborated": true,
+   "negatives": 1,
+   "net_signal": -1.8,
+   "legalAdj": 0,
+   "corroborated": false,
    "evidence": [
-    {
-     "title": "Soludo’s Billboard Crackdown: Fear, Not Law, In Anambra -By Jeff Okoroafor - Opinion Nigeria",
-     "source": "Opinion Nigeria",
-     "date": "2026-11-20",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQMEc0LUZ4aXQ1ZXhES3d6RlNzSlhhT3FQbmVuZ3JIanZNODFQZklXX1lPRzJ1U2w4S3lncmJFeUlPWnF2NlpkRUxXTUwzSnlqcE1DSVo3YVRWdmFaS1I0WlFJZmtfZEJFNDhoLWZ1ZmF6MFZlSDZsLVRUclhCdGkta1ZYWW10bWhkQUxrQjdmZlFzTWlYSHVqUTRhdkk3R3N1ZXhV?oc=5",
-     "polarity": "negative",
-     "weight": -2,
-     "matched": [
-      "!crackdown"
-     ]
-    },
     {
      "title": "Nigeria’s Tinubu asks parliament to decriminalise attempted suicide - Club of Mozambique",
      "source": "Club of Mozambique",
@@ -48,78 +37,34 @@
      "matched": [
       "!criminalis"
      ]
-    },
-    {
-     "title": "Nigerian lawmakers clear bill to put OPay, Moniepoint, others under bank-style CBN supervision - Techpoint Africa",
-     "source": "Techpoint Africa",
-     "date": "2026-11-19",
-     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBraXZ2TWQzeDJzUFlwNlR1bDVRYVl5d3AyZWFrMmVBY25LQUNOY1dUUXozeTBDenlnMThSVlNLTl9mTTFWVGlZUE1uX2t2dFlhOWN1b3VXUWlCZ1RZV2F0R1BWaUtlaHgwSDBCSHR3?oc=5",
-     "polarity": "negative",
-     "weight": -1.2,
-     "matched": [
-      "-ban"
-     ]
-    },
-    {
-     "title": "Data Protection In Nigeria; Impact On Open Banking Regulation - Legal 500",
-     "source": "Legal 500",
-     "date": "2026-10-31",
-     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNMjVteVdFS2ZtOFNubmJnWFZ2MjktRF9Ba2g4M3FwRElGQ3dvYXR5N3dleU82cXUzdFFuNFpyRXNGLTR4V09uQmFMblNCNkxIRVNGWVlVMjhKcU5QUHg4bE9UNUlQdExMYkZpUUdTRFlLcXhxaWRvQ1BDMWlZVHFoSG9kZnJuTEY3dUFmQ1I0OHd2bFVVNTlfMXlXWUY2UTFvLTIzdkRTenBqaEVURVRCaC16X2s1bmxa?oc=5",
-     "polarity": "negative",
-     "weight": -0.84,
-     "matched": [
-      "-ban"
-     ]
-    },
-    {
-     "title": "Fintech Regulation In Nigeria; Non-Bank Merchant Acquirers - Legal 500",
-     "source": "Legal 500",
-     "date": "2026-10-28",
-     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPeDJZdE11Zy04WjNyVmRlVHp6WlhoclJWcGdDdExaYTFwS1hKUlhSSi0yUFpqOUVDRjUyaHUyUE1TOHBRdmJQaW9rdXRnV3Z5TFlkNFZYc3BPWXA4NXBOOHM2YzV6VnZlb0V1cXNDRXlwbWthYTB1ZThGTFFodTNOYTZYLVBBSDRRUHNXQWRHNlR2NXJSM01VdjM3cUZmQVVjMXNhUmhKaTR5ZVRaS0NueWFVQjBjWHhD?oc=5",
-     "polarity": "negative",
-     "weight": -0.54,
-     "matched": [
-      "-ban"
-     ]
-    },
-    {
-     "title": "Nigeria’s parliament suspends engagements with South Africa over anti-migrant violence - AP News",
-     "source": "AP News",
-     "date": "2026-09-11",
-     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOQnZPVzgtakFsTFJoVUc2cFdFT0tpRUprMXQ4R2pmYndsWWx3TGZ4TTFWeldYYlNCcFF2MUhiU2VzT3hrQWktdW8zS3FmNi1vZ3A2VUJIVnRIeUE3M0gxaGVRVUxra0U2U2FycFpKMFNRRGJFeDZpc21SZ2pUdjVEVk9WX2hHb1NlOXd5RkJ4d0o0bHFGWXNWUFp1T2l4em8?oc=5",
-     "polarity": "negative",
-     "weight": -0.3,
-     "matched": [
-      "-suspends"
-     ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:28.665Z"
+   "fetchedAt": "2026-11-23T16:16:47.208Z"
   },
   "GH": {
    "code": "GH",
    "name": "Ghana",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 96,
+   "items_scanned": 100,
    "items_scored": 4,
-   "items_before_dedup": 4,
+   "items_before_dedup": 8,
    "items_skipped_foreign_actor": 0,
-   "positives": 1,
-   "negatives": 3,
-   "net_signal": -3.6,
+   "positives": 0,
+   "negatives": 4,
+   "net_signal": -4.6,
    "legalAdj": -2,
    "corroborated": true,
    "evidence": [
     {
-     "title": "Cocaine seizure briefing sensitive for open debate in Parliament – Majority Leader - Ghana Business News",
-     "source": "Ghana Business News",
-     "date": "2026-11-21",
-     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPeUpQVkw2WkFUeEVUbTlVZVpPcGVBYTZtcXVHOS1wTkx0Wm41MkRZbnQzelZDSV9COVBsNUQxUWxERG1EUlM0MkdCNk1kWEV2a1J3alU1V2REY2RwUGloZ2U1aXVkQTN3dHNVd201ZWZ6ZnRweU1MTnFGbXYwdTRaTlRCNTNTeWg3aHJPM1NwMlJVVVY5VThTcm1WeWlSVkltT1dvNFVQODZYeERoYzlaM1BPcEZ4U2RzSXpmSURIaEZNeVAw?oc=5",
+     "title": "Parliamentary absenteeism: Lack of sanctions encourages MPs to stay away – CDD-Ghana Fellow - Modern Ghana",
+     "source": "Modern Ghana",
+     "date": "2026-11-23",
+     "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ZOUl0TlZTMUR0Z1dvY25NNFlwR2pSMFpCRXlVRExiZlppRHNSWDBlbHotWl9zbE4tY2VveHMyOC1rNEpBV2MxRXozeS1QQUdka2tQVWE4QjZOVjNsNkdrdS1WSlDSAVxBVV95cUxNbzB3bkx2OTdGWXVQczhmOWczejJlbkU0Mnl1Mkdsck1GRFRFMVlUcWlXYm1IYmNRLW1Yb1daaXhxbWRjWkRKeW43aFlmcDYzOUd4WUx3Y01DdzJRVA?oc=5",
      "polarity": "negative",
-     "weight": -2,
+     "weight": -1.5,
      "matched": [
-      "-seizure"
+      "-sanctions"
      ]
     },
     {
@@ -135,36 +80,36 @@
      ]
     },
     {
-     "title": "Bank of Ghana cuts policy rate to 11% in realignment - NewsGhana",
-     "source": "NewsGhana",
-     "date": "2026-11-22",
-     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQRHNPVjQxTy1aWVl3aUh3bVVxUEQwNnRtOHNNcm94SU1aVnJSZk02NGhyMEdndHlTTDZWRDdER0JEM0l4N2E0NTlWUUVsZGw4Y1dkbEVYQ3I0RjVNdHdOUThOYjl3YTNSb0haS0s5bEg1OVpnYllBa2lqUHlVeUZnRjluOA?oc=5",
+     "title": "Ghana to revisit vote on anti-LGBTQIA+ bill over sentencing errors - www.out.tv",
+     "source": "www.out.tv",
+     "date": "2026-11-05",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOWWQ1clJBM2JWU3VzMTZRTVc3amdROFZWRHFROGF4bTNUZU4tMUpQbTh1WTRzWjg4VUJjRkJucjlhdVFpd181M2NOTEhTdFh2WG1fYUVfMTJZTmJoMk53cE5TOUprTngtREZzdTFheU91QnA5MzhHT3E3MXRkTnJpcU5xVk5EalhjXzFCT0xhZnBCTGpWdUFjYVhOUQ?oc=5",
      "polarity": "negative",
-     "weight": -1.2,
+     "weight": -1.4,
      "matched": [
-      "-ban"
+      "!anti-lgbt"
      ]
     },
     {
-     "title": "Speaker cites Ghana's RTI law, Data Protection Act as examples of legislative commitment to transparency and privacy - 3News",
-     "source": "3News",
-     "date": "2026-11-20",
-     "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxQcmlCWjN1UWpMcGxmb2ItU21KMDFadmU4VGFwcEoxM2hiQkY4Tk1KYXdMNHV1OWRQQW94U2tNSjFzdVl6cFFjTDExM1dyWEtJSFRKdi1Ud1RaZDN6ZHc1YTg4OXN3VlhtbmVEbXl3MjJRaXB0eFhLOEpBNWd1RGlXTGZJdW9iU2xDZHU0Z0RzMzZMTW4tOTEtYk5zMVExbkZ3T092X1RyVzFQNVR1dC0zWnJnNEJKWDZ1NFB5Z1YyWjJXODd4WmltelpUaG14eE9NNWhJ?oc=5",
-     "polarity": "positive",
-     "weight": 1,
+     "title": "Ghana bans preaching on buses with jail terms for offenders - BBC",
+     "source": "BBC",
+     "date": "2026-10-03",
+     "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBTcVZubnhPV0d0S3RkQ0Z2OVpvZEQ3SU1QVzdYYUF2VkY0MzRrY002SjVQN0lYSkdQYVI2c1dGRzlrVVFBMWc1dFBfbnJPcnBIQmpIYUFLVGVVTXM?oc=5",
+     "polarity": "negative",
+     "weight": -0.3,
      "matched": [
-      "+transparency"
+      "-ban"
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:30.463Z"
+   "fetchedAt": "2026-11-23T16:16:49.159Z"
   },
   "SN": {
    "code": "SN",
    "name": "Senegal",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 52,
+   "items_scanned": 53,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -174,7 +119,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:32.048Z"
+   "fetchedAt": "2026-11-23T16:16:50.684Z"
   },
   "BF": {
    "code": "BF",
@@ -182,12 +127,12 @@
    "language": "fr",
    "classifier": "lexicon_v1",
    "items_scanned": 100,
-   "items_scored": 6,
-   "items_before_dedup": 9,
+   "items_scored": 5,
+   "items_before_dedup": 8,
    "items_skipped_foreign_actor": 0,
    "positives": 2,
-   "negatives": 4,
-   "net_signal": -3.25,
+   "negatives": 3,
+   "net_signal": -1.75,
    "legalAdj": -1,
    "corroborated": true,
    "evidence": [
@@ -204,32 +149,10 @@
      ]
     },
     {
-     "title": "Burkina Faso : dissolution du Syndicat des pharmaciens et relance de la mine de Perkoa - Alwihda Info",
-     "source": "Alwihda Info",
-     "date": "2026-11-19",
-     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQTWVwRlVuSnhKelV3Z2hmNTUwT25tYVBYNTJGWnF5WURRXzBwWW5LYVJnYzZKTXJ4cFFzYklsOU1CMHVwNzNuNXJGd0xOVWQxcG1WRFRGQlpYNDdSS1ROaWlLM1VUVnZPaUozN3RyNWhlN2dfbXphQ0lLUEVCNklRbm0wU3ZzQjlhY1NCX2R2RkN0OEVnbWl1UnF5c1dkYVpMa1dWbGNtRXRZWFB5Y21PSVdzSQ?oc=5",
-     "polarity": "negative",
-     "weight": -1.5,
-     "matched": [
-      "-dissolution"
-     ]
-    },
-    {
      "title": "Burkina Faso: la peine de mort rétablie par le gouvernement militaire d'Ibrahim Traoré huit ans après son abolition - tv5monde",
      "source": "tv5monde",
      "date": "2026-10-21",
      "url": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPSEF4M2FMaC1Ra1kybGhZNnpMWjVGalV5Wkt1RlI0QzBxQTJXTGhOSG53QzZ4TTdsVkFVckNydWJGek1JNWRTVl9ZVmFYSHkxR0h4dlViUG5jYkFDNlI4SUsyZzltcndIeThEblMycWZjY1ZOV0F4UVFnZ2VlRTNuYkZ6ZlRhZEdzR3dJUmd2a3NZWEZZUnEtYk1lSjRNOFlUbDQxZERXS1FLSlBKanVlSkh4d1JSTy1wRkVjM3ltbGVzaFhuOGxiQTJvRmN0Y1Q3MXdGRG5nN3VTektMbGR5eWhNLVBnVENTVVhwV1pJQkZnWmxS?oc=5",
-     "polarity": "negative",
-     "weight": -0.68,
-     "matched": [
-      "!peine de mort"
-     ]
-    },
-    {
-     "title": "Burkina Faso : le rétablissement de la peine de mort dans le nouveau Code pénal - - Gabonactu.com",
-     "source": "Gabonactu.com",
-     "date": "2026-10-24",
-     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNZHNTQ0tuLXpsdkFkT1hoWjNWdUJPU2xLclU5aURiZl94d0Y5dEZVcTZwN1ZYb1BOTENhTk5Kb0oyWEw5bWJka1pyYnBRSVlfUmhFWS14NndXTkIwb0E2cjRFZkFWOU1DTkxXdUE4bm1OQ0tVQ2UzMDZLbkltVU50cmRYcHVCTURkWUtRSnhzRV9oRHo5WkhRZFBpNlVFUFhDSllVajRrWHFoWVBvNnRHZ1JlaFN2bmM?oc=5",
      "polarity": "negative",
      "weight": -0.68,
      "matched": [
@@ -248,6 +171,17 @@
      ]
     },
     {
+     "title": "Burkina Faso : le rétablissement de la peine de mort dans le nouveau Code pénal - - Gabonactu.com",
+     "source": "Gabonactu.com",
+     "date": "2026-10-24",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNZHNTQ0tuLXpsdkFkT1hoWjNWdUJPU2xLclU5aURiZl94d0Y5dEZVcTZwN1ZYb1BOTENhTk5Kb0oyWEw5bWJka1pyYnBRSVlfUmhFWS14NndXTkIwb0E2cjRFZkFWOU1DTkxXdUE4bm1OQ0tVQ2UzMDZLbkltVU50cmRYcHVCTURkWUtRSnhzRV9oRHo5WkhRZFBpNlVFUFhDSllVajRrWHFoWVBvNnRHZ1JlaFN2bmM?oc=5",
+     "polarity": "negative",
+     "weight": -0.68,
+     "matched": [
+      "!peine de mort"
+     ]
+    },
+    {
      "title": "Burkina : Les députés adoptent à l’unanimité la loi de finances rectificative pour l’exécution du budget de l’État, exercice 2026 - leFaso.net - L'actualité au Burkina Faso",
      "source": "leFaso.net - L'actualité au Burkina Faso",
      "date": "2026-09-23",
@@ -260,14 +194,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:33.815Z"
+   "fetchedAt": "2026-11-23T16:16:52.453Z"
   },
   "ML": {
    "code": "ML",
    "name": "Mali",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 34,
+   "items_scanned": 32,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -277,14 +211,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:35.283Z"
+   "fetchedAt": "2026-11-23T16:16:54.003Z"
   },
   "GN": {
    "code": "GN",
    "name": "Guinee",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 20,
+   "items_scanned": 19,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -294,22 +228,22 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:36.738Z"
+   "fetchedAt": "2026-11-23T16:16:55.466Z"
   },
   "BJ": {
    "code": "BJ",
    "name": "Benin",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 100,
-   "items_scored": 3,
-   "items_before_dedup": 3,
+   "items_scanned": 17,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
-   "positives": 2,
-   "negatives": 1,
-   "net_signal": 0.83,
+   "positives": 1,
+   "negatives": 0,
+   "net_signal": 0.5,
    "legalAdj": 0,
-   "corroborated": true,
+   "corroborated": false,
    "evidence": [
     {
      "title": "Bénin : le gouvernement adopte un projet de Loi de finances 2027 en hausse de 14,7 % - AGENCE ECOFIN",
@@ -317,35 +251,13 @@
      "date": "2026-10-08",
      "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxObmtIdHNWSXFSZFhFLXFBLVkzTXFIWEpmT0xjX0pzdTdKX0x2YUM0UnVzNUtvaEtoMHRDNXBxRG1teWZqQmIyQnRmVjgtZG9nRDNoQmVSMGFDUmY2SEtQWDhvUWh3cWJaV0F4M1NLdTl5R1k1TkYza25sME8wSnVmNURmQ0hfMWJ2OHYyWVpHdzlnc0pvdUlhckh0VlFheGdlSHQ5cnVGTEY1TjVFX0VEOGNHa2N0SVR0RE5rUmwwcC1OVGNpME1ZZGZfbXhSdFJxTEtUOXJzYw?oc=5",
      "polarity": "positive",
-     "weight": 0.9,
+     "weight": 0.5,
      "matched": [
       "+loi de finances"
      ]
-    },
-    {
-     "title": "Le Conseil constitutionnel censure la loi sénégalaise sur les fonds spéciaux - BENIN WEB TV",
-     "source": "BENIN WEB TV",
-     "date": "2026-10-15",
-     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPdjRFdGRVSUlkZElqdDdiQWpyNFYxS2xRbENSU3Z1WURmSERTQ2w1UHB4aUpNcF9EVHl3NnhFVWZZWFBfYXczTFZadk1XYmViWUkyN3Q4bnF6ZElvSEhaQWd1ejI2eEpnUWpzY2hvQ04wVENubU9BQWYwWV9wNTJteEVFOGYzeThLZG1za2pQUXZCeTc2a3duWEhyV2V6X2s?oc=5",
-     "polarity": "negative",
-     "weight": -0.45,
-     "matched": [
-      "-censure"
-     ]
-    },
-    {
-     "title": "Assemblée nationale du Bénin: vote à l’unanimité du budget 2027 de l’institution - BENIN WEB TV",
-     "source": "BENIN WEB TV",
-     "date": "2026-09-09",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNTHhHV1drbUtna1FfaS1UbXRVME0tNmZFYmpFUDVITEY1ZldsZUN1c1licDJJcUppdGxnTkptU29DZS1mNGFiYW1rX2ZrQm9BRExnbDE0OVBZWkYyWjc5WGNlMDB5ZmMwWHpaOGhWb1FnNG5yV29fUmtWRWMzNEw5bnQwcnNuN2ZPdEFfLWhCa3pzekJyYUY0cG1Wc25KTllCMVpR?oc=5",
-     "polarity": "positive",
-     "weight": 0.38,
-     "matched": [
-      "+budget"
-     ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:38.477Z"
+   "fetchedAt": "2026-11-23T16:16:57.015Z"
   },
   "TG": {
    "code": "TG",
@@ -374,7 +286,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:40.001Z"
+   "fetchedAt": "2026-11-23T16:16:58.551Z"
   },
   "NE": {
    "code": "NE",
@@ -391,14 +303,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:41.483Z"
+   "fetchedAt": "2026-11-23T16:17:00.069Z"
   },
   "MR": {
    "code": "MR",
    "name": "Mauritanie",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 45,
+   "items_scanned": 46,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -408,20 +320,20 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:43.043Z"
+   "fetchedAt": "2026-11-23T16:17:01.582Z"
   },
   "GW": {
    "code": "GW",
    "name": "Guinee-Bissau",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 34,
+   "items_scanned": 9,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
    "positives": 1,
    "negatives": 0,
-   "net_signal": 0.45,
+   "net_signal": 0.25,
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [
@@ -431,22 +343,22 @@
      "date": "2026-10-08",
      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxNbmVKNFNEYTIyWk1uemFZSlRpUm1xZmJkeTRZTF9mdHdyUnpMaFkxSTJnaE9oU2M0bVFrZDBzWHJFdllqcWh6c0pJZkxiZ0JNMVhpSjRQOHZ3Z0xPdlVibDlqYjhYZ1FNWXpRNklLSmFQUFZ2Q3h6alVha2ZHQ3dCZkdmZ2JkZlNPZENrbTFqd1NvYlA0enFtb1UydXVmOUVOYjFZX09NQnlQZnEwaXhnc3liMC1CSzJheGNNdWdSM0tJRHNRb0VDZHpIckw?oc=5",
      "polarity": "positive",
-     "weight": 0.45,
+     "weight": 0.25,
      "matched": [
       "+transparency"
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:44.639Z"
+   "fetchedAt": "2026-11-23T16:17:03.154Z"
   },
   "SL": {
    "code": "SL",
    "name": "Sierra Leone",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 32,
+   "items_scanned": 35,
    "items_scored": 1,
-   "items_before_dedup": 1,
+   "items_before_dedup": 2,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
    "negatives": 1,
@@ -466,7 +378,7 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:46.415Z"
+   "fetchedAt": "2026-11-23T16:17:04.931Z"
   },
   "LR": {
    "code": "LR",
@@ -483,14 +395,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:47.979Z"
+   "fetchedAt": "2026-11-23T16:17:06.565Z"
   },
   "GM": {
    "code": "GM",
    "name": "Gambie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 23,
+   "items_scanned": 8,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
@@ -512,14 +424,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:29:49.561Z"
+   "fetchedAt": "2026-11-23T16:17:08.087Z"
   },
   "CV": {
    "code": "CV",
    "name": "Cap-Vert",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 9,
+   "items_scanned": 26,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -529,14 +441,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:51.068Z"
+   "fetchedAt": "2026-11-23T16:17:09.631Z"
   },
   "CM": {
    "code": "CM",
    "name": "Cameroun",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 46,
+   "items_scanned": 100,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -546,14 +458,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:52.560Z"
+   "fetchedAt": "2026-11-23T16:17:11.320Z"
   },
   "GA": {
    "code": "GA",
    "name": "Gabon",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 34,
+   "items_scanned": 36,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -563,7 +475,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:54.055Z"
+   "fetchedAt": "2026-11-23T16:17:12.845Z"
   },
   "CG": {
    "code": "CG",
@@ -580,7 +492,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:55.541Z"
+   "fetchedAt": "2026-11-23T16:17:14.446Z"
   },
   "CD": {
    "code": "CD",
@@ -597,7 +509,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:57.032Z"
+   "fetchedAt": "2026-11-23T16:17:16.085Z"
   },
   "CF": {
    "code": "CF",
@@ -614,14 +526,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:29:58.678Z"
+   "fetchedAt": "2026-11-23T16:17:17.772Z"
   },
   "TD": {
    "code": "TD",
    "name": "Tchad",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 33,
+   "items_scanned": 31,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -631,7 +543,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:00.153Z"
+   "fetchedAt": "2026-11-23T16:17:19.290Z"
   },
   "GQ": {
    "code": "GQ",
@@ -648,14 +560,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:01.716Z"
+   "fetchedAt": "2026-11-23T16:17:20.813Z"
   },
   "KE": {
    "code": "KE",
    "name": "Kenya",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 41,
+   "items_scanned": 36,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -665,7 +577,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:03.248Z"
+   "fetchedAt": "2026-11-23T16:17:22.462Z"
   },
   "TZ": {
    "code": "TZ",
@@ -682,7 +594,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:04.765Z"
+   "fetchedAt": "2026-11-23T16:17:24.152Z"
   },
   "UG": {
    "code": "UG",
@@ -699,7 +611,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:06.283Z"
+   "fetchedAt": "2026-11-23T16:17:25.720Z"
   },
   "RW": {
    "code": "RW",
@@ -716,36 +628,24 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:07.784Z"
+   "fetchedAt": "2026-11-23T16:17:27.210Z"
   },
   "BI": {
    "code": "BI",
    "name": "Burundi",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 100,
-   "items_scored": 1,
-   "items_before_dedup": 1,
+   "items_scanned": 21,
+   "items_scored": 0,
+   "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
    "positives": 0,
-   "negatives": 1,
-   "net_signal": -0.68,
+   "negatives": 0,
+   "net_signal": 0,
    "legalAdj": 0,
    "corroborated": false,
-   "evidence": [
-    {
-     "title": "Burundi : ce que l’on sait de l’arrestation de Papy Jamaica après un différend à l’Assemblée nationale - SOS Médias Burundi",
-     "source": "SOS Médias Burundi",
-     "date": "2026-10-14",
-     "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxPRVV2OWpVU0wtWGlzQ3ZxdzVCRnQ3SVdwc0FqbHZDdk4tNWppVC1MWlB1MkJLTkFpYmo3OEF2X1YwdkNxQVh6QVJQOUJlbzhuVEh6UFRCbVFjYmo1TXQwOXBsZWt1N3NLZDNJdDRXWWtKUWE3dTNGd2d4N1NIbnpwdUxWYWQxUzF3YUY3ZEFkMWxvTmVwMEZ3blBMR1hJUXF1dDJHdlNDQ1V6WURvN3pHM1psejBnTW5iMlpkR1dmUjZVeURoVm9PcWZhR240UkdVRkxLRjVVVFpmQQ?oc=5",
-     "polarity": "negative",
-     "weight": -0.68,
-     "matched": [
-      "!arrestation"
-     ]
-    }
-   ],
-   "fetchedAt": "2026-11-22T13:30:09.503Z"
+   "evidence": [],
+   "fetchedAt": "2026-11-23T16:17:28.707Z"
   },
   "SS": {
    "code": "SS",
@@ -762,14 +662,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:11.331Z"
+   "fetchedAt": "2026-11-23T16:17:30.389Z"
   },
   "ET": {
    "code": "ET",
    "name": "Ethiopie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 9,
+   "items_scanned": 10,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -779,7 +679,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:12.852Z"
+   "fetchedAt": "2026-11-23T16:17:32.043Z"
   },
   "DJ": {
    "code": "DJ",
@@ -796,7 +696,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:14.330Z"
+   "fetchedAt": "2026-11-23T16:17:33.614Z"
   },
   "ER": {
    "code": "ER",
@@ -813,7 +713,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:15.834Z"
+   "fetchedAt": "2026-11-23T16:17:35.122Z"
   },
   "SO": {
    "code": "SO",
@@ -830,14 +730,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:17.332Z"
+   "fetchedAt": "2026-11-23T16:17:36.624Z"
   },
   "SD": {
    "code": "SD",
    "name": "Soudan",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 10,
+   "items_scanned": 48,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -847,14 +747,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:18.834Z"
+   "fetchedAt": "2026-11-23T16:17:38.278Z"
   },
   "ZA": {
    "code": "ZA",
    "name": "Afrique du Sud",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 7,
+   "items_scanned": 6,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
@@ -876,14 +776,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:30:20.381Z"
+   "fetchedAt": "2026-11-23T16:17:39.820Z"
   },
   "MZ": {
    "code": "MZ",
    "name": "Mozambique",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 54,
+   "items_scanned": 57,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -893,7 +793,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:22.033Z"
+   "fetchedAt": "2026-11-23T16:17:41.350Z"
   },
   "ZW": {
    "code": "ZW",
@@ -910,14 +810,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:23.783Z"
+   "fetchedAt": "2026-11-23T16:17:43.001Z"
   },
   "ZM": {
    "code": "ZM",
    "name": "Zambie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 8,
+   "items_scanned": 9,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -927,14 +827,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:25.303Z"
+   "fetchedAt": "2026-11-23T16:17:44.504Z"
   },
   "BW": {
    "code": "BW",
    "name": "Botswana",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 38,
+   "items_scanned": 36,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -944,14 +844,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:26.832Z"
+   "fetchedAt": "2026-11-23T16:17:46.151Z"
   },
   "NA": {
    "code": "NA",
    "name": "Namibie",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 6,
+   "items_scanned": 4,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
@@ -973,24 +873,36 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:30:28.330Z"
+   "fetchedAt": "2026-11-23T16:17:47.657Z"
   },
   "MW": {
    "code": "MW",
    "name": "Malawi",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 47,
-   "items_scored": 0,
-   "items_before_dedup": 0,
+   "items_scanned": 100,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
-   "positives": 0,
+   "positives": 1,
    "negatives": 0,
-   "net_signal": 0,
+   "net_signal": 0.38,
    "legalAdj": 0,
    "corroborated": false,
-   "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:29.884Z"
+   "evidence": [
+    {
+     "title": "Malawi Parliament Approves K10.98 Trillion Budget, Targets Economic Recovery and Food Security - pan african visions",
+     "source": "pan african visions",
+     "date": "2026-09-19",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxNTGhlMmJ0UjlWSWRLa0VhRkJNdVhLelRBbzhMS2xSWmxJUkhadHB1ckZEalEzRXZ6bEE1ZUhLV1V2dzU2TmpkUjJZRWlDdzRNbGNxYXVMS2VXRVF4OGlKSFZJOWluakNPOFNGZjgtX21ia1pQbzBDQVUxMFBlSlN5UnF1S2dqb2kySHJUM0VOREItTHgyUjZNb09uVGUycjRvaXUxTFdzX05rMDZTVzcyU2U5V2UxTkw5TTVPb0V2VnRzX09vc1dsRnZYX1Y?oc=5",
+     "polarity": "positive",
+     "weight": 0.38,
+     "matched": [
+      "+budget"
+     ]
+    }
+   ],
+   "fetchedAt": "2026-11-23T16:17:49.413Z"
   },
   "AO": {
    "code": "AO",
@@ -1007,14 +919,43 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:31.449Z"
+   "fetchedAt": "2026-11-23T16:17:50.971Z"
+  },
+  "MG": {
+   "code": "MG",
+   "name": "Madagascar",
+   "language": "fr",
+   "classifier": "lexicon_v1",
+   "items_scanned": 42,
+   "items_scored": 1,
+   "items_before_dedup": 1,
+   "items_skipped_foreign_actor": 0,
+   "positives": 0,
+   "negatives": 1,
+   "net_signal": -0.38,
+   "legalAdj": 0,
+   "corroborated": false,
+   "evidence": [
+    {
+     "title": "Madagascar: des jeunes appellent à la dissolution de l’Assemblée nationale, son président défend son action - RFI",
+     "source": "RFI",
+     "date": "2026-08-28",
+     "url": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxQeTZpMG9XMjVHNnpIaWVyLXRyZW0xV3l2bjVuSk9FUURKTmZtNk1rMGlwSDc1bWRxbHRHMWszbUZVcmV4OHJudnJZT3JhRjlkejk0bW9YR0RkYjVJd3JkLXNXeklXVnJfeEFsSWxlYUhZTHF4Z0d0NmdMc3dNZWlGSlA5NjQxanRCTmF2S3ZjcXZDLXlZODZRVWsxSElZZmV3RVlZRER4UHNtQmJCRWZNUzdHMW1jTHd4eGJ0aVI2cDNjWlR3eGQ5MFFaQk1fUUZsTDBVTHVaa1BlOEpydWY2YjBxZ1JVLWpnVnFUNm0zMzBNdTY5Skc4?oc=5",
+     "polarity": "negative",
+     "weight": -0.38,
+     "matched": [
+      "-dissolution"
+     ]
+    }
+   ],
+   "fetchedAt": "2026-11-23T16:17:52.477Z"
   },
   "MU": {
    "code": "MU",
    "name": "Maurice",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 45,
+   "items_scanned": 43,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1024,7 +965,24 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:34.598Z"
+   "fetchedAt": "2026-11-23T16:17:54.033Z"
+  },
+  "SC": {
+   "code": "SC",
+   "name": "Seychelles",
+   "language": "fr",
+   "classifier": "lexicon_v1",
+   "items_scanned": 23,
+   "items_scored": 0,
+   "items_before_dedup": 0,
+   "items_skipped_foreign_actor": 0,
+   "positives": 0,
+   "negatives": 0,
+   "net_signal": 0,
+   "legalAdj": 0,
+   "corroborated": false,
+   "evidence": [],
+   "fetchedAt": "2026-11-23T16:17:55.536Z"
   },
   "SZ": {
    "code": "SZ",
@@ -1041,14 +999,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:37.564Z"
+   "fetchedAt": "2026-11-23T16:17:57.041Z"
   },
   "LS": {
    "code": "LS",
    "name": "Lesotho",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 30,
+   "items_scanned": 100,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1058,14 +1016,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:39.083Z"
+   "fetchedAt": "2026-11-23T16:17:58.797Z"
   },
   "KM": {
    "code": "KM",
    "name": "Comores",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 26,
+   "items_scanned": 25,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1075,14 +1033,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:40.607Z"
+   "fetchedAt": "2026-11-23T16:18:00.298Z"
   },
   "MA": {
    "code": "MA",
    "name": "Maroc",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 42,
+   "items_scanned": 37,
    "items_scored": 1,
    "items_before_dedup": 1,
    "items_skipped_foreign_actor": 1,
@@ -1104,45 +1062,23 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:30:42.159Z"
+   "fetchedAt": "2026-11-23T16:18:01.809Z"
   },
   "TN": {
    "code": "TN",
    "name": "Tunisie",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 58,
-   "items_scored": 3,
-   "items_before_dedup": 3,
+   "items_scanned": 55,
+   "items_scored": 1,
+   "items_before_dedup": 1,
    "items_skipped_foreign_actor": 0,
-   "positives": 1,
-   "negatives": 2,
-   "net_signal": 0.26,
+   "positives": 0,
+   "negatives": 1,
+   "net_signal": -0.54,
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [
-    {
-     "title": "Loi de finances 2027 : 24 articles adoptés, un seul rejeté - Tunisie-Tribune",
-     "source": "Tunisie-Tribune",
-     "date": "2026-11-18",
-     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQRnhQSVQ1dXg1a2JjQTVCVkNzQU1Cb3I3aEdwSXVRUnZDWXRQMl9BNDJ3R2hDSW5Vcjhvc0d6dHFPU1B5RUk1Rm92SWduQV9pUTJ0ZkVDaFhGUzZNZjVYaURQbWUtVENHcV90Y241aWNxX1A5SmdUUTlUcE1zYU80QTJaRk9aR0hJeG5pNWl1enRJb1ByTWFNT3Z0eHFFS292?oc=5",
-     "polarity": "positive",
-     "weight": 2,
-     "matched": [
-      "+loi de finances"
-     ]
-    },
-    {
-     "title": "Tunisie : le Parlement rejette la hausse des taxes sur les boissons alcoolisées - Webmanagercenter",
-     "source": "Webmanagercenter",
-     "date": "2026-11-17",
-     "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQV1hhWUozbUJFVVBwVGRGZm1vcVRJbEdLbmYwdnZiVllVX19ZLUIwVGVLaTJRZlgta3liOURzdlhHMXBrVGdsT3Z4a2R1MGFZMWl0Zm5aLWNtVkd1dm9tM0RBZ1JKbmNqTEp1UGhoZFFKU01KZFJkSWVISGlpYkgyVHFqVGM0eG5wX3o1LUwwQnhBandfcUlHLW5SUDM3RGtpZk8zSldDVlp5RUFZblI1aE95ZzVyTjdiLXVGTXh6UmdxWGdrV1FCeQ?oc=5",
-     "polarity": "negative",
-     "weight": -1.2,
-     "matched": [
-      "-hausse des taxes"
-     ]
-    },
     {
      "title": "Démarchage téléphonique : comment les centres d'appels au Maroc et en Tunisie s'adaptent à l'interdiction française - Les Echos",
      "source": "Les Echos",
@@ -1155,14 +1091,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:30:43.701Z"
+   "fetchedAt": "2026-11-23T16:18:03.328Z"
   },
   "EG": {
    "code": "EG",
    "name": "Egypte",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 9,
+   "items_scanned": 8,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1172,14 +1108,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:45.242Z"
+   "fetchedAt": "2026-11-23T16:18:04.938Z"
   },
   "DZ": {
    "code": "DZ",
    "name": "Algerie",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 40,
+   "items_scanned": 39,
    "items_scored": 2,
    "items_before_dedup": 2,
    "items_skipped_foreign_actor": 0,
@@ -1212,14 +1148,14 @@
      ]
     }
    ],
-   "fetchedAt": "2026-11-22T13:30:46.757Z"
+   "fetchedAt": "2026-11-23T16:18:06.479Z"
   },
   "LY": {
    "code": "LY",
    "name": "Libye",
    "language": "en",
    "classifier": "lexicon_v1",
-   "items_scanned": 5,
+   "items_scanned": 2,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1229,14 +1165,14 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:48.261Z"
+   "fetchedAt": "2026-11-23T16:18:07.977Z"
   },
   "CI": {
    "code": "CI",
    "name": "Cote d'Ivoire",
    "language": "fr",
    "classifier": "lexicon_v1",
-   "items_scanned": 43,
+   "items_scanned": 38,
    "items_scored": 0,
    "items_before_dedup": 0,
    "items_skipped_foreign_actor": 0,
@@ -1246,7 +1182,7 @@
    "legalAdj": 0,
    "corroborated": false,
    "evidence": [],
-   "fetchedAt": "2026-11-22T13:30:49.861Z"
+   "fetchedAt": "2026-11-23T16:18:09.537Z"
   }
  }
 }
