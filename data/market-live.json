@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-25T02:23:00.215Z",
+ "fetchedAt": "2026-11-26T01:45:32.641Z",
  "fx": {
   "date": "Wed, 25 Nov 2026 00:02:31 +0000",
   "xofPerUsd": 598.535926,
@@ -175,17 +175,17 @@
  "crypto": {
   "quotes": {
    "BTC": {
-    "usd": 58977,
-    "change": -2.72,
-    "cap": "$1.19T"
+    "usd": 60708,
+    "change": 2.41,
+    "cap": "$1.22T"
    },
    "ETH": {
-    "usd": 1653.24,
-    "change": -2.66,
-    "cap": "$202B"
+    "usd": 1699.91,
+    "change": 2.41,
+    "cap": "$208B"
    },
    "USDC": {
-    "usd": 0.999515,
+    "usd": 0.999442,
     "change": -0.01,
     "cap": "$69B"
    },
@@ -201,196 +201,196 @@
   "BRVM": {
    "quotes": {
     "ABJC": {
-     "price": 2600,
-     "change": -7.33
+     "price": 2590,
+     "change": 0
     },
     "BBGC": {
-     "price": 7590,
-     "change": -6.25
+     "price": 7800,
+     "change": 4
     },
     "BICB": {
-     "price": 7000,
-     "change": 0.72
+     "price": 6900,
+     "change": 0
     },
     "BICC": {
-     "price": 30975,
-     "change": 3.94
+     "price": 29000,
+     "change": -6.38
     },
     "BNBC": {
      "price": 1680,
-     "change": -3.72
+     "change": -1.19
     },
     "BOAB": {
      "price": 8200,
-     "change": -2.55
+     "change": -1.59
     },
     "BOABF": {
-     "price": 7180,
-     "change": -2.91
+     "price": 7100,
+     "change": -2.3
     },
     "BOAC": {
-     "price": 10590,
-     "change": 0.86
+     "price": 10840,
+     "change": 2.41
     },
     "BOAM": {
-     "price": 4830,
-     "change": -1.84
+     "price": 5000,
+     "change": 1.35
     },
     "BOAN": {
-     "price": 4165,
-     "change": -1.44
+     "price": 4350,
+     "change": 5.97
     },
     "BOAS": {
-     "price": 7600,
-     "change": 0.2
+     "price": 7500,
+     "change": -1.58
     },
     "CABC": {
-     "price": 2545,
-     "change": -7.37
+     "price": 2500,
+     "change": -0.6
     },
     "CBIBF": {
-     "price": 24900,
-     "change": -2.14
+     "price": 23500,
+     "change": -5.64
     },
     "CFAC": {
-     "price": 1195,
-     "change": 1.27
+     "price": 1170,
+     "change": -1.26
     },
     "CIEC": {
-     "price": 4200,
-     "change": -1.16
+     "price": 3990,
+     "change": -5.88
     },
     "ECOC": {
-     "price": 14450,
-     "change": 0.31
+     "price": 14500,
+     "change": 0
     },
     "ETIT": {
-     "price": 52,
-     "change": -1.89
+     "price": 51,
+     "change": 0
     },
     "FTSC": {
-     "price": 1470,
-     "change": -6.94
+     "price": 1370,
+     "change": -7.46
     },
     "LNBB": {
-     "price": 3850,
-     "change": 1.06
+     "price": 3800,
+     "change": 0
     },
     "NEIC": {
-     "price": 1800,
-     "change": 2.27
+     "price": 1760,
+     "change": -0.28
     },
     "NSBC": {
      "price": 15100,
-     "change": 0.67
+     "change": -0.66
     },
     "NTLC": {
      "price": 11800,
-     "change": -0.84
+     "change": 0
     },
     "ONTBF": {
-     "price": 2800,
+     "price": 2795,
      "change": 0
     },
     "ORAC": {
-     "price": 18900,
-     "change": -1.6
+     "price": 18700,
+     "change": -1.07
     },
     "ORGT": {
-     "price": 2400,
-     "change": -0.42
+     "price": 2310,
+     "change": -3.35
     },
     "PALC": {
-     "price": 7310,
-     "change": -0.14
+     "price": 7300,
+     "change": -0.68
     },
     "PRSC": {
-     "price": 3450,
-     "change": -6.76
+     "price": 3300,
+     "change": -4.35
     },
     "SAFC": {
-     "price": 2780,
-     "change": -3.11
+     "price": 2900,
+     "change": 3.57
     },
     "SCRC": {
-     "price": 1290,
-     "change": 2.85
+     "price": 1315,
+     "change": 5.53
     },
     "SDCC": {
-     "price": 11000,
-     "change": 0
+     "price": 10400,
+     "change": -5.45
     },
     "SDSC": {
-     "price": 2700,
-     "change": 5.69
+     "price": 2690,
+     "change": -0.19
     },
     "SEMC": {
      "price": 1495,
      "change": 0
     },
     "SGBC": {
-     "price": 36995,
-     "change": -0.16
+     "price": 37000,
+     "change": -1.46
     },
     "SHEC": {
-     "price": 1795,
-     "change": -2.7
+     "price": 1900,
+     "change": 5.56
     },
     "SIBC": {
-     "price": 8100,
-     "change": -3.68
+     "price": 7800,
+     "change": -0.5
     },
     "SICC": {
      "price": 8400,
      "change": 0
     },
     "SIVC": {
-     "price": 1485,
-     "change": -7.5
+     "price": 1405,
+     "change": -5.07
     },
     "SLBC": {
-     "price": 36080,
-     "change": -6.41
+     "price": 36500,
+     "change": 0.04
     },
     "SMBC": {
-     "price": 17500,
-     "change": 0
+     "price": 17005,
+     "change": -2.83
     },
     "SNTS": {
-     "price": 3850,
-     "change": -0.26
+     "price": 3750,
+     "change": -3.6
     },
     "SOGC": {
      "price": 7250,
-     "change": 1.33
+     "change": 0
     },
     "SPHC": {
-     "price": 7505,
-     "change": -0.73
+     "price": 7450,
+     "change": -0.13
     },
     "STAC": {
-     "price": 2300,
-     "change": 5.5
+     "price": 2290,
+     "change": 0
     },
     "STBC": {
-     "price": 20005,
-     "change": -0.24
+     "price": 20395,
+     "change": -0.47
     },
     "TTLC": {
-     "price": 3010,
-     "change": 6.42
+     "price": 2970,
+     "change": -0.5
     },
     "TTLS": {
-     "price": 3400,
-     "change": -2.86
+     "price": 3500,
+     "change": 2.94
     },
     "UNLC": {
      "price": 42000,
      "change": 0
     },
     "UNXC": {
-     "price": 1720,
-     "change": 2.94
+     "price": 1690,
+     "change": -3.43
     }
    },
    "source": "brvm.org (cours officiels)"
@@ -398,48 +398,48 @@
   "JSE": {
    "quotes": {
     "NPN": {
-     "price": 63894,
-     "change": -5.45
+     "price": 61116,
+     "change": -7.12
     },
     "SOL": {
-     "price": 20299,
-     "change": -4.18
+     "price": 20318,
+     "change": -0.89
     },
     "FSR": {
-     "price": 8914,
-     "change": 0.28
+     "price": 8867,
+     "change": 0.36
     },
     "SBK": {
-     "price": 28946,
-     "change": 2.41
+     "price": 28963,
+     "change": 1.81
     },
     "MTN": {
-     "price": 22543,
-     "change": -0.05
+     "price": 22615,
+     "change": 0.69
     },
     "SHP": {
-     "price": 34501,
-     "change": 1.92
+     "price": 34681,
+     "change": 3.28
     },
     "GFI": {
-     "price": 59080,
-     "change": 1.62
+     "price": 56392,
+     "change": -3.08
     },
     "IMP": {
-     "price": 16632,
-     "change": 0.68
+     "price": 15753,
+     "change": -9.37
     },
     "SSW": {
-     "price": 3376,
-     "change": -0.85
+     "price": 3200,
+     "change": -7.54
     },
     "VOD": {
-     "price": 18380,
-     "change": 1.66
+     "price": 18201,
+     "change": 1.43
     },
     "CPI": {
-     "price": 460597,
-     "change": 3.09
+     "price": 460899,
+     "change": 4.3
     }
    },
    "source": "Yahoo Finance"
@@ -448,7 +448,7 @@
    "quotes": {
     "COMI": {
      "price": 81.2,
-     "change": -36.56
+     "change": -36.31
     },
     "EAST": {
      "price": 21.8,
@@ -456,19 +456,19 @@
     },
     "FWRY": {
      "price": 6.82,
-     "change": -59.67
+     "change": -60.58
     },
     "ETEL": {
      "price": 32.77,
-     "change": -76.91
+     "change": -76.08
     },
     "HRHO": {
      "price": 21.55,
-     "change": -14.82
+     "change": -15.49
     },
     "SWDY": {
      "price": 47.69,
-     "change": -59.57
+     "change": -59.41
     },
     "ORAS": {
      "price": 71.05,
@@ -476,15 +476,15 @@
     },
     "TMGH": {
      "price": 58,
-     "change": -29.7
+     "change": -29.74
     },
     "ABUK": {
      "price": 58.32,
-     "change": -23.47
+     "change": -23.62
     },
     "JUFO": {
      "price": 18.71,
-     "change": -19.77
+     "change": -19.21
     }
    },
    "source": "Yahoo Finance"
